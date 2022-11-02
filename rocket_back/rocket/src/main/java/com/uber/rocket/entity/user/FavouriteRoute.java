@@ -19,7 +19,7 @@ public class FavouriteRoute {
     @Setter(AccessLevel.NONE)
     private Long id;
     @OneToOne
-    private Client user;
+    private User user;
 
     @OneToMany
     private Collection<Route> routes;

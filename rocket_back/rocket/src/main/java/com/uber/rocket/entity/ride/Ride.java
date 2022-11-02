@@ -1,7 +1,7 @@
 package com.uber.rocket.entity.ride;
 
 import com.sun.istack.NotNull;
-import com.uber.rocket.entity.user.Client;
+import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
 import lombok.*;
 
@@ -23,7 +23,7 @@ public class Ride {
 
     @OneToMany
     @NotNull
-    private Collection<Client> passengers;
+    private Collection<User> passengers;
 
     @OneToOne
     @NotNull

@@ -19,7 +19,7 @@ public class Vehicle {
 
     @OneToOne
     @NotNull
-    private Client driver;
+    private User driver;
 
     @NotNull
     private String type;
