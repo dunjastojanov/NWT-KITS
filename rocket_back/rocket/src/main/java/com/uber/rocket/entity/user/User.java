@@ -1,11 +1,7 @@
 package com.uber.rocket.entity.user;
 
-//import com.uber.rocket.entity.user.Role;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sun.istack.NotNull;
 import lombok.*;
-import org.hibernate.annotations.Columns;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,11 +11,11 @@ import java.util.Collection;
 @NoArgsConstructor
 @Data
 @Entity
-@Table
-public class Client {
+@Table(name = "app_user")
+public class User {
     @Id
-    @SequenceGenerator(name = "client_sequence", sequenceName = "client_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "client_sequence")
+    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_sequence")
     @Setter(AccessLevel.NONE)
     private Long id;
 

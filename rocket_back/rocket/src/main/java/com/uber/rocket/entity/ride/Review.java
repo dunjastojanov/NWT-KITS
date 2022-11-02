@@ -1,7 +1,7 @@
 package com.uber.rocket.entity.ride;
 
 import com.sun.istack.NotNull;
-import com.uber.rocket.entity.user.Client;
+import com.uber.rocket.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,7 +20,7 @@ public class Review {
 
     @OneToOne
     @NotNull
-    private Client passenger;
+    private User passenger;
 
     @NotNull
     private int driverRating;

@@ -2,7 +2,6 @@ package com.uber.rocket.entity.user;
 
 import com.sun.istack.NotNull;
 import lombok.*;
-import org.hibernate.annotations.Columns;
 
 import javax.persistence.*;
 
@@ -18,8 +17,8 @@ public class EditInfoRequest {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @OneToOne
-    private Client driver;
+    @NotNull
+    private Long driverId;
 
     @NotNull
     private String imageUrl;
