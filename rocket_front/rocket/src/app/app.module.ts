@@ -19,6 +19,7 @@ import { LocationsComponent } from './components/about/locations/locations.compo
 import { ContactComponent } from './components/about/contact/contact.component';
 import { LocationCardComponent } from './components/about/locations/location-card/location-card.component';
 import { LabelComponent } from './utils/label/label/label.component';
+import { CalculateShowRoutesComponent } from './components/routes/calculate-show-routes/calculate-show-routes.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { LabelComponent } from './utils/label/label/label.component';
     LocationsComponent,
     ContactComponent,
     LocationCardComponent,
-    LabelComponent
+    LabelComponent,
+    CalculateShowRoutesComponent
   ],
   imports: [
     BrowserModule,
