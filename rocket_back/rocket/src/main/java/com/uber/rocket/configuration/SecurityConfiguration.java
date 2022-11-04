@@ -1,10 +1,11 @@
 package com.uber.rocket.configuration;
 
+import com.uber.rocket.entity.user.RoleType;
 import com.uber.rocket.security.CustomAuthenticationFilter;
 import com.uber.rocket.security.CustomAuthorizationFilter;
 import com.uber.rocket.service.AuthService;
-import com.uber.rocket.service.UserService;
 import com.uber.rocket.service.CustomUserDetailsService;
+import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,8 +63,8 @@ public class SecurityConfiguration {
         authenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/api/**").permitAll();
-//        http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/api/login").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
+        http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(authenticationFilter);
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new CustomAuthorizationFilter(authService), UsernamePasswordAuthenticationFilter.class);
@@ -75,10 +76,12 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/", "http://127.0.0.1:80/", "http://example.com/"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "OPTIONS", "PUT","PATCH"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+
 }

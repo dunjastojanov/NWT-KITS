@@ -17,7 +17,7 @@ public class LogInfo {
     @Setter(AccessLevel.NONE)
     private Long id;
     private Long userId;
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDateTime begging;
+    private LocalDateTime ending;
 
 }
