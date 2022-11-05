@@ -19,7 +19,7 @@ public class User {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
     @OneToOne
