@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -22,6 +24,17 @@ public class UserController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
+
+    @GetMapping("/logged")
+    public ResponseEntity<?> getLoggedUser(HttpServletRequest request){
+        try {
+            return ResponseEntity.ok(userService.getLoggedUser(request));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+
+    }
+
 
     @GetMapping(path = "/confirm/{token}")
     public ResponseEntity<?> confirm(@PathVariable("token") String token) {
