@@ -20,8 +20,9 @@ module.exports = {
           dark: "#0A3F68"
         },
         tertiary: {
-          light: "#F5F6F7",
-          medium: "#949EA0",
+          light: "#f5f4f4",
+          mediumLight: "#e0dfdf",
+          medium: "#b9b9b9",
         }
       }
     },

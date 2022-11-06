@@ -1,0 +1,34 @@
+<div>
+  <div class="table-container">
+    <table class="table">
+      <thead class="header">
+      <tr>
+        <th *ngFor="let header of headers" scope="col" class="header-row">
+          {{header.toString()[0].toUpperCase() + header.toString().slice(1)}}
+        </th>
+        <th scope="col" class="py-3 px-6"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of data" class="row">
+        <td *ngFor="let header of headers" class="data">
+          {{item[header]}}
+        </td>
+        <td>
+          <secondary-button class="text-xs" [text]="'VIEW MORE'" (click)="toggleDetailedRoute()"></secondary-button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+  <div class="flex mt-3">
+    <div class="mx-auto">
+      <pagination></pagination>
+    </div>
+  </div>
+
+  <app-detailed-route [open]="openDetailedRoute" [closeFunc]="toggleDetailedRoute"></app-detailed-route>
+
+</div>

@@ -1,0 +1,9 @@
+<div class="relative z-0 mb-6 w-full group">
+  <label class="absolute text-tertiary-medium  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] focus:text-secondary-light">
+    {{text}}
+  </label>
+  <select id="underline_select" class="block py-2.5 px-0 w-full text-base text-tertiary-medium bg-transparent border-0 border-b-2 border-tertiary-medium appearance-none focus:outline-none focus:ring-0 focus:border-secondary-light peer">
+    <option class="text-secondary-medium p-2" selected=""></option>
+    <option class="text-secondary-medium p-2" *ngFor="let item of items" value=item.value>{{item.text}}</option>
+  </select>
+</div>
