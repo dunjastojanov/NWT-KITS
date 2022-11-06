@@ -1,0 +1,7 @@
+.tabs {
+  @apply text-sm font-medium flex justify-center text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700
+}
+
+.tab {
+  @apply inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300
+}
