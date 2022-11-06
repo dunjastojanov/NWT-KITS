@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.large {
+  @apply text-xl
+}
+
+.small {
+  @apply text-sm
+}
