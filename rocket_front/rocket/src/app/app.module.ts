@@ -20,6 +20,10 @@ import { ContactComponent } from './components/about/contact/contact.component';
 import { LocationCardComponent } from './components/about/locations/location-card/location-card.component';
 import { LabelComponent } from './shared/utils/label/label/label.component';
 import { CalculateShowRoutesComponent } from './components/routes/calculate-show-routes/calculate-show-routes.component';
+import { LoginComponent } from './modals/login/login.component';
+import { RegisterComponent } from './modals/register/register.component';
+import { ForgotPasswordComponent } from './modals/forgot-password/forgot-password.component';
+import { IconComponent } from './shared/utils/icon/icon.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,11 @@ import { CalculateShowRoutesComponent } from './components/routes/calculate-show
     ContactComponent,
     LocationCardComponent,
     LabelComponent,
-    CalculateShowRoutesComponent
+    CalculateShowRoutesComponent,
+    LoginComponent,
+    RegisterComponent,
+    ForgotPasswordComponent,
+    IconComponent
   ],
   imports: [
     BrowserModule,

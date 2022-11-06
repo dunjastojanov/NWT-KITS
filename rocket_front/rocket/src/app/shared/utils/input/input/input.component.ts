@@ -7,8 +7,11 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class InputComponent implements OnInit {
   @Input('text') text!: string;
+  @Input('type') type: string;
 
-  constructor() { }
+  constructor() {
+    this.type = "text"
+   }
 
   ngOnInit(): void {
   }
