@@ -1,5 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, OnInit, Input } from '@angular/core'
 
 @Component({
   selector: 'app-label',
@@ -8,12 +7,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class LabelComponent implements OnInit {
   @Input('text') text!: string;
-  @Input('icon') icon!: string;
-  public logo: SafeHtml;
+  @Input('icon') icon?: string;
 
-  constructor(private sanitizer: DomSanitizer) { 
-    this.logo = sanitizer.bypassSecurityTrustHtml(this.icon);
-  }
+
+  constructor() {  }
 
   ngOnInit(): void {
   }
