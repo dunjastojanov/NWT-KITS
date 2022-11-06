@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.vertical-navbar {
+  @apply absolute top-[15] left-0 h-[900px] w-1/4 bg-primary-light
+}
+
+.profile-image {
+  @apply md:w-[150px] lg:w-[200px] md:h-[150px] lg:h-[200px] rounded-full object-cover mx-auto my-5
+}
+
+.vertical-navbar-item {
+  @apply font-bold text-tertiary-light p-5 pl-7 flex items-center hover:bg-primary-dark hover:border-l-4 hover:border-white
+}
+
+.white-icon {
+  @apply w-5 h-5 mr-2
+}
+
+.white-icon {
+  filter: brightness(0) invert(1);
+}
