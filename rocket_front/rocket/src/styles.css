@@ -9,6 +9,10 @@ html, body {
     width: 100%;
 }
 
+.white-icon {
+  filter: brightness(0) invert(1);
+}
+
 p, h1, h2, h3 {
     cursor: default;
 }
