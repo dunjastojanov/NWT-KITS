@@ -1,6 +1,4 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .vertical-navbar {
   @apply absolute top-[15] left-0 h-[900px] w-1/4 bg-primary-light
