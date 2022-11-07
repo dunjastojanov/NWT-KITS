@@ -2,13 +2,13 @@ import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-title',
-  template: `<div class="flex justify-center">
-    <h1 class="title">{{text}}</h1>
-    </div>`,
+  templateUrl: './title.component.html',
   styleUrls: ['./title.component.css']
 })
 export class TitleComponent implements OnInit {
-  @Input('text') text!: String;
+  @Input('header') header?: String;
+  @Input('title') title!: String;
+  @Input('subtitle') subtitle?: String;
 
   constructor() { }
 

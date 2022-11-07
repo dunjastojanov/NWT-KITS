@@ -1,5 +1,11 @@
 .banner {
-    width: 100%;
-    height: 89vh;
-    object-fit: cover;
+    @apply w-full h-[89vh] object-cover brightness-50
+}
+
+.carousel-slide {
+    @apply duration-700 ease-in-out absolute inset-0 transition-all transform ;
+}
+
+.slide-content {
+   @apply absolute z-30 -translate-x-1/2 -translate-y-1/2 top-1/2 left-[37%] 
 }

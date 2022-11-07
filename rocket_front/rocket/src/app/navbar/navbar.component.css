@@ -1,6 +1,5 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 
 .navbar {
     @apply bg-white px-2 sm:px-8 py-2.5 w-full z-20 top-0 left-0 border-b border-gray-200

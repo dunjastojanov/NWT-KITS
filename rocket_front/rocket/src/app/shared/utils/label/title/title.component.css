@@ -1,7 +1,6 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .title {
-    @apply font-bold text-6xl w-fit mb-12
+    @apply font-bold text-6xl w-fit
 }
+
