@@ -80,7 +80,6 @@ import { StatisticsComponent } from './page/homepage/statistics/statistics.compo
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
-    IconComponent,
     HistoryTableComponent,
     PaginationComponent,
     SelectComponent,
@@ -89,7 +88,7 @@ import { StatisticsComponent } from './page/homepage/statistics/statistics.compo
     DetailedRouteComponent,
     PersonalInformationComponent,
     PaymentInformationComponent,
-    ProfilePictureComponent
+    ProfilePictureComponent,
     IconComponent, 
     WordCeoComponent, StatisticsComponent
   ],
