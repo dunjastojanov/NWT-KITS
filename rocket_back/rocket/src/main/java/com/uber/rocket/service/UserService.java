@@ -1,5 +1,6 @@
 package com.uber.rocket.service;
 
+import com.uber.rocket.dto.LoggedUserDTO;
 import com.uber.rocket.dto.UserDTO;
 import com.uber.rocket.entity.user.RoleType;
 import com.uber.rocket.entity.user.User;
@@ -8,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 public class UserService {
@@ -27,6 +31,10 @@ public class UserService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private AuthService authService;
+
 
     public User getUserByEmail(String email) {
         Optional<User> client = userRepository.findByEmail(email);
@@ -60,5 +68,11 @@ public class UserService {
         User user = confirmationTokenService.validateToken(token);
         user.setBlocked(false);
         userRepository.save(user);
+    }
+
+    public LoggedUserDTO getLoggedUser(HttpServletRequest request) {
+        String email = authService.getUsernameFromJWT(request.getHeader(AUTHORIZATION));
+        User user = getUserByEmail(email);
+        return new LoggedUserDTO(user);
     }
 }
