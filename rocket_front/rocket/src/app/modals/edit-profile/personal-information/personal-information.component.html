@@ -1,0 +1,33 @@
+<div>
+  <div class="flex m-4 items-center justify-center">
+
+
+    <div class="flex flex-col m-2 items-center justify-center">
+      <div class="w-64 m-2">
+        <app-input [text]="'First name'">
+        </app-input>
+      </div>
+      <div class="w-64 m-2">
+      <app-input [text]="'Email'">
+      </app-input>
+    </div>
+    </div>
+    <div class="flex flex-col m-2 items-center justify-center">
+      <div class="w-64 m-2">
+        <app-input [text]="'Last name'">
+        </app-input>
+      </div>
+
+      <div class="w-64 m-2">
+        <app-input [text]="'Phone number'">
+        </app-input>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="flex items-center justify-center mt-2">
+    <secondary-button class="mr-2" [text]="'CANCEL'"></secondary-button>
+    <primary-button [text]="'SAVE'"></primary-button>
+  </div>
+</div>

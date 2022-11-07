@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.input-box {
+  @apply bg-tertiary-light pt-5 px-4 mt-3 mx-3 w-1/4
+}

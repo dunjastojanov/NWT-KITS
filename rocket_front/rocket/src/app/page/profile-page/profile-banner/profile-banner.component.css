@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.banner {
+  @apply w-full bg-local h-[200px] bg-cover bg-center flex p-5 text-white items-end
+}
+
+.white-icon {
+  @apply w-5 h-5 mr-2
+}

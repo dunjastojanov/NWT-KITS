@@ -1,0 +1,17 @@
+<div>
+  <div class="flex ">
+    <div *ngFor="let route of favouriteRoutes" class="favourite-route-card" [ngClass]="{'favourite-route-card-tertiary': route.focus===false, 'favourite-route-card-primary': route.focus===true}">
+      <div class="favourite-route-info" [ngClass]="{'favourite-route-info-tertiary': route.focus===false, 'favourite-route-info-primary': route.focus===true}">
+        <app-info [title]="'Start'" [info]="route.start" [size]="'small'"></app-info>
+      </div>
+      <div class="favourite-route-info" [ngClass]="{'favourite-route-info-tertiary': route.focus===false, 'favourite-route-info-primary': route.focus===true}">
+        <app-info [title]="'End'" [info]="route.end" [size]="'small'"></app-info>
+      </div>
+      <div class="favourite-route-button-div">
+        <secondary-button text="BOOK NOW"></secondary-button>
+      </div>
+    </div>
+  </div>
+
+
+</div>

@@ -6,8 +6,8 @@
         <div class="py-6 px-6 lg:px-8">
             <h3 class="mb-4 text-xl font-medium text-gray-900 ">Log in to our platform</h3>
             <form class="space-y-3 flex flex-col items-center mt-10" action="#">
-                <app-input text="Your email"></app-input>
-                <app-input text="Your password" type="password" class="border-0 p-0 m-0"></app-input>
+                <app-input class="w-96" text="Your email"></app-input>
+                <app-input text="Your password" type="password" class="border-0 p-0 m-0 w-96"></app-input>
                 <primary-button text="Login to your account"></primary-button>
                 <a class="text-sm text-primary-light hover:underline cursor-pointer" (click)="toggleForgotPasswordModal()"> Forgot your passowrd?</a>
                 <div class="flex gap-3 items-center w-full !mt-6">
@@ -31,4 +31,4 @@
 
 <forgot-password [open]="openForgotPasswordModal" [closeFunc]="toggleForgotPasswordModal" ></forgot-password>
 <div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
-  
+

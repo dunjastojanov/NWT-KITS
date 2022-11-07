@@ -20,10 +20,29 @@ import { ContactComponent } from './components/contact/contact.component';
 import { LocationCardComponent } from './components/about/locations/location-card/location-card.component';
 import { LabelComponent } from './shared/utils/label/label/label.component';
 import { CalculateShowRoutesComponent } from './components/routes/calculate-show-routes/calculate-show-routes.component';
+import { ProfilePageComponent } from './page/profile-page/profile-page.component';
+import { VerticalNavbarComponent } from './vertical-navbar/vertical-navbar.component';
+import { GeneralInformationComponent } from './page/profile-page/general-information/general-information.component';
+import { FavouriteRoutesComponent } from './page/profile-page/favourite-routes/favourite-routes.component';
+import { ProfileStatisticsComponent } from './page/profile-page/profile-statistics/profile-statistics.component';
+import { ProfileHistoryComponent } from './page/profile-page/profile-history/profile-history.component';
+import { ProfileBannerComponent } from './page/profile-page/profile-banner/profile-banner.component';
+import { InfoComponent } from './shared/utils/label/info/info.component';
+import { MediumTitleComponent } from './shared/utils/label/medium-title/medium-title.component';
+import { LineChartComponent } from './page/profile-page/profile-statistics/line-chart/line-chart.component';
 import { LoginComponent } from './modals/login/login.component';
 import { RegisterComponent } from './modals/register/register.component';
 import { ForgotPasswordComponent } from './modals/forgot-password/forgot-password.component';
 import { IconComponent } from './shared/utils/icon/icon.component';
+import { HistoryTableComponent } from './shared/utils/history-table/history-table.component';
+import { PaginationComponent } from './shared/utils/pagination/pagination.component';
+import { SelectComponent } from './shared/utils/input/select/select.component';
+import { EditProfileComponent } from './modals/edit-profile/edit-profile.component';
+import { DeleteProfileComponent } from './modals/delete-profile/delete-profile.component';
+import { DetailedRouteComponent } from './modals/detailed-route/detailed-route.component';
+import { PersonalInformationComponent } from './modals/edit-profile/personal-information/personal-information.component';
+import { PaymentInformationComponent } from './modals/edit-profile/payment-information/payment-information.component';
+import { ProfilePictureComponent } from './modals/edit-profile/profile-picture/profile-picture.component';
 import { WordCeoComponent } from './page/homepage/word-ceo/word-ceo.component';
 import { StatisticsComponent } from './page/homepage/statistics/statistics.component';
 
@@ -47,9 +66,30 @@ import { StatisticsComponent } from './page/homepage/statistics/statistics.compo
     LocationCardComponent,
     LabelComponent,
     CalculateShowRoutesComponent,
+    ProfilePageComponent,
+    VerticalNavbarComponent,
+    GeneralInformationComponent,
+    FavouriteRoutesComponent,
+    ProfileStatisticsComponent,
+    ProfileHistoryComponent,
+    ProfileBannerComponent,
+    InfoComponent,
+    MediumTitleComponent,
+    LineChartComponent,
+    CalculateShowRoutesComponent,
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
+    IconComponent,
+    HistoryTableComponent,
+    PaginationComponent,
+    SelectComponent,
+    EditProfileComponent,
+    DeleteProfileComponent,
+    DetailedRouteComponent,
+    PersonalInformationComponent,
+    PaymentInformationComponent,
+    ProfilePictureComponent
     IconComponent, 
     WordCeoComponent, StatisticsComponent
   ],
