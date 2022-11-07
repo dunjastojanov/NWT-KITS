@@ -24,6 +24,9 @@ module.exports = {
           mediumLight: "#e0dfdf",
           medium: "#b9b9b9",
         }
+      },
+      backgroundImage: {
+        'statistics': "url('./assets/statistics.jpg')",  
       }
     },
   },

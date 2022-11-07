@@ -16,7 +16,7 @@ import { InputComponent } from './shared/utils/input/input/input.component';
 import { SecondaryComponent } from './shared/utils/buttons/secondary/secondary.component';
 import { AboutComponent } from './components/about/about.component';
 import { LocationsComponent } from './components/about/locations/locations.component';
-import { ContactComponent } from './components/about/contact/contact.component';
+import { ContactComponent } from './components/contact/contact.component';
 import { LocationCardComponent } from './components/about/locations/location-card/location-card.component';
 import { LabelComponent } from './shared/utils/label/label/label.component';
 import { CalculateShowRoutesComponent } from './components/routes/calculate-show-routes/calculate-show-routes.component';
@@ -43,6 +43,8 @@ import { DetailedRouteComponent } from './modals/detailed-route/detailed-route.c
 import { PersonalInformationComponent } from './modals/edit-profile/personal-information/personal-information.component';
 import { PaymentInformationComponent } from './modals/edit-profile/payment-information/payment-information.component';
 import { ProfilePictureComponent } from './modals/edit-profile/profile-picture/profile-picture.component';
+import { WordCeoComponent } from './page/homepage/word-ceo/word-ceo.component';
+import { StatisticsComponent } from './page/homepage/statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +80,6 @@ import { ProfilePictureComponent } from './modals/edit-profile/profile-picture/p
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
-    IconComponent,
     HistoryTableComponent,
     PaginationComponent,
     SelectComponent,
@@ -87,7 +88,9 @@ import { ProfilePictureComponent } from './modals/edit-profile/profile-picture/p
     DetailedRouteComponent,
     PersonalInformationComponent,
     PaymentInformationComponent,
-    ProfilePictureComponent
+    ProfilePictureComponent,
+    IconComponent, 
+    WordCeoComponent, StatisticsComponent
   ],
   imports: [
     BrowserModule,
