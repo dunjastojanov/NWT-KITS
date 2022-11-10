@@ -1,0 +1,10 @@
+<div class="flex items-center justify-center">
+
+  <div class="multiselect-card" (click)="toggleSelected(item)" [ngClass]="{'selected': item.selected === true}" *ngFor="let item of items">
+
+    <img class="w-12 h-12" src="{{item.path}}" alt="icon">
+    <p class="font-bold mt-3">{{item.title}}</p>
+
+  </div>
+
+</div>

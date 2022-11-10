@@ -53,6 +53,8 @@ import { UserInfoComponent } from './modals/user-info/user-info.component';
 import { IconButtonSecondaryComponent } from './shared/utils/buttons/icon-button-secondary/icon-button-secondary.component';
 import { AdminHistoryComponent } from './page/admin-page/admin-history/admin-history.component';
 import { AdminStatisticsComponent } from './page/admin-page/admin-statistics/admin-statistics.component';
+import { RegisterDriverComponent } from './modals/register-driver/register-driver.component';
+import { MultiSelectWithIconsComponent } from './shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +100,7 @@ import { AdminStatisticsComponent } from './page/admin-page/admin-statistics/adm
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent
   ],
   imports: [
     BrowserModule,
