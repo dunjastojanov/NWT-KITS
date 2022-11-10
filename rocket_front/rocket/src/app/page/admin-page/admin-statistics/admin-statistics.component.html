@@ -1,0 +1,31 @@
+<div class="pt-5 h-screen">
+  <app-medium-title [text]="'Statistics'"></app-medium-title>
+  <div class="flex justify-center w-full">
+    <div class="input-box">
+      <app-input [text] = "'Start date'"></app-input>
+    </div>
+
+    <div class="input-box">
+      <app-input [text] = "'End date'"></app-input>
+    </div>
+
+    <div class="input-box">
+      <app-select [text] = "'Type'" [placeholder]="'Choose a type of report'" [items]="types"></app-select>
+    </div>
+
+    <div class="input-box">
+      <app-select [text] = "'Users'" [placeholder]="'Choose a type of user'" [items]="users"></app-select>
+    </div>
+
+  </div>
+  <div>
+    <app-line-chart ></app-line-chart>
+  </div>
+
+  <div class="translate-y-24 absolute">
+
+  </div>
+
+
+</div>
+

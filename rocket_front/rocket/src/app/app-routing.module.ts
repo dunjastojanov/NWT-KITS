@@ -10,6 +10,7 @@ import {AdminPageComponent} from "./page/admin-page/admin-page.component";
 import {ClientsComponent} from "./page/admin-page/clients/clients.component";
 import {DriversComponent} from "./page/admin-page/drivers/drivers.component";
 import {AdminHistoryComponent} from "./page/admin-page/admin-history/admin-history.component";
+import {AdminStatisticsComponent} from "./page/admin-page/admin-statistics/admin-statistics.component";
 
 const routes: Routes = [
   {path: "", component: HomepageComponent},
@@ -26,7 +27,8 @@ const routes: Routes = [
       {path: "information", component: GeneralInformationComponent},
       {path: "clients", component: ClientsComponent},
       {path: "drivers", component: DriversComponent},
-      {path: "history", component: AdminHistoryComponent}
+      {path: "history", component: AdminHistoryComponent},
+      {path: "statistics", component: AdminStatisticsComponent}
 
     ]
   }

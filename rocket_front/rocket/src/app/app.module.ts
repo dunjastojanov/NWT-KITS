@@ -28,7 +28,7 @@ import { ProfileHistoryComponent } from './page/profile-page/profile-history/pro
 import { ProfileBannerComponent } from './page/profile-page/profile-banner/profile-banner.component';
 import { InfoComponent } from './shared/utils/label/info/info.component';
 import { MediumTitleComponent } from './shared/utils/label/medium-title/medium-title.component';
-import { LineChartComponent } from './page/profile-page/profile-statistics/line-chart/line-chart.component';
+import { LineChartComponent } from './shared/line-chart/line-chart.component';
 import { LoginComponent } from './modals/login/login.component';
 import { RegisterComponent } from './modals/register/register.component';
 import { ForgotPasswordComponent } from './modals/forgot-password/forgot-password.component';
@@ -52,6 +52,7 @@ import { SearchComponent } from './shared/utils/search/search.component';
 import { UserInfoComponent } from './modals/user-info/user-info.component';
 import { IconButtonSecondaryComponent } from './shared/utils/buttons/icon-button-secondary/icon-button-secondary.component';
 import { AdminHistoryComponent } from './page/admin-page/admin-history/admin-history.component';
+import { AdminStatisticsComponent } from './page/admin-page/admin-statistics/admin-statistics.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,7 @@ import { AdminHistoryComponent } from './page/admin-page/admin-history/admin-his
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent
   ],
   imports: [
     BrowserModule,
