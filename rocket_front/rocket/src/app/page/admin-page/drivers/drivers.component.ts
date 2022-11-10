@@ -12,6 +12,12 @@ export class DriversComponent implements OnInit {
   constructor() {
   }
 
+  openRegisterDriver: boolean = false;
+
+  toggleOpenRegisterDriver = () => {
+    this.openRegisterDriver =!this.openRegisterDriver;
+  }
+
   drivers: Array<User> = [{
     firstName: "Kevin",
     lastName: "Ball",
