@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-vertical-navbar',
@@ -9,12 +9,9 @@ export class VerticalNavbarComponent implements OnInit {
 
   constructor() { }
 
-  navbarItems:any=[
-    {routerLink: "information", path: "./assets/icons/information.png", title: "General information"},
-    {routerLink: "favourites", path: "./assets/icons/favorite.png", title: "Favourite routes"},
-    {routerLink: "statistics", path: "./assets/icons/statistics.png", title: "Statistics"},
-    {routerLink: "history", path: "./assets/icons/history.png", title: "History"},
-  ]
+  @Input("navbarItems") navbarItems:any;
+
+  @Input("profileImageLink") profileImageLink:string = "assets/fiona.jpg";
 
   ngOnInit(): void {
   }
