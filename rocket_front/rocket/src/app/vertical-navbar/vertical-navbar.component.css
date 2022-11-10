@@ -9,7 +9,7 @@
 }
 
 .vertical-navbar-item {
-  @apply font-bold text-tertiary-light p-5 pl-7 flex items-center hover:bg-primary-dark hover:border-l-4 hover:border-white
+  @apply font-bold text-tertiary-light p-5 pl-7 flex items-center hover:bg-primary-dark hover:border-l-4 hover:border-white transition ease-in-out
 }
 
 .white-icon {

@@ -1,9 +1,9 @@
 <div class="vertical-navbar navbar-nav">
 
-  <img class="profile-image" src="assets/fiona.jpg"/>
+  <img alt="profile-image" class="profile-image" src="{{profileImageLink}}"/>
 
   <div *ngFor="let item of navbarItems" class="vertical-navbar-item navbar-link" routerLink={{item.routerLink}}>
-    <img class="white-icon" src={{item.path}} alt="{{item.title}}">
+    <img class="white-icon" src="{{item.path}}" alt="{{item.title}}">
     <p>{{item.title}}</p>
   </div>
 </div>

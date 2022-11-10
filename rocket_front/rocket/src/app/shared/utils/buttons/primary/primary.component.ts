@@ -13,3 +13,6 @@ export class PrimaryButtonComponent implements OnInit {
   ngOnInit(): void {
   }
 }
+
+export class PrimaryComponent {
+}

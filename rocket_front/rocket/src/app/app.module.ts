@@ -45,6 +45,14 @@ import { PaymentInformationComponent } from './modals/edit-profile/payment-infor
 import { ProfilePictureComponent } from './modals/edit-profile/profile-picture/profile-picture.component';
 import { WordCeoComponent } from './page/homepage/word-ceo/word-ceo.component';
 import { StatisticsComponent } from './page/homepage/statistics/statistics.component';
+import { AdminPageComponent } from './page/admin-page/admin-page.component';
+import { DriversComponent } from './page/admin-page/drivers/drivers.component';
+import { ClientsComponent } from './page/admin-page/clients/clients.component';
+import { UserCardComponent } from './shared/utils/user-card/user-card.component';
+import { SearchComponent } from './shared/utils/search/search.component';
+import { UserInfoComponent } from './modals/user-info/user-info.component';
+import { FilterComponent } from './modals/filter/filter.component';
+import { IconButtonSecondaryComponent } from './shared/utils/buttons/icon-button-secondary/icon-button-secondary.component';
 
 @NgModule({
   declarations: [
@@ -89,8 +97,8 @@ import { StatisticsComponent } from './page/homepage/statistics/statistics.compo
     PersonalInformationComponent,
     PaymentInformationComponent,
     ProfilePictureComponent,
-    IconComponent, 
-    WordCeoComponent, StatisticsComponent
+    IconComponent,
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, FilterComponent, IconButtonSecondaryComponent
   ],
   imports: [
     BrowserModule,

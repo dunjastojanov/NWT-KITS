@@ -1,5 +1,5 @@
 <div *ngIf="open" class="modal !w-3/5">
-  <div class="modal-container  w-full">
+  <div class="modal-container w-full">
     <button type="button" (click)="closeFunc()" class="modal-close-button">
       <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
            xmlns="http://www.w3.org/2000/svg">
@@ -19,7 +19,7 @@
 
 
         <div class="flex items-center">
-          <img class="ml-3 w-20 h-20 rounded-full" src="assets/kev.webp" />
+          <img alt="profile-image" class="ml-3 w-20 h-20 rounded-full" src="assets/kev.webp" />
           <app-info [title]="'Driver'" [info]="route.driver"></app-info>
           <app-info class="ml-auto" [title]="'Price'" [info]="route.price"></app-info>
           <app-info [title]="'Duration'" [info]="route.duration"></app-info>
@@ -47,7 +47,7 @@
           <div class="flex">
             <div class="review-card m-2 w-1/2 p-3 pl-6 bg-tertiary-light rounded-md">
               <div class="flex items-center">
-                <img class="w-14 h-14 rounded-full" src="assets/fiona.jpg" />
+                <img alt="profile-image" class="w-14 h-14 rounded-full" src="assets/fiona.jpg" />
                 <app-info [title]="'Passenger'" [info]="route.passenger"></app-info>
               </div>
 
@@ -68,7 +68,7 @@
             </div>
             <div class="review-card m-2 w-1/2 p-3 pl-6 bg-tertiary-light rounded-md">
               <div class="flex items-center">
-                <img class="w-14 h-14 rounded-full" src="assets/fiona.jpg" />
+                <img alt="profile-image" class="w-14 h-14 rounded-full" src="assets/fiona.jpg" />
                 <app-info [title]="'Passenger'" [info]="route.passenger"></app-info>
               </div>
 
