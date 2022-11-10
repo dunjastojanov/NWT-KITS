@@ -5,24 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.lang.reflect.Field;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO implements ValidateClassAttributes<UserDTO> {
-
-    @Email(message = "Wrong email format", regexp = ".+[@].+[\\.].+")
-    @NotBlank(message = "Email is mandatory")
-    private String email;
-
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$", message = "Password must contain at least one upper letter, at least one lower latter and at least one digit")
-    @NotBlank(message = "Password is mandatory")
-    private String password;
-
+public class UpdateUserDataDTO implements ValidateClassAttributes<UpdateUserDataDTO> {
     @NotBlank(message = "First name is mandatory")
     private String firstName;
     @NotBlank(message = "Last name is mandatory")
@@ -34,7 +23,7 @@ public class UserDTO implements ValidateClassAttributes<UserDTO> {
 
     @SneakyThrows
     @Override
-    public void validateClassAttributes(UserDTO userDTO) {
+    public void validateClassAttributes(UpdateUserDataDTO updateUserDataDTO) {
         for (Field f : getClass().getDeclaredFields())
             if (f.get(this) == null || f.get(this).equals(""))
                 throw new IllegalAccessException("Parameter " + f.getName() + " is mandatory.");
