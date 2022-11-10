@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -51,7 +50,6 @@ import { ClientsComponent } from './page/admin-page/clients/clients.component';
 import { UserCardComponent } from './shared/utils/user-card/user-card.component';
 import { SearchComponent } from './shared/utils/search/search.component';
 import { UserInfoComponent } from './modals/user-info/user-info.component';
-import { FilterComponent } from './modals/filter/filter.component';
 import { IconButtonSecondaryComponent } from './shared/utils/buttons/icon-button-secondary/icon-button-secondary.component';
 
 @NgModule({
@@ -98,7 +96,7 @@ import { IconButtonSecondaryComponent } from './shared/utils/buttons/icon-button
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, FilterComponent, IconButtonSecondaryComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent
   ],
   imports: [
     BrowserModule,
