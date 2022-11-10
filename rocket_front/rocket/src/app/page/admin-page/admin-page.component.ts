@@ -9,7 +9,8 @@ export class AdminPageComponent implements OnInit {
   navbarItems: any = [
     {routerLink: "information", path: "./assets/icons/information.png", title: "Personal information"},
     {routerLink: "drivers", path: "./assets/icons/wheel.png", title: "Drivers"},
-    {routerLink: "clients", path: "./assets/icons/user.png", title: "Clients"}
+    {routerLink: "clients", path: "./assets/icons/user.png", title: "Clients"},
+    {routerLink: "history", path: "./assets/icons/history.png", title: "History"}
   ]
   profileImageLink:string = "assets/svetlana.jpg";
 
