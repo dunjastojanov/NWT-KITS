@@ -1,15 +1,16 @@
 package com.uber.rocket.service;
 
-import com.uber.rocket.dto.LoggedUserDTO;
-import com.uber.rocket.dto.UserDTO;
+import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.user.RoleType;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,6 +36,8 @@ public class UserService {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private ImageService imageService;
 
     public User getUserByEmail(String email) {
         Optional<User> client = userRepository.findByEmail(email);
@@ -43,7 +46,7 @@ public class UserService {
         return client.get();
     }
 
-    public void register(UserDTO userDTO) throws IllegalAccessException {
+    public String register(UserDTO userDTO) throws IllegalAccessException {
         userDTO.validateClassAttributes(userDTO);
         Optional<User> client = userRepository.findByEmail(userDTO.getEmail());
         if (client.isPresent())
@@ -54,6 +57,7 @@ public class UserService {
         String token = UUID.randomUUID().toString();
         confirmationTokenService.createToken(user, token);
         emailService.sendRegistrationEmail(user, token);
+        return "Successful registration";
     }
 
     private User createUser(UserDTO userDTO) {
@@ -71,8 +75,46 @@ public class UserService {
     }
 
     public LoggedUserDTO getLoggedUser(HttpServletRequest request) {
+        return new LoggedUserDTO(getUserFromRequest(request));
+    }
+
+    public ResponseObjectDTO updateUser(HttpServletRequest request, UpdateUserDataDTO updateUserDataDTO) {
+        updateUserDataDTO.validateClassAttributes(updateUserDataDTO);
+        User user = getUserFromRequest(request);
+        updateUserData(user, updateUserDataDTO);
+        return new ResponseObjectDTO(new LoggedUserDTO(user), "Successful update of user");
+    }
+
+    private void updateUserData(User user, UpdateUserDataDTO updateUserDataDTO) {
+        user.setCity(updateUserDataDTO.getCity());
+        user.setFirstName(updateUserDataDTO.getFirstName());
+        user.setLastName(updateUserDataDTO.getLastName());
+        user.setPhoneNumber(updateUserDataDTO.getPhoneNumber());
+        userRepository.save(user);
+    }
+
+    private User getUserFromRequest(HttpServletRequest request) {
         String email = authService.getUsernameFromJWT(request.getHeader(AUTHORIZATION));
-        User user = getUserByEmail(email);
-        return new LoggedUserDTO(user);
+        return getUserByEmail(email);
+    }
+
+    public ResponseObjectDTO updateProfilePicture(HttpServletRequest request, MultipartFile multipart) throws IOException {
+        User user = getUserFromRequest(request);
+        user.setProfilePicture(imageService.saveProfilePicture(multipart, String.valueOf(user.getId())));
+        userRepository.save(user);
+        return new ResponseObjectDTO(user.getProfilePicture(), "Successful update of profile picture");
+    }
+
+    public String getProfilePicture(String email) {
+        return getUserByEmail(email).getProfilePicture();
+    }
+
+    public Object updatePassword(PasswordChangeDTO passwordChangeDTO, HttpServletRequest request) {
+        User user = getUserFromRequest(request);
+        if (!bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), user.getPassword()))
+            throw new RuntimeException("Old password incorrect");
+        user.setPassword(bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword()));
+        userRepository.save(user);
+        return "Successful password update";
     }
 }
