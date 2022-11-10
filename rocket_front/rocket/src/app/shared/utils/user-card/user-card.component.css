@@ -1,0 +1,25 @@
+@tailwind base;
+
+.user-image-container {
+  @apply mx-5 mb-3 mt-5 rounded-full  shadow
+}
+
+.active {
+  @apply border-4 border-solid border-primary-medium
+}
+
+.inactive {
+  @apply border-4 border-solid border-tertiary-light
+}
+
+.user-image {
+  @apply w-32 h-32 object-cover rounded-full border-4 border-solid border-tertiary-light
+}
+
+.user-card {
+  @apply flex flex-col m-2 mb-3 items-center bg-white drop-shadow-2xl rounded-lg border shadow-md hover:bg-tertiary-mediumLight hover:scale-110 transition ease-in-out
+}
+
+.user-card-info {
+  @apply p-4 flex flex-col items-center justify-center
+}

@@ -1,0 +1,24 @@
+<div class="mx-10">
+
+  <search></search>
+
+  <div class="flex flex-row pt-3">
+    <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1">
+      <user-card *ngFor="let driver of drivers" [user]="driver"></user-card>
+    </div>
+
+    <div class="ml-4 flex flex-col items-center justify-center">
+      <icon-button-secondary [path]="'assets/icons/plus.png'"></icon-button-secondary>
+    </div>
+
+
+
+
+  </div>
+
+
+  <div class="w-full mt-7 flex justify-center">
+    <pagination></pagination>
+  </div>
+
+</div>
