@@ -51,6 +51,7 @@ import { UserCardComponent } from './shared/utils/user-card/user-card.component'
 import { SearchComponent } from './shared/utils/search/search.component';
 import { UserInfoComponent } from './modals/user-info/user-info.component';
 import { IconButtonSecondaryComponent } from './shared/utils/buttons/icon-button-secondary/icon-button-secondary.component';
+import { AdminHistoryComponent } from './page/admin-page/admin-history/admin-history.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,7 @@ import { IconButtonSecondaryComponent } from './shared/utils/buttons/icon-button
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent
   ],
   imports: [
     BrowserModule,
