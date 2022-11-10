@@ -1,4 +1,11 @@
 <div>
+
+  <div class="mt-5">
+
+    <app-medium-title [text]="'Favourite routes'"></app-medium-title>
+  </div>
+
+
   <div class="flex ">
     <div *ngFor="let route of favouriteRoutes" class="favourite-route-card" [ngClass]="{'favourite-route-card-tertiary': route.focus===false, 'favourite-route-card-primary': route.focus===true}">
       <div class="favourite-route-info" [ngClass]="{'favourite-route-info-tertiary': route.focus===false, 'favourite-route-info-primary': route.focus===true}">
