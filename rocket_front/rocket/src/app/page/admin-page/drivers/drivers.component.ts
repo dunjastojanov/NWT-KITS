@@ -17,14 +17,18 @@ export class DriversComponent implements OnInit {
     lastName: "Ball",
     phoneNumber: "235-47851-96",
     city: "Chicago",
-    status: "active"
+    status: "active",
+    role: "driver",
+    profileImage: "assets/kev.webp"
     }, ...Array(7).fill(
     {
       firstName: "Kevin",
       lastName: "Ball",
       phoneNumber: "235-47851-96",
       city: "Chicago",
-      status: "inactive"
+      status: "inactive",
+      role: "driver",
+      profileImage: "assets/kev.webp"
     }
   )]
 

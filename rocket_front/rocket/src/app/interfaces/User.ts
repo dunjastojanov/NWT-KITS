@@ -4,4 +4,6 @@ export interface User {
   city: string;
   phoneNumber: string;
   status?: string;
+  role: string;
+  profileImage: string;
 }

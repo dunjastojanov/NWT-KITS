@@ -1,1 +1,18 @@
-<p>clients works!</p>
+<div class="mx-10">
+
+  <search></search>
+
+  <div class="flex flex-row pt-3">
+    <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1">
+      <user-card *ngFor="let client of clients" [user]="client"></user-card>
+    </div>
+
+  </div>
+
+
+  <div class="w-full mt-7 flex justify-center">
+    <pagination></pagination>
+  </div>
+
+</div>
+
