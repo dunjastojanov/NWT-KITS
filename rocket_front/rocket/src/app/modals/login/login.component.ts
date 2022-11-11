@@ -1,7 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {FacebookLoginProvider, SocialAuthService, SocialUser} from '@abacritt/angularx-social-login';
-import {Router} from '@angular/router';
 import { api } from 'src/app/shared/api/api';
+import { Store } from '@ngrx/store'
+import { storeType } from 'src/app/shared/store/types';
+import { LoggedUserAction, LoggedUserActionType } from 'src/app/shared/store/logged-user-slice/logged-user.actions';
+import { User } from 'src/app/interfaces/User';
 
 @Component({
   selector: 'login',
@@ -16,25 +19,24 @@ export class LoginComponent implements OnInit {
   openForgotPasswordModal = false;
 
   openErrorToast = false;
+  openSuccessToast = false;
 
-  user: SocialUser | null;
-  loggedIn: boolean;
+  user: User | null = null;
 
   email: string;
   password: string;
 
-  constructor(private router: Router,
-    private socialAuthService: SocialAuthService) {
-      this.user = null;
-      this.loggedIn = false;
+  constructor(
+    private socialAuthService: SocialAuthService,
+    private store: Store<storeType>) {
       this.email = '';
       this.password = '';
   }
 
     ngOnInit() {
-      this.socialAuthService.authState.subscribe((user) => {
-        this.user = user;
-        this.loggedIn = (user != null);
+      this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
+        let user: User = {email: socialUser.email, firstName: socialUser.firstName, lastName: socialUser.lastName, roles:["client"], profilePicture:socialUser.photoUrl};
+        this.login(user)
       });
     }
 
@@ -46,8 +48,18 @@ export class LoginComponent implements OnInit {
     this.openErrorToast =!this.openErrorToast;
   }
 
+  toggleSuccessToast = () => {
+    this.openSuccessToast =!this.openSuccessToast;
+  }
+
   signInWithFB(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
+  }
+
+  login(user:User) {
+    this.openSuccessToast = true;
+    this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user))
+    this.closeFunc();
   }
 
   onSubmit() {
@@ -55,10 +67,13 @@ export class LoginComponent implements OnInit {
       let encodedData = new URLSearchParams()
       encodedData.append("username", this.email)
       encodedData.append("password", this.password)
-      api.post('/api/login', encodedData)
+      const that = this;
+      /*api.post('/api/login', encodedData)
       .then((res:any) => console.log(res))
-      
-      .catch((err: any) => console.log(`error: ${err}`))
+      .catch((err: any) => that.openErrorToast = true)*/
+      //OVO IDE U THEN
+      let user: User = {email: "email", firstName: "First", lastName: "Last", city:"city", phoneNumber:"phone", roles:["client"], profilePicture:"profilePic"};
+      this.login(user);
     }
     else {
       this.openErrorToast = true;

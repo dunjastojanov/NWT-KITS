@@ -40,7 +40,8 @@
         </div>
     </div>
 </div>
-<toast-error message="Invadil email or password" [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
+<toast-error message="Invalid email or password" [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
+<toast-success message="Login successful!" [open]="openSuccessToast" [closeFunc]="toggleSuccessToast"></toast-success>
 <forgot-password [open]="openForgotPasswordModal" [closeFunc]="toggleForgotPasswordModal" ></forgot-password>
 <div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
 
