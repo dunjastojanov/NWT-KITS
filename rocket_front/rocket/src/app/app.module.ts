@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { SocialLoginModule, GoogleLoginProvider, FacebookLoginProvider } from '@abacritt/angularx-social-login';
 import { AuthGuardService } from './auth-guard.service';
 import { AppRoutingModule } from './app-routing.module';
+import { StoreModule } from '@ngrx/store'
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomepageComponent } from './page/homepage/homepage.component';
@@ -59,6 +60,8 @@ import { AdminStatisticsComponent } from './page/admin-page/admin-statistics/adm
 import { RegisterDriverComponent } from './modals/register-driver/register-driver.component';
 import { MultiSelectWithIconsComponent } from './shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
 import { ErrorComponent } from './modals/error/error.component';
+import { SuccessComponent } from './modals/success/success.component';
+import { loggedUserReducer } from './shared/store/logged-user-slice/logged-user.reducer';
 
 @NgModule({
   declarations: [
@@ -104,12 +107,13 @@ import { ErrorComponent } from './modals/error/error.component';
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    StoreModule.forRoot({loggedUser: loggedUserReducer}),
     SocialLoginModule
   ],
   providers: [{
