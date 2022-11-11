@@ -1,3 +1,4 @@
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <div *ngIf="open" class="modal">
     <div class="modal-container">
         <button type="button" (click)="closeFunc()" class="modal-close-button">
@@ -5,10 +6,12 @@
         </button>
         <div class="py-6 px-6 lg:px-8">
             <h3 class="mb-4 text-xl font-medium text-gray-900 ">Log in to our platform</h3>
-            <form class="space-y-3 flex flex-col items-center mt-10" action="#">
-                <app-input class="w-96" text="Your email"></app-input>
-                <app-input text="Your password" type="password" class="border-0 p-0 m-0 w-96"></app-input>
-                <primary-button text="Login to your account"></primary-button>
+            <div class="space-y-3 flex flex-col items-center mt-10" action="#">
+                <form class="flex flex-col items-center w-full">
+                    <app-input class="w-96" text="Your email" name="email" [(prop)]="email"></app-input>
+                    <app-input text="Your password" type="password" class="border-0 p-0 m-0 w-96" name="password" [(prop)]="password"></app-input>
+                    <primary-button text="Login to your account" (click)="onSubmit()"></primary-button>
+                </form>
                 <a class="text-sm text-primary-light hover:underline cursor-pointer" (click)="toggleForgotPasswordModal()"> Forgot your passowrd?</a>
                 <div class="flex gap-3 items-center w-full !mt-6">
                     <div class="w-1/3 pt-1"><hr class= "min-w-full"></div>
@@ -17,18 +20,28 @@
                 </div>
                 <div>
                     <div class="flex gap-10">
+                       
                         <icon path="./assets/icons/facebook.png" class="!w-10 !h-10"></icon>
-                        <icon path="./assets/icons/google.png" class="!w-10 !h-10"></icon>                                    
+                        
+                        <asl-google-signin-button 
+                            type='icon'
+                            shape="circle" 
+                            size='large'
+                            data-client_id="863688763477-8llkkdmr3a6nf9m1hbubp7atv69eniu3.apps.googleusercontent.com.apps.googleusercontent.com"
+                            data-callback="loginWithGoogle"
+                        ></asl-google-signin-button>
+                                               
                     </div>
                 </div>
                 <div class="text-sm font-medium text-gray-500 self-start !mt-10">
                     Not registered? <button class="text-secondary-light hover:underline" (click)="openRegisterModal()" >Create account</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-
+<toast-error message="Invalid email or password" [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
+<toast-success message="Login successful!" [open]="openSuccessToast" [closeFunc]="toggleSuccessToast"></toast-success>
 <forgot-password [open]="openForgotPasswordModal" [closeFunc]="toggleForgotPasswordModal" ></forgot-password>
 <div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
 

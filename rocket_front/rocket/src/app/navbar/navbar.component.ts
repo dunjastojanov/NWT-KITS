@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store'
+import { User } from '../interfaces/User';
+import { LoggedUserAction, LoggedUserActionType } from '../shared/store/logged-user-slice/logged-user.actions';
+
+
+import { storeType } from '../shared/store/types';
 
 @Component({
   selector: 'navbar',
@@ -8,7 +14,16 @@ import { Component, OnInit } from '@angular/core';
 export class NavbarComponent implements OnInit {
   showLoginModal = false;
   showRegisterModal = false;
-  constructor() { }
+  user: User | null = null;
+  
+  constructor(private store: Store<storeType>) {
+    let loggedUserSlice = store.select('loggedUser');
+    loggedUserSlice.subscribe(
+      resData => {
+        this.user = resData.user;
+      }
+    )
+  }
 
   ngOnInit(): void {
   }
@@ -16,6 +31,10 @@ export class NavbarComponent implements OnInit {
   toggleLogin = (): void => {
     this.showRegisterModal = false;
     this.showLoginModal = !this.showLoginModal;
+  }
+
+  logout = (): void => {
+    this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGOUT));
   }
 
   toggleRegister = (): void => {
