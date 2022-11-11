@@ -24,6 +24,8 @@ public class ConfirmationToken {
     @Column(nullable = false)
     private LocalDateTime expiredAt;
     private LocalDateTime confirmedAt;
+    @Column(nullable = false)
+    private ConformationTokenType tokenType;
     @ManyToOne
     private User user;
 }

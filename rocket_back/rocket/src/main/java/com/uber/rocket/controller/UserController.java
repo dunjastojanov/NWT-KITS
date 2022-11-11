@@ -1,5 +1,6 @@
 package com.uber.rocket.controller;
 
+import com.uber.rocket.dto.ForgetPasswordDTO;
 import com.uber.rocket.dto.PasswordChangeDTO;
 import com.uber.rocket.dto.UpdateUserDataDTO;
 import com.uber.rocket.dto.UserDTO;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 
 @RestController
@@ -77,12 +79,32 @@ public class UserController {
 
 
     @GetMapping(path = "/confirm/{token}")
-    public ResponseEntity<?> confirm(@PathVariable("token") String token) {
+    public ResponseEntity<?> validateRegistration(@PathVariable("token") String token) {
         try {
-            userService.validateRegistrationToken(token);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            return ResponseEntity.status(HttpStatus.OK).body(userService.validateRegistrationToken(token));
         } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
+
+    @PostMapping(path = "/confirm")
+    public ResponseEntity<?> validateChangingPassword(@Valid @RequestBody ForgetPasswordDTO forgetPasswordDTO) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.validatePasswordToken(forgetPasswordDTO));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+
+    @PostMapping(path = "/password")
+    public ResponseEntity<?> forgottenPassword(@NotBlank @RequestParam("email") String email) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.confirmForgottenPassword(email));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+
 }
