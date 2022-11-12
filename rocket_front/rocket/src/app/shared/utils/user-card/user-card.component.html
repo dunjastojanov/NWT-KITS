@@ -6,7 +6,7 @@
 
   <div class="user-card-info">
     <p class="mb-2 text-xl font-bold text-xl tracking-tight text-secondary-dark">{{user.firstName + " " + user.lastName}}</p>
-    <p class="mb-3 text-md">{{user.roles[0].toUpperCase() + user.roles.slice(1)}}</p>
+    <p class="mb-3 text-md">{{user.role[0].toUpperCase() + user.role.slice(1)}}</p>
     <secondary-button class="text-xs mt-3 mb-2" (click)="toggleOpenInfo()" [text]="'Details'"></secondary-button>
   </div>
 

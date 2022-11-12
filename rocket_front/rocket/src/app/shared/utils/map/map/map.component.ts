@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import  * as L from 'leaflet';
 
 @Component({
@@ -7,7 +7,7 @@ import  * as L from 'leaflet';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements AfterViewInit  {
-
+  @Input('height') height!:string
   private map: any;
 
   private initMap(): void {

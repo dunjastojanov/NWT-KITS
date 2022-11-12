@@ -1,10 +1,10 @@
 
 <nav class="navbar">
     <div class="container flex flex-wrap justify-between items-start mx-auto">
-      <a href="#" class="flex items-center mt-2">
+      <p routerLink='' class="flex items-center mt-2 hover:cursor-pointer">
           <icon path="./assets/logo.png" class="mr-3 sm:h-9 !w-10 !h-10"></icon>
           <span class="self-center text-xl font-semibold whitespace-nowrap ">Rocket</span>
-      </a>
+      </p>
     <div class="md:flex gap-7 items-center w-4/6 md:w-auto">
       <div class="flex gap-4 md:order-2 justify-end">
           <primary-button *ngIf="!user" text="Login" (click)="toggleLogin()"></primary-button>
@@ -16,19 +16,22 @@
       <div class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
         <ul class="flex flex-col p-2 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
           <li *ngIf="user">
-            <a href="#" class="navbar-link">Book a ride</a>
+            <p class="navbar-link" routerLink='profile'>Profile</p>
           </li>
           <li *ngIf="user">
-            <a href="#" class="navbar-link">My ride</a>
+            <p class="navbar-link" routerLink='ride/book'>Book a ride</p>
+          </li>
+          <li *ngIf="user">
+            <p class="navbar-link" routerLink='ride/current'>Current ride</p>
           </li>
           <li>
-            <a href="#" class="navbar-link">Home</a>
+            <p class="navbar-link" routerLink=''>Home</p>
           </li>
-          <li>
-            <a href="#/pricing" class="navbar-link">Pricing</a>
+          <li *ngIf="!user">
+            <a class="navbar-link" href='#pricing'>Pricing</a>
           </li>
-          <li>
-            <a href="#/about" class="navbar-link">About</a>
+          <li *ngIf="!user">
+            <a class="navbar-link" href='#about'>About</a>
           </li>
         </ul>
       </div>

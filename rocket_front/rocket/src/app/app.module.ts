@@ -62,6 +62,11 @@ import { MultiSelectWithIconsComponent } from './shared/utils/input/multi-select
 import { ErrorComponent } from './modals/error/error.component';
 import { SuccessComponent } from './modals/success/success.component';
 import { loggedUserReducer } from './shared/store/logged-user-slice/logged-user.reducer';
+import { CurrentRidePageComponent } from './page/current-ride-page/current-ride-page.component';
+import { CurrentRideInfoComponent } from './components/current-ride-info/current-ride-info.component';
+import { FieldComponent } from './components/current-ride-info/field/field.component';
+import { CheckboxComponent } from './shared/utils/checkbox/checkbox.component';
+import { ReportDriverComponent } from './modals/report-driver/report-driver.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +112,7 @@ import { loggedUserReducer } from './shared/store/logged-user-slice/logged-user.
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent
   ],
   imports: [
     BrowserModule,

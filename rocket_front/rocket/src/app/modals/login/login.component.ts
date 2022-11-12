@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
       this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
-        let user: User = {email: socialUser.email, firstName: socialUser.firstName, lastName: socialUser.lastName, roles:["client"], profilePicture:socialUser.photoUrl};
+        let user: User = {id:socialUser.id, email: socialUser.email, firstName: socialUser.firstName, lastName: socialUser.lastName, role:"client", profilePicture:socialUser.photoUrl};
         this.login(user)
       });
     }
@@ -72,7 +72,8 @@ export class LoginComponent implements OnInit {
       .then((res:any) => console.log(res))
       .catch((err: any) => that.openErrorToast = true)*/
       //OVO IDE U THEN
-      let user: User = {email: "email", firstName: "First", lastName: "Last", city:"city", phoneNumber:"phone", roles:["client"], profilePicture:"profilePic"};
+      //sa backa se dobije user koji ima roles: string[], ukoliko je len 1 onda se samo ta rola dodeli useru na frontu, u suprotnom se ponudi korisniku da izabre kao ko zeli da se prijavi i ta rola se doda useru na frontu
+      let user: User = {id:"1", email: "email", firstName: "First", lastName: "Last", city:"city", phoneNumber:"phone", role:"client", profilePicture:"profilePic"};
       this.login(user);
     }
     else {
