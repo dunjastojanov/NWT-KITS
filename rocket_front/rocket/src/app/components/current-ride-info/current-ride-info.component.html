@@ -1,4 +1,4 @@
-<div class="p-7 px-16" *ngIf="currentRide">
+<div class="p-7 px-16">
     <app-title title="Current ride" [subtitle]="'Your vehicle is arriving in ' + currentRide.minutesToCome + ' minutes'"></app-title>
     <div class="flex w-full justify-center gap-12 mt-12">
 
@@ -12,18 +12,18 @@
             <checkbox [checked]="currentRide.isSplitFair" [disabled]="true" text="Split fair"></checkbox>        
         </div>
 
-        <div class="flex flex-col items-center py-5 border-l border-r w-1/4">
+        <div class="flex flex-col gap-3 items-center py-5 border-l border-r w-1/4">
             <div class="flex flex-col items-start">
                 <img alt="driver-image" class="profile-image self-center !m-0" src="./assets/fiona.jpg"/>
                 <field title="Driver" [value]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName"></field>
             </div>
-            <secondary-button text="Report" class="mt-7 self-center" (click)="toggleReportModal()"></secondary-button>
+            <secondary-button text="Report" class="mt-10 self-center" (click)="toggleReportModal()"></secondary-button>
         </div>
 
         <div class="flex flex-col items-start py-5 w-1/4">
             <field title="Start" [value]="currentRide.startAddress"></field>
             <field title="End" [value]="currentRide.endAddress"></field>
-            <field title="Price" [value]="currentRide.price.toString()"></field>
+            <field title="Price" [value]="currentRide.price.toString() + ' €'"></field>
             <field title="Estimated time" [value]="currentRide.estimatedTime"></field>
             
             <div class='mt-8 flex items-center gap-2 rounded-full px-3 py-2 hover:cursor-pointer group' [class]="currentRide.isRouteFavorite ? 'favorite' : 'not-favorite'">
