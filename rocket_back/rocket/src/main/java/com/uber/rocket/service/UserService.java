@@ -1,6 +1,7 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
+import com.uber.rocket.entity.user.ConformationTokenType;
 import com.uber.rocket.entity.user.RoleType;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.repository.UserRepository;
@@ -55,9 +56,13 @@ public class UserService {
         user.getRoles().add(roleService.getRoleByUserRole(RoleType.CLIENT));
         userRepository.save(user);
         String token = UUID.randomUUID().toString();
-        confirmationTokenService.createToken(user, token);
-        emailService.sendRegistrationEmail(user, token);
-        return "Successful registration";
+        confirmationTokenService.createToken(user, token, ConformationTokenType.REGISTRATION_CONFORMATION_TOKEN);
+        try {
+            emailService.sendEmailByEmailSubject(user, token, EmailSubject.REGISTRATION_EMAIL);
+        } catch (IOException e) {
+            throw new RuntimeException("There was some error in sending email");
+        }
+        return "Successful registration. We have sent an email for registration verification";
     }
 
     private User createUser(UserDTO userDTO) {
@@ -68,10 +73,11 @@ public class UserService {
         return user;
     }
 
-    public void validateRegistrationToken(String token) {
+    public ResponseObjectDTO validateRegistrationToken(String token) {
         User user = confirmationTokenService.validateToken(token);
         user.setBlocked(false);
         userRepository.save(user);
+        return new ResponseObjectDTO(null, "Successful registration verification");
     }
 
     public LoggedUserDTO getLoggedUser(HttpServletRequest request) {
@@ -116,5 +122,24 @@ public class UserService {
         user.setPassword(bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword()));
         userRepository.save(user);
         return "Successful password update";
+    }
+
+    public Object validatePasswordToken(ForgetPasswordDTO forgetPasswordDTO) {
+        User user = confirmationTokenService.validateToken(forgetPasswordDTO.getToken());
+        user.setPassword(bCryptPasswordEncoder.encode(forgetPasswordDTO.getPassword()));
+        userRepository.save(user);
+        return "Successful password update";
+    }
+
+    public Object confirmForgottenPassword(String email) {
+        User user = getUserByEmail(email);
+        String token = String.valueOf(UUID.randomUUID());
+        confirmationTokenService.createToken(user, token, ConformationTokenType.PASSWORD_CONFORMATION_TOKEN);
+        try {
+            emailService.sendEmailByEmailSubject(user, token, EmailSubject.FORGOTTEN_PASSWORD);
+        } catch (IOException e) {
+            throw new RuntimeException("There was some error in sending email");
+        }
+        return "We have sent an email for changing password";
     }
 }

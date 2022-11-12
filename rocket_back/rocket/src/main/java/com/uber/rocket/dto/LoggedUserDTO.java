@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +17,7 @@ public class LoggedUserDTO {
     private String lastName;
     private String phoneNumber;
     private String city;
+    private ArrayList<String> roles;
 
     public LoggedUserDTO(User user) {
         this.email = user.getEmail();
@@ -23,5 +26,7 @@ public class LoggedUserDTO {
         this.lastName = user.getLastName();
         this.phoneNumber = user.getPhoneNumber();
         this.city = user.getCity();
+        this.roles = new ArrayList<>();
+        user.getRoles().forEach(role -> this.roles.add(role.getRole()));
     }
 }
