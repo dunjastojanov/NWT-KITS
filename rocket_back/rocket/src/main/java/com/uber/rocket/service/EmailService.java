@@ -77,7 +77,6 @@ public class EmailService {
 
     private static String getEmailFileBySubject(EmailSubject emailSubject) {
         try {
-
             switch (emailSubject) {
                 case REGISTRATION_EMAIL -> {
                     return Files.readString(Path.of(REGISTRATION_EMAIL_PATH));
@@ -104,7 +103,7 @@ public class EmailService {
             }
             case FORGOTTEN_PASSWORD -> {
                 //TODO treba namestiti stranicu za menjanje lozinke i putanje
-                return content.replace("%s", "putanja do stranice sa menjanje lozinke" + token);
+                return content.replace("%s", "http://localhost:4200/reset/password/" + token);
             }
             default -> {
                 return "";
