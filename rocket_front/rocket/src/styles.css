@@ -12,7 +12,9 @@ html, body {
   filter: brightness(0) invert(1);
 }
 
-
+.profile-image {
+    @apply md:w-[150px] lg:w-[200px] md:h-[150px] lg:h-[200px] rounded-full object-cover mx-auto my-5
+}
 
 p, h1, h2, h3 {
     cursor: default;

@@ -1,0 +1,7 @@
+.not-favorite {
+    @apply bg-tertiary-light text-secondary-light hover:text-tertiary-light hover:bg-secondary-dark
+}
+
+.favorite {
+    @apply text-tertiary-light bg-secondary-dark hover:bg-tertiary-light hover:text-secondary-dark
+}
