@@ -68,6 +68,15 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/{email}")
+    public ResponseEntity<?> blockUser(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok(userService.blockUser(email));
+        } catch (RuntimeException | IOException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
     @GetMapping("/image/{email}")
     public ResponseEntity<?> getProfilePicture(@PathVariable String email) {
         try {

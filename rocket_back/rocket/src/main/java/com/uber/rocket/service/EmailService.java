@@ -26,6 +26,8 @@ public class EmailService {
     @Value(value = "${spring.mail.username}")
     private String sender;
 
+    //TODO treba namestiti bolji html template
+    private static final String BLOCKED_NOTIFICATION_EMAIL_PATH = "src/main/resources/templates/blocked_notification.html";
     private final static String REGISTRATION_EMAIL_PATH = "src/main/resources/templates/registration_verification.html";
     private final static String PASSWORD_EMAIL_PATH = "src/main/resources/templates/forgotten_password.html";
     private final static String APP_LOGO_PATH = "src/main/resources/static/images/email/logo.png";
@@ -63,23 +65,44 @@ public class EmailService {
     }
 
 
-    public void sendEmailByEmailSubject(User user, String token, EmailSubject emailSubject) throws IOException {
+    public void sendEmailWithTokenByEmailSubject(User user, String token, EmailSubject emailSubject) throws IOException {
         EmailDataDTO emailDataDTO = new EmailDataDTO();
         emailDataDTO.setRecipient(user.getEmail());
-        String content = getEmailContentByEmailSubject(token, emailSubject);
+        String content = getEmailFileBySubject(emailSubject);
+        content = injectTokenInEmail(token, emailSubject, content);
         emailDataDTO.setContent(content);
-        emailDataDTO.setSubject(emailSubject.label);
+        emailDataDTO.setSubject(emailSubject.getLabel());
         sendEmail(emailDataDTO);
     }
 
-    private static String getEmailContentByEmailSubject(String token, EmailSubject emailSubject) throws IOException {
+    private static String getEmailFileBySubject(EmailSubject emailSubject) {
+        try {
+
+            switch (emailSubject) {
+                case REGISTRATION_EMAIL -> {
+                    return Files.readString(Path.of(REGISTRATION_EMAIL_PATH));
+                }
+                case FORGOTTEN_PASSWORD -> {
+                    return Files.readString(Path.of(PASSWORD_EMAIL_PATH));
+                }
+                case BLOCKED_NOTIFICATION -> {
+                    return Files.readString(Path.of(BLOCKED_NOTIFICATION_EMAIL_PATH));
+                }
+                default -> {
+                    return "";
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(emailSubject.getLabel() + " haven't been loaded");
+        }
+    }
+
+    private static String injectTokenInEmail(String token, EmailSubject emailSubject, String content) {
         switch (emailSubject) {
             case REGISTRATION_EMAIL -> {
-                String content = Files.readString(Path.of(REGISTRATION_EMAIL_PATH));
                 return content.replace("%s", "https://localhost:8443/api/user/confirm/" + token);
             }
             case FORGOTTEN_PASSWORD -> {
-                String content = Files.readString(Path.of(PASSWORD_EMAIL_PATH));
                 //TODO treba namestiti stranicu za menjanje lozinke i putanje
                 return content.replace("%s", "putanja do stranice sa menjanje lozinke" + token);
             }
@@ -87,5 +110,14 @@ public class EmailService {
                 return "";
             }
         }
+    }
+
+    public void sendEmailByEmailSubject(User user, EmailSubject emailSubject) {
+        EmailDataDTO emailDataDTO = new EmailDataDTO();
+        emailDataDTO.setRecipient(user.getEmail());
+        String content = getEmailFileBySubject(emailSubject);
+        emailDataDTO.setContent(content);
+        emailDataDTO.setSubject(emailSubject.getLabel());
+        sendEmail(emailDataDTO);
     }
 }
