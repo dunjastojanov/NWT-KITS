@@ -1,9 +1,12 @@
 package com.uber.rocket.dto;
 
-public enum EmailSubject {
-    REGISTRATION_EMAIL("Registration email"), FORGOTTEN_PASSWORD("Forgotten password email");
+import lombok.Getter;
 
-    public final String label;
+@Getter
+public enum EmailSubject {
+    REGISTRATION_EMAIL("Registration email"), FORGOTTEN_PASSWORD("Forgotten password email"), BLOCKED_NOTIFICATION("Blocked notification");
+
+    private final String label;
 
     EmailSubject(String label) {
         this.label = label;

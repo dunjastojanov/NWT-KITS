@@ -69,6 +69,7 @@ public class SecurityConfiguration {
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/logged").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/user/**").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/image/**").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
+        http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/user/**").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
 
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/confirm/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();

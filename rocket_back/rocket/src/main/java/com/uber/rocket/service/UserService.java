@@ -58,7 +58,7 @@ public class UserService {
         String token = UUID.randomUUID().toString();
         confirmationTokenService.createToken(user, token, ConformationTokenType.REGISTRATION_CONFORMATION_TOKEN);
         try {
-            emailService.sendEmailByEmailSubject(user, token, EmailSubject.REGISTRATION_EMAIL);
+            emailService.sendEmailWithTokenByEmailSubject(user, token, EmailSubject.REGISTRATION_EMAIL);
         } catch (IOException e) {
             throw new RuntimeException("There was some error in sending email");
         }
@@ -136,10 +136,20 @@ public class UserService {
         String token = String.valueOf(UUID.randomUUID());
         confirmationTokenService.createToken(user, token, ConformationTokenType.PASSWORD_CONFORMATION_TOKEN);
         try {
-            emailService.sendEmailByEmailSubject(user, token, EmailSubject.FORGOTTEN_PASSWORD);
+            emailService.sendEmailWithTokenByEmailSubject(user, token, EmailSubject.FORGOTTEN_PASSWORD);
         } catch (IOException e) {
             throw new RuntimeException("There was some error in sending email");
         }
         return "We have sent an email for changing password";
+    }
+
+    public Object blockUser(String email) throws IOException {
+        User user = getUserByEmail(email);
+        if (user.isBlocked())
+            throw new RuntimeException("User is already blocked");
+        user.setBlocked(true);
+        userRepository.save(user);
+        emailService.sendEmailByEmailSubject(user, EmailSubject.BLOCKED_NOTIFICATION);
+        return "User is successfully blocked";
     }
 }
