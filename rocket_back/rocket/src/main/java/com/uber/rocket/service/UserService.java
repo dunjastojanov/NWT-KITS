@@ -47,29 +47,28 @@ public class UserService {
         return client.get();
     }
 
-    public String register(UserDTO userDTO) throws IllegalAccessException {
-        userDTO.validateClassAttributes(userDTO);
-        Optional<User> client = userRepository.findByEmail(userDTO.getEmail());
-        if (client.isPresent())
+    public String register(UserRegistrationDTO userRegistrationDTO) throws IllegalAccessException {
+        userRegistrationDTO.validateClassAttributes(userRegistrationDTO);
+        Optional<User> user = userRepository.findByEmail(userRegistrationDTO.getEmail());
+        if (user.isPresent())
             throw new RuntimeException("User with this email already exists");
-        User user = createUser(userDTO);
-        user.getRoles().add(roleService.getRoleByUserRole(RoleType.CLIENT));
-        userRepository.save(user);
+        User client = createUser(userRegistrationDTO);
+        client.getRoles().add(roleService.getRoleByUserRole(RoleType.CLIENT));
+        userRepository.save(client);
         String token = UUID.randomUUID().toString();
-        confirmationTokenService.createToken(user, token, ConformationTokenType.REGISTRATION_CONFORMATION_TOKEN);
+        confirmationTokenService.createToken(client, token, ConformationTokenType.REGISTRATION_CONFORMATION_TOKEN);
         try {
-            emailService.sendEmailWithTokenByEmailSubject(user, token, EmailSubject.REGISTRATION_EMAIL);
+            emailService.sendEmailWithTokenByEmailSubject(client, token, EmailSubject.REGISTRATION_EMAIL);
         } catch (IOException e) {
             throw new RuntimeException("There was some error in sending email");
         }
         return "Successful registration. We have sent an email for registration verification";
     }
 
-    private User createUser(UserDTO userDTO) {
-        User user = new User(userDTO);
+    private User createUser(UserRegistrationDTO userRegistrationDTO) {
+        User user = new User(userRegistrationDTO);
         user.setRoles(new ArrayList<>());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(new ArrayList<>());
         return user;
     }
 
@@ -151,5 +150,16 @@ public class UserService {
         userRepository.save(user);
         emailService.sendEmailByEmailSubject(user, EmailSubject.BLOCKED_NOTIFICATION);
         return "User is successfully blocked";
+    }
+
+    public User registerDriver(DriverRegistrationDTO driverRegistrationDTO) {
+        Optional<User> user = userRepository.findByEmail(driverRegistrationDTO.getEmail());
+        if (user.isPresent())
+            throw new RuntimeException("User with this email already exists");
+        User driver = createUser(new UserRegistrationDTO(driverRegistrationDTO));
+        driver.getRoles().add(roleService.getRoleByUserRole(RoleType.DRIVER));
+        driver.setBlocked(false);
+        userRepository.save(driver);
+        return driver;
     }
 }

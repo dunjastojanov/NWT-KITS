@@ -1,9 +1,6 @@
 package com.uber.rocket.controller;
 
-import com.uber.rocket.dto.ForgetPasswordDTO;
-import com.uber.rocket.dto.PasswordChangeDTO;
-import com.uber.rocket.dto.UpdateUserDataDTO;
-import com.uber.rocket.dto.UserDTO;
+import com.uber.rocket.dto.*;
 import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,9 +20,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userDTO));
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userRegistrationDTO));
         } catch (RuntimeException | IllegalAccessException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }

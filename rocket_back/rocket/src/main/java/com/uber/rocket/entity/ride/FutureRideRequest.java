@@ -24,4 +24,6 @@ public class FutureRideRequest {
     @NotNull
     private int paid;
 
+    //TODO additional feature, putanja (od-do)
+
 }

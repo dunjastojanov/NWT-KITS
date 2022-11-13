@@ -1,7 +1,7 @@
 package com.uber.rocket.entity.user;
 
 
-import com.uber.rocket.dto.UserDTO;
+import com.uber.rocket.dto.UserRegistrationDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -36,13 +36,13 @@ public class User {
     private String city;
     private boolean blocked;
 
-    public User(UserDTO userDTO) {
-        this.setEmail(userDTO.getEmail());
-        this.setPassword(userDTO.getPassword());
-        this.setFirstName(userDTO.getFirstName());
-        this.setLastName(userDTO.getLastName());
-        this.setCity(userDTO.getCity());
-        this.setPhoneNumber(userDTO.getPhoneNumber());
+    public User(UserRegistrationDTO userRegistrationDTO) {
+        this.setEmail(userRegistrationDTO.getEmail());
+        this.setPassword(userRegistrationDTO.getPassword());
+        this.setFirstName(userRegistrationDTO.getFirstName());
+        this.setLastName(userRegistrationDTO.getLastName());
+        this.setCity(userRegistrationDTO.getCity());
+        this.setPhoneNumber(userRegistrationDTO.getPhoneNumber());
         this.setBlocked(true);
     }
 }
