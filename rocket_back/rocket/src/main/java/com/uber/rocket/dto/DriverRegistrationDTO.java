@@ -3,18 +3,16 @@ package com.uber.rocket.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.lang.reflect.Field;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO implements ValidateClassAttributes<UserDTO> {
-
+@Data
+public class DriverRegistrationDTO {
     @Email(message = "Wrong email format", regexp = ".+[@].+[\\.].+")
     @NotBlank(message = "Email is mandatory")
     private String email;
@@ -31,12 +29,13 @@ public class UserDTO implements ValidateClassAttributes<UserDTO> {
     private String phoneNumber;
     @NotBlank(message = "City is mandatory")
     private String city;
-
-    @SneakyThrows
-    @Override
-    public void validateClassAttributes(UserDTO userDTO) {
-        for (Field f : getClass().getDeclaredFields())
-            if (f.get(this) == null || f.get(this).equals(""))
-                throw new IllegalAccessException("Parameter " + f.getName() + " is mandatory.");
-    }
+    @NotBlank(message = "Vehicle type is mandatory")
+    @Pattern(regexp = "suv|limousine|hatchback|caravan|coupe|convertible|minivan|pickup", message = "Vehicle types can only be suv,limousine,hatchback,caravan,coupe,convertible,minivan or pickup")
+    private String vehicleType;
+    @NotNull(message = "Pet friendly feature must be assigned")
+    private boolean petFriendly;
+    @NotNull(message = "Kid friendly feature must be assigned")
+    private boolean kidFriendly;
 }
+
+

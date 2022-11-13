@@ -1,9 +1,9 @@
 package com.uber.rocket.entity.user;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,11 +18,13 @@ public class Vehicle {
     private Long id;
 
     @OneToOne
-    @NotNull
     private User driver;
 
-    @NotNull
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private VehicleType vehicleType;
+
+    @ManyToMany
+    private List<VehicleAdditionalFeatures> features;
 
     @Enumerated(EnumType.STRING)
     private VehicleStatus status;
