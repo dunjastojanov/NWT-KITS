@@ -67,6 +67,11 @@ import { CurrentRideInfoComponent } from './components/current-ride-info/current
 import { FieldComponent } from './components/current-ride-info/field/field.component';
 import { CheckboxComponent } from './shared/utils/checkbox/checkbox.component';
 import { ReportDriverComponent } from './modals/report-driver/report-driver.component';
+import { CurrentRideRouteComponent } from './components/current-ride-info/current-ride-route/current-ride-route.component';
+import { CurrentRidePalsComponent } from './components/current-ride-info/current-ride-pals/current-ride-pals.component';
+import { ButtonIconComponent } from './shared/utils/buttons/button-icon/button-icon.component';
+import { CurrentRideClientComponent } from './components/current-ride-info/current-ride-client/current-ride-client.component';
+import { CurrentRideButtonsComponent } from './components/current-ride-info/current-ride-buttons/current-ride-buttons.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +117,7 @@ import { ReportDriverComponent } from './modals/report-driver/report-driver.comp
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent, CurrentRideRouteComponent, CurrentRidePalsComponent, ButtonIconComponent, CurrentRideClientComponent, CurrentRideButtonsComponent
   ],
   imports: [
     BrowserModule,

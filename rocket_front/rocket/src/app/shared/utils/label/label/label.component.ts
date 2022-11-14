@@ -8,9 +8,13 @@ import { Component, OnInit, Input } from '@angular/core'
 export class LabelComponent implements OnInit {
   @Input('text') text!: string;
   @Input('icon') icon?: string;
+  @Input('gap') gap: string;
+  @Input('dimension') dimension: string;
 
-
-  constructor() {  }
+  constructor() { 
+    this.gap="gap-5";
+    this.dimension = "!w-6 !h-6"
+   }
 
   ngOnInit(): void {
   }

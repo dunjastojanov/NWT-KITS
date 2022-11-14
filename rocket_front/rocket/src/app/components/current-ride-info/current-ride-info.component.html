@@ -1,37 +1,30 @@
 <div class="p-7 px-16">
-    <app-title title="Current ride" [subtitle]="'Your vehicle is arriving in ' + currentRide.minutesToCome + ' minutes'"></app-title>
+    <div class="flex justify-center items-center relative">
+        <app-title title="Current ride" [subtitle]="'Your vehicle is arriving in ' + currentRide.minutesToCome + ' minutes'"></app-title>
+        <current-ride-buttons [user]="!currentRide.client"></current-ride-buttons>     
+    </div>
     <div class="flex w-full justify-center gap-12 mt-12">
 
         <div class="flex flex-col items-center gap-4 py-5 w-1/4">
-            <div class="flex flex-col items-start">
-                <p class="font-light text-lg"> Riding with </p>
-                <div *ngFor="let pal of currentRide.ridingPals" >
-                    <field class="!text-xl" [title]="pal.email!" [value]="pal.firstName + ' ' + pal.lastName"></field>  
-                </div>
-            </div>
-            <checkbox [checked]="currentRide.isSplitFair" [disabled]="true" text="Split fair"></checkbox>        
+            <current-ride-client *ngIf="currentRide.client" [client]="currentRide.client"></current-ride-client>
+            <current-ride-pals [pals]="currentRide.ridingPals"></current-ride-pals>
+            <checkbox *ngIf="!currentRide.client" [checked]="currentRide.isSplitFair!" [disabled]="true" text="Split fair"></checkbox>  
         </div>
 
         <div class="flex flex-col gap-3 items-center py-5 border-l border-r w-1/4">
-            <div class="flex flex-col items-start">
+            <div class="flex flex-col items-start mt-auto">
                 <img alt="driver-image" class="profile-image self-center !m-0" src="./assets/fiona.jpg"/>
-                <field title="Driver" [value]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName"></field>
+                <field title="Driver" [subValue]="currentRide.driver.email" [value]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName" icon="./assets/icons/driver.png"></field>
             </div>
-            <secondary-button text="Report" class="mt-10 self-center" (click)="toggleReportModal()"></secondary-button>
         </div>
 
-        <div class="flex flex-col items-start py-5 w-1/4">
-            <field title="Start" [value]="currentRide.startAddress"></field>
-            <field title="End" [value]="currentRide.endAddress"></field>
-            <field title="Price" [value]="currentRide.price.toString() + ' €'"></field>
-            <field title="Estimated time" [value]="currentRide.estimatedTime"></field>
-            
-            <div class='mt-8 flex items-center gap-2 rounded-full px-3 py-2 hover:cursor-pointer group' [class]="currentRide.isRouteFavorite ? 'favorite' : 'not-favorite'">
-                <icon path="./assets/icons/favorite.png" class="w-9 h-9" [class]="currentRide.isRouteFavorite ? 'white-icon group-hover:brightness-0' : 'group-hover:brightness-200 group-hover:invert'"></icon> 
-                <p class="font-light text-lg hover:cursor-pointer"> {{currentRide.isRouteFavorite? 'Unmark' : 'Mark'}} route as favorite</p>
-            </div>
-         
-        </div>
+        <current-ride-route class="w-1/4" 
+            [startAddress]="currentRide.startAddress" 
+            [endAddress]="currentRide.endAddress"
+            [price]="currentRide.price.toString()"
+            [estimatedTime]="currentRide.estimatedTime"
+            >
+        </current-ride-route>
     </div>
     <report-driver [open]="openReportModal" [closeFunc]="toggleReportModal" [driver]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName"></report-driver>
 </div>

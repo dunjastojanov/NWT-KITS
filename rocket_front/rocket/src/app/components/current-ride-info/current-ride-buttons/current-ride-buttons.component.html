@@ -1,0 +1,8 @@
+<div *ngIf="user" class="absolute right-32 bottom-6 flex gap-3">
+    <button-icon icon="./assets/icons/favorite.png" text="Mark route as favorite "></button-icon>
+    <button-icon icon="./assets/icons/exclamation-mark.png" text="Report driver"></button-icon>
+    <button-icon icon="./assets/icons/cancel.png" text="Cancel ride"></button-icon>
+</div> 
+<div *ngIf="!user" class="absolute right-32 flex gap-3 bottom-6">
+    <secondary-button text="Start patching the ride"></secondary-button>
+</div> 
