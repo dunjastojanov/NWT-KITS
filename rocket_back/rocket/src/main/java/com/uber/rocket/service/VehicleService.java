@@ -38,4 +38,8 @@ public class VehicleService {
         if (driverRegistrationDTO.isPetFriendly())
             vehicle.getFeatures().add(additionalFeaturesService.getFeatureByName(AdditionalVehicleFeature.PET_FRIENDLY));
     }
+
+    public Object getDriversByFilter(int size, int number, String filter) {
+        return userService.getDriversByFilter(size, number, filter);
+    }
 }
