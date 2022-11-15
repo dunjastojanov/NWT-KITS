@@ -21,9 +21,9 @@ export class CurrentRidePageComponent implements OnInit {
     //this.currentRide = this.rideService.getCurrentRide();
     this.currentRide = {
       rideId: "1", 
-      //client: {id: "1", firstName: "Client", lastName:"Cl", email:"clclclc@gmail.com", profilePicture:"profpic"},
+      client: {id: "1", firstName: "Client", lastName:"Cl", email:"clclclc@gmail.com", profilePicture:"profpic"},
       ridingPals: [ {id: "1", firstName: "One", lastName:"Pal", email:"palone@gmail.com", profilePicture:"profpic"}, {id: "1", firstName: "Tu", lastName:"Pal", email:"paltwo@gmail.com", profilePicture:"profpic"} ],
-      isSplitFair: true,
+      //isSplitFair: true,
       driver: {id: "1", firstName: "Best", lastName:"Driver", profilePicture:"profpic", email:'bestDriver@gmail.com'},
       startAddress: "Adresa broj 1",
       endAddress: "Adresa broj 2",
@@ -31,7 +31,7 @@ export class CurrentRidePageComponent implements OnInit {
       estimatedTime: "1h 15min",
       vehicleLocation: {longitude: 40.151515615, latitude: 42.156516515},
       minutesToCome: 7,
-      isRouteFavorite: false
+      //isRouteFavorite: false
     }
   }
 }

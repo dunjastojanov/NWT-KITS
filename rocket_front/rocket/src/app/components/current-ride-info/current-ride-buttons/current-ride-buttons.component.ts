@@ -7,9 +7,31 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CurrentRideButtonsComponent implements OnInit {
   @Input('user') user!: boolean
-  constructor() { }
+  @Input('isFavorite') isFavorite: boolean
+  @Input('driverName') driverName?: string;
+
+  openReportModal = false;
+
+  patchingRide = false;
+  dissablePatch = false;
+
+  constructor() {
+    this.isFavorite = false;
+   }
 
   ngOnInit(): void {
   }
 
+  toggleReportModal() {
+    console.log(this.openReportModal)
+    this.openReportModal = !this.openReportModal;
+  }
+
+  togglePatchingRide() {
+    if (!this.patchingRide) {
+      this.patchingRide = true;
+    } else {
+      this.dissablePatch = true;
+    }
+  }
 }

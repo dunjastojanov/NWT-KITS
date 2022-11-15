@@ -7,8 +7,10 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class SecondaryComponent implements OnInit {
   @Input('text') text!: String;
-  
-  constructor() { }
+  @Input('disabled') disabled: boolean;
+  constructor() {
+    this.disabled = false;
+   }
 
   ngOnInit(): void {
   }

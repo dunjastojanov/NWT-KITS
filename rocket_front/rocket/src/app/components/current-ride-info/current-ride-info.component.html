@@ -1,7 +1,7 @@
 <div class="p-7 px-16">
     <div class="flex justify-center items-center relative">
         <app-title title="Current ride" [subtitle]="'Your vehicle is arriving in ' + currentRide.minutesToCome + ' minutes'"></app-title>
-        <current-ride-buttons [user]="!currentRide.client"></current-ride-buttons>     
+        <current-ride-buttons [user]="!currentRide.client" [isFavorite]="currentRide.isRouteFavorite!" [driverName]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName"></current-ride-buttons>     
     </div>
     <div class="flex w-full justify-center gap-12 mt-12">
 
@@ -26,5 +26,4 @@
             >
         </current-ride-route>
     </div>
-    <report-driver [open]="openReportModal" [closeFunc]="toggleReportModal" [driver]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName"></report-driver>
 </div>

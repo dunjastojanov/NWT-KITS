@@ -1,0 +1,23 @@
+.not-fill {
+    @apply hover:bg-secondary-dark
+}
+
+.fill {
+    @apply bg-secondary-dark 
+}
+
+.not-fill-icon {
+    @apply group-hover:brightness-200 group-hover:invert
+ }
+ 
+ .fill-icon {
+     @apply brightness-200 invert
+ }
+
+.not-fill-text {
+   @apply group-hover:text-white
+}
+
+.fill-text {
+    @apply group-hover:text-white
+}
