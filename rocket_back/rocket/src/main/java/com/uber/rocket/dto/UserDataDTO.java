@@ -10,7 +10,7 @@ import java.util.ArrayList;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoggedUserDTO {
+public class UserDataDTO {
     private String email;
     private String profilePicture;
     private String firstName;
@@ -19,7 +19,7 @@ public class LoggedUserDTO {
     private String city;
     private ArrayList<String> roles;
 
-    public LoggedUserDTO(User user) {
+    public UserDataDTO(User user) {
         this.email = user.getEmail();
         this.profilePicture = user.getProfilePicture();
         this.firstName = user.getFirstName();

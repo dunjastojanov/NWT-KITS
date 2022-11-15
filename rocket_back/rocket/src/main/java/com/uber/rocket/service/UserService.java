@@ -2,10 +2,12 @@ package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.user.ConformationTokenType;
+import com.uber.rocket.entity.user.Role;
 import com.uber.rocket.entity.user.RoleType;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +41,7 @@ public class UserService {
 
     @Autowired
     private ImageService imageService;
+
 
     public User getUserByEmail(String email) {
         Optional<User> client = userRepository.findByEmail(email);
@@ -79,15 +82,15 @@ public class UserService {
         return new ResponseObjectDTO(null, "Successful registration verification");
     }
 
-    public LoggedUserDTO getLoggedUser(HttpServletRequest request) {
-        return new LoggedUserDTO(getUserFromRequest(request));
+    public UserDataDTO getLoggedUser(HttpServletRequest request) {
+        return new UserDataDTO(getUserFromRequest(request));
     }
 
     public ResponseObjectDTO updateUser(HttpServletRequest request, UpdateUserDataDTO updateUserDataDTO) {
         updateUserDataDTO.validateClassAttributes(updateUserDataDTO);
         User user = getUserFromRequest(request);
         updateUserData(user, updateUserDataDTO);
-        return new ResponseObjectDTO(new LoggedUserDTO(user), "Successful update of user");
+        return new ResponseObjectDTO(new UserDataDTO(user), "Successful update of user");
     }
 
     private void updateUserData(User user, UpdateUserDataDTO updateUserDataDTO) {
@@ -161,5 +164,10 @@ public class UserService {
         driver.setBlocked(false);
         userRepository.save(driver);
         return driver;
+    }
+
+    public Object getClientByFilter(int size, int number, String filter) {
+        Role role = roleService.getRoleByUserRole(RoleType.CLIENT);
+        return userRepository.searchAllByFirstNameStartingWithOrLastNameStartingWithAndRolesContains(filter, filter, role, PageRequest.of(number, size));
     }
 }

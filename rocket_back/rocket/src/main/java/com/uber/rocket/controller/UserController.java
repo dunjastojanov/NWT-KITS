@@ -1,6 +1,9 @@
 package com.uber.rocket.controller;
 
-import com.uber.rocket.dto.*;
+import com.uber.rocket.dto.ForgetPasswordDTO;
+import com.uber.rocket.dto.PasswordChangeDTO;
+import com.uber.rocket.dto.UpdateUserDataDTO;
+import com.uber.rocket.dto.UserRegistrationDTO;
 import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +49,16 @@ public class UserController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
+
+    @GetMapping
+    public ResponseEntity<?> getClients(@RequestParam int number, @RequestParam int size, @RequestParam String filter) {
+        try {
+            return ResponseEntity.ok(userService.getClientByFilter(size, number, filter));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
 
     @PutMapping("/password")
     public ResponseEntity<?> updatePassword(@Valid @RequestBody PasswordChangeDTO passwordChangeDTO, HttpServletRequest request) {
