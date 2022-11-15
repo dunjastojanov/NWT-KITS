@@ -8,6 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class FieldComponent implements OnInit {
   @Input('title') title!: string;
   @Input('value') value!: string;
+  @Input('subValue') subValue? : string;
+  @Input('icon') titleIcon? : string;
   constructor() { }
 
   ngOnInit(): void {

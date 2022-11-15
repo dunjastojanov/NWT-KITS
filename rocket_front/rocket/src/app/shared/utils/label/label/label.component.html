@@ -1,4 +1,4 @@
-<div class="flex gap-5 justify-start items-center h-8">
-    <icon *ngIf="icon" [path]="icon" class="!w-6 !h-6"></icon>
+<div class="flex justify-start items-center h-8" [class]="gap">
+    <icon *ngIf="icon" [path]="icon" [class]="dimension"></icon>
     <p class="text-gray-700">{{text}}</p>
 </div>

@@ -9,8 +9,6 @@ import { CurrentRide } from 'src/app/interfaces/Ride';
 export class CurrentRideInfoComponent implements OnInit {
   @Input('ride') currentRide! : CurrentRide;
   
-  openReportModal = false;
-
   constructor() { 
   }
 
@@ -18,8 +16,4 @@ export class CurrentRideInfoComponent implements OnInit {
     
   }
 
-  toggleReportModal() {
-    console.log(this.openReportModal)
-    this.openReportModal = !this.openReportModal;
-  }
 }

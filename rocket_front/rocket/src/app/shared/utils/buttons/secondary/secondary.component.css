@@ -1,5 +1,5 @@
 @tailwind base;
 
 .secondary-button {
-    @apply text-white bg-secondary-light hover:bg-secondary-medium focus:ring-4 focus:outline-none focus:ring-secondary-dark rounded-full text-center font-medium px-7 py-2.5
+    @apply text-white disabled:opacity-50 bg-secondary-light hover:bg-secondary-medium focus:ring-4 focus:outline-none focus:ring-secondary-dark rounded-full text-center font-medium px-7 py-2.5
 }

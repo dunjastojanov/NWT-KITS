@@ -2,8 +2,9 @@ import { sideUser } from "./User";
 
 export interface CurrentRide {
     rideId: string;
+    client?: sideUser;
     ridingPals: sideUser[];
-    isSplitFair: boolean;
+    isSplitFair?: boolean;
     driver: sideUser;
     startAddress: string;
     endAddress: string;
@@ -11,5 +12,5 @@ export interface CurrentRide {
     estimatedTime: string;
     vehicleLocation: {longitude: number, latitude: number};
     minutesToCome: number;
-    isRouteFavorite: boolean;
+    isRouteFavorite?: boolean;
 }
