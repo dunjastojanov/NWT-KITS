@@ -2,7 +2,6 @@ package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.user.ConformationTokenType;
-import com.uber.rocket.entity.user.Role;
 import com.uber.rocket.entity.user.RoleType;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.repository.UserRepository;
@@ -166,8 +165,14 @@ public class UserService {
         return driver;
     }
 
+    public Object getDriversByFilter(int size, int number, String filter) {
+        String role = RoleType.DRIVER.name();
+        return userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter, PageRequest.of(number, size));
+    }
+
     public Object getClientByFilter(int size, int number, String filter) {
-        Role role = roleService.getRoleByUserRole(RoleType.CLIENT);
-        return userRepository.searchAllByFirstNameStartingWithOrLastNameStartingWithAndRolesContains(filter, filter, role, PageRequest.of(number, size));
+        String role = RoleType.CLIENT.name();
+        return userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter, PageRequest.of(number, size));
+
     }
 }
