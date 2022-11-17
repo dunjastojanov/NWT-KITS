@@ -92,7 +92,7 @@ public class UserService {
         return new ResponseObjectDTO(new UserDataDTO(user), "Successful update of user");
     }
 
-    private void updateUserData(User user, UpdateUserDataDTO updateUserDataDTO) {
+    public void updateUserData(User user, UpdateUserDataDTO updateUserDataDTO) {
         user.setCity(updateUserDataDTO.getCity());
         user.setFirstName(updateUserDataDTO.getFirstName());
         user.setLastName(updateUserDataDTO.getLastName());
@@ -100,7 +100,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private User getUserFromRequest(HttpServletRequest request) {
+    public User getUserFromRequest(HttpServletRequest request) {
         String email = authService.getUsernameFromJWT(request.getHeader(AUTHORIZATION));
         return getUserByEmail(email);
     }
