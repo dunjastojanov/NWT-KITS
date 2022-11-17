@@ -42,7 +42,7 @@ public class UserController {
 
 
     @PutMapping
-    public ResponseEntity<?> updateAttributes(@Valid @RequestBody UpdateUserDataDTO updateUserDataDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateUserData(@Valid @RequestBody UpdateUserDataDTO updateUserDataDTO, HttpServletRequest request) {
         try {
             return ResponseEntity.ok(userService.updateUser(request, updateUserDataDTO));
         } catch (RuntimeException exception) {

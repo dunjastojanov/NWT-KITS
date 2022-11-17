@@ -67,12 +67,13 @@ public class SecurityConfiguration {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/logged").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
-        http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/user/**").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name());
+        http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/user/**").hasAnyAuthority(RoleType.CLIENT.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/vehicle/**").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/image/**").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
         http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/user/**").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/vehicle").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
+        http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/vehicle/**").hasAnyAuthority(RoleType.DRIVER.name());
 
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/confirm/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();

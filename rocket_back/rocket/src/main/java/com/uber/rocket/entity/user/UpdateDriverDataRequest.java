@@ -10,18 +10,15 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table
-public class EditInfoRequest {
+public class UpdateDriverDataRequest {
     @Id
-    @SequenceGenerator(name = "edit_info_request_sequence", sequenceName = "edit_info_request_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "edit_info_request_sequence")
+    @SequenceGenerator(name = "update_driver_data_request_sequence", sequenceName = "update_driver_data_request_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "update_driver_data_request_sequence")
     @Setter(AccessLevel.NONE)
     private Long id;
 
     @NotNull
     private Long driverId;
-
-    @NotNull
-    private String imageUrl;
 
     @NotNull
     private String firstName;

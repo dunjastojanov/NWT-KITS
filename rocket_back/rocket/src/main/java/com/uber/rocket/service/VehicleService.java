@@ -1,11 +1,14 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.DriverRegistrationDTO;
+import com.uber.rocket.dto.UpdateUserDataDTO;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,6 +23,15 @@ public class VehicleService {
 
     @Autowired
     private VehicleAdditionalFeaturesService additionalFeaturesService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private UpdateDriverDataRequestService updateDriverDataRequestService;
+
+    @Autowired
+    private UpdateDriverPictureRequestService updateDriverPictureRequestService;
 
     public Object registerDriver(DriverRegistrationDTO driverRegistrationDTO) throws IOException {
         User driver = userService.registerDriver(driverRegistrationDTO);
@@ -46,5 +58,19 @@ public class VehicleService {
 
     public Object getDriversByFilter(int size, int number, String filter) {
         return userService.getDriversByFilter(size, number, filter);
+    }
+
+    public Object updateDriverData(HttpServletRequest request, UpdateUserDataDTO updateUserDataDTO) {
+        updateUserDataDTO.validateClassAttributes(updateUserDataDTO);
+        User user = userService.getUserFromRequest(request);
+        updateDriverDataRequestService.createDriverDataRequest(updateUserDataDTO, user.getId());
+        return "Successfully requested the update of drivers information";
+    }
+
+    public Object updateDriverPicture(HttpServletRequest request, MultipartFile multipart) throws IOException {
+        User user = userService.getUserFromRequest(request);
+        String newProfilePath = imageService.saveProfilePicture(multipart, String.valueOf(user.getId()));
+        updateDriverPictureRequestService.createDriverPictureRequest(newProfilePath, user.getId());
+        return "Successfully requested the update of driver profile picture";
     }
 }
