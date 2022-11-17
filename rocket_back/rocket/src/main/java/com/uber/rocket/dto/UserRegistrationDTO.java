@@ -32,13 +32,13 @@ public class UserRegistrationDTO implements ValidateClassAttributes<UserRegistra
     @NotBlank(message = "City is mandatory")
     private String city;
 
-    public UserRegistrationDTO(DriverRegistrationDTO driverRegistrationDTO) {
+    public UserRegistrationDTO(DriverRegistrationDTO driverRegistrationDTO, String password) {
         this.email = driverRegistrationDTO.getEmail();
-        this.password = driverRegistrationDTO.getPassword();
-        this.firstName = driverRegistrationDTO.getFirstName();
         this.lastName = driverRegistrationDTO.getLastName();
         this.phoneNumber = driverRegistrationDTO.getPhoneNumber();
         this.city = driverRegistrationDTO.getCity();
+        this.firstName = driverRegistrationDTO.getFirstName();
+        this.password = password;
     }
 
     @SneakyThrows

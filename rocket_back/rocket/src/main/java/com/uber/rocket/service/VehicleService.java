@@ -6,6 +6,7 @@ import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Service
@@ -20,8 +21,13 @@ public class VehicleService {
     @Autowired
     private VehicleAdditionalFeaturesService additionalFeaturesService;
 
-    public Object registerDriver(DriverRegistrationDTO driverRegistrationDTO) {
+    public Object registerDriver(DriverRegistrationDTO driverRegistrationDTO) throws IOException {
         User driver = userService.registerDriver(driverRegistrationDTO);
+        createVehicle(driverRegistrationDTO, driver);
+        return "Successful driver registration";
+    }
+
+    private void createVehicle(DriverRegistrationDTO driverRegistrationDTO, User driver) {
         Vehicle vehicle = new Vehicle();
         vehicle.setDriver(driver);
         vehicle.setStatus(VehicleStatus.INACTIVE);
@@ -29,7 +35,6 @@ public class VehicleService {
         vehicle.setFeatures(new ArrayList<>());
         setAdditionalFeatures(vehicle, driverRegistrationDTO);
         vehicleRepository.save(vehicle);
-        return "Successful driver registration";
     }
 
     public void setAdditionalFeatures(Vehicle vehicle, DriverRegistrationDTO driverRegistrationDTO) {

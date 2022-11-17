@@ -26,10 +26,7 @@ public class EmailService {
     @Value(value = "${spring.mail.username}")
     private String sender;
 
-    //TODO treba namestiti bolji html template
-    private static final String BLOCKED_NOTIFICATION_EMAIL_PATH = "src/main/resources/templates/blocked_notification.html";
-    private final static String REGISTRATION_EMAIL_PATH = "src/main/resources/templates/registration_verification.html";
-    private final static String PASSWORD_EMAIL_PATH = "src/main/resources/templates/forgotten_password.html";
+    private final static String REPLACEMENT_STRING = "%s";
     private final static String APP_LOGO_PATH = "src/main/resources/static/images/email/logo.png";
     private final static String FACEBOOK_LOGO_PATH = "src/main/resources/static/images/email/facebook.png";
     private final static String INSTAGRAM_LOGO_PATH = "src/main/resources/static/images/email/instagram.png";
@@ -66,57 +63,51 @@ public class EmailService {
 
 
     public void sendEmailWithTokenByEmailSubject(User user, String token, EmailSubject emailSubject) throws IOException {
-        EmailDataDTO emailDataDTO = new EmailDataDTO();
-        emailDataDTO.setRecipient(user.getEmail());
-        String content = getEmailFileBySubject(emailSubject);
-        content = injectTokenInEmail(token, emailSubject, content);
+        EmailDataDTO emailDataDTO = buildEmailDTO(user, emailSubject);
+        String content = loadEmailTemplate(emailSubject);
+        content = modifyEmailContent(token, emailSubject, content);
         emailDataDTO.setContent(content);
-        emailDataDTO.setSubject(emailSubject.getLabel());
         sendEmail(emailDataDTO);
     }
 
-    private static String getEmailFileBySubject(EmailSubject emailSubject) {
+    public void sendEmailByEmailSubject(User user, EmailSubject emailSubject) {
+        EmailDataDTO emailDataDTO = buildEmailDTO(user, emailSubject);
+        String content = loadEmailTemplate(emailSubject);
+        emailDataDTO.setContent(content);
+        sendEmail(emailDataDTO);
+    }
+
+
+    private static String loadEmailTemplate(EmailSubject emailSubject) {
         try {
-            switch (emailSubject) {
-                case REGISTRATION_EMAIL -> {
-                    return Files.readString(Path.of(REGISTRATION_EMAIL_PATH));
-                }
-                case FORGOTTEN_PASSWORD -> {
-                    return Files.readString(Path.of(PASSWORD_EMAIL_PATH));
-                }
-                case BLOCKED_NOTIFICATION -> {
-                    return Files.readString(Path.of(BLOCKED_NOTIFICATION_EMAIL_PATH));
-                }
-                default -> {
-                    return "";
-                }
-            }
+            return Files.readString(Path.of(emailSubject.getPath()));
         } catch (IOException e) {
             throw new RuntimeException(emailSubject.getLabel() + " haven't been loaded");
         }
     }
 
-    private static String injectTokenInEmail(String token, EmailSubject emailSubject, String content) {
+    private static String modifyEmailContent(String injectedString, EmailSubject emailSubject, String content) {
         switch (emailSubject) {
             case REGISTRATION_EMAIL -> {
-                return content.replace("%s", "https://localhost:8443/api/user/confirm/" + token);
+                return content.replace(REPLACEMENT_STRING, "https://localhost:8443/api/user/confirm/" + injectedString);
             }
             case FORGOTTEN_PASSWORD -> {
-                //TODO treba namestiti stranicu za menjanje lozinke i putanje
-                return content.replace("%s", "http://localhost:4200/reset/password/" + token);
+                return content.replace(REPLACEMENT_STRING, "http://localhost:4200/reset/password/" + injectedString);
+            }
+            case DRIVER_REGISTRATION_NOTIFICATION -> {
+                return content.replace(REPLACEMENT_STRING, injectedString);
             }
             default -> {
-                return "";
+                return content;
             }
         }
     }
 
-    public void sendEmailByEmailSubject(User user, EmailSubject emailSubject) {
+    private static EmailDataDTO buildEmailDTO(User user, EmailSubject emailSubject) {
         EmailDataDTO emailDataDTO = new EmailDataDTO();
         emailDataDTO.setRecipient(user.getEmail());
-        String content = getEmailFileBySubject(emailSubject);
-        emailDataDTO.setContent(content);
-        emailDataDTO.setSubject(emailSubject.getLabel());
-        sendEmail(emailDataDTO);
+        emailDataDTO.setSubject(emailSubject.getPath());
+        return emailDataDTO;
     }
+
 }
