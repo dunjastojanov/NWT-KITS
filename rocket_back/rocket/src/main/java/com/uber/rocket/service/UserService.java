@@ -154,13 +154,15 @@ public class UserService {
         return "User is successfully blocked";
     }
 
-    public User registerDriver(DriverRegistrationDTO driverRegistrationDTO) {
+    public User registerDriver(DriverRegistrationDTO driverRegistrationDTO) throws IOException {
         Optional<User> user = userRepository.findByEmail(driverRegistrationDTO.getEmail());
         if (user.isPresent())
             throw new RuntimeException("User with this email already exists");
-        User driver = createUser(new UserRegistrationDTO(driverRegistrationDTO));
+        String password = "Driver" + driverRegistrationDTO.getFirstName() + "123";
+        User driver = createUser(new UserRegistrationDTO(driverRegistrationDTO,password));
         driver.getRoles().add(roleService.getRoleByUserRole(RoleType.DRIVER));
         driver.setBlocked(false);
+        emailService.sendEmailWithTokenByEmailSubject(driver, password,EmailSubject.DRIVER_REGISTRATION_NOTIFICATION);
         userRepository.save(driver);
         return driver;
     }

@@ -17,9 +17,9 @@ public class DriverRegistrationDTO {
     @NotBlank(message = "Email is mandatory")
     private String email;
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$", message = "Password must contain at least one upper letter, at least one lower latter and at least one digit")
-    @NotBlank(message = "Password is mandatory")
-    private String password;
+//    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$", message = "Password must contain at least one upper letter, at least one lower latter and at least one digit")
+//    @NotBlank(message = "Password is mandatory")
+//    private String password;
 
     @NotBlank(message = "First name is mandatory")
     private String firstName;

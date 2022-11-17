@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/vehicle")
@@ -19,7 +20,7 @@ public class VehicleController {
     public ResponseEntity<?> registerDriver(@Valid @RequestBody DriverRegistrationDTO driverRegistrationDTO) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(vehicleService.registerDriver(driverRegistrationDTO));
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException | IOException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
