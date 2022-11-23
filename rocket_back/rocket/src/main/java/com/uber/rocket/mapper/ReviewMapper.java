@@ -10,10 +10,6 @@ public class ReviewMapper implements Mapper<Review, ReviewDTO>{
     @Autowired
     private SimpleUserMapper simpleUserMapper;
 
-    @Override
-    public Review mapToEntity(ReviewDTO reviewDTO) {
-        return null;
-    }
 
     @Override
     public ReviewDTO mapToDto(Review review) {
