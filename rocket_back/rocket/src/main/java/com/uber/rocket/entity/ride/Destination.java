@@ -19,4 +19,12 @@ public class Destination {
 
     @NotNull
     private String city;
+    @NotNull
+    private String street;
+    @NotNull
+    private String number;
+
+    public String toString() {
+        return  street + " " + number + ", " + city;
+    }
 }
