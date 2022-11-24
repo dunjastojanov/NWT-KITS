@@ -68,4 +68,9 @@ public class Ride {
     public Destination getEnd() {
         return destinations.stream().toList().get(destinations.size()-1);
     }
+
+    public double getLength() {
+        return 1.1;
+        //TODO: Add logic for calculating length of ride
+    }
 }
