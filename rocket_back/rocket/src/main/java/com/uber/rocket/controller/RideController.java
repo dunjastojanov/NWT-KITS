@@ -1,13 +1,11 @@
 package com.uber.rocket.controller;
 
+import com.uber.rocket.dto.DatePeriod;
 import com.uber.rocket.pagination.Pagination;
 import com.uber.rocket.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,6 +34,24 @@ public class RideController {
     public ResponseEntity<?> getAllRideHistory(@PathVariable int page, @PathVariable int size) {
         try {
             return ResponseEntity.ok(pagination.paginate(rideService.getAllRideHistory(), size, page));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/report/{type}")
+    public ResponseEntity<?> getReportForUser(HttpServletRequest request, @PathVariable String type, @RequestParam DatePeriod datePeriod) {
+        try {
+            return ResponseEntity.ok(rideService.getReportForUser(request, type, datePeriod));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/report/all/{type}")
+    public ResponseEntity<?> getReportForAll(@PathVariable String type, @RequestParam DatePeriod datePeriod) {
+        try {
+            return ResponseEntity.ok(rideService.getReportForAll(type, datePeriod));
         } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
