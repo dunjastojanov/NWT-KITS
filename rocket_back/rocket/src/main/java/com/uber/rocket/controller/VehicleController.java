@@ -1,6 +1,7 @@
 package com.uber.rocket.controller;
 
 import com.uber.rocket.dto.DriverRegistrationDTO;
+import com.uber.rocket.dto.EvaluationDTO;
 import com.uber.rocket.dto.UpdateUserDataDTO;
 import com.uber.rocket.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,26 @@ public class VehicleController {
     @PutMapping("/image")
     public ResponseEntity<?> updateDriverProfile(@RequestParam("file") MultipartFile multipart, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(vehicleService.updateDriverPicture(request, multipart));
+            return ResponseEntity.ok(vehicleService.requestDriverPictureUpdate(request, multipart));
         } catch (RuntimeException | IOException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @PostMapping("/validate/image")
+    public ResponseEntity<?> validateVehiclePictureUpdate(@RequestBody EvaluationDTO evaluationDTO) {
+        try {
+            return ResponseEntity.ok(vehicleService.validateVehiclePictureUpdate(evaluationDTO));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<?> validateVehicleDataUpdate(@Valid @RequestBody EvaluationDTO evaluationDTO) {
+        try {
+            return ResponseEntity.ok(vehicleService.validateVehicleDataUpdate(evaluationDTO));
+        } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }

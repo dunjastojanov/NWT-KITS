@@ -3,6 +3,7 @@ package com.uber.rocket.service;
 import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.user.ConformationTokenType;
 import com.uber.rocket.entity.user.RoleType;
+import com.uber.rocket.entity.user.UpdateDriverPictureRequest;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,10 +160,10 @@ public class UserService {
         if (user.isPresent())
             throw new RuntimeException("User with this email already exists");
         String password = "Driver" + driverRegistrationDTO.getFirstName() + "123";
-        User driver = createUser(new UserRegistrationDTO(driverRegistrationDTO,password));
+        User driver = createUser(new UserRegistrationDTO(driverRegistrationDTO, password));
         driver.getRoles().add(roleService.getRoleByUserRole(RoleType.DRIVER));
         driver.setBlocked(false);
-        emailService.sendEmailWithTokenByEmailSubject(driver, password,EmailSubject.DRIVER_REGISTRATION_NOTIFICATION);
+        emailService.sendEmailWithTokenByEmailSubject(driver, password, EmailSubject.DRIVER_REGISTRATION_NOTIFICATION);
         userRepository.save(driver);
         return driver;
     }
@@ -176,5 +177,19 @@ public class UserService {
         String role = RoleType.CLIENT.name();
         return userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter, PageRequest.of(number, size));
 
+    }
+
+    public User getById(Long driverId) {
+        Optional<User> user = userRepository.findById(driverId);
+        if (user.isEmpty())
+            throw new RuntimeException("There is no driver with this id");
+        return user.get();
+    }
+
+
+    public void updateDriverPicture(UpdateDriverPictureRequest driverPictureRequest) {
+        User user = getById(driverPictureRequest.getDriverId());
+        user.setProfilePicture(driverPictureRequest.getProfilePicture());
+        userRepository.save(user);
     }
 }

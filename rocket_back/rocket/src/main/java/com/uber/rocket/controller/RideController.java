@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/ride")
 public class RideController {
     private final RideService rideService;
+    //TODO ispravi na koriscenje PageRequest ako moze
     private final Pagination pagination;
 
     @Autowired

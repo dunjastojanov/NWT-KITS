@@ -3,6 +3,7 @@ package com.uber.rocket.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
@@ -41,5 +42,12 @@ public class ImageService {
         } catch (IOException exception) {
             throw new IOException("Could not save image file: " + file.getOriginalFilename(), exception);
         }
+    }
+
+    public void deletePicture(String profilePicture) {
+        String folderPathInStatic = STATIC_PATH.substring(0, STATIC_PATH.length() - 1) + profilePicture;
+        File file = new File(folderPathInStatic);
+        if (!file.delete())
+            throw new RuntimeException("Picture isn't successfully deleted");
     }
 }
