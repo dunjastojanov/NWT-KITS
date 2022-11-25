@@ -32,4 +32,7 @@ public class UpdateDriverDataRequest {
     @NotNull
     private String city;
 
+    @NotNull
+    private boolean validated;
+
 }
