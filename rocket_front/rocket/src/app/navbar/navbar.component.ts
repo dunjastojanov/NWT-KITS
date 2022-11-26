@@ -4,7 +4,7 @@ import { User } from '../interfaces/User';
 import { LoggedUserAction, LoggedUserActionType } from '../shared/store/logged-user-slice/logged-user.actions';
 
 
-import { storeType } from '../shared/store/types';
+import { StoreType } from '../shared/store/types';
 
 @Component({
   selector: 'navbar',
@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
   showRegisterModal = false;
   user: User | null = null;
   
-  constructor(private store: Store<storeType>) {
+  constructor(private store: Store<StoreType>) {
     let loggedUserSlice = store.select('loggedUser');
     loggedUserSlice.subscribe(
       resData => {

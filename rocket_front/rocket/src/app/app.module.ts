@@ -62,6 +62,7 @@ import { MultiSelectWithIconsComponent } from './shared/utils/input/multi-select
 import { ErrorComponent } from './modals/error/error.component';
 import { SuccessComponent } from './modals/success/success.component';
 import { loggedUserReducer } from './shared/store/logged-user-slice/logged-user.reducer';
+import { destinationsReducer } from './shared/store/destinations-slice/destinations.reducer';
 import { CurrentRidePageComponent } from './page/current-ride-page/current-ride-page.component';
 import { CurrentRideInfoComponent } from './components/current-ride-info/current-ride-info.component';
 import { FieldComponent } from './components/current-ride-info/field/field.component';
@@ -72,6 +73,9 @@ import { CurrentRidePalsComponent } from './components/current-ride-info/current
 import { ButtonIconComponent } from './shared/utils/buttons/button-icon/button-icon.component';
 import { CurrentRideClientComponent } from './components/current-ride-info/current-ride-client/current-ride-client.component';
 import { CurrentRideButtonsComponent } from './components/current-ride-info/current-ride-buttons/current-ride-buttons.component';
+import { metaReducers } from './local-storage.service';
+import { InputDestinationComponent } from './components/routes/input-destination/input-destination.component';
+import { RouteService } from './components/routes/route.service';
 
 @NgModule({
   declarations: [
@@ -117,16 +121,18 @@ import { CurrentRideButtonsComponent } from './components/current-ride-info/curr
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent, CurrentRideRouteComponent, CurrentRidePalsComponent, ButtonIconComponent, CurrentRideClientComponent, CurrentRideButtonsComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent, CurrentRideRouteComponent, CurrentRidePalsComponent, ButtonIconComponent, CurrentRideClientComponent, CurrentRideButtonsComponent, InputDestinationComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    StoreModule.forRoot({loggedUser: loggedUserReducer}),
+    StoreModule.forRoot({loggedUser: loggedUserReducer, destinations: destinationsReducer}, { metaReducers }),
     SocialLoginModule
   ],
-  providers: [{
+  providers: [
+    RouteService, 
+    {
     provide: 'SocialAuthServiceConfig',
     useValue: {
       autoLogin: false, //keeps the user signed in
