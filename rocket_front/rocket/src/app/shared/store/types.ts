@@ -1,9 +1,16 @@
+import { Action } from "@ngrx/store";
+import { Destination } from "src/app/interfaces/Destination";
 import { User } from "src/app/interfaces/User"
 
-export type stateType = {
+export type LoggedUserStateType = {
     user: User | null;
 }
 
-export type storeType = {
-    loggedUser : stateType
+export type DestinationsStateType = {
+    destinations: Destination[]
+}
+
+export type StoreType = {
+    loggedUser : LoggedUserStateType
+    destinations: DestinationsStateType
 }

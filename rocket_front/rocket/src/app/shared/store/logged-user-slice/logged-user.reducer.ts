@@ -1,12 +1,12 @@
-import { stateType } from "../types";
+import { LoggedUserStateType } from "../types";
 import { LoggedUserAction, LoggedUserActionType } from "./logged-user.actions";
 
-const initialState: stateType = {
+const initialState: LoggedUserStateType = {
     user: null,
    
 }
 
-export const loggedUserReducer = (state: stateType = initialState, action: LoggedUserAction) => {
+export const loggedUserReducer = (state: LoggedUserStateType = initialState, action: LoggedUserAction) => {
     switch (action.type) {
         case LoggedUserActionType.LOGIN:
             return {

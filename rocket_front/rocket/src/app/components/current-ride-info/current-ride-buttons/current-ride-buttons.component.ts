@@ -23,7 +23,6 @@ export class CurrentRideButtonsComponent implements OnInit {
   }
 
   toggleReportModal() {
-    console.log(this.openReportModal)
     this.openReportModal = !this.openReportModal;
   }
 

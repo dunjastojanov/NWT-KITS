@@ -19,8 +19,8 @@
         </div>
 
         <current-ride-route class="w-1/4" 
-            [startAddress]="currentRide.startAddress" 
-            [endAddress]="currentRide.endAddress"
+            [startAddress]="currentRide.destinations[0].address" 
+            [endAddress]="currentRide.destinations[currentRide.destinations.length-1].address"
             [price]="currentRide.price.toString()"
             [estimatedTime]="currentRide.estimatedTime"
             >

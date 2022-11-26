@@ -1,3 +1,4 @@
+import { Destination } from "./Destination";
 import { sideUser } from "./User";
 
 export interface CurrentRide {
@@ -6,8 +7,7 @@ export interface CurrentRide {
     ridingPals: sideUser[];
     isSplitFair?: boolean;
     driver: sideUser;
-    startAddress: string;
-    endAddress: string;
+    destinations: Destination[]
     price: number;
     estimatedTime: string;
     vehicleLocation: {longitude: number, latitude: number};
