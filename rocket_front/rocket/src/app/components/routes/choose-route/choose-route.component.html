@@ -1,4 +1,14 @@
-<div class="p-4 flex flex-col gap-10">
-    <app-input class="w-96" text="Choose initial destination"></app-input>
-    <app-input text="Choose final destination"></app-input>
-</div>
+
+    <div class="p-4 pr-0 flex flex-col gap-3">
+        <div class="w-96 h-fit overflow-auto p-1 gap-3" style="max-height: 13rem !important;">
+            <input-destination *ngFor="let destination of this.destinations;" [index]="destination.index" [value]="destination.address" class="w-96"></input-destination>
+            <input-destination #newInput hidden></input-destination>   
+        </div>
+
+        <div (click)="addNewComponent()" class="w-fit flex items-center justify-items-center gap-2 hover:cursor-pointer hover:text-secondary-light">
+            <p class="font-bold text-3xl hover:cursor-pointer"> + </p>
+            <p class="font-light pt-1 hover:cursor-pointer"> Add destination</p>
+        </div>
+        
+    </div>
+

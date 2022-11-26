@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RouteService } from '../route.service';
 
 @Component({
   selector: 'calculate-show-routes',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalculateShowRoutesComponent implements OnInit {
 
-  constructor() { }
+  constructor(private service: RouteService ) { }
 
   ngOnInit(): void {
   }
 
+  onShow() {
+      this.service.setTrigger('trigger');
+  }
 }

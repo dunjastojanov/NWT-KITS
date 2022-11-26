@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import {FacebookLoginProvider, SocialAuthService, SocialUser} from '@abacritt/angularx-social-login';
 import { api } from 'src/app/shared/api/api';
 import { Store } from '@ngrx/store'
-import { storeType } from 'src/app/shared/store/types';
+import { StoreType } from 'src/app/shared/store/types';
 import { LoggedUserAction, LoggedUserActionType } from 'src/app/shared/store/logged-user-slice/logged-user.actions';
 import { User } from 'src/app/interfaces/User';
 
@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private socialAuthService: SocialAuthService,
-    private store: Store<storeType>) {
+    private store: Store<StoreType>) {
       this.email = '';
       this.password = '';
   }

@@ -1,9 +1,10 @@
 .not-fill {
-    @apply hover:bg-secondary-dark
+    @apply hover:bg-secondary-light
+
 }
 
 .fill {
-    @apply bg-secondary-dark 
+    @apply bg-secondary-light 
 }
 
 .not-fill-icon {

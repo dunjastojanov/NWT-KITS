@@ -7,7 +7,10 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class IconComponent implements OnInit {
   @Input('path') path!: string;
-  constructor() { }
+  @Input('bounce') bounce: boolean;
+  constructor() { 
+    this.bounce = true;
+  }
 
   ngOnInit(): void {
   }
