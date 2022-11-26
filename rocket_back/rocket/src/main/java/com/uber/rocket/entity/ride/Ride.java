@@ -35,7 +35,7 @@ public class Ride {
 
     @OneToMany
     @NotNull
-    private Collection<Destination> destination;
+    private Collection<Destination> destinations;
 
     @OneToMany
     @NotNull
@@ -54,4 +54,23 @@ public class Ride {
     @NotNull
     private int price;
 
+    @NotNull
+    private int duration;
+
+    public User getDriver() {
+        return  vehicle.getDriver();
+    }
+
+    public Destination getStart() {
+        return destinations.stream().toList().get(0);
+    }
+
+    public Destination getEnd() {
+        return destinations.stream().toList().get(destinations.size()-1);
+    }
+
+    public double getLength() {
+        return 1.1;
+        //TODO: Add logic for calculating length of ride
+    }
 }

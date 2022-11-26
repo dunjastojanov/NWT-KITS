@@ -21,6 +21,7 @@ public class UpdateUserDataDTO implements ValidateClassAttributes<UpdateUserData
     @NotBlank(message = "City is mandatory")
     private String city;
 
+
     @SneakyThrows
     @Override
     public void validateClassAttributes(UpdateUserDataDTO updateUserDataDTO) {

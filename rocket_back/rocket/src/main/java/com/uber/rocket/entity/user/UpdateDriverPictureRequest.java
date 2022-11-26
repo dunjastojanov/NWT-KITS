@@ -23,5 +23,6 @@ public class UpdateDriverPictureRequest {
     @NotNull
     private String profilePicture;
 
-
+    @NotNull
+    private boolean validated;
 }
