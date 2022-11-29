@@ -7,7 +7,8 @@ const initialState: DestinationsStateType = {
         {index: 0, address:''},
         {index: 1, address:''}
     ],
-   
+    estimated_route_distance: 0,
+    estimated_route_time: 0
 }
 
 export const destinationsReducer = (state: DestinationsStateType = initialState, action: DestinationsAction) => {
@@ -41,6 +42,16 @@ export const destinationsReducer = (state: DestinationsStateType = initialState,
                 ...state,
                 destinations: finalStateUpdate
             };
+        case DestinationsActionType.ADD_ROUTE_DISTANCE:
+            return {
+                ...state,
+                estimated_route_distance: <number>action.payload
+            };
+        case DestinationsActionType.ADD_ROUTE_TIME:
+        return {
+            ...state,
+            estimated_route_time: <number>action.payload
+        };
         default: {
             return state;
         }

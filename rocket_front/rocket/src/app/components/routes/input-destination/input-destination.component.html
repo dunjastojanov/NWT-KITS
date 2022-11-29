@@ -1,4 +1,5 @@
 <div class="flex gap-2 w-fit items-center">
     <app-input class="w-80" [(prop)]="destination" [value]="value" (focusout)="onFocusOut($event)"></app-input>
+    <button-icon *ngIf="this.value !== ''" (click)="clearInput()" icon="./assets/icons/cancel.png" dimension="!w-6 !h-6" groupHoverDimension="!w-4 !h-4"></button-icon>
     <button-icon *ngIf="this.index > 1" (click)="removeItem()" icon="./assets/icons/garbage-bin.png" dimension="!w-6 !h-6" groupHoverDimension="!w-4 !h-4"></button-icon>
 </div>

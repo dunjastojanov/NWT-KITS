@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store'
 import { StoreType } from 'src/app/shared/store/types';
 import { LoggedUserAction, LoggedUserActionType } from 'src/app/shared/store/logged-user-slice/logged-user.actions';
 import { User } from 'src/app/interfaces/User';
+import { AxiosError } from 'axios';
 
 @Component({
   selector: 'login',
@@ -69,8 +70,12 @@ export class LoginComponent implements OnInit {
       encodedData.append("password", this.password)
       const that = this;
       /*api.post('/api/login', encodedData)
-      .then((res:any) => console.log(res))
-      .catch((err: any) => that.openErrorToast = true)*/
+      .then((res:any) => {
+        console.log(res)
+      })
+      .catch((err: AxiosError) => {
+        that.openErrorToast = true
+      })*/
       //OVO IDE U THEN
       //sa backa se dobije user koji ima roles: string[], ukoliko je len 1 onda se samo ta rola dodeli useru na frontu, u suprotnom se ponudi korisniku da izabre kao ko zeli da se prijavi i ta rola se doda useru na frontu
       let user: User = {id:"1", email: "email", firstName: "First", lastName: "Last", city:"city", phoneNumber:"phone", role:"client", profilePicture:"profilePic"};

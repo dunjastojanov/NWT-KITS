@@ -7,7 +7,9 @@ export type LoggedUserStateType = {
 }
 
 export type DestinationsStateType = {
-    destinations: Destination[]
+    destinations: Destination[],
+    estimated_route_time: number,
+    estimated_route_distance: number,
 }
 
 export type StoreType = {
