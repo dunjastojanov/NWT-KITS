@@ -43,4 +43,11 @@ export class InputDestinationComponent extends InputComponent {
   removeItem() {
     this.store.dispatch(new DestinationsAction(DestinationsActionType.REMOVE, this.index)) 
   }
+
+  clearInput() {
+    this.value = '';
+    this.destination = '';
+    this.lastDispatched = 'not empty'
+    this.setStore();
+  }
 }

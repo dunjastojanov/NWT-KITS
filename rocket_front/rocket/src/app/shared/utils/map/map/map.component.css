@@ -1,0 +1,6 @@
+.leaflet-right .leaflet-top .leaflet-bottom .leaflet-routing-alternatives-container{
+    width: 0px !important;
+    height: 0px !important;
+    z-index: -1000 !important;
+    display: none !important;
+}
