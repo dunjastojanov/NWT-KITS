@@ -1,0 +1,16 @@
+<li (click)="openFunc()" class="flex group items-center p-5 min-w-fit max-w-2xl hover:bg-tertiary-medium cursor-pointer">
+  <div class="flex items-center mr-4">
+    <img alt="profile-image" class="w-14 h-14 rounded-full object-cover" src="{{notification.imageLink}}" />
+  </div>
+    <div class="flex items-center">
+      <div class="flex flex-col">
+        <p>{{notification.text}}</p>
+        <p [ngClass]="{'unread': notification.read==false}" class="ml-auto text-xs font-medium text-gray-400 group-hover:text-gray-700">
+          {{dateString}}
+        </p>
+      </div>
+      <svg *ngIf="!notification.read" class="ml-5 fill-primary-light" height="10" width="10">
+        <circle cx="5" cy="5" r="5"/>
+      </svg>
+    </div>
+</li>

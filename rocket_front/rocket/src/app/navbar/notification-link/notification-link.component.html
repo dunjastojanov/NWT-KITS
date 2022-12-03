@@ -1,0 +1,15 @@
+<a class="navbar-link" (click)="toggle()">Notifications</a>
+
+<div *ngIf="isOpen" class="absolute bg-white z-50">
+  <ul>
+    <li *ngFor="let notification of scheduledRideNotifications">
+        <scheduled-ride-notification [notification]="notification"></scheduled-ride-notification>
+    </li>
+    <li *ngFor="let notification of updateDriverNotifications">
+      <update-driver-notification [notification]="notification"></update-driver-notification>
+    </li>
+  </ul>
+
+</div>
+
+
