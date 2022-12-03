@@ -1,0 +1,36 @@
+<notification-item [openFunc]="toggleOpen" [notification]="notification"></notification-item>
+
+<div *ngIf="open" class="modal !w-1/2 -translate-x-36">
+  <div class="modal-container  w-full py-8 px-2">
+
+    <button type="button" (click)="toggleOpen()" class="modal-close-button">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+    </button>
+
+    <div class="flex flex-col justify-center items-center relative">
+
+      <app-medium-title [text]="'Notification'"></app-medium-title>
+
+      <div class="flex items-center justify-center mt-6">
+        <img alt="notification.driver-image" class="profile-image self-center !m-0" src="{{notification.driver.profilePicture}}"/>
+      </div>
+
+      <div class="flex w-full justify-center gap-10 mt-8">
+        <app-info title="First name" [info]="notification.driver.firstName"></app-info>
+        <app-info title="Last name" [info]="notification.driver.lastName"></app-info>
+        <app-info title="City" [info]="notification.driver.city"></app-info>
+        <app-info title="Phone number" [info]="notification.driver.phoneNumber"></app-info>
+      </div>
+
+      <div class="flex justify-center gap-10 mt-4">
+        <secondary-button (click)="toggleOpen()" class="mt-7" text="Deny changes"></secondary-button>
+        <primary-button (click)="toggleOpen()" class="mt-7" text="Accept changes"></primary-button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
