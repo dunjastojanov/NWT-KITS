@@ -1,0 +1,51 @@
+<notification-item [openFunc]="toggleOpen" [notification]="notification"></notification-item>
+
+<div *ngIf="open" class="modal !w-3/5 -translate-x-60">
+
+  <div class="modal-container  w-full py-8 px-2">
+
+    <button type="button" (click)="toggleOpen()" class="modal-close-button">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+    </button>
+
+    <div class="flex flex-col justify-center items-center relative">
+
+      <app-medium-title [text]="'Notification'"></app-medium-title>
+
+      <div class="flex w-full justify-center gap-12 mt-12">
+
+        <div *ngIf="notification.ride.ridingPals.length > 0 || notification.ride.client" class="flex flex-col items-center gap-4 py-5 w-1/4">
+          <current-ride-client *ngIf="notification.ride.client" [client]="notification.ride.client"></current-ride-client>
+          <div *ngIf="notification.ride.ridingPals.length > 0">
+            <current-ride-pals [pals]="notification.ride.ridingPals"></current-ride-pals>
+            <checkbox *ngIf="!notification.ride.client" [checked]="notification.ride.isSplitFair!" [disabled]="true" text="Split fair"></checkbox>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-3 items-center py-5 border-l border-r w-1/4">
+          <div class="flex flex-col items-start mt-auto">
+            <img alt="driver-image" class="profile-image self-center !m-0" src="{{notification.imageLink}}"/>
+            <field title="Driver" [subValue]="notification.ride.driver.email"
+                   [value]="notification.ride.driver.firstName + ' ' + notification.ride.driver.lastName"
+                   icon="./assets/icons/driver.png"></field>
+          </div>
+        </div>
+
+        <current-ride-route class="w-1/4"
+                            [startAddress]="notification.ride.destinations[0].address"
+                            [endAddress]="notification.ride.destinations[notification.ride.destinations.length-1].address"
+                            [price]="notification.ride.price.toString()"
+                            [estimatedTime]="notification.ride.estimatedTime"
+        >
+        </current-ride-route>
+      </div>
+
+      <secondary-button class="mt-7" text="OK" (click)="toggleOpen()"></secondary-button>
+    </div>
+
+  </div>
+</div>
+
+
+<div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+
