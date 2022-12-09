@@ -1,45 +1,40 @@
-import {Component, OnInit} from '@angular/core';
-import {User} from "../../../interfaces/User";
-
+import { Component, OnInit } from '@angular/core';
+import { User } from '../../../interfaces/User';
 
 @Component({
   selector: 'app-drivers',
   templateUrl: './drivers.component.html',
-  styleUrls: ['./drivers.component.css']
+  styleUrls: ['./drivers.component.css'],
 })
 export class DriversComponent implements OnInit {
-
-  constructor() {
-  }
+  constructor() {}
 
   openRegisterDriver: boolean = false;
 
   toggleOpenRegisterDriver = () => {
-    this.openRegisterDriver =!this.openRegisterDriver;
-  }
+    this.openRegisterDriver = !this.openRegisterDriver;
+  };
 
-  drivers: Array<User> = [{
-    firstName: "Kevin",
-    lastName: "Ball",
-    phoneNumber: "235-47851-96",
-    city: "Chicago",
-    status: "active",
-    role: "driver",
-    profileImage: "assets/kev.webp"
-    }, ...Array(7).fill(
+  drivers: Array<User> = [
     {
-      firstName: "Kevin",
-      lastName: "Ball",
-      phoneNumber: "235-47851-96",
-      city: "Chicago",
-      status: "inactive",
-      role: "driver",
-      profileImage: "assets/kev.webp"
-    }
-  )]
+      firstName: 'Kevin',
+      lastName: 'Ball',
+      phoneNumber: '235-47851-96',
+      city: 'Chicago',
+      status: 'active',
+      role: 'driver',
+      profileImage: 'assets/kev.webp',
+    },
+    ...Array(7).fill({
+      firstName: 'Kevin',
+      lastName: 'Ball',
+      phoneNumber: '235-47851-96',
+      city: 'Chicago',
+      status: 'inactive',
+      role: 'driver',
+      profileImage: 'assets/kev.webp',
+    }),
+  ];
 
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

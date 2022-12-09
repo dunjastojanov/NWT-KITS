@@ -77,6 +77,7 @@ import { metaReducers } from './local-storage.service';
 import { InputDestinationComponent } from './components/routes/input-destination/input-destination.component';
 import { RouteService } from './components/routes/route.service';
 import { RouteInfoComponent } from './components/routes/route-info/route-info.component';
+import { ChooseRoleComponent } from './modals/choose-role/choose-role.component';
 
 @NgModule({
   declarations: [
@@ -122,7 +123,7 @@ import { RouteInfoComponent } from './components/routes/route-info/route-info.co
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent, CurrentRideRouteComponent, CurrentRidePalsComponent, ButtonIconComponent, CurrentRideClientComponent, CurrentRideButtonsComponent, InputDestinationComponent, RouteInfoComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent, CurrentRideRouteComponent, CurrentRidePalsComponent, ButtonIconComponent, CurrentRideClientComponent, CurrentRideButtonsComponent, InputDestinationComponent, RouteInfoComponent, ChooseRoleComponent
   ],
   imports: [
     BrowserModule,
