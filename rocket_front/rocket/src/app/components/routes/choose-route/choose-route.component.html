@@ -1,7 +1,7 @@
 
     <div class="p-4 pr-0 flex flex-col gap-3">
         <div class="w-[26rem] h-fit overflow-auto p-1 gap-3" style="max-height: 13rem !important;">
-            <input-destination *ngFor="let destination of this.destinations;" [index]="destination.index" [value]="destination.address" class="w-96"></input-destination>
+            <input-destination *ngFor="let destination of this.destinations;" [showBin]="this.destinations.length > 2" [index]="destination.index" [value]="destination.address" class="w-96"></input-destination>
             <input-destination #newInput hidden></input-destination>   
         </div>
 
