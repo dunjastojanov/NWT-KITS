@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { SocialLoginModule, GoogleLoginProvider, FacebookLoginProvider } from '@abacritt/angularx-social-login';
+import {
+  SocialLoginModule,
+  GoogleLoginProvider,
+  FacebookLoginProvider,
+} from '@abacritt/angularx-social-login';
 import { AuthGuardService } from './auth-guard.service';
 import { AppRoutingModule } from './app-routing.module';
-import { StoreModule } from '@ngrx/store'
+import { StoreModule } from '@ngrx/store';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomepageComponent } from './page/homepage/homepage.component';
@@ -78,6 +82,7 @@ import { InputDestinationComponent } from './components/routes/input-destination
 import { RouteService } from './components/routes/route.service';
 import { RouteInfoComponent } from './components/routes/route-info/route-info.component';
 import { ChooseRoleComponent } from './modals/choose-role/choose-role.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -123,34 +128,70 @@ import { ChooseRoleComponent } from './modals/choose-role/choose-role.component'
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent, CurrentRideRouteComponent, CurrentRidePalsComponent, ButtonIconComponent, CurrentRideClientComponent, CurrentRideButtonsComponent, InputDestinationComponent, RouteInfoComponent, ChooseRoleComponent
+    WordCeoComponent,
+    StatisticsComponent,
+    AdminPageComponent,
+    DriversComponent,
+    ClientsComponent,
+    UserCardComponent,
+    SearchComponent,
+    UserInfoComponent,
+    IconButtonSecondaryComponent,
+    AdminHistoryComponent,
+    AdminStatisticsComponent,
+    RegisterDriverComponent,
+    MultiSelectWithIconsComponent,
+    ErrorComponent,
+    SuccessComponent,
+    CurrentRidePageComponent,
+    CurrentRideInfoComponent,
+    FieldComponent,
+    CheckboxComponent,
+    ReportDriverComponent,
+    CurrentRideRouteComponent,
+    CurrentRidePalsComponent,
+    ButtonIconComponent,
+    CurrentRideClientComponent,
+    CurrentRideButtonsComponent,
+    InputDestinationComponent,
+    RouteInfoComponent,
+    ChooseRoleComponent,
   ],
   imports: [
+    DragDropModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    StoreModule.forRoot({loggedUser: loggedUserReducer, destinations: destinationsReducer}, { metaReducers }),
-    SocialLoginModule
+    StoreModule.forRoot(
+      { loggedUser: loggedUserReducer, destinations: destinationsReducer },
+      { metaReducers }
+    ),
+    SocialLoginModule,
   ],
   providers: [
-    RouteService, 
+    RouteService,
     {
-    provide: 'SocialAuthServiceConfig',
-    useValue: {
-      autoLogin: false, //keeps the user signed in
-      providers: [
-        {
-          id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider('863688763477-8llkkdmr3a6nf9m1hbubp7atv69eniu3.apps.googleusercontent.com') // your client id
-        },
-        {
-          id: FacebookLoginProvider.PROVIDER_ID,
-          provider: new FacebookLoginProvider('863688763477-8llkkdmr3a6nf9m1hbubp7atv69eniu3.apps.googleusercontent.com')
-        }
-      ]
-    }
-  },
-    AuthGuardService],
-  bootstrap: [AppComponent]
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false, //keeps the user signed in
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '863688763477-8llkkdmr3a6nf9m1hbubp7atv69eniu3.apps.googleusercontent.com'
+            ), // your client id
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider(
+              '863688763477-8llkkdmr3a6nf9m1hbubp7atv69eniu3.apps.googleusercontent.com'
+            ),
+          },
+        ],
+      },
+    },
+    AuthGuardService,
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

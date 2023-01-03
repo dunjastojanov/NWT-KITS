@@ -54,43 +54,46 @@ export class RegisterComponent implements OnInit {
       if (success) {
         this.toggleSuccessToast();
       } else {
-        this.errorMessage = 'Korisnik sa unetim mailom vec postoji';
+        this.errorMessage = 'User with this email already registered.';
         this.toggleErrorToast();
       }
     } else {
-      this.errorMessage = 'Nevalidni podaci';
       this.toggleErrorToast();
     }
   };
   valid = (): boolean => {
     if (!/^.+[@].+[\.].+$/.test(this.email)) {
-      console.log('email');
+      this.errorMessage =
+        'Invalid format of email. Please enter email in format: username@domain.com.';
       return false;
     }
     if (
       !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,20}$/.test(this.password)
     ) {
-      console.log('password');
+      this.errorMessage =
+        'Inavlid format of password. Password must be at least 8 characters long and contain at least one capital letter and one number.';
       return false;
     }
     if (this.password !== this.confirmPassword) {
-      console.log('confirm pass');
+      this.errorMessage =
+        'The password and confirmation password you have entered do not match. Please double-check your password and try again';
       return false;
     }
-    if (!/^[A-Za-z0-9]*$/.test(this.firstName)) {
-      console.log('first name');
+    if (!/^[A-Za-z\s]+$/.test(this.firstName)) {
+      this.errorMessage = 'First name must contain all letters.';
       return false;
     }
-    if (!/^[A-Za-z0-9]*$/.test(this.lastName)) {
-      console.log('last name');
+    if (!/^[A-Za-z\s]+$/.test(this.lastName)) {
+      this.errorMessage = 'Last name must contain all letters.';
       return false;
     }
-    if (!/^[A-Za-z\s]*$/.test(this.city)) {
-      console.log('city');
+    if (!/^[A-Za-z\s]+$/.test(this.city)) {
+      this.errorMessage = 'City must contain all letters.';
       return false;
     }
     if (!/^06[0-9]{7,8}$/.test(this.phone)) {
-      console.log('phone');
+      this.errorMessage =
+        "Phone number must contain only numbers and must start with '06'.";
       return false;
     }
     return true;
