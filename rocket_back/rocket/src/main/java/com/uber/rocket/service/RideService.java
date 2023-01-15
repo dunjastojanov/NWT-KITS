@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -25,6 +26,8 @@ public class RideService {
     @Autowired
     private RideRepository repository;
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     public List<RideHistoryDTO> getRideHistoryForUser(HttpServletRequest request) {
         User user = userService.getUserFromRequest(request);
         return getRideHistory(repository.findByPassenger(user));
@@ -40,12 +43,19 @@ public class RideService {
 
     public Report getReportForUser(HttpServletRequest request, String type, DatePeriod datePeriod) {
         User user = userService.getUserFromRequest(request);
-        List<Ride> rides = repository.findByPassengerAndDatePeriod(user, datePeriod.getStartDate(), datePeriod.getEndDate());
+        LocalDateTime start = LocalDateTime.parse(datePeriod.getStartDate(), formatter);
+        LocalDateTime end = LocalDateTime.parse(datePeriod.getEndDate(), formatter);
+        List<Ride> rides = repository.findByPassengerAndDatePeriod(
+                user,
+                start,
+                end);
         return getReport(type, rides);
     }
 
     public Report getReportForAll(String type, DatePeriod datePeriod) {
-        List<Ride> rides = repository.findByDatePeriod(datePeriod.getStartDate(), datePeriod.getEndDate());
+        List<Ride> rides = repository.findByDatePeriod(
+                LocalDate.parse(datePeriod.getStartDate(), formatter),
+                LocalDate.parse(datePeriod.getEndDate(), formatter));
         return getReport(type, rides);
     }
 

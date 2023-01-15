@@ -22,7 +22,7 @@ public class RideController {
         this.pagination = pagination;
     }
 
-    @GetMapping("/{size}/{page}")
+    @PutMapping("/{size}/{page}")
     public ResponseEntity<?> getRideHistoryForUser(HttpServletRequest request, @PathVariable int page, @PathVariable int size) {
         try {
             return ResponseEntity.ok(pagination.paginate(rideService.getRideHistoryForUser(request), size, page));
@@ -31,7 +31,7 @@ public class RideController {
         }
     }
 
-    @GetMapping("/all/{size}/{page}")
+    @PutMapping("/all/{size}/{page}")
     public ResponseEntity<?> getAllRideHistory(@PathVariable int page, @PathVariable int size) {
         try {
             return ResponseEntity.ok(pagination.paginate(rideService.getAllRideHistory(), size, page));
@@ -40,8 +40,8 @@ public class RideController {
         }
     }
 
-    @GetMapping("/report/{type}")
-    public ResponseEntity<?> getReportForUser(HttpServletRequest request, @PathVariable String type, @RequestParam DatePeriod datePeriod) {
+    @PutMapping("/report/{type}")
+    public ResponseEntity<?> getReportForUser(HttpServletRequest request, @PathVariable String type, @RequestBody DatePeriod datePeriod) {
         try {
             return ResponseEntity.ok(rideService.getReportForUser(request, type, datePeriod));
         } catch (RuntimeException exception) {
@@ -49,8 +49,8 @@ public class RideController {
         }
     }
 
-    @GetMapping("/report/all/{type}")
-    public ResponseEntity<?> getReportForAll(@PathVariable String type, @RequestParam DatePeriod datePeriod) {
+    @PutMapping("/report/all/{type}")
+    public ResponseEntity<?> getReportForAll(@PathVariable String type, @RequestBody DatePeriod datePeriod) {
         try {
             return ResponseEntity.ok(rideService.getReportForAll(type, datePeriod));
         } catch (RuntimeException exception) {
