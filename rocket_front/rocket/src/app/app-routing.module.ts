@@ -11,7 +11,8 @@ import {ClientsComponent} from "./page/admin-page/clients/clients.component";
 import {DriversComponent} from "./page/admin-page/drivers/drivers.component";
 import {AdminHistoryComponent} from "./page/admin-page/admin-history/admin-history.component";
 import {AdminStatisticsComponent} from "./page/admin-page/admin-statistics/admin-statistics.component";
-import { CurrentRidePageComponent } from './page/current-ride-page/current-ride-page.component';
+import {CurrentRidePageComponent} from './page/current-ride-page/current-ride-page.component';
+import {PaypalTestComponent} from "./page/paypal-test/paypal-test.component";
 
 const routes: Routes = [
   {path: "", component: HomepageComponent},
@@ -33,7 +34,8 @@ const routes: Routes = [
 
     ]
   },
-  {path: "ride/current", component: CurrentRidePageComponent}
+  {path: "ride/current", component: CurrentRidePageComponent},
+  {path: "test", component: PaypalTestComponent}
 ];
 
 @NgModule({

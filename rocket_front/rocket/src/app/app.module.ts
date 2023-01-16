@@ -76,6 +76,7 @@ import { CurrentRideButtonsComponent } from './components/current-ride-info/curr
 import { metaReducers } from './local-storage.service';
 import { InputDestinationComponent } from './components/routes/input-destination/input-destination.component';
 import { RouteService } from './components/routes/route.service';
+import { PaypalTestComponent } from './page/paypal-test/paypal-test.component';
 
 @NgModule({
   declarations: [
@@ -121,7 +122,7 @@ import { RouteService } from './components/routes/route.service';
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent, CurrentRideRouteComponent, CurrentRidePalsComponent, ButtonIconComponent, CurrentRideClientComponent, CurrentRideButtonsComponent, InputDestinationComponent
+    WordCeoComponent, StatisticsComponent, AdminPageComponent, DriversComponent, ClientsComponent, UserCardComponent, SearchComponent, UserInfoComponent, IconButtonSecondaryComponent, AdminHistoryComponent, AdminStatisticsComponent, RegisterDriverComponent, MultiSelectWithIconsComponent, ErrorComponent, SuccessComponent, CurrentRidePageComponent, CurrentRideInfoComponent, FieldComponent, CheckboxComponent, ReportDriverComponent, CurrentRideRouteComponent, CurrentRidePalsComponent, ButtonIconComponent, CurrentRideClientComponent, CurrentRideButtonsComponent, InputDestinationComponent, PaypalTestComponent
   ],
   imports: [
     BrowserModule,
