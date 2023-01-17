@@ -76,6 +76,8 @@ public class SecurityConfiguration {
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/vehicle/validate/**").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/vehicle/**").hasAnyAuthority(RoleType.DRIVER.name());
 
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/payment/**").hasAnyAuthority(RoleType.CLIENT.name());
+
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/confirm/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
@@ -89,7 +91,7 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200/", "http://127.0.0.1:80/", "http://example.com/"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200/"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
