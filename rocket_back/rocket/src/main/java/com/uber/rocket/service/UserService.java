@@ -1,6 +1,7 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
+import com.uber.rocket.entity.tokens.ConformationTokenType;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

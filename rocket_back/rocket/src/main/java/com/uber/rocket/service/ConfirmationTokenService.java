@@ -1,7 +1,7 @@
 package com.uber.rocket.service;
 
-import com.uber.rocket.entity.user.ConfirmationToken;
-import com.uber.rocket.entity.user.ConformationTokenType;
+import com.uber.rocket.entity.tokens.ConfirmationToken;
+import com.uber.rocket.entity.tokens.ConformationTokenType;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.repository.ConfirmationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;

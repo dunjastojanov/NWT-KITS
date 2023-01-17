@@ -30,6 +30,9 @@ public class Review {
 
     @NotNull
     private String description;
+
+    @ManyToOne
+    private Ride ride;
     public float getRating() {
         return ((float)(vehicleRating + driverRating))/2;
     }

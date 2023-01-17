@@ -41,4 +41,11 @@ export class PaypalTestComponent implements OnInit {
       console.log("joooj")
     })
   }
+
+  // openDialog() {
+  //   let dialog=dialog.open( <ime_komponente>,{
+  //     height: '400px',
+  //     width: '600px',
+  //   });
+  // }
 }

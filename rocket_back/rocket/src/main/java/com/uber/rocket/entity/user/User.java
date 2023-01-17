@@ -34,7 +34,7 @@ public class User {
     private String city;
     private boolean blocked;
 
-    private Double tokens= (double) 0;
+    private Double tokens = (double) 0;
 
     public User(UserRegistrationDTO userRegistrationDTO) {
         this.setEmail(userRegistrationDTO.getEmail());
