@@ -15,6 +15,7 @@ import { CurrentRidePageComponent } from './page/current-ride-page/current-ride-
 import { RideRequestPageComponent } from './page/ride-request-page/ride-request-page.component';
 import { RouteComponent } from './page/ride-request-page/route/route.component';
 import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
+import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -46,6 +47,7 @@ const routes: Routes = [
     children: [
       { path: 'route', component: RouteComponent },
       { path: 'info', component: DataInfoComponent },
+      { path: 'confirm', component: ConfirmRideComponent },
     ],
   },
 ];

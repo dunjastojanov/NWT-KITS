@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 type item = { path: string; title: string; selected: boolean };
-export type multiSelectProp = { path: string; title: string };
+export type multiSelectProp = {
+  path: string;
+  title: string;
+  selected?: boolean;
+};
 @Component({
   selector: 'multi-select',
   templateUrl: './multi-select-with-icons.component.html',
@@ -19,7 +23,11 @@ export class MultiSelectWithIconsComponent implements OnInit {
 
   ngOnInit(): void {
     this.items = this.itemProps.map((item) => {
-      return { path: item.path, title: item.title, selected: false };
+      return {
+        path: item.path,
+        title: item.title,
+        selected: item.selected ? item.selected : false,
+      };
     });
   }
 

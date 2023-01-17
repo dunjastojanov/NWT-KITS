@@ -87,6 +87,8 @@ import { RideRequestPageComponent } from './page/ride-request-page/ride-request-
 import { RouteComponent } from './page/ride-request-page/route/route.component';
 import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/request-navbar.component';
 import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
+import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
+import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reducer';
 
 @NgModule({
   declarations: [
@@ -164,6 +166,7 @@ import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.
     RouteComponent,
     RequestNavbarComponent,
     DataInfoComponent,
+    ConfirmRideComponent,
   ],
   imports: [
     DragDropModule,
@@ -171,7 +174,11 @@ import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.
     AppRoutingModule,
     FormsModule,
     StoreModule.forRoot(
-      { loggedUser: loggedUserReducer, destinations: destinationsReducer },
+      {
+        loggedUser: loggedUserReducer,
+        destinations: destinationsReducer,
+        rideInfo: RideInfoReducer,
+      },
       { metaReducers }
     ),
     SocialLoginModule,

@@ -9,7 +9,11 @@ import {
   DestinationsAction,
   DestinationsActionType,
 } from 'src/app/shared/store/destinations-slice/destinations.actions';
-import { StoreType } from 'src/app/shared/store/types';
+import { DestinationsStateType, StoreType } from 'src/app/shared/store/types';
+import { decode, encode, LatLngTuple } from '@googlemaps/polyline-codec';
+import { Route } from './route.type';
+import { Observable, Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -26,23 +30,11 @@ export class MapComponent implements AfterViewInit {
   bounds: L.LatLngBounds | null = null;
   estimatedDistance: number = 0;
   estimatedTime: number = 0;
-  chosenRouteCoordinates: L.LatLng[] = [];
   destinations: { latitude: number; longitude: number }[] = [];
   destObj: Destination[] = [];
   layerPolylines: L.LayerGroup | null = null;
   layerMarkers: L.LayerGroup | null = null;
-  routes: [
-    {
-      distance: number;
-      duration: number;
-      geometry: { coordinates: [number, number][] };
-    },
-    {
-      distance: number;
-      duration: number;
-      geometry: { coordinates: [number, number][] };
-    }?
-  ][] = [];
+  routes: [Route, Route?][] = [];
   openErrorToast = false;
   error: boolean = false;
   private initMap(): void {
@@ -65,21 +57,43 @@ export class MapComponent implements AfterViewInit {
     this.layerMarkers = L.layerGroup().addTo(this.map);
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  subscription: Subscription;
+
   constructor(private service: RouteService, private store: Store<StoreType>) {
-    this.store.select('destinations').subscribe((resData) => {
-      this.destObj = resData.destinations;
+    this.subscription = this.store
+      .select('destinations')
+      .subscribe((resData) => {
+        this.destObj = resData.destinations;
+        this.estimatedDistance = resData.estimated_route_distance;
+        this.estimatedTime = resData.estimated_route_time;
+        this.routes = resData.routes;
+      });
+
+    this.store.dispatch(
+      new DestinationsAction(DestinationsActionType.RESET, '')
+    );
+
+    this.service.trigger$().subscribe((x) => {
+      if (x === 'trigger') {
+        this.showDestinations();
+      }
     });
   }
 
   ngAfterViewInit(): void {
-    this.service.trigger$().subscribe((x) => this.showDestinations());
     this.initMap();
   }
 
   showDestinations() {
+    if (this.routes.length > 0) {
+      return;
+    }
     this.clearMap(true);
     this.destinations = [];
-    this.routes = [];
     this.error = false;
     if (
       this.destObj.filter((elem) => elem.address !== '').length ===
@@ -123,38 +137,51 @@ export class MapComponent implements AfterViewInit {
     await axios.get(url).then((response) => {
       const routes = response.data['routes'];
 
-      const mainRoute: {
-        distance: number;
-        duration: number;
-        geometry: { coordinates: [number, number][] };
-      } = routes[0];
-      const alternativeRoute: {
-        distance: number;
-        duration: number;
-        geometry: { coordinates: [number, number][] };
-      } = routes[1];
+      const mainRoute: Route = routes[0];
+      mainRoute.selected = true;
+      const alternativeRoute: Route = routes[1];
+      if (alternativeRoute) alternativeRoute.selected = false;
 
-      alternativeRoute
-        ? this.routes.push([mainRoute, alternativeRoute])
-        : this.routes.push([mainRoute]);
+      if (alternativeRoute) {
+        this.store.dispatch(
+          new DestinationsAction(DestinationsActionType.ADD_ROUTE, [
+            mainRoute,
+            alternativeRoute,
+          ])
+        );
+      } else {
+        this.store.dispatch(
+          new DestinationsAction(DestinationsActionType.ADD_ROUTE, [mainRoute])
+        );
+      }
     });
   }
 
   drawPolylines() {
-    this.estimatedDistance = 0;
-    this.estimatedTime = 0;
-    for (const polyline of this.routes) {
-      let mainRoute: { geometry: { coordinates: [number, number][] } } =
-        polyline[0];
-      let mainCoordinates = this.getCoordinates(mainRoute);
-      this.drawMainPolyline(mainCoordinates);
+    /*this.store.dispatch(
+      new DestinationsAction(DestinationsActionType.ADD_ROUTE_DISTANCE, 0)
+    );
+    this.store.dispatch(
+      new DestinationsAction(DestinationsActionType.ADD_ROUTE_TIME, 0)
+    );*/
+    for (let i = 0; i < this.routes.length; i++) {
+      let oneRoute: Route = this.routes[i][0];
+      let oneCoordinates = this.getCoordinates(oneRoute);
+      if (oneRoute.selected) {
+        this.drawMainPolyline(oneCoordinates);
+      } else {
+        this.drawAlternativePolyline(oneCoordinates, this.routes[i]);
+      }
 
-      if (polyline[1]) {
-        let alternativeRoute: {
-          geometry: { coordinates: [number, number][] };
-        } = polyline[1];
-        let alternativeCoordinates = this.getCoordinates(alternativeRoute);
-        this.drawAlternativePolyline(alternativeCoordinates, polyline);
+      const polyline = this.routes[i][1];
+      if (polyline) {
+        let secondRoute: Route = polyline;
+        let secondCoordinates = this.getCoordinates(secondRoute);
+        if (secondRoute.selected) {
+          this.drawMainPolyline(secondCoordinates);
+        } else {
+          this.drawAlternativePolyline(secondCoordinates, this.routes[i]);
+        }
       }
     }
     this.map.fitBounds(this.bounds);
@@ -178,10 +205,7 @@ export class MapComponent implements AfterViewInit {
   }
   drawAlternativePolyline(
     coordinates: any,
-    routes: [
-      { geometry: { coordinates: [number, number][] } },
-      { geometry: { coordinates: [number, number][] } }?
-    ]
+    betweenTwoAdressesRoutes: [Route, Route?]
   ) {
     const alternativeRoutePolyline = L.polyline(coordinates, {
       color: '#0D4F83',
@@ -190,11 +214,12 @@ export class MapComponent implements AfterViewInit {
 
     alternativeRoutePolyline.addEventListener('click', (event) => {
       this.clearMap(false);
-      this.routes = this.routes.map((elem) => {
-        if (elem[0].geometry.coordinates === routes[0].geometry.coordinates) {
-          return [elem[1]!, elem[0]];
-        } else return [elem[0], elem[1]!];
-      });
+      this.store.dispatch(
+        new DestinationsAction(
+          DestinationsActionType.SWITCH_ALTERNATIVE,
+          betweenTwoAdressesRoutes
+        )
+      );
       this.drawPolylines();
       this.calculateRouteInfo();
     });
@@ -203,12 +228,14 @@ export class MapComponent implements AfterViewInit {
   }
 
   calculateRouteInfo() {
-    for (const polyline of this.routes) {
-      let mainRoute = polyline[0];
-      this.estimatedDistance += mainRoute.distance;
-      this.estimatedTime += mainRoute.duration;
+    let distance = this.estimatedDistance;
+    let time = this.estimatedTime;
+    for (const route of this.routes) {
+      let mainRoute = route[0].selected ? route[0] : route[1]!;
+      distance += mainRoute.distance;
+      time += mainRoute.duration;
     }
-    this.setRouteInfoSlice();
+    this.setRouteInfoSlice(distance, time);
   }
   clearMap(clearMarkers: boolean) {
     if (!this.layerPolylines) {
@@ -218,18 +245,15 @@ export class MapComponent implements AfterViewInit {
     if (clearMarkers && this.layerMarkers) this.layerMarkers!.clearLayers();
   }
 
-  setRouteInfoSlice() {
+  setRouteInfoSlice(distance: number, time: number) {
     this.store.dispatch(
       new DestinationsAction(
         DestinationsActionType.ADD_ROUTE_DISTANCE,
-        this.estimatedDistance
+        distance
       )
     );
     this.store.dispatch(
-      new DestinationsAction(
-        DestinationsActionType.ADD_ROUTE_TIME,
-        this.estimatedTime
-      )
+      new DestinationsAction(DestinationsActionType.ADD_ROUTE_TIME, time)
     );
   }
   async getLatLong(
