@@ -5,9 +5,9 @@ export interface User {
   lastName: string;
   city?: string;
   phoneNumber?: string;
-  status?: string;
-  role: string;
   profilePicture: string;
+  status?: string;
+  roles: string[];
 }
 
 export interface sideUser {

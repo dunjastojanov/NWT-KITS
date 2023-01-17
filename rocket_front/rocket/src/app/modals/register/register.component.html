@@ -7,19 +7,19 @@
             <h3 class="mb-4 text-xl font-medium text-gray-900 ">Sign up to our platform</h3>
             <form class="space-y-3 flex flex-col items-center mt-10" action="#">
                 <div class="flex flex-col items-center w-full h-[300px] gap-5" *ngIf="currentPage === 1">
-                    <app-input class="w-96" text="Your email"></app-input>
-                    <app-input text="Your password" type="password" class="border-0 p-0 m-0 w-96"></app-input>
-                    <app-input text="Confirm password" type="password" class="border-0 p-0 m-0 w-96"></app-input>
+                    <app-input class="w-96" text="Your email" name="email" [(prop)]="email" [value]="email"></app-input>
+                    <app-input text="Your password" type="password" name="password" [(prop)]="password" [value]="password" class="border-0 p-0 m-0 w-96"></app-input>
+                    <app-input text="Confirm password" type="password" name="confirmPassword" [(prop)]="confirmPassword" [value]="confirmPassword" class="border-0 p-0 m-0 w-96"></app-input>
                     <primary-button text="Continue" (click)="nextPage()"></primary-button>
                 </div>
                 <div class="flex flex-col items-center w-full h-[300px]" *ngIf="currentPage === 2">
-                    <app-input class="w-96" text="Your first name"></app-input>
-                    <app-input class="w-96" text="Your last name"></app-input>
-                    <app-input class="w-96" text="Your city"></app-input>
-                    <app-input class="w-96" text="Your phone"></app-input>
+                    <app-input class="w-96" text="Your first name" name="firstName" [(prop)]="firstName" [value]="firstName"></app-input>
+                    <app-input class="w-96" text="Your last name" name="lastName" [(prop)]="lastName" [value]="lastName"></app-input>
+                    <app-input class="w-96" text="Your city" name="city" [(prop)]="city" [value]="city"></app-input>
+                    <app-input class="w-96" text="Your phone" name="phone" [(prop)]="phone" [value]="phone"></app-input>
                     <div class="flex justify-evenly w-full">
                         <secondary-button text="Back" (click)="previousPage()"></secondary-button>
-                        <primary-button text="Sign up"></primary-button>
+                        <primary-button text="Sign up" (click)="onSignUp()"></primary-button>
                     </div>
                 </div>
                 <div class="flex gap-5 justify-center !mt-8">
@@ -33,6 +33,7 @@
         </div>
     </div>
 </div>
-
+<toast-error [message]="errorMessage" [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
+<toast-success message="Registration successful!" [open]="openSuccessToast" [closeFunc]="toggleSuccessToast"></toast-success>
 <div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
 

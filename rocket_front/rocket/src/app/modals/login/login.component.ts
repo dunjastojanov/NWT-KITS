@@ -1,15 +1,23 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {FacebookLoginProvider, SocialAuthService, SocialUser} from '@abacritt/angularx-social-login';
-import { api } from 'src/app/shared/api/api';
-import { Store } from '@ngrx/store'
+import {
+  FacebookLoginProvider,
+  SocialAuthService,
+  SocialUser,
+} from '@abacritt/angularx-social-login';
+import { Store } from '@ngrx/store';
 import { StoreType } from 'src/app/shared/store/types';
-import { LoggedUserAction, LoggedUserActionType } from 'src/app/shared/store/logged-user-slice/logged-user.actions';
+import {
+  LoggedUserAction,
+  LoggedUserActionType,
+} from 'src/app/shared/store/logged-user-slice/logged-user.actions';
 import { User } from 'src/app/interfaces/User';
+import { LoginService } from './login.service';
+import { multiSelectProp } from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
 
 @Component({
   selector: 'login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
   @Input('open') open!: boolean;
@@ -17,6 +25,8 @@ export class LoginComponent implements OnInit {
   @Input('openRegisterModal') openRegisterModal!: () => void;
 
   openForgotPasswordModal = false;
+  openChooseRoleModal = false;
+  userRoleItems: multiSelectProp[] = [];
 
   openErrorToast = false;
   openSuccessToast = false;
@@ -27,61 +37,104 @@ export class LoginComponent implements OnInit {
   password: string;
 
   constructor(
+    private service: LoginService,
     private socialAuthService: SocialAuthService,
-    private store: Store<StoreType>) {
-      this.email = '';
-      this.password = '';
+    private store: Store<StoreType>
+  ) {
+    this.email = '';
+    this.password = '';
   }
 
-    ngOnInit() {
-      this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
-        let user: User = {id:socialUser.id, email: socialUser.email, firstName: socialUser.firstName, lastName: socialUser.lastName, role:"client", profilePicture:socialUser.photoUrl};
-        this.login(user)
-      });
-    }
+  ngOnInit() {
+    this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
+      let user: User = {
+        id: socialUser.id,
+        email: socialUser.email,
+        firstName: socialUser.firstName,
+        lastName: socialUser.lastName,
+        roles: ['client'],
+        profilePicture: socialUser.photoUrl,
+      };
+      this.login(user);
+    });
+  }
 
   toggleForgotPasswordModal = () => {
-    this.openForgotPasswordModal =!this.openForgotPasswordModal;
-  }
+    this.openForgotPasswordModal = !this.openForgotPasswordModal;
+  };
+
+  toggleChooseRoleModal = () => {
+    this.openChooseRoleModal = !this.openChooseRoleModal;
+  };
 
   toggleErrorToast = () => {
-    this.openErrorToast =!this.openErrorToast;
-  }
+    this.openErrorToast = !this.openErrorToast;
+  };
 
   toggleSuccessToast = () => {
-    this.openSuccessToast =!this.openSuccessToast;
-  }
+    this.openSuccessToast = !this.openSuccessToast;
+  };
 
   signInWithFB(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }
 
-  login(user:User) {
+  login(user: User) {
     this.openSuccessToast = true;
-    this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user))
+    this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
     this.closeFunc();
   }
 
-  onSubmit() {
+  loginWithOneRole(role: string) {
+    this.user!.roles = [role];
+    this.login(this.user!);
+    this.toggleChooseRoleModal();
+  }
+
+  async onSubmit() {
     if (this.valid()) {
-      let encodedData = new URLSearchParams()
-      encodedData.append("username", this.email)
-      encodedData.append("password", this.password)
-      const that = this;
-      /*api.post('/api/login', encodedData)
-      .then((res:any) => console.log(res))
-      .catch((err: any) => that.openErrorToast = true)*/
-      //OVO IDE U THEN
-      //sa backa se dobije user koji ima roles: string[], ukoliko je len 1 onda se samo ta rola dodeli useru na frontu, u suprotnom se ponudi korisniku da izabre kao ko zeli da se prijavi i ta rola se doda useru na frontu
-      let user: User = {id:"1", email: "email", firstName: "First", lastName: "Last", city:"city", phoneNumber:"phone", role:"client", profilePicture:"profilePic"};
-      this.login(user);
-    }
-    else {
-      this.openErrorToast = true;
+      let success: boolean = await this.service.loginUser(
+        this.getEncodedData()
+      );
+      if (success) {
+        this.user = await this.service.getUser();
+        if (this.user && this.user.roles.length === 1) {
+          this.login(this.user);
+        } else if (this.user && this.user.roles.length > 1) {
+          this.chooseRoleForLogin();
+        } else {
+          this.openErrorToast = true; //token nije upisan
+        }
+      } else {
+        this.openErrorToast = true; //ne postoji user sa unetim kredencijalima
+      }
+    } else {
+      this.openErrorToast = true; //email ili sifra nisu u dobrom formatu upisani
     }
   }
 
+  getEncodedData(): URLSearchParams {
+    let encodedData = new URLSearchParams();
+    encodedData.append('username', this.email);
+    encodedData.append('password', this.password);
+    return encodedData;
+  }
+
+  chooseRoleForLogin() {
+    this.userRoleItems = [];
+    for (let role of this.user!.roles) {
+      this.userRoleItems.push({
+        path: './assets/icons/user-role.png',
+        title: role.charAt(0).toUpperCase() + role.slice(1).toLowerCase(),
+      });
+    }
+    this.toggleChooseRoleModal();
+  }
+
   valid(): boolean {
-    return (/^.+[@].+[\.].+$/.test(this.email)) && (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,20}$/.test(this.password))
+    return (
+      /^.+[@].+[\.].+$/.test(this.email) &&
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,20}$/.test(this.password)
+    );
   }
 }

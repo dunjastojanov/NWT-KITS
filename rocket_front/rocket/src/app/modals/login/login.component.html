@@ -43,5 +43,6 @@
 <toast-error message="Invalid email or password" [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
 <toast-success message="Login successful!" [open]="openSuccessToast" [closeFunc]="toggleSuccessToast"></toast-success>
 <forgot-password [open]="openForgotPasswordModal" [closeFunc]="toggleForgotPasswordModal" ></forgot-password>
+<choose-role [open]="openChooseRoleModal" [closeFunc]="toggleChooseRoleModal" [userRoleItems]="userRoleItems" (onConfirmRole)="loginWithOneRole($event)"></choose-role>
 <div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
 
