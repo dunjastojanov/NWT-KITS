@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ReviewDTO {
-    private SimpleUserDTO reviewer;
-    private float rating;
+    private String reviewer;
+    private double rating;
     private String text;
 }
