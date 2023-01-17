@@ -12,7 +12,7 @@
 
 .gray {
     background: #f5f4f4;
-    color: #252525;
+    color: #707070;
 }
 
 .wizard:not(.left-arrow) .gray:after {

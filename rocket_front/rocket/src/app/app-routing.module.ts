@@ -14,7 +14,7 @@ import { AdminStatisticsComponent } from './page/admin-page/admin-statistics/adm
 import { CurrentRidePageComponent } from './page/current-ride-page/current-ride-page.component';
 import { RideRequestPageComponent } from './page/ride-request-page/ride-request-page.component';
 import { RouteComponent } from './page/ride-request-page/route/route.component';
-import { TimeComponent } from './page/ride-request-page/time/time.component';
+import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -45,7 +45,7 @@ const routes: Routes = [
     component: RideRequestPageComponent,
     children: [
       { path: 'route', component: RouteComponent },
-      { path: 'time', component: TimeComponent },
+      { path: 'info', component: DataInfoComponent },
     ],
   },
 ];

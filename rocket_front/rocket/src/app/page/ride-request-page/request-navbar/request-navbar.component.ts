@@ -19,10 +19,10 @@ export class RequestNavbarComponent implements OnInit {
 
   states: { name: string; link: string }[] = [
     { name: '1. Route', link: 'route' },
-    { name: '2. Time', link: 'time' },
-    { name: '3. Friends', link: 'friends' },
-    { name: '4. Info', link: 'info' },
-    { name: '5. Confirm', link: 'confirm' },
+    { name: '2. Info', link: 'info' },
+    { name: '3. Confirm', link: 'confirm' },
+    { name: '4. Get driver', link: 'driver' },
+    { name: '5. Payment', link: 'payment' },
   ];
   ngOnInit(): void {}
 }

@@ -85,8 +85,8 @@ import { ChooseRoleComponent } from './modals/choose-role/choose-role.component'
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RideRequestPageComponent } from './page/ride-request-page/ride-request-page.component';
 import { RouteComponent } from './page/ride-request-page/route/route.component';
-import { TimeComponent } from './page/ride-request-page/time/time.component';
 import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/request-navbar.component';
+import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
 
 @NgModule({
   declarations: [
@@ -162,8 +162,8 @@ import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/
     ChooseRoleComponent,
     RideRequestPageComponent,
     RouteComponent,
-    TimeComponent,
     RequestNavbarComponent,
+    DataInfoComponent,
   ],
   imports: [
     DragDropModule,
