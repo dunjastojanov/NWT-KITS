@@ -1,6 +1,7 @@
 package com.uber.rocket.entity.ride;
 
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
 import lombok.*;
@@ -8,6 +9,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,22 +28,19 @@ public class Ride {
     private Collection<User> passengers;
 
     @OneToOne
-    @NotNull
+    @Nullable
     private Vehicle vehicle;
 
-    @OneToOne
     @NotNull
-    private Route route;
+    private String routeLocation;
 
-    @OneToMany
-    @NotNull
-    private Collection<Destination> destinations;
+    @Nullable
+    @ElementCollection
+    private List<String> destinations;
 
-    @OneToMany
-    @NotNull
-    private Collection<Review> reviews;
 
     private LocalDateTime startTime;
+    @Nullable
     private LocalDateTime endTime;
 
     @NotNull
@@ -57,24 +56,19 @@ public class Ride {
     @NotNull
     private int duration;
 
+    private double length;
+
     public User getDriver() {
-        return  vehicle.getDriver();
+        return vehicle.getDriver();
     }
 
-    public Destination getStart() {
-        return destinations.stream().toList().get(0);
+    public String getStart() {
+        return destinations.get(0);
     }
 
-    public Destination getEnd() {
-        return destinations.stream().toList().get(destinations.size()-1);
+    public String getEnd() {
+        return destinations.get(destinations.size() - 1);
     }
 
-    public double getLength() {
-        return 1.1;
-        //TODO: Add logic for calculating length of ride
-    }
 
-    public double getRating() {
-        return reviews.stream().mapToDouble(Review::getRating).sum()/reviews.size();
-    }
 }

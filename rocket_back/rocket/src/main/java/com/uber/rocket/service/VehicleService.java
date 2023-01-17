@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
 
 @Service
 public class VehicleService {
@@ -22,9 +21,6 @@ public class VehicleService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private VehicleAdditionalFeaturesService additionalFeaturesService;
 
     @Autowired
     private ImageService imageService;
@@ -49,16 +45,9 @@ public class VehicleService {
         vehicle.setDriver(driver);
         vehicle.setStatus(VehicleStatus.INACTIVE);
         vehicle.setVehicleType(VehicleType.valueOf(driverRegistrationDTO.getVehicleType().toUpperCase()));
-        vehicle.setFeatures(new ArrayList<>());
-        setAdditionalFeatures(vehicle, driverRegistrationDTO);
+        vehicle.setKidFriendly(driverRegistrationDTO.isKidFriendly());
+        vehicle.setPetFriendly(driverRegistrationDTO.isPetFriendly());
         vehicleRepository.save(vehicle);
-    }
-
-    public void setAdditionalFeatures(Vehicle vehicle, DriverRegistrationDTO driverRegistrationDTO) {
-        if (driverRegistrationDTO.isKidFriendly())
-            vehicle.getFeatures().add(additionalFeaturesService.getFeatureByName(AdditionalVehicleFeature.KID_FRIENDLY));
-        if (driverRegistrationDTO.isPetFriendly())
-            vehicle.getFeatures().add(additionalFeaturesService.getFeatureByName(AdditionalVehicleFeature.PET_FRIENDLY));
     }
 
     public Object getDriversByFilter(int size, int number, String filter) {

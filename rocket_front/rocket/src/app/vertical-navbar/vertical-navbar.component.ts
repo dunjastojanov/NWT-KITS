@@ -11,7 +11,7 @@ export class VerticalNavbarComponent implements OnInit {
 
   @Input("navbarItems") navbarItems:any;
 
-  @Input("profileImageLink") profileImageLink:string = "assets/fiona.jpg";
+  @Input("profileImageLink") profileImageLink:string = "assets/profile-placeholder.png";
 
   ngOnInit(): void {
   }

@@ -5,9 +5,7 @@
   </div>
   <div class="flex mt-5">
     <secondary-button class="mr-3" [text]="'EDIT ACCOUNT'" (click)="toggleEditProfile()"></secondary-button>
-    <secondary-button [text]="'DELETE ACCOUNT'" (click)="toggleDeleteProfile()"></secondary-button>
   </div>
 
-  <app-delete-profile [open]="openDeleteProfile" [closeFunc]="toggleDeleteProfile"></app-delete-profile>
   <app-edit-profile class="w-3/4" [open]="openEditProfile" [closeFunc]="toggleEditProfile"></app-edit-profile>
 </div>

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {User} from "../../../interfaces/User";
+import {UserService} from "../../../services/user/user.service";
 
 @Component({
   selector: 'app-general-information',
@@ -7,41 +9,44 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GeneralInformationComponent implements OnInit {
 
-  openDeleteProfile: boolean = false;
   openEditProfile: boolean = false;
+  information: any = []
+  user: User | null = null;
+  constructor(private service: UserService) {
+    this.setUser().then(() => {
+      this.setInformation();
 
-  information: any = [
-    {
-      title: "First name",
-      info: "Fiona"
-    },
-    {
-      title: "Last name",
-      info: "Gallager"
-    },
-    {
-      title: "City",
-      info: "Chicago"
-    },
-    {
-      title: "Phone number",
-      info: "202-555-0117"
-    }
-  ]
-  title: string = "First name";
-  info: string = "Fiona";
+    });
 
-  constructor() { }
+  }
+  async setUser() {
+    this.user = await this.service.getUser();
+  }
 
+  setInformation() {
+    this.information = [
+      {
+        title: "First name",
+        info: this.user?.firstName
+      },
+      {
+        title: "Last name",
+        info: this.user?.lastName
+      },
+      {
+        title: "City",
+        info: this.user?.city
+      },
+      {
+        title: "Phone number",
+        info: this.user?.phoneNumber
+      }
+    ]
+  }
   ngOnInit(): void {
   }
 
   toggleEditProfile = () => {
     this.openEditProfile =!this.openEditProfile;
   }
-
-  toggleDeleteProfile = () => {
-    this.openDeleteProfile =!this.openDeleteProfile;
-  }
-
 }

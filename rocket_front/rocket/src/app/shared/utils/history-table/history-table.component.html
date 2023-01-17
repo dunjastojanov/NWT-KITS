@@ -10,10 +10,12 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let item of data" class="row">
-        <td *ngFor="let header of headers" class="data">
-          {{item[header]}}
-        </td>
+      <tr *ngFor="let item of rideHistory" class="row">
+        <td class="data">{{item.start}}</td>
+        <td class="data">{{item.end}}</td>
+        <td class="data">{{item.driver}}</td>
+        <td class="data">{{item.duration}}</td>
+        <td class="data">{{item.price}}</td>
         <td>
           <secondary-button class="text-xs" [text]="'VIEW MORE'" (click)="toggleDetailedRoute()"></secondary-button>
         </td>
@@ -21,11 +23,10 @@
       </tbody>
     </table>
 
-
   </div>
   <div class="flex mt-3">
     <div class="mx-auto">
-      <pagination></pagination>
+      <pagination [(currentPage)]="currentPage" [numberOfPages]="numberOfPages"></pagination>
     </div>
   </div>
 

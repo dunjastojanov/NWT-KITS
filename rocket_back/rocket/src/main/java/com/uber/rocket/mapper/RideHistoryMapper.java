@@ -18,9 +18,8 @@ public class RideHistoryMapper implements Mapper<Ride, RideHistoryDTO> {
         dto.setDriver(ride.getDriver().getFullName());
         dto.setPrice(ride.getPrice());
         dto.setDuration(ride.getDuration());
-        dto.setStart(ride.getStart().toString());
-        dto.setEnd(ride.getEnd().toString());
-        dto.setId(ride.getId());
+        dto.setStart(ride.getStart());
+        dto.setEnd(ride.getEnd());
         return dto;
     }
 }

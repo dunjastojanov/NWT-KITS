@@ -20,6 +20,7 @@ public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
 
+    //TODO dodati pocetnu lokaciju
     @PostMapping
     public ResponseEntity<?> registerDriver(@Valid @RequestBody DriverRegistrationDTO driverRegistrationDTO) {
         try {

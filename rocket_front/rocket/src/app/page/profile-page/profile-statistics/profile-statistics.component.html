@@ -1,21 +1,26 @@
 <div class="mt-5 h-screen">
-  <app-medium-title [text]="'Statistics'"></app-medium-title>
-  <div class="flex justify-center w-full">
+  <app-medium-title [text]="'Statistics'" ></app-medium-title>
+  <div class="flex justify-center w-full align-middle">
       <div class="input-box">
-        <app-input [text] = "'Start date'"></app-input>
+        <app-input text="Start date" [(prop)]="startDate" [value]="startDate"></app-input>
       </div>
 
       <div class="input-box">
-        <app-input [text] = "'End date'"></app-input>
+        <app-input text = "End date" [value]="endDate" [(prop)]="endDate"></app-input>
       </div>
 
       <div class="input-box">
-        <app-select [text] = "'Type'" [placeholder]="'Choose a type of report'" [items]="items"></app-select>
+        <app-select text = "Type" [placeholder]="'Choose a type of report'" [items]="items" [value]="type" [(prop)]="type"></app-select>
       </div>
+
+
+  </div>
+  <div class="mt-5 flex justify-center w-full align-middle">
+    <secondary-button text="Show" (click)="onShow()"></secondary-button>
 
   </div>
   <div>
-    <app-line-chart ></app-line-chart>
+    <app-line-chart [data]="reportData.data" [total]="reportData.total" [average]="reportData.average" [type]="type" [unit]="type === 'kilometers' ? 'KM': type === 'money' ? '€': ''"></app-line-chart>
   </div>
 
   <div class="translate-y-24 absolute">

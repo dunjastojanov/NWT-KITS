@@ -23,8 +23,6 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-    @OneToOne
-    private PayInfo payInfo;
 
     @Column(unique = true)
     private String email;
@@ -35,6 +33,8 @@ public class User {
     private String phoneNumber;
     private String city;
     private boolean blocked;
+
+    private Double tokens = (double) 0;
 
     public User(UserRegistrationDTO userRegistrationDTO) {
         this.setEmail(userRegistrationDTO.getEmail());

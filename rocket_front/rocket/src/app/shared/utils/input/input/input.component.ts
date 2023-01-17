@@ -22,7 +22,8 @@ export class InputComponent implements OnInit {
     this.marginBottom = 'mb-6';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   onInputChange(event: any) {
     this.prop = event.target.value;
