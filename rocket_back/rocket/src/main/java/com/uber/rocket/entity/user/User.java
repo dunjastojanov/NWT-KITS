@@ -45,4 +45,8 @@ public class User {
         this.setPhoneNumber(userRegistrationDTO.getPhoneNumber());
         this.setBlocked(true);
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

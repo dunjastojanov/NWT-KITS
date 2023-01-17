@@ -30,7 +30,7 @@ public class Review {
 
     @NotNull
     private String description;
-    public float getRating() {
+    public double getRating() {
         return ((float)(vehicleRating + driverRating))/2;
     }
 

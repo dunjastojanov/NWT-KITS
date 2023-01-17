@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface RideRepository extends JpaRepository<Ride, Long> {
-    @Query("FROM Ride ride WHERE :user MEMBER ride.passengers")
+    @Query("FROM Ride ride JOIN FETCH ride.destinations WHERE :user MEMBER ride.passengers")
     List<Ride> findByPassenger(@Param("user") User user);
     @Query("FROM Ride ride WHERE :user MEMBER ride.passengers AND ride.startTime > :start AND ride.endTime < :end")
     List<Ride> findByPassengerAndDatePeriod(@Param("user") User user, @Param("start") LocalDateTime start, @Param("end")LocalDateTime end);

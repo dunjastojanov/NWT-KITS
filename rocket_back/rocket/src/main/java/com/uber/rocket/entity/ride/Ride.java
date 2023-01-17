@@ -73,4 +73,8 @@ public class Ride {
         return 1.1;
         //TODO: Add logic for calculating length of ride
     }
+
+    public double getRating() {
+        return reviews.stream().mapToDouble(Review::getRating).sum()/reviews.size();
+    }
 }
