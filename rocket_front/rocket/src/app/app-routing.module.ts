@@ -1,3 +1,4 @@
+import {PaypalTestComponent} from "./page/paypal-test/paypal-test.component";
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomepageComponent } from './page/homepage/homepage.component';
@@ -48,6 +49,8 @@ const routes: Routes = [
       { path: 'time', component: TimeComponent },
     ],
   },
+  {path: "ride/current", component: CurrentRidePageComponent},
+  {path: "test", component: PaypalTestComponent}
 ];
 
 @NgModule({

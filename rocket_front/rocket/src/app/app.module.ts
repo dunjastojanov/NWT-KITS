@@ -80,6 +80,7 @@ import { CurrentRideButtonsComponent } from './components/current-ride-info/curr
 import { metaReducers } from './local-storage.service';
 import { InputDestinationComponent } from './components/routes/input-destination/input-destination.component';
 import { RouteService } from './components/routes/route.service';
+import { PaypalTestComponent } from './page/paypal-test/paypal-test.component';
 import { RouteInfoComponent } from './components/routes/route-info/route-info.component';
 import { ChooseRoleComponent } from './modals/choose-role/choose-role.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -132,6 +133,7 @@ import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
+    PaypalTestComponent,
     WordCeoComponent,
     StatisticsComponent,
     AdminPageComponent,

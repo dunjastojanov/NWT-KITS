@@ -1,10 +1,7 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
-import com.uber.rocket.entity.user.ConformationTokenType;
-import com.uber.rocket.entity.user.RoleType;
-import com.uber.rocket.entity.user.UpdateDriverPictureRequest;
-import com.uber.rocket.entity.user.User;
+import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -179,10 +176,10 @@ public class UserService {
 
     }
 
-    public User getById(Long driverId) {
-        Optional<User> user = userRepository.findById(driverId);
+    public User getById(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty())
-            throw new RuntimeException("There is no driver with this id");
+            throw new RuntimeException("There is no user with this id");
         return user.get();
     }
 
@@ -192,4 +189,11 @@ public class UserService {
         user.setProfilePicture(driverPictureRequest.getProfilePicture());
         userRepository.save(user);
     }
+
+    public void addTokens(Payment data) {
+        User user = getById(data.getUserId());
+        user.setTokens(user.getTokens() + data.getAmount());
+        userRepository.save(user);
+    }
+
 }
