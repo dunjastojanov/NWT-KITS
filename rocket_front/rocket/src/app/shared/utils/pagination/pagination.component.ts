@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'pagination',
@@ -9,11 +9,18 @@ export class PaginationComponent implements OnInit {
 
   constructor() { }
 
-  numberOfPages: number = 7;
+  @Input() numberOfPages!: number;
 
-  pages: any = [...Array(this.numberOfPages+1).keys()].slice(1)
+  @Input() currentPage!: string;
+  @Output() currentPageChange = new EventEmitter<string>();
+  pages: any = [...Array(this.numberOfPages).keys()].slice(1)
 
   ngOnInit(): void {
+  }
+
+  onPageChange(page: string): void {
+    this.currentPage = page;
+    this.currentPageChange.emit(page);
   }
 
 }

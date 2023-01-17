@@ -1,15 +1,15 @@
 <div>
   <div class="flex items-center justify-center">
-    <img alt="profile" class="profile-image drop-shadow-sm" src="assets/fiona.jpg"/>
+    <img alt="profile" class="profile-image drop-shadow-sm" [src]= "profilePicture || 'assets/profile-placeholder.png'"/>
     <button class="text-white font-bold text-2xs opacity-0 bg-black flex flex-col items-center justify-center fixed profile-image hover:opacity-75">
 
-      <input type="file" class="h-full w-full absolute opacity-0" >
+      <input type="file" class="h-full w-full absolute opacity-0" (change)="onFileSelected($event)">
       Select another photo
     </button>
 
   </div>
   <div class="flex items-center justify-center mt-12">
     <secondary-button class="mr-2" [text]="'CANCEL'"></secondary-button>
-    <primary-button [text]="'SAVE'"></primary-button>
+    <primary-button [text]="'SAVE'" (click)="onSave()"></primary-button>
   </div>
 </div>

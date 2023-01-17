@@ -3,8 +3,8 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  city?: string;
-  phoneNumber?: string;
+  city: string;
+  phoneNumber: string;
   profilePicture: string;
   status?: string;
   roles: string[];

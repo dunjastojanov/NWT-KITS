@@ -45,7 +45,6 @@ import { HistoryTableComponent } from './shared/utils/history-table/history-tabl
 import { PaginationComponent } from './shared/utils/pagination/pagination.component';
 import { SelectComponent } from './shared/utils/input/select/select.component';
 import { EditProfileComponent } from './modals/edit-profile/edit-profile.component';
-import { DeleteProfileComponent } from './modals/delete-profile/delete-profile.component';
 import { DetailedRouteComponent } from './modals/detailed-route/detailed-route.component';
 import { PersonalInformationComponent } from './modals/edit-profile/personal-information/personal-information.component';
 import { PaymentInformationComponent } from './modals/edit-profile/payment-information/payment-information.component';
@@ -82,8 +81,9 @@ import { InputDestinationComponent } from './components/routes/input-destination
 import { RouteService } from './components/routes/route.service';
 import { RouteInfoComponent } from './components/routes/route-info/route-info.component';
 import { ChooseRoleComponent } from './modals/choose-role/choose-role.component';
+import {ToastrModule} from "ngx-toastr";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { DragDropModule } from '@angular/cdk/drag-drop';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -122,7 +122,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     PaginationComponent,
     SelectComponent,
     EditProfileComponent,
-    DeleteProfileComponent,
     DetailedRouteComponent,
     PersonalInformationComponent,
     PaymentInformationComponent,
@@ -162,6 +161,15 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+        timeOut: 3000,
+        positionClass: 'toast-center-center',
+        preventDuplicates: true,
+      }
+    ),
+    StoreModule.forRoot({loggedUser: loggedUserReducer, destinations: destinationsReducer}, { metaReducers }),
+    SocialLoginModule,
     StoreModule.forRoot(
       { loggedUser: loggedUserReducer, destinations: destinationsReducer },
       { metaReducers }
