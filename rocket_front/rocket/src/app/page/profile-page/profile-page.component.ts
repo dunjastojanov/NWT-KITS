@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {UserService} from "../../services/user/user.service";
 
 @Component({
   selector: 'app-profile-page',
@@ -7,7 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfilePageComponent implements OnInit {
 
-  constructor() { }
+  profileImageLink: string = "assets/profile-placeholder.png";
+  constructor(private service: UserService) {
+    service.getUser().then(res=> {
+      this.profileImageLink = res?.profilePicture || "assets/profile-placeholder.png";
+    })
+  }
 
   navbarItems:any =  [
     {routerLink: "information", path: "./assets/icons/information.png", title: "General information"},
@@ -15,7 +21,7 @@ export class ProfilePageComponent implements OnInit {
     {routerLink: "statistics", path: "./assets/icons/statistics.png", title: "Statistics"},
     {routerLink: "history", path: "./assets/icons/history.png", title: "History"},
   ]
-  profileImageLink: string = "assets/fiona.jpg";
+
 
   ngOnInit(): void {
   }

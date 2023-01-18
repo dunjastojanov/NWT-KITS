@@ -11,7 +11,7 @@ import {
   LoggedUserActionType,
 } from 'src/app/shared/store/logged-user-slice/logged-user.actions';
 import { User } from 'src/app/interfaces/User';
-import { LoginService } from './login.service';
+import { UserService } from '../../services/user/user.service';
 import { multiSelectProp } from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
 
 @Component({
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
   password: string;
 
   constructor(
-    private service: LoginService,
+    private service: UserService,
     private socialAuthService: SocialAuthService,
     private store: Store<StoreType>
   ) {
@@ -48,12 +48,13 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
       let user: User = {
+        city: "", phoneNumber: "",
         id: socialUser.id,
         email: socialUser.email,
         firstName: socialUser.firstName,
         lastName: socialUser.lastName,
         roles: ['client'],
-        profilePicture: socialUser.photoUrl,
+        profilePicture: socialUser.photoUrl
       };
       this.login(user);
     });
@@ -133,7 +134,7 @@ export class LoginComponent implements OnInit {
 
   valid(): boolean {
     return (
-      /^.+[@].+[\.].+$/.test(this.email) &&
+      /^.+[@].+[.].+$/.test(this.email) &&
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,20}$/.test(this.password)
     );
   }

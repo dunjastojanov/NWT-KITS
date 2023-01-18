@@ -1,6 +1,6 @@
 package com.uber.rocket.repository;
 
-import com.uber.rocket.entity.user.ConfirmationToken;
+import com.uber.rocket.entity.tokens.ConfirmationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

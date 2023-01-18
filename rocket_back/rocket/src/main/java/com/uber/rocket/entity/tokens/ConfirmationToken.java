@@ -1,5 +1,6 @@
-package com.uber.rocket.entity.user;
+package com.uber.rocket.entity.tokens;
 
+import com.uber.rocket.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;

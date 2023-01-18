@@ -3,7 +3,6 @@ package com.uber.rocket.entity.user;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,8 +22,11 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private VehicleType vehicleType;
 
-    @ManyToMany
-    private List<VehicleAdditionalFeatures> features;
+    private boolean petFriendly;
+
+    private boolean kidFriendly;
+
+    private String currentLocation;
 
     @Enumerated(EnumType.STRING)
     private VehicleStatus status;

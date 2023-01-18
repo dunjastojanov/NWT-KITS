@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeleteProfileComponent } from './delete-profile.component';
+import { PaypalTestComponent } from './paypal-test.component';
 
-describe('DeleteProfileComponent', () => {
-  let component: DeleteProfileComponent;
-  let fixture: ComponentFixture<DeleteProfileComponent>;
+describe('PaypalTestComponent', () => {
+  let component: PaypalTestComponent;
+  let fixture: ComponentFixture<PaypalTestComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DeleteProfileComponent ]
+      declarations: [ PaypalTestComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DeleteProfileComponent);
+    fixture = TestBed.createComponent(PaypalTestComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
