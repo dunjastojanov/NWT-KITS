@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store'
-import { User } from '../interfaces/User';
-import { LoggedUserAction, LoggedUserActionType } from '../shared/store/logged-user-slice/logged-user.actions';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store'
+import {User} from '../interfaces/User';
+import {LoggedUserAction, LoggedUserActionType} from '../shared/store/logged-user-slice/logged-user.actions';
 
 
-import { StoreType } from '../shared/store/types';
+import {StoreType} from '../shared/store/types';
 
 @Component({
   selector: 'navbar',
@@ -12,10 +12,11 @@ import { StoreType } from '../shared/store/types';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  showPayPalModal = false;
   showLoginModal = false;
   showRegisterModal = false;
   user: User | null = null;
-  
+
   constructor(private store: Store<StoreType>) {
     let loggedUserSlice = store.select('loggedUser');
     loggedUserSlice.subscribe(
@@ -31,6 +32,7 @@ export class NavbarComponent implements OnInit {
   toggleLogin = (): void => {
     this.showRegisterModal = false;
     this.showLoginModal = !this.showLoginModal;
+    this.showPayPalModal = false
   }
 
   logout = (): void => {
@@ -38,7 +40,14 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleRegister = (): void => {
+    this.showPayPalModal = false
     this.showLoginModal = false;
-    this.showRegisterModal =!this.showRegisterModal;
+    this.showRegisterModal = !this.showRegisterModal;
+  }
+
+  togglePayPal = (): void => {
+    this.showLoginModal = false;
+    this.showRegisterModal = false;
+    this.showPayPalModal = !this.showPayPalModal
   }
 }

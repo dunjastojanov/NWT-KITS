@@ -35,7 +35,10 @@ public class Ride {
     private String routeLocation;
 
     @Nullable
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="destination", joinColumns=@JoinColumn(name="ride_id"))
+    @Column(name="destination")
+    @OrderColumn
     private List<String> destinations;
 
 
