@@ -3,5 +3,6 @@ export interface RideHistory {
   'end': string,
   'driver': string,
   'duration': string,
-  'price': string
+  'price': string,
+  'id': string,
 }

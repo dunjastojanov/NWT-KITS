@@ -1,0 +1,9 @@
+@tailwind base;
+
+.large {
+  @apply w-7 h-7;
+}
+
+.small {
+  @apply w-5 h-5;
+}

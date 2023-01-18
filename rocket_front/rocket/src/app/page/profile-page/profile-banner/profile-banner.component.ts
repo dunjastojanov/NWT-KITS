@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {User} from "../../../interfaces/User";
+import {UserService} from "../../../services/user/user.service";
 
 @Component({
   selector: 'app-profile-banner',
@@ -7,7 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileBannerComponent implements OnInit {
 
-  constructor() { }
+  title: string = "";
+  constructor(private service: UserService) {
+    this.service.getUser().then((res) => {
+      if (res) {
+        this.title = `${res.firstName} ${res.lastName}`;
+
+      }
+
+    });
+
+  }
 
   ngOnInit(): void {
   }

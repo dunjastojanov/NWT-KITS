@@ -20,7 +20,7 @@
 
   </div>
   <div>
-    <app-line-chart [data]="reportData.data" [total]="reportData.total" [average]="reportData.average" [type]="type" [unit]="type === 'kilometers' ? 'KM': type === 'money' ? '€': ''"></app-line-chart>
+    <line-chart [data]="reportData.data" [total]="+reportData.total" [average]="reportData.average" [type]="type" [unit]="type === 'kilometers' ? 'KM': type === 'money' ? 'din': ''"></line-chart>
   </div>
 
   <div class="translate-y-24 absolute">
