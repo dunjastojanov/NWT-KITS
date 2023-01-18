@@ -1,20 +1,27 @@
-
 <nav class="navbar">
-    <div class="container flex flex-wrap justify-between items-start mx-auto">
-      <p routerLink='' class="flex items-center mt-2 hover:cursor-pointer">
-          <icon path="./assets/logo.png" class="mr-3 sm:h-9 !w-10 !h-10"></icon>
-          <span class="self-center text-xl font-semibold whitespace-nowrap ">Rocket</span>
-      </p>
+  <div class="container flex flex-wrap justify-between items-start mx-auto">
+    <p routerLink='' class="flex items-center mt-2 hover:cursor-pointer">
+      <icon path="./assets/logo.png" class="mr-3 sm:h-9 !w-10 !h-10"></icon>
+      <span class="self-center text-xl font-semibold whitespace-nowrap ">Rocket</span>
+    </p>
     <div class="md:flex gap-7 items-center w-4/6 md:w-auto">
       <div class="flex gap-4 md:order-2 justify-end">
-          <primary-button *ngIf="!user" text="Login" (click)="toggleLogin()"></primary-button>
-          <primary-button *ngIf="user" text="Logout" (click)="logout()"></primary-button>
-          <button data-collapse-toggle="navbar-sticky" type="button" class="ml-5 inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 " aria-controls="navbar-sticky" aria-expanded="false">
-            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+        <primary-button *ngIf="!user" text="Login" (click)="toggleLogin()"></primary-button>
+        <primary-button *ngIf="user" text="Logout" (click)="logout()"></primary-button>
+        <button data-collapse-toggle="navbar-sticky" type="button"
+                class="ml-5 inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
+                aria-controls="navbar-sticky" aria-expanded="false">
+          <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+               xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                  clip-rule="evenodd"></path>
+          </svg>
         </button>
       </div>
       <div class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-        <ul class="flex flex-col p-2 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
+        <ul
+          class="flex flex-col p-2 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
           <li *ngIf="user">
             <p class="navbar-link" routerLink='profile'>Profile</p>
           </li>
@@ -27,6 +34,9 @@
           <li>
             <a class="navbar-link" href=''>Home</a>
           </li>
+          <li>
+            <button *ngIf="user" (click)="togglePayPal()"><p class="navbar-link">PayPal</p></button>
+          </li>
           <li *ngIf="!user">
             <a class="navbar-link" href='#pricing'>Pricing</a>
           </li>
@@ -36,8 +46,9 @@
         </ul>
       </div>
     </div>
-    </div>
-  </nav>
-  
-  <login [open]="showLoginModal" [closeFunc]="toggleLogin" [openRegisterModal]="toggleRegister"></login>
-  <register [open]="showRegisterModal" [closeFunc]="toggleRegister" [openLoginModal]="toggleLogin"></register>
+  </div>
+</nav>
+
+<login [open]="showLoginModal" [closeFunc]="toggleLogin" [openRegisterModal]="toggleRegister"></login>
+<paypal class="!w-3/5" [open]="showPayPalModal" [closeFunc]="togglePayPal" ></paypal>
+<register [open]="showRegisterModal" [closeFunc]="toggleRegister" [openLoginModal]="toggleLogin"></register>

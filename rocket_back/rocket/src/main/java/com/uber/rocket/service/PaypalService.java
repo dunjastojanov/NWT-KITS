@@ -4,12 +4,13 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import com.uber.rocket.dto.PaymentDTO;
-import com.uber.rocket.entity.user.User;
 import com.uber.rocket.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -24,16 +25,23 @@ public class PaypalService {
     private PaymentRepository paymentRepository;
     @Autowired
     private UserService userService;
-    public static final String SUCCESS_URL = "http://localhost:4200/test";
-    public static final String CANCEL_URL = "http://localhost:4200/test";
+    public static final String SUCCESS_URL = "http://localhost:4200/";
+    public static final String CANCEL_URL = "http://localhost:4200/";
     public static final String CURRENCY = "USD";
     public static final String INTENT = "sale";
     public static final String DESCRIPTION = "Purchase of rocket tokens";
     public static final String PAYMENT_METHOD = "paypal";
 
 
-    public String createPayment(HttpServletRequest request) {
-        double total = Double.parseDouble(request.getParameter("amount"));
+    public String createPayment(HttpServletRequest request) throws IOException {
+        StringBuilder buffer = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line);
+        }
+        String data = buffer.toString();
+        double total = Double.parseDouble(data);
         Amount amount = new Amount();
         amount.setCurrency(CURRENCY);
         total = BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP).doubleValue();

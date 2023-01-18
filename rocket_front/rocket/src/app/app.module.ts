@@ -81,7 +81,6 @@ import { CurrentRideButtonsComponent } from './components/current-ride-info/curr
 import { metaReducers } from './local-storage.service';
 import { InputDestinationComponent } from './components/routes/input-destination/input-destination.component';
 import { RouteService } from './components/routes/route.service';
-import { PaypalTestComponent } from './page/paypal-test/paypal-test.component';
 import { RouteInfoComponent } from './components/routes/route-info/route-info.component';
 import { ChooseRoleComponent } from './modals/choose-role/choose-role.component';
 import {ToastrModule} from "ngx-toastr";
@@ -91,6 +90,8 @@ import { RideRequestPageComponent } from './page/ride-request-page/ride-request-
 import { RouteComponent } from './page/ride-request-page/route/route.component';
 import { TimeComponent } from './page/ride-request-page/time/time.component';
 import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/request-navbar.component';
+import { PaypalComponent } from './modals/paypal/paypal.component';
+
 import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
 import { StarComponent } from './modals/detailed-route/large-star/star.component';
 import { ReviewComponent } from './modals/review/review.component';
@@ -137,7 +138,6 @@ import { ReviewComponent } from './modals/review/review.component';
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    PaypalTestComponent,
     WordCeoComponent,
     StatisticsComponent,
     AdminPageComponent,
@@ -173,6 +173,7 @@ import { ReviewComponent } from './modals/review/review.component';
     ViewMoreButtonComponent,
     StarComponent,
     ReviewComponent,
+    PaypalComponent,
   ],
   imports: [
     CommonModule,

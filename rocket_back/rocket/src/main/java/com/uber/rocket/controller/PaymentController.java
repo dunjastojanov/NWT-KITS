@@ -1,7 +1,6 @@
 package com.uber.rocket.controller;
 
 import com.uber.rocket.dto.PaymentDTO;
-import com.uber.rocket.dto.PaymentRequestDto;
 import com.uber.rocket.service.PaypalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController
 @RequestMapping(path = "/api/payment")
@@ -20,7 +20,7 @@ public class PaymentController {
     public ResponseEntity<String> createPayment(HttpServletRequest request) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(paypalService.createPayment(request));
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException | IOException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
