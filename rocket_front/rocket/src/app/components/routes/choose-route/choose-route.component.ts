@@ -1,12 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Destination } from 'src/app/interfaces/Destination';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Destination} from 'src/app/interfaces/Destination';
 import {
   DestinationsAction,
   DestinationsActionType,
 } from 'src/app/shared/store/destinations-slice/destinations.actions';
-import { StoreType } from 'src/app/shared/store/types';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import {StoreType} from 'src/app/shared/store/types';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'choose-route',
@@ -14,7 +14,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
   styleUrls: ['./choose-route.component.css'],
 })
 export class ChooseRouteComponent implements OnInit {
-  @ViewChild('newInput', { read: ElementRef }) newInput!: ElementRef;
+  @ViewChild('newInput', {read: ElementRef}) newInput!: ElementRef;
   destinations: Array<Destination> = [];
 
   constructor(private store: Store<StoreType>) {
@@ -29,7 +29,8 @@ export class ChooseRouteComponent implements OnInit {
     this.newInput.nativeElement.hidden = true;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   drop(event: CdkDragDrop<Destination[]>) {
     const droppingTo = event.currentIndex;

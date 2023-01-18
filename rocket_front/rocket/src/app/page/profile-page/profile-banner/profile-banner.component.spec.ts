@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ProfileBannerComponent } from './profile-banner.component';
+import {ProfileBannerComponent} from './profile-banner.component';
 
 describe('ProfileBannerComponent', () => {
   let component: ProfileBannerComponent;
@@ -8,9 +8,9 @@ describe('ProfileBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProfileBannerComponent ]
+      declarations: [ProfileBannerComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ProfileBannerComponent);
     component = fixture.componentInstance;

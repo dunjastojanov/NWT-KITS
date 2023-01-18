@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'forgot-password',
@@ -9,7 +9,8 @@ export class ForgotPasswordComponent implements OnInit {
   @Input('open') open!: boolean;
   @Input('closeFunc') closeFunc!: () => void;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

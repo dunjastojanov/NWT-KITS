@@ -43,6 +43,6 @@ export class FavouriteRoutesComponent implements OnInit {
     this.rideService.deleteFavourite(id).then(res => {
       window.location.reload();
     })
-}
+  }
 
 }

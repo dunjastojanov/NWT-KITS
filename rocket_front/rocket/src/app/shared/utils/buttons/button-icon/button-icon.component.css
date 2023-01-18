@@ -1,24 +1,24 @@
 .not-fill {
-    @apply hover:bg-secondary-light
+  @apply hover:bg-secondary-light
 
 }
 
 .fill {
-    @apply bg-secondary-light 
+  @apply bg-secondary-light
 }
 
 .not-fill-icon {
-    @apply group-hover:brightness-200 group-hover:invert
- }
- 
- .fill-icon {
-     @apply brightness-200 invert
- }
+  @apply group-hover:brightness-200 group-hover:invert
+}
+
+.fill-icon {
+  @apply brightness-200 invert
+}
 
 .not-fill-text {
-   @apply group-hover:text-white
+  @apply group-hover:text-white
 }
 
 .fill-text {
-    @apply group-hover:text-white
+  @apply group-hover:text-white
 }

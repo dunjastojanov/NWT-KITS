@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DetailedRouteComponent } from './detailed-route.component';
+import {DetailedRouteComponent} from './detailed-route.component';
 
 describe('DetailedRouteComponent', () => {
   let component: DetailedRouteComponent;
@@ -8,9 +8,9 @@ describe('DetailedRouteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DetailedRouteComponent ]
+      declarations: [DetailedRouteComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(DetailedRouteComponent);
     component = fixture.componentInstance;

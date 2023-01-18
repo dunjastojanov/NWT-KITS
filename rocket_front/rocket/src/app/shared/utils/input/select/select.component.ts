@@ -12,10 +12,11 @@ export class SelectComponent implements OnInit {
   @Input('placeholder') placeholder?: string;
   @Input('items') items!: SelectItem[];
   @Input('value') value!: string;
-  @Input() prop!: string | "kilometers"|"rides"|"money";
+  @Input() prop!: string | "kilometers" | "rides" | "money";
   @Output() propChange = new EventEmitter<string>();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

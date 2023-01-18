@@ -2,5 +2,5 @@
 
 
 .icon {
-    @apply w-full h-full object-contain
+  @apply w-full h-full object-contain
 }

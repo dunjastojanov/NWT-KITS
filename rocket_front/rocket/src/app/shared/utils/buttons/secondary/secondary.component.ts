@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'secondary-button',
@@ -8,9 +8,10 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SecondaryComponent implements OnInit {
   @Input('text') text!: String;
   @Input('disabled') disabled: boolean;
+
   constructor() {
     this.disabled = false;
-   }
+  }
 
   ngOnInit(): void {
   }

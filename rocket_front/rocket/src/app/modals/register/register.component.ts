@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { RegisterService } from './register.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {RegisterService} from './register.service';
 
 @Component({
   selector: 'register',
@@ -24,9 +24,11 @@ export class RegisterComponent implements OnInit {
   openSuccessToast = false;
   errorMessage = '';
 
-  constructor(private service: RegisterService) {}
+  constructor(private service: RegisterService) {
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   nextPage = () => {
     this.currentPage++;

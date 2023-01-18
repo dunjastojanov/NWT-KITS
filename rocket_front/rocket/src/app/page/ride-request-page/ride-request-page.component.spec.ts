@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { RideRequestPageComponent } from './ride-request-page.component';
+import {RideRequestPageComponent} from './ride-request-page.component';
 
 describe('RideRequestPageComponent', () => {
   let component: RideRequestPageComponent;
@@ -8,9 +8,9 @@ describe('RideRequestPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RideRequestPageComponent ]
+      declarations: [RideRequestPageComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(RideRequestPageComponent);
     component = fixture.componentInstance;

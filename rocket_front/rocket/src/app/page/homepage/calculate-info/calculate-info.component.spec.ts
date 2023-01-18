@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CalculateInfoComponent } from './calculate-info.component';
+import {CalculateInfoComponent} from './calculate-info.component';
 
 describe('CalculateInfoComponent', () => {
   let component: CalculateInfoComponent;
@@ -8,9 +8,9 @@ describe('CalculateInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CalculateInfoComponent ]
+      declarations: [CalculateInfoComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CalculateInfoComponent);
     component = fixture.componentInstance;

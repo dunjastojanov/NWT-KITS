@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { CurrentRide } from 'src/app/interfaces/Ride';
+import {Component, Input, OnInit} from '@angular/core';
+import {CurrentRide} from 'src/app/interfaces/Ride';
 
 @Component({
   selector: 'current-ride-info',
@@ -7,13 +7,13 @@ import { CurrentRide } from 'src/app/interfaces/Ride';
   styleUrls: ['./current-ride-info.component.css']
 })
 export class CurrentRideInfoComponent implements OnInit {
-  @Input('ride') currentRide! : CurrentRide;
-  
-  constructor() { 
+  @Input('ride') currentRide!: CurrentRide;
+
+  constructor() {
   }
 
   ngOnInit(): void {
-    
+
   }
 
 }

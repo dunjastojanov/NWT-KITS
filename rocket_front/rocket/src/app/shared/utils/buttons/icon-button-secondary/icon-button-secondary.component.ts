@@ -10,7 +10,8 @@ export class IconButtonSecondaryComponent implements OnInit {
   @Input('path') path!: String;
 
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

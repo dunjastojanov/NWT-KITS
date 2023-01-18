@@ -1,7 +1,7 @@
 export interface Report {
-  average:number;
-  total:number;
-  data:ReportData;
+  average: number;
+  total: number;
+  data: ReportData;
 }
 
 export interface ReportData {

@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ViewMoreButtonComponent } from './view-more-button.component';
+import {ViewMoreButtonComponent} from './view-more-button.component';
 
 describe('ViewMoreButtonComponent', () => {
   let component: ViewMoreButtonComponent;
@@ -8,9 +8,9 @@ describe('ViewMoreButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewMoreButtonComponent ]
+      declarations: [ViewMoreButtonComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ViewMoreButtonComponent);
     component = fixture.componentInstance;

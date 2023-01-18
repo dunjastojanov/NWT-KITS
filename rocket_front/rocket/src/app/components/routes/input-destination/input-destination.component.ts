@@ -1,12 +1,12 @@
-import { Component, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
+import {Component, Input} from '@angular/core';
+import {Store} from '@ngrx/store';
 import {
   DestinationsAction,
   DestinationsActionType,
 } from 'src/app/shared/store/destinations-slice/destinations.actions';
-import { StoreType } from 'src/app/shared/store/types';
-import { InputComponent } from 'src/app/shared/utils/input/input/input.component';
-import { RouteService } from '../route.service';
+import {StoreType} from 'src/app/shared/store/types';
+import {InputComponent} from 'src/app/shared/utils/input/input/input.component';
+import {RouteService} from '../route.service';
 
 @Component({
   selector: 'input-destination',
@@ -18,6 +18,7 @@ export class InputDestinationComponent extends InputComponent {
   @Input('showBin') showBin!: boolean;
   destination: string = '';
   lastDispatched: string = this.value;
+
   constructor(private service: RouteService, private store: Store<StoreType>) {
     super();
   }

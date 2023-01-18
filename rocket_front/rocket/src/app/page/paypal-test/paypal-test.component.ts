@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {api} from "../../shared/api/api";
 import axios from "axios";
 
 @Component({

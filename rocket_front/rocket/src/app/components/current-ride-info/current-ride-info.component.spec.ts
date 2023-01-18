@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CurrentRideInfoComponent } from './current-ride-info.component';
+import {CurrentRideInfoComponent} from './current-ride-info.component';
 
 describe('CurrentRideInfoComponent', () => {
   let component: CurrentRideInfoComponent;
@@ -8,9 +8,9 @@ describe('CurrentRideInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CurrentRideInfoComponent ]
+      declarations: [CurrentRideInfoComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CurrentRideInfoComponent);
     component = fixture.componentInstance;

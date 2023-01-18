@@ -1,4 +1,4 @@
 export interface Destination {
-    index: number;
-    address: string;
+  index: number;
+  address: string;
 }
