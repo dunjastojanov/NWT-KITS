@@ -91,7 +91,6 @@ import { RouteComponent } from './page/ride-request-page/route/route.component';
 import { TimeComponent } from './page/ride-request-page/time/time.component';
 import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/request-navbar.component';
 import { PaypalComponent } from './modals/paypal/paypal.component';
-
 import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
 import { StarComponent } from './modals/detailed-route/large-star/star.component';
 import { ReviewComponent } from './modals/review/review.component';
@@ -189,11 +188,11 @@ import { ReviewComponent } from './modals/review/review.component';
         preventDuplicates: true,
       }
     ),
-    StoreModule.forRoot({loggedUser: loggedUserReducer, destinations: destinationsReducer}, { metaReducers }),
+    StoreModule.forRoot({loggedUser: loggedUserReducer, destinations: destinationsReducer}, {metaReducers}),
     SocialLoginModule,
     StoreModule.forRoot(
-      { loggedUser: loggedUserReducer, destinations: destinationsReducer },
-      { metaReducers }
+      {loggedUser: loggedUserReducer, destinations: destinationsReducer},
+      {metaReducers}
     ),
     SocialLoginModule,
   ],

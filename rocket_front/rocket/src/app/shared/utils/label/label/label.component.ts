@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core'
+import {Component, Input, OnInit} from '@angular/core'
 
 @Component({
   selector: 'app-label',
@@ -11,10 +11,10 @@ export class LabelComponent implements OnInit {
   @Input('gap') gap: string;
   @Input('dimension') dimension: string;
 
-  constructor() { 
-    this.gap="gap-5";
+  constructor() {
+    this.gap = "gap-5";
     this.dimension = "!w-6 !h-6"
-   }
+  }
 
   ngOnInit(): void {
   }

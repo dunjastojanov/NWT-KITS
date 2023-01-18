@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'location-card',
@@ -9,7 +9,8 @@ export class LocationCardComponent implements OnInit {
   @Input('city') city!: String;
   @Input('text') text!: String;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

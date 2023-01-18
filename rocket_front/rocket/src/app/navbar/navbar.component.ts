@@ -26,6 +26,10 @@ export class NavbarComponent implements OnInit {
     )
   }
 
+  hasRole(role: string): boolean {
+    return this.user !== null && this.user?.roles.indexOf(role) !== -1;
+  }
+
   ngOnInit(): void {
   }
 

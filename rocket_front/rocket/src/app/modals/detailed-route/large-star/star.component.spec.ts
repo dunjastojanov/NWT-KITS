@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { StarComponent } from './star.component';
+import {StarComponent} from './star.component';
 
 describe('LargeStartComponent', () => {
   let component: StarComponent;
@@ -8,9 +8,9 @@ describe('LargeStartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StarComponent ]
+      declarations: [StarComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(StarComponent);
     component = fixture.componentInstance;

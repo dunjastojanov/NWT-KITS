@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { StoreType } from 'src/app/shared/store/types';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {StoreType} from 'src/app/shared/store/types';
 
 @Component({
   selector: 'route-info',
@@ -12,8 +12,9 @@ export class RouteInfoComponent implements OnInit {
   distance: number = 0;
   time: number = 0;
   price: number = 0;
-  constructor(private store: Store<StoreType>) { 
-    store.select('destinations').subscribe( res => {
+
+  constructor(private store: Store<StoreType>) {
+    store.select('destinations').subscribe(res => {
       this.distance = res.estimated_route_distance;
       this.time = res.estimated_route_time;
     })
@@ -32,7 +33,7 @@ export class RouteInfoComponent implements OnInit {
 
   timeOutput(): string {
     let minutes: number = Math.floor(this.time / 60);
-    return  `${minutes} min ${(this.time - minutes * 60).toFixed(0)} s`
+    return `${minutes} min ${(this.time - minutes * 60).toFixed(0)} s`
   }
 
   priceOutput(): string {

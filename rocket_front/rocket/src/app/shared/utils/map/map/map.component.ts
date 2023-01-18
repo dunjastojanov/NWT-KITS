@@ -1,15 +1,16 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
+import {AfterViewInit, Component, Input} from '@angular/core';
+import {Store} from '@ngrx/store';
 import axios from 'axios';
 import * as L from 'leaflet';
 import * as lrm from 'leaflet-routing-machine';
-import { RouteService } from 'src/app/components/routes/route.service';
-import { Destination } from 'src/app/interfaces/Destination';
+import {RouteService} from 'src/app/components/routes/route.service';
+import {Destination} from 'src/app/interfaces/Destination';
 import {
   DestinationsAction,
   DestinationsActionType,
 } from 'src/app/shared/store/destinations-slice/destinations.actions';
-import { StoreType } from 'src/app/shared/store/types';
+import {StoreType} from 'src/app/shared/store/types';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -45,6 +46,7 @@ export class MapComponent implements AfterViewInit {
   ][] = [];
   openErrorToast = false;
   error: boolean = false;
+
   private initMap(): void {
     lrm;
     this.map = L.map('map', {
@@ -176,6 +178,7 @@ export class MapComponent implements AfterViewInit {
     this.bounds = mainRoutePolyline.getBounds();
     mainRoutePolyline.addTo(this.layerPolylines!);
   }
+
   drawAlternativePolyline(
     coordinates: any,
     routes: [
@@ -210,6 +213,7 @@ export class MapComponent implements AfterViewInit {
     }
     this.setRouteInfoSlice();
   }
+
   clearMap(clearMarkers: boolean) {
     if (!this.layerPolylines) {
       return;
@@ -232,6 +236,7 @@ export class MapComponent implements AfterViewInit {
       )
     );
   }
+
   async getLatLong(
     outermost: boolean,
     address: string
@@ -242,7 +247,7 @@ export class MapComponent implements AfterViewInit {
     const queryStr = new URLSearchParams(params).toString();
     let result = await axios.get(
       'https://nominatim.openstreetmap.org/search?' + queryStr,
-      { headers: { 'Access-Control-Allow-Origin': '*' } }
+      {headers: {'Access-Control-Allow-Origin': '*'}}
     );
     if (result.data.length === 0) {
       this.error = true;
@@ -251,7 +256,7 @@ export class MapComponent implements AfterViewInit {
       latitude = result.data[0].lat;
       this.createMarker(outermost, new L.LatLng(latitude, longitude), address);
     }
-    return { latitude, longitude };
+    return {latitude, longitude};
   }
 
   createMarker(outermost: boolean, latLng: L.LatLng, name: string) {

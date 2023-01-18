@@ -1,14 +1,17 @@
+<div class="p-3 pr-0 flex flex-col gap-3">
+  <div class="w-[26rem] h-fit overflow-auto p-1 gap-3" style="max-height: 13rem !important;" cdkDropList
+       [cdkDropListData]="this.destinations" (cdkDropListDropped)="drop($event)">
+    <input-destination cdkDrag [cdkDragData]="destination" *ngFor="let destination of this.destinations;"
+                       [showBin]="this.destinations.length > 2" [index]="destination.index"
+                       [value]="destination.address" class="w-96"></input-destination>
+    <input-destination #newInput hidden></input-destination>
+  </div>
 
-    <div class="p-3 pr-0 flex flex-col gap-3">
-        <div class="w-[26rem] h-fit overflow-auto p-1 gap-3" style="max-height: 13rem !important;" cdkDropList  [cdkDropListData]="this.destinations" (cdkDropListDropped)="drop($event)">
-            <input-destination cdkDrag [cdkDragData]="destination" *ngFor="let destination of this.destinations;" [showBin]="this.destinations.length > 2" [index]="destination.index" [value]="destination.address" class="w-96"></input-destination>
-            <input-destination #newInput hidden></input-destination>   
-        </div>
+  <div (click)="addNewComponent()"
+       class="w-fit flex items-center justify-items-center gap-2 hover:cursor-pointer hover:text-secondary-light">
+    <p class="font-bold text-3xl hover:cursor-pointer"> + </p>
+    <p class="font-light pt-1 hover:cursor-pointer"> Add destination</p>
+  </div>
 
-        <div (click)="addNewComponent()" class="w-fit flex items-center justify-items-center gap-2 hover:cursor-pointer hover:text-secondary-light">
-            <p class="font-bold text-3xl hover:cursor-pointer"> + </p>
-            <p class="font-light pt-1 hover:cursor-pointer"> Add destination</p>
-        </div>
-        
-    </div>
+</div>
 

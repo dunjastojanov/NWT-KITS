@@ -2,8 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AxiosResponse} from "axios";
 import {http} from "../../shared/api/axios-wrapper";
-import {Browser} from "leaflet";
-import win = Browser.win;
+
 
 @Component({
   selector: 'homepage',
@@ -14,6 +13,7 @@ export class HomepageComponent implements OnInit {
 
   constructor(private route: ActivatedRoute) {
   }
+
   openErrorToast = false;
   openSuccessToast = false;
 
@@ -25,12 +25,13 @@ export class HomepageComponent implements OnInit {
       if (paymentId && payerId) {
         this.triggerPaymentExecution(paymentId, payerId);
         setTimeout(args => {
-          window.location.href="http://localhost:4200/"
+          window.location.href = "http://localhost:4200/"
         }, 5000)
       }
       // do something with the parameters
     });
   }
+
   toggleErrorToast = () => {
     this.openErrorToast = !this.openErrorToast;
   };

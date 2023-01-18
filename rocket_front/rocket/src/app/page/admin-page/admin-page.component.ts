@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {Store} from "@ngrx/store";
+import {StoreType} from "../../shared/store/types";
 
 @Component({
   selector: 'app-admin-page',
@@ -14,9 +16,16 @@ export class AdminPageComponent implements OnInit {
     {routerLink: "statistics", path: "./assets/icons/statistics.png", title: "Statistics"}
 
   ]
-  profileImageLink:string = "assets/svetlana.jpg";
+  profileImageLink: string = "assets/profile-placeholder.png";
 
-  constructor() { }
+  constructor(private store: Store<StoreType>) {
+    let loggedUserSlice = store.select('loggedUser');
+    loggedUserSlice.subscribe(
+      resData => {
+        this.profileImageLink = resData.user?.profilePicture || "assets/profile-placeholder.png";
+      }
+    )
+  }
 
   ngOnInit(): void {
   }

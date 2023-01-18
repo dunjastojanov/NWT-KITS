@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Destination } from 'src/app/interfaces/Destination';
-import { StoreType } from 'src/app/shared/store/types';
-import { RouteService } from '../route.service';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Destination} from 'src/app/interfaces/Destination';
+import {StoreType} from 'src/app/shared/store/types';
+import {RouteService} from '../route.service';
 
 @Component({
   selector: 'calculate-show-routes',
@@ -13,11 +13,12 @@ export class CalculateShowRoutesComponent implements OnInit {
 
   destinations: Destination[] = [];
   openErrorToast = false;
-  constructor(private store: Store<StoreType> ,private service: RouteService ) {
-    store.select('destinations').subscribe( res => {
+
+  constructor(private store: Store<StoreType>, private service: RouteService) {
+    store.select('destinations').subscribe(res => {
       this.destinations = res.destinations;
     })
-   }
+  }
 
   ngOnInit(): void {
   }
@@ -31,6 +32,6 @@ export class CalculateShowRoutesComponent implements OnInit {
   }
 
   toggleErrorToast = () => {
-    this.openErrorToast =!this.openErrorToast;
+    this.openErrorToast = !this.openErrorToast;
   }
 }

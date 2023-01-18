@@ -1,5 +1,6 @@
 <div class="flex w-full wizard">
-    <a *ngFor="let state of this.states" [routerLink]="state.link" [ngClass]="{'yellow': this.currentPath === state.link, 'gray': this.currentPath !== state.link}">
-        <p class="text-3xl cursor-pointer">{{state.name}}</p>
-    </a>
+  <a *ngFor="let state of this.states" [routerLink]="state.link"
+     [ngClass]="{'yellow': this.currentPath === state.link, 'gray': this.currentPath !== state.link}">
+    <p class="text-3xl cursor-pointer">{{state.name}}</p>
+  </a>
 </div>

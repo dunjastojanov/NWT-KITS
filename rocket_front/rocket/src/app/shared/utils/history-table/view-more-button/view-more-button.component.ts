@@ -8,7 +8,6 @@ import {Component, Input, OnInit} from '@angular/core';
 export class ViewMoreButtonComponent implements OnInit {
 
   constructor() {
-    console.log(this.id)
   }
 
   @Input() id!: string;

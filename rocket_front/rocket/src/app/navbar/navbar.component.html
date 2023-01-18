@@ -1,9 +1,9 @@
 <nav class="navbar">
-  <div class="container flex flex-wrap justify-between items-start mx-auto">
-    <p routerLink='' class="flex items-center mt-2 hover:cursor-pointer">
-      <icon path="./assets/logo.png" class="mr-3 sm:h-9 !w-10 !h-10"></icon>
-      <span class="self-center text-xl font-semibold whitespace-nowrap ">Rocket</span>
-    </p>
+    <div class="container flex flex-wrap justify-between items-start mx-auto">
+      <p routerLink='' class="flex items-center mt-2 hover:cursor-pointer">
+          <icon path="./assets/logo.png" class="mr-3 sm:h-9 !w-10 !h-10"></icon>
+          <span class="self-center text-xl font-semibold whitespace-nowrap ">Rocket</span>
+      </p>
     <div class="md:flex gap-7 items-center w-4/6 md:w-auto">
       <div class="flex gap-4 md:order-2 justify-end">
         <primary-button *ngIf="!user" text="Login" (click)="toggleLogin()"></primary-button>
@@ -22,14 +22,18 @@
       <div class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
         <ul
           class="flex flex-col p-2 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
-          <li *ngIf="user">
+          <li *ngIf="hasRole('CLIENT')  || hasRole('DRIVER')">
             <p class="navbar-link" routerLink='profile'>Profile</p>
           </li>
-          <li *ngIf="user">
-            <p class="navbar-link" routerLink='ride/book'>Book a ride</p>
+          <li *ngIf="hasRole('ADMINISTRATOR')">
+            <p class="navbar-link" routerLink='admin'>Profile & Administrative Panel</p>
           </li>
           <li *ngIf="user">
-            <p class="navbar-link" routerLink='ride/current'>Current ride</p>
+            <p class="navbar-link" *ngIf="hasRole('CLIENT')" routerLink='ride/book'>Book a ride</p>
+          </li>
+          <li *ngIf="user">
+            <p class="navbar-link" *ngIf="hasRole('CLIENT')  || hasRole('DRIVER')" routerLink='ride/current'>Current
+              ride</p>
           </li>
           <li>
             <a class="navbar-link" href=''>Home</a>

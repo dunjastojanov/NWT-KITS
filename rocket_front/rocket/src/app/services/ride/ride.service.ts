@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import {User} from "../../interfaces/User";
+import {Injectable} from '@angular/core';
 import {AxiosResponse} from "axios";
 import {http} from "../../shared/api/axios-wrapper";
 
@@ -8,13 +7,14 @@ import {http} from "../../shared/api/axios-wrapper";
 })
 export class RideService {
 
-  constructor() { }
+  constructor() {
+  }
 
-  async getRide(id:string): Promise<any | null> {
-      let result: AxiosResponse = await http.get(
-        '/api/ride/' + id
-      );
-      return result.data;
+  async getRide(id: string): Promise<any | null> {
+    let result: AxiosResponse = await http.get(
+      '/api/ride/' + id
+    );
+    return result.data;
   }
 
   async getFavourites(): Promise<any | null> {

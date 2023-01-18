@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ReportDriverComponent } from './report-driver.component';
+import {ReportDriverComponent} from './report-driver.component';
 
 describe('ReportDriverComponent', () => {
   let component: ReportDriverComponent;
@@ -8,9 +8,9 @@ describe('ReportDriverComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReportDriverComponent ]
+      declarations: [ReportDriverComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ReportDriverComponent);
     component = fixture.componentInstance;

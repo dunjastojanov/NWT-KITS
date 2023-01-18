@@ -7,17 +7,37 @@ import {RideHistory} from "../../../interfaces/RideHistory";
   styleUrls: ['./history-table.component.css']
 })
 export class HistoryTableComponent implements OnInit {
+
   constructor() {
+    this._currentPage = this.page;
   }
+
   headers: string[] = [
     'start', 'end', 'driver', 'duration', 'price'
   ]
 
   @Input('rideHistory') rideHistory!: RideHistory[];
-  @Input() currentPage!: string;
-  @Input() numberOfPages!: number;
-  @Output() currentPageChange = new EventEmitter<string>();
+  @Input() page!: string;
 
-  ngOnInit(): void {}
+  private _currentPage: string = '1';
+
+  get currentPage(): string {
+    return this._currentPage;
+  }
+
+  set currentPage(value: string) {
+    if (this._currentPage !== value) {
+      this._currentPage = value;
+      this.pageChange.emit(this._currentPage);
+    }
+
+  }
+
+  @Input() numberOfPages!: number;
+  @Output() pageChange = new EventEmitter<string>();
+  @Output() numberOfPagesChange = new EventEmitter<number>();
+
+  ngOnInit(): void {
+  }
 
 }

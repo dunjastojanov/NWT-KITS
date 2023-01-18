@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../interfaces/User";
+import {UserService} from "../../services/user/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-user-info',
@@ -8,13 +10,26 @@ import {User} from "../../interfaces/User";
 })
 export class UserInfoComponent implements OnInit {
 
-  constructor() { }
 
   @Input('open') open!: boolean;
   @Input('closeFunc') closeFunc!: () => void;
-  @Input('user') user!:User;
+  @Input('user') user!: User;
+
+  private service: UserService;
+  private toastr: ToastrService;
+
+  constructor(service: UserService, toastr: ToastrService) {
+    this.service = service;
+    this.toastr = toastr;
+  }
 
   information: any = []
+
+  onBlock() {
+    this.service.blockUser(this.user.email).then((result) => {
+      this.toastr.success(result);
+    });
+  }
 
   ngOnInit(): void {
     this.information = [{

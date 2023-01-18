@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { RouteInfoComponent } from './route-info.component';
+import {RouteInfoComponent} from './route-info.component';
 
 describe('RouteInfoComponent', () => {
   let component: RouteInfoComponent;
@@ -8,9 +8,9 @@ describe('RouteInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RouteInfoComponent ]
+      declarations: [RouteInfoComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(RouteInfoComponent);
     component = fixture.componentInstance;

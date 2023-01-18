@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'toast-error',
@@ -9,8 +9,9 @@ export class ErrorComponent implements OnInit {
   @Input('message') message!: string
   @Input('open') open!: boolean;
   @Input('closeFunc') closeFunc!: () => void;
-  
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { sideUser } from 'src/app/interfaces/User';
+import {Component, Input, OnInit} from '@angular/core';
+import {sideUser} from 'src/app/interfaces/User';
 
 @Component({
   selector: 'current-ride-pals',
@@ -8,7 +8,9 @@ import { sideUser } from 'src/app/interfaces/User';
 })
 export class CurrentRidePalsComponent implements OnInit {
   @Input('pals') ridingPals!: sideUser[]
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

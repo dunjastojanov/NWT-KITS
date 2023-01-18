@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-info',
@@ -11,7 +11,8 @@ export class InfoComponent implements OnInit {
   @Input() size: String = "large";
 
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

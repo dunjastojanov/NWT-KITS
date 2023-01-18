@@ -11,13 +11,14 @@ import com.uber.rocket.repository.FavouriteRouteRepository;
 import com.uber.rocket.repository.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,8 +37,8 @@ public class RideService {
     private RideRepository repository;
     @Autowired
     private ReviewService reviewService;
-
-
+    @Autowired
+    private VehicleService vehicleService;
 
     @Autowired
     private FavouriteRouteRepository favouriteRouteRepository;
@@ -47,7 +48,7 @@ public class RideService {
 
     public List<FavouriteRouteDTO> getFavouriteRoutesForUser(HttpServletRequest request) {
         List<FavouriteRoute> favouriteRoutes = favouriteRouteRepository.findAllByUser(userService.getUserByEmail(userService.getLoggedUser(request).getEmail()));
-        return  favouriteRoutes.stream().map(FavouriteRouteDTO::new).collect(Collectors.toList());
+        return favouriteRoutes.stream().map(FavouriteRouteDTO::new).collect(Collectors.toList());
     }
 
     public FavouriteRouteDTO addFavouriteRoute(HttpServletRequest request, Long rideId) {
@@ -67,42 +68,57 @@ public class RideService {
         Optional<Ride> ride = repository.findById(id);
         if (ride.isPresent()) {
             return ride.get();
-        }
-        else {
+        } else {
             throw new RuntimeException("Ride with given id does not exist.");
 
-        }    }
+        }
+    }
 
     public Page<RideHistoryDTO> getRideHistoryForUser(HttpServletRequest request, int page, int size) {
         User user = userService.getUserFromRequest(request);
-        return getRideHistory(repository.findByPassenger(user).stream().distinct().collect(Collectors.toList()), page, size);
+        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("CLIENT"))) {
+            return getRideHistory(repository.findByPassengers(PageRequest.of(page, size, Sort.by("startTime")), user));
+        }
+        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("DRIVER"))) {
+            return getRideHistory(repository.findByVehicleDriver(PageRequest.of(page, size, Sort.by("startTime")), vehicleService.getVehicleByDriver(user)));
+        }
+        return null;
     }
 
     public Page<RideHistoryDTO> getAllRideHistory(int page, int size) {
-        return getRideHistory(repository.findAll(), page, size);
+        return getRideHistory(repository.findAll(PageRequest.of(page, size, Sort.by("startTime"))));
     }
 
-    private Page<RideHistoryDTO> getRideHistory(List<Ride> rides, int page, int size) {
-        int start = (page - 1) * size;
-        int end = Math.min(page * size, rides.size());
-        return new PageImpl<>(rides.stream().map(ride -> rideHistoryMapper.mapToDto(ride)).toList().subList(start, end));
+    private Page<RideHistoryDTO> getRideHistory(Page<Ride> rides) {
+        return rides.map(ride -> rideHistoryMapper.mapToDto(ride));
     }
 
     public Report getReportForUser(HttpServletRequest request, String type, DatePeriod datePeriod) {
         User user = userService.getUserFromRequest(request);
         LocalDateTime start = LocalDateTime.parse(datePeriod.getStartDate(), formatter);
         LocalDateTime end = LocalDateTime.parse(datePeriod.getEndDate(), formatter);
-        List<Ride> rides = repository.findByPassengerAndDatePeriod(
-                user,
-                start,
-                end);
+
+        List<Ride> rides = new ArrayList<>();
+
+        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("CLIENT"))) {
+            rides = repository.findByPassengerAndDatePeriod(
+                    user,
+                    start,
+                    end);
+        } else if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("DRIVER"))) {
+            rides = repository.findByDriverAndDatePeriod(
+                    user,
+                    start,
+                    end);
+        }
+
         return getReport(type, rides);
     }
 
     public Report getReportForAll(String type, DatePeriod datePeriod) {
-        List<Ride> rides = repository.findByDatePeriod(
-                LocalDate.parse(datePeriod.getStartDate(), formatter),
-                LocalDate.parse(datePeriod.getEndDate(), formatter));
+        LocalDateTime start = LocalDateTime.parse(datePeriod.getStartDate(), formatter);
+        LocalDateTime end = LocalDateTime.parse(datePeriod.getEndDate(), formatter);
+        List<Ride> rides = repository.findByDatePeriod(start, end);
         return getReport(type, rides);
     }
 
@@ -162,6 +178,7 @@ public class RideService {
     private static Double getKilometerData(List<Ride> rides) {
         return rides.stream().map(Ride::getLength).reduce((double) 0, Double::sum);
     }
+
     private static Double getRidesData(List<Ride> rides) {
         return (double) rides.size();
     }
@@ -170,12 +187,12 @@ public class RideService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return dateTime.format(formatter);
     }
+
     public RideDetails getRideDetails(Long id) {
         Optional<Ride> ride = repository.findById(id);
         if (ride.isPresent()) {
             return rideDetailsMapper.mapToDto(ride.get());
-        }
-        else throw new RuntimeException("Ride doesn't exist");
+        } else throw new RuntimeException("Ride doesn't exist");
     }
 
     public Review addReview(HttpServletRequest request, NewReviewDTO dto) {

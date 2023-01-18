@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../../interfaces/User";
 
 @Component({
@@ -13,10 +13,12 @@ export class UserCardComponent implements OnInit {
   openInfo: boolean = false;
 
   toggleOpenInfo = () => {
-    this.openInfo =!this.openInfo;
+    this.openInfo = !this.openInfo;
   }
 
-  constructor() { }
+  constructor() {
+  }
+
 
   ngOnInit(): void {
   }

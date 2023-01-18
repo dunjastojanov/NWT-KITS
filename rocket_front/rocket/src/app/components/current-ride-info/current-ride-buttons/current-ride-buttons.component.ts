@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'current-ride-buttons',
@@ -17,7 +17,7 @@ export class CurrentRideButtonsComponent implements OnInit {
 
   constructor() {
     this.isFavorite = false;
-   }
+  }
 
   ngOnInit(): void {
   }

@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import {Action} from '@ngrx/store';
 
 export enum DestinationsActionType {
   ADD = 'ADD',
@@ -16,5 +16,6 @@ export class DestinationsAction implements Action {
   constructor(
     readonly type: string,
     public payload: string | number | UpdatePayloadType | SwitchPayloadType
-  ) {}
+  ) {
+  }
 }

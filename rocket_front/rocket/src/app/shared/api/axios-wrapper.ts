@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { backlink, loggedUserToken } from '../consts';
+import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {backlink, loggedUserToken} from '../consts';
 
 enum StatusCode {
   BadRequest = 400,
@@ -54,7 +54,7 @@ class Http {
     http.interceptors.response.use(
       (response) => response,
       (error) => {
-        const { response } = error;
+        const {response} = error;
         return this.handleError(response);
       }
     );
@@ -96,7 +96,7 @@ class Http {
   // Handle global app errors
   // We can handle generic app errors depending on the status code
   private handleError(error: any) {
-    const { status } = error;
+    const {status} = error;
 
     switch (status) {
       case StatusCode.BadRequest: {

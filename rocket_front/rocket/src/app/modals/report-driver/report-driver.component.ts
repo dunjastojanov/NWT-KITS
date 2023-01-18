@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'report-driver',
@@ -9,7 +9,9 @@ export class ReportDriverComponent implements OnInit {
   @Input('open') open!: boolean;
   @Input('driver') driver!: string;
   @Input('closeFunc') closeFunc!: () => void;
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

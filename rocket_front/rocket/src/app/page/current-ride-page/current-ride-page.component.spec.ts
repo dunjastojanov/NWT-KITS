@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CurrentRidePageComponent } from './current-ride-page.component';
+import {CurrentRidePageComponent} from './current-ride-page.component';
 
 describe('CurrentRidePageComponent', () => {
   let component: CurrentRidePageComponent;
@@ -8,9 +8,9 @@ describe('CurrentRidePageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CurrentRidePageComponent ]
+      declarations: [CurrentRidePageComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CurrentRidePageComponent);
     component = fixture.componentInstance;

@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { VerticalNavbarComponent } from './vertical-navbar.component';
+import {VerticalNavbarComponent} from './vertical-navbar.component';
 
 describe('VerticalNavbarComponent', () => {
   let component: VerticalNavbarComponent;
@@ -8,9 +8,9 @@ describe('VerticalNavbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ VerticalNavbarComponent ]
+      declarations: [VerticalNavbarComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(VerticalNavbarComponent);
     component = fixture.componentInstance;

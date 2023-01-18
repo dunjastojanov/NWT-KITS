@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CurrentRideButtonsComponent } from './current-ride-buttons.component';
+import {CurrentRideButtonsComponent} from './current-ride-buttons.component';
 
 describe('CurrentRideButtonsComponent', () => {
   let component: CurrentRideButtonsComponent;
@@ -8,9 +8,9 @@ describe('CurrentRideButtonsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CurrentRideButtonsComponent ]
+      declarations: [CurrentRideButtonsComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CurrentRideButtonsComponent);
     component = fixture.componentInstance;

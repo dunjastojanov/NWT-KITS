@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CalculateShowRoutesComponent } from './calculate-show-routes.component';
+import {CalculateShowRoutesComponent} from './calculate-show-routes.component';
 
 describe('CalculateShowRoutesComponent', () => {
   let component: CalculateShowRoutesComponent;
@@ -8,9 +8,9 @@ describe('CalculateShowRoutesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CalculateShowRoutesComponent ]
+      declarations: [CalculateShowRoutesComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CalculateShowRoutesComponent);
     component = fixture.componentInstance;

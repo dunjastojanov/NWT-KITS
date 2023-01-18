@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AdminStatisticsComponent } from './admin-statistics.component';
+import {AdminStatisticsComponent} from './admin-statistics.component';
 
 describe('AdminStatisticsComponent', () => {
   let component: AdminStatisticsComponent;
@@ -8,9 +8,9 @@ describe('AdminStatisticsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AdminStatisticsComponent ]
+      declarations: [AdminStatisticsComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(AdminStatisticsComponent);
     component = fixture.componentInstance;
