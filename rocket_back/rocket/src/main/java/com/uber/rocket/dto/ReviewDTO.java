@@ -9,6 +9,8 @@ import lombok.*;
 @Builder
 public class ReviewDTO {
     private String reviewer;
+
+    private String reviewerProfileImage;
     private double rating;
     private String text;
 }

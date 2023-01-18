@@ -1,10 +1,13 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
+import com.uber.rocket.entity.ride.FavouriteRoute;
+import com.uber.rocket.entity.ride.Review;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
+import com.uber.rocket.repository.FavouriteRouteRepository;
 import com.uber.rocket.repository.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,8 +34,44 @@ public class RideService {
     private UserService userService;
     @Autowired
     private RideRepository repository;
+    @Autowired
+    private ReviewService reviewService;
+
+
+
+    @Autowired
+    private FavouriteRouteRepository favouriteRouteRepository;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+
+    public List<FavouriteRouteDTO> getFavouriteRoutesForUser(HttpServletRequest request) {
+        List<FavouriteRoute> favouriteRoutes = favouriteRouteRepository.findAllByUser(userService.getUserByEmail(userService.getLoggedUser(request).getEmail()));
+        return  favouriteRoutes.stream().map(FavouriteRouteDTO::new).collect(Collectors.toList());
+    }
+
+    public FavouriteRouteDTO addFavouriteRoute(HttpServletRequest request, Long rideId) {
+        User user = userService.getUserFromRequest(request);
+        FavouriteRoute favouriteRoute = new FavouriteRoute();
+        favouriteRoute.setRide(getRide(rideId));
+        favouriteRoute.setUser(userService.getUserByEmail(user.getEmail()));
+        favouriteRoute = favouriteRouteRepository.save(favouriteRoute);
+        return new FavouriteRouteDTO(favouriteRoute);
+    }
+
+    public void deleteFavouriteRoute(Long favouriteRouteId) {
+        favouriteRouteRepository.deleteById(favouriteRouteId);
+    }
+
+    public Ride getRide(Long id) {
+        Optional<Ride> ride = repository.findById(id);
+        if (ride.isPresent()) {
+            return ride.get();
+        }
+        else {
+            throw new RuntimeException("Ride with given id does not exist.");
+
+        }    }
 
     public Page<RideHistoryDTO> getRideHistoryForUser(HttpServletRequest request, int page, int size) {
         User user = userService.getUserFromRequest(request);
@@ -99,9 +138,9 @@ public class RideService {
 
     private static void addDataset(String type, Report report, Map<String, List<Ride>> groupedByDate) {
         Dataset dataset = new Dataset();
-        for (String key : groupedByDate.keySet()) {
-            report.addLabel(key);
-            dataset.setLabel(key);
+        for (String key : groupedByDate.keySet().stream().toList().stream().sorted().toList()) {
+            report.addLabel(key.toUpperCase());
+            dataset.setLabel(type);
             dataset.setBackgroundColor("yellow");
             switch (type) {
                 case "rides":
@@ -131,7 +170,7 @@ public class RideService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return dateTime.format(formatter);
     }
-    public RideDetailsDto getRideDetails(Long id) {
+    public RideDetails getRideDetails(Long id) {
         Optional<Ride> ride = repository.findById(id);
         if (ride.isPresent()) {
             return rideDetailsMapper.mapToDto(ride.get());
@@ -139,4 +178,7 @@ public class RideService {
         else throw new RuntimeException("Ride doesn't exist");
     }
 
+    public Review addReview(HttpServletRequest request, NewReviewDTO dto) {
+        return reviewService.addReview(request, dto, getRide(dto.getRideId()));
+    }
 }

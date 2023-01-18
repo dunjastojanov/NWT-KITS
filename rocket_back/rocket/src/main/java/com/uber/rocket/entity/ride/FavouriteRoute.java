@@ -8,9 +8,10 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Entity
 @Table
+@Setter
+@Getter
 public class FavouriteRoute {
     @Id
     @SequenceGenerator(name = "favourite_route_sequence", sequenceName = "favourite_route_sequence", allocationSize = 1)
@@ -21,6 +22,6 @@ public class FavouriteRoute {
     @ManyToOne
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Ride ride;
 }

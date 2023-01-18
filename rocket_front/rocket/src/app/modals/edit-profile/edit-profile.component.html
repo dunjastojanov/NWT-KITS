@@ -19,11 +19,6 @@
                class="tab">Personal information</a>
           </li>
           <li class="mr-2">
-            <a (click)="togglePaymentInformation()"
-               class="tab"
-               aria-current="page">Payment information</a>
-          </li>
-          <li class="mr-2">
             <a (click)="toggleProfilePicture()"
                class="tab">Profile picture</a>
           </li>
@@ -33,7 +28,6 @@
       <div>
         <app-personal-information *ngIf="showPersonalInformation"></app-personal-information>
         <app-profile-picture *ngIf="showProfilePicture"></app-profile-picture>
-        <app-payment-information *ngIf="showPaymentInformation"></app-payment-information>
       </div>
 
 

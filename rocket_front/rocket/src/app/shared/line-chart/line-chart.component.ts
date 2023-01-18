@@ -3,7 +3,7 @@ import Chart from 'chart.js/auto';
 import {ReportData} from "../../interfaces/Report";
 
 @Component({
-  selector: 'app-line-chart',
+  selector: 'line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.css']
 })
