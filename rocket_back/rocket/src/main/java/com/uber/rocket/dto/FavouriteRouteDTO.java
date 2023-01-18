@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FavouriteRouteDTO {
-
     String start;
     String end;
     Long id;

@@ -40,6 +40,10 @@ public class VehicleService {
         return "Successful driver registration";
     }
 
+    public Vehicle getVehicleByDriver(User driver) {
+        return vehicleRepository.findFirstByDriver(driver);
+    }
+
     private void createVehicle(DriverRegistrationDTO driverRegistrationDTO, User driver) {
         Vehicle vehicle = new Vehicle();
         vehicle.setDriver(driver);
