@@ -67,10 +67,6 @@ export class MapComponent implements AfterViewInit {
       });
     this.service.setTrigger('back');
 
-    /* this.store.dispatch(
-      new DestinationsAction(DestinationsActionType.RESET, '')
-    ); */
-
     this.service.trigger$().subscribe((x) => {
       if (x === 'trigger') {
         this.showDestinations();
