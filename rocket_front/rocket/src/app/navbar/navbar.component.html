@@ -1,9 +1,9 @@
 <nav class="navbar">
-  <div class="container flex flex-wrap justify-between items-start mx-auto">
-    <p routerLink='' class="flex items-center mt-2 hover:cursor-pointer">
-      <icon path="./assets/logo.png" class="mr-3 sm:h-9 !w-10 !h-10"></icon>
-      <span class="self-center text-xl font-semibold whitespace-nowrap ">Rocket</span>
-    </p>
+    <div class="container flex flex-wrap justify-between items-start mx-auto">
+      <p routerLink='' class="flex items-center mt-2 hover:cursor-pointer">
+          <icon path="./assets/logo.png" class="mr-3 sm:h-9 !w-10 !h-10"></icon>
+          <span class="self-center text-xl font-semibold whitespace-nowrap ">Rocket</span>
+      </p>
     <div class="md:flex gap-7 items-center w-4/6 md:w-auto">
       <div class="flex gap-4 md:order-2 justify-end">
         <primary-button *ngIf="!user" text="Login" (click)="toggleLogin()"></primary-button>
@@ -38,6 +38,9 @@
           <li>
             <a class="navbar-link" href=''>Home</a>
           </li>
+          <li>
+            <button *ngIf="user" (click)="togglePayPal()"><p class="navbar-link">PayPal</p></button>
+          </li>
           <li *ngIf="!user">
             <a class="navbar-link" href='#pricing'>Pricing</a>
           </li>
@@ -51,4 +54,5 @@
 </nav>
 
 <login [open]="showLoginModal" [closeFunc]="toggleLogin" [openRegisterModal]="toggleRegister"></login>
+<paypal class="!w-3/5" [open]="showPayPalModal" [closeFunc]="togglePayPal" ></paypal>
 <register [open]="showRegisterModal" [closeFunc]="toggleRegister" [openLoginModal]="toggleLogin"></register>

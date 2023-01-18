@@ -12,6 +12,7 @@ import {StoreType} from '../shared/store/types';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  showPayPalModal = false;
   showLoginModal = false;
   showRegisterModal = false;
   user: User | null = null;
@@ -30,12 +31,12 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   toggleLogin = (): void => {
     this.showRegisterModal = false;
     this.showLoginModal = !this.showLoginModal;
+    this.showPayPalModal = false
   }
 
   logout = (): void => {
@@ -43,7 +44,14 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleRegister = (): void => {
+    this.showPayPalModal = false
     this.showLoginModal = false;
     this.showRegisterModal = !this.showRegisterModal;
+  }
+
+  togglePayPal = (): void => {
+    this.showLoginModal = false;
+    this.showRegisterModal = false;
+    this.showPayPalModal = !this.showPayPalModal
   }
 }

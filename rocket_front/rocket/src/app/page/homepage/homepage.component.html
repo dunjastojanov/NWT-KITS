@@ -1,11 +1,14 @@
 <div class="flex flex-col">
-  <banner></banner>
+    <banner></banner>
 
-  <calculate-info></calculate-info>
-  <word-ceo></word-ceo>
-  <statistics></statistics>
-  <about></about>
+    <calculate-info></calculate-info>
+    <word-ceo></word-ceo>
+    <statistics></statistics>
+    <about></about>
 
 </div>
+<toast-error message="Payment was not successful" [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
+<toast-success message="Payment was successful!" [open]="openSuccessToast" [closeFunc]="toggleSuccessToast"></toast-success>
+
 
 
