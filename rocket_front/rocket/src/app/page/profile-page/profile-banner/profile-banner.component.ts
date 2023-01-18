@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {User} from "../../../interfaces/User";
-import {UserService} from "../../../services/user/user.service";
+import {Component, OnInit} from '@angular/core';
+import {Store} from "@ngrx/store";
+import {StoreType} from "../../../shared/store/types";
 
 @Component({
   selector: 'app-profile-banner',
@@ -10,15 +10,14 @@ import {UserService} from "../../../services/user/user.service";
 export class ProfileBannerComponent implements OnInit {
 
   title: string = "";
-  constructor(private service: UserService) {
-    this.service.getUser().then((res) => {
-      if (res) {
-        this.title = `${res.firstName} ${res.lastName}`;
 
+  constructor(private store: Store<StoreType>) {
+    let loggedUserSlice = store.select('loggedUser');
+    loggedUserSlice.subscribe(
+      resData => {
+        this.title = `${resData.user?.firstName} ${resData.user?.lastName}`;
       }
-
-    });
-
+    )
   }
 
   ngOnInit(): void {

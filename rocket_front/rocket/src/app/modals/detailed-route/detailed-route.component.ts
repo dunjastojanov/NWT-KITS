@@ -44,7 +44,6 @@ export class DetailedRouteComponent implements OnInit {
     this.rideService.getRide(this.id).then(
       data => {
         this.ride = data;
-        console.log(this.ride);
       }
     )
   }

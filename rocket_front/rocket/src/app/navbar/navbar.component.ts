@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store'
-import { User } from '../interfaces/User';
-import { LoggedUserAction, LoggedUserActionType } from '../shared/store/logged-user-slice/logged-user.actions';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store'
+import {User} from '../interfaces/User';
+import {LoggedUserAction, LoggedUserActionType} from '../shared/store/logged-user-slice/logged-user.actions';
 
 
-import { StoreType } from '../shared/store/types';
+import {StoreType} from '../shared/store/types';
 
 @Component({
   selector: 'navbar',
@@ -15,7 +15,7 @@ export class NavbarComponent implements OnInit {
   showLoginModal = false;
   showRegisterModal = false;
   user: User | null = null;
-  
+
   constructor(private store: Store<StoreType>) {
     let loggedUserSlice = store.select('loggedUser');
     loggedUserSlice.subscribe(
@@ -25,7 +25,12 @@ export class NavbarComponent implements OnInit {
     )
   }
 
+  hasRole(role: string): boolean {
+    return this.user !== null && this.user?.roles.indexOf(role) !== -1;
+  }
+
   ngOnInit(): void {
+
   }
 
   toggleLogin = (): void => {
@@ -39,6 +44,6 @@ export class NavbarComponent implements OnInit {
 
   toggleRegister = (): void => {
     this.showLoginModal = false;
-    this.showRegisterModal =!this.showRegisterModal;
+    this.showRegisterModal = !this.showRegisterModal;
   }
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { User } from '../../../interfaces/User';
+import {Component, OnInit} from '@angular/core';
+import {UserService} from "../../../services/user/user.service";
 
 @Component({
   selector: 'app-drivers',
@@ -7,34 +7,50 @@ import { User } from '../../../interfaces/User';
   styleUrls: ['./drivers.component.css'],
 })
 export class DriversComponent implements OnInit {
-  constructor() {}
-
   openRegisterDriver: boolean = false;
 
   toggleOpenRegisterDriver = () => {
     this.openRegisterDriver = !this.openRegisterDriver;
   };
 
-  drivers: Array<User> = [
-    {
-      firstName: 'Kevin',
-      lastName: 'Ball',
-      phoneNumber: '235-47851-96',
-      city: 'Chicago',
-      status: 'active',
-      role: 'driver',
-      profileImage: 'assets/kev.webp',
-    },
-    ...Array(7).fill({
-      firstName: 'Kevin',
-      lastName: 'Ball',
-      phoneNumber: '235-47851-96',
-      city: 'Chicago',
-      status: 'inactive',
-      role: 'driver',
-      profileImage: 'assets/kev.webp',
-    }),
-  ];
+  get filter(): string {
+    return this._filter;
+  }
 
-  ngOnInit(): void {}
+  set filter(value: string) {
+    this._filter = value;
+  }
+
+  private _filter: string = '';
+
+  get currentPage(): string {
+    return this._currentPage;
+  }
+
+  private service: UserService;
+
+  set currentPage(value: string) {
+    this._currentPage = value;
+    this.fetch();
+  }
+
+  constructor(service: UserService) {
+    this.service = service;
+    this.fetch();
+  }
+
+  fetch() {
+    this.service.getDrivers(this.filter, (+this.currentPage - 1).toString(), 4).then(response => {
+      this.drivers = response.content;
+      this.numberOfPages = response.totalPages;
+    })
+  }
+
+  drivers = [];
+  private _currentPage: string = "1";
+  numberOfPages: number = 1;
+
+
+  ngOnInit(): void {
+  }
 }

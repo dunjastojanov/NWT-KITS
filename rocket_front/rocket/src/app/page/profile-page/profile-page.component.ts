@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {UserService} from "../../services/user/user.service";
+import {Component, OnInit} from '@angular/core';
+import {Store} from "@ngrx/store";
+import {StoreType} from "../../shared/store/types";
 
 @Component({
   selector: 'app-profile-page',
@@ -9,13 +10,17 @@ import {UserService} from "../../services/user/user.service";
 export class ProfilePageComponent implements OnInit {
 
   profileImageLink: string = "assets/profile-placeholder.png";
-  constructor(private service: UserService) {
-    service.getUser().then(res=> {
-      this.profileImageLink = res?.profilePicture || "assets/profile-placeholder.png";
-    })
+
+  constructor(private store: Store<StoreType>) {
+    let loggedUserSlice = store.select('loggedUser');
+    loggedUserSlice.subscribe(
+      resData => {
+        this.profileImageLink = resData.user?.profilePicture || "assets/profile-placeholder.png";
+      }
+    )
   }
 
-  navbarItems:any =  [
+  navbarItems: any = [
     {routerLink: "information", path: "./assets/icons/information.png", title: "General information"},
     {routerLink: "favourites", path: "./assets/icons/favorite.png", title: "Favourite routes"},
     {routerLink: "statistics", path: "./assets/icons/statistics.png", title: "Statistics"},
