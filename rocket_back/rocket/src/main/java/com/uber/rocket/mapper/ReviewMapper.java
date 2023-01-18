@@ -13,6 +13,7 @@ public class ReviewMapper implements Mapper<Review, ReviewDTO>{
         dto.setReviewer(review.getPassenger().getFullName());
         dto.setText(review.getDescription());
         dto.setRating(review.getRating());
+        dto.setReviewerProfileImage(review.getPassenger().getProfilePicture());
         return dto;
     }
 }

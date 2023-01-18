@@ -13,9 +13,10 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Entity
 @Table
+@Setter
+@Getter
 public class Ride {
     @Id
     @SequenceGenerator(name = "ride_sequence", sequenceName = "ride_sequence", allocationSize = 1)
@@ -35,9 +36,11 @@ public class Ride {
     private String routeLocation;
 
     @Nullable
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="destination", joinColumns=@JoinColumn(name="ride_id"))
+    @Column(name="destination")
+    @OrderColumn
     private List<String> destinations;
-
 
     private LocalDateTime startTime;
     @Nullable
@@ -69,6 +72,7 @@ public class Ride {
     public String getEnd() {
         return destinations.get(destinations.size() - 1);
     }
+
 
 
 }

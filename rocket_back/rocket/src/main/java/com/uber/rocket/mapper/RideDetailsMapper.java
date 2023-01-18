@@ -1,6 +1,6 @@
 package com.uber.rocket.mapper;
 
-import com.uber.rocket.dto.RideDetailsDto;
+import com.uber.rocket.dto.RideDetails;
 import com.uber.rocket.entity.ride.Review;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.service.ReviewService;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 
 @Component
-public class RideDetailsMapper implements Mapper<Ride, RideDetailsDto> {
+public class RideDetailsMapper implements Mapper<Ride, RideDetails> {
     private final ReviewMapper reviewMapper;
     private final ReviewService reviewService;
 
@@ -19,11 +19,13 @@ public class RideDetailsMapper implements Mapper<Ride, RideDetailsDto> {
     }
 
     @Override
-    public RideDetailsDto mapToDto(Ride ride) {
+    public RideDetails mapToDto(Ride ride) {
 
-        return RideDetailsDto
+        return RideDetails
                 .builder()
+                .id(ride.getId())
                 .driver(ride.getDriver().getFullName())
+                .driverProfileImage(ride.getDriver().getProfilePicture())
                 .start(ride.getStart())
                 .end(ride.getEnd())
                 .duration(String.valueOf(ride.getDuration()))
