@@ -36,6 +36,7 @@
     "mapbox-gl-leaflet": "^0.0.15",
     "ng2-charts": "^4.0.1",
     "ngrx-store-localstorage": "^14.0.0",
+    "ngx-stars": "^1.6.4",
     "ngx-toastr": "^14.3.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

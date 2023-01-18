@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import {
@@ -6,6 +7,7 @@ import {
   GoogleLoginProvider,
   FacebookLoginProvider,
 } from '@abacritt/angularx-social-login';
+import { NgxStarsModule } from 'ngx-stars';
 import { AuthGuardService } from './auth-guard.service';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
@@ -90,6 +92,9 @@ import { TimeComponent } from './page/ride-request-page/time/time.component';
 import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/request-navbar.component';
 import { PaypalComponent } from './modals/paypal/paypal.component';
 
+import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
+import { StarComponent } from './modals/detailed-route/large-star/star.component';
+import { ReviewComponent } from './modals/review/review.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -165,14 +170,19 @@ import { PaypalComponent } from './modals/paypal/paypal.component';
     RouteComponent,
     TimeComponent,
     RequestNavbarComponent,
+    ViewMoreButtonComponent,
+    StarComponent,
+    ReviewComponent,
     PaypalComponent,
   ],
   imports: [
+    CommonModule,
     DragDropModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
+    NgxStarsModule,
     ToastrModule.forRoot({
         timeOut: 3000,
         positionClass: 'toast-center-center',

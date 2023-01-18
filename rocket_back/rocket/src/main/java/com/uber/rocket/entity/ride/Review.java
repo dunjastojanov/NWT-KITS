@@ -33,8 +33,9 @@ public class Review {
 
     @ManyToOne
     private Ride ride;
-    public float getRating() {
-        return ((float)(vehicleRating + driverRating))/2;
+
+    public double getRating() {
+        return ((double)(vehicleRating + driverRating))/2;
     }
 
 }

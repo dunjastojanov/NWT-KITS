@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DatePeriod {
-    String startDate;
-    String endDate;
+@Setter
+@Getter
+public class NewReviewDTO {
+    long rideId;
+    int driverRating;
+    int vehicleRating;
+    String description;
 }

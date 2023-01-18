@@ -26,10 +26,6 @@ export class ProfileHistoryComponent implements OnInit, OnChanges {
       this.rideHistory = data.content;
       this.numberOfPages = data.totalPages;
     })
-
-    this.rideService.getRide().then(data=> {
-      console.log(data);
-    })
   }
 
   ngOnInit(): void {
