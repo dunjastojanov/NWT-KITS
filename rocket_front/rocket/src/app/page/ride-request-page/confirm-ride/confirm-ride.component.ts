@@ -14,15 +14,22 @@ import { RideInfo } from '../data-info/ride-info.type';
 export class ConfirmRideComponent implements OnInit {
   rideInfo: RideInfo = new RideInfo();
   destinations: Destination[] = [];
-  estimated_route_distance: number = 0;
-  estimated_route_time: number = 0;
-  routes: [Route, Route?][] = [];
+  estimated_price: number = 0;
+  estimated_distance: number = 0;
+  estimated_time: number = 0;
+  selectedRoute: Route[] = [];
   constructor(private store: Store<StoreType>, private service: RouteService) {
     this.store.select('destinations').subscribe((resData) => {
       this.destinations = resData.destinations;
-      this.estimated_route_distance = resData.estimated_route_distance;
-      this.estimated_route_time = resData.estimated_route_time;
-      this.routes = resData.routes;
+      this.estimated_price = resData.estimated_price;
+      this.estimated_distance = resData.estimated_route_distance;
+      this.estimated_time = resData.estimated_route_time;
+      this.selectedRoute = resData.routes.map((mainAlt) => {
+        const one = mainAlt[0];
+        const two = mainAlt[1];
+        if (one && one.selected) return one;
+        return two!;
+      });
     });
     this.store.select('rideInfo').subscribe((resData) => {
       this.rideInfo = resData.ride;

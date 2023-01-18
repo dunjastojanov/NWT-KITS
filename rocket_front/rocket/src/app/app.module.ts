@@ -89,6 +89,7 @@ import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/
 import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
 import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reducer';
+import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.component';
 
 @NgModule({
   declarations: [
@@ -167,6 +168,7 @@ import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reduce
     RequestNavbarComponent,
     DataInfoComponent,
     ConfirmRideComponent,
+    ShowOnMapComponent,
   ],
   imports: [
     DragDropModule,

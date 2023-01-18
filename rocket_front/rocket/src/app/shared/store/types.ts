@@ -12,6 +12,7 @@ export type DestinationsStateType = {
   destinations: Destination[];
   estimated_route_time: number;
   estimated_route_distance: number;
+  estimated_price: number;
   routes: [Route, Route?][];
 };
 

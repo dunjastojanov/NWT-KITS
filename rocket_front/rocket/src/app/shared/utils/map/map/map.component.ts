@@ -9,10 +9,9 @@ import {
   DestinationsAction,
   DestinationsActionType,
 } from 'src/app/shared/store/destinations-slice/destinations.actions';
-import { DestinationsStateType, StoreType } from 'src/app/shared/store/types';
-import { decode, encode, LatLngTuple } from '@googlemaps/polyline-codec';
-import { Route } from './route.type';
-import { Observable, Subscription } from 'rxjs';
+import { StoreType } from 'src/app/shared/store/types';
+import { Route, url } from './route.type';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -22,16 +21,10 @@ import { Observable, Subscription } from 'rxjs';
 export class MapComponent implements AfterViewInit {
   @Input('height') height!: string;
   private map: any;
-  baseUrl = 'http://router.project-osrm.org/route/v1/car/';
-  options = {
-    alternatives: 'true',
-    geometries: 'geojson',
-  };
   bounds: L.LatLngBounds | null = null;
   estimatedDistance: number = 0;
   estimatedTime: number = 0;
-  destinations: { latitude: number; longitude: number }[] = [];
-  destObj: Destination[] = [];
+  destinations: Destination[] = [];
   layerPolylines: L.LayerGroup | null = null;
   layerMarkers: L.LayerGroup | null = null;
   routes: [Route, Route?][] = [];
@@ -67,15 +60,16 @@ export class MapComponent implements AfterViewInit {
     this.subscription = this.store
       .select('destinations')
       .subscribe((resData) => {
-        this.destObj = resData.destinations;
+        this.destinations = resData.destinations;
         this.estimatedDistance = resData.estimated_route_distance;
         this.estimatedTime = resData.estimated_route_time;
         this.routes = resData.routes;
       });
+    this.service.setTrigger('back');
 
-    this.store.dispatch(
+    /* this.store.dispatch(
       new DestinationsAction(DestinationsActionType.RESET, '')
-    );
+    ); */
 
     this.service.trigger$().subscribe((x) => {
       if (x === 'trigger') {
@@ -93,22 +87,16 @@ export class MapComponent implements AfterViewInit {
       return;
     }
     this.clearMap(true);
-    this.destinations = [];
     this.error = false;
     if (
-      this.destObj.filter((elem) => elem.address !== '').length ===
-      this.destObj.length
+      this.destinations.filter((elem) => elem.address !== '').length ===
+      this.destinations.length
     ) {
-      let destPromises = this.destObj.map(async (elem, index, array) => {
+      this.destinations.map(async (elem, index, array) => {
         let outermost = index === 0 || index === array.length - 1;
-        return await this.getLatLong(outermost, elem.address);
+        await this.getLatLong(outermost, elem);
+        if (index === array.length - 1) this.createRoutes();
       });
-      Promise.all(destPromises).then((promises) =>
-        promises.map((promise) => {
-          this.destinations.push(promise);
-          if (this.destinations.length === promises.length) this.createRoutes();
-        })
-      );
     }
   }
 
@@ -124,17 +112,8 @@ export class MapComponent implements AfterViewInit {
     this.calculateRouteInfo();
   }
 
-  async osrm(
-    start: { latitude: number; longitude: number },
-    end: { latitude: number; longitude: number }
-  ) {
-    const url = `${this.baseUrl}${start.longitude},${start.latitude};${
-      end.longitude
-    },${end.latitude}?${Object.keys(this.options)
-      .map((key) => `${key}=${this.options[key as keyof typeof this.options]}`)
-      .join('&')}`;
-
-    await axios.get(url).then((response) => {
+  async osrm(start: Destination, end: Destination) {
+    await axios.get(url(start, end)).then((response) => {
       const routes = response.data['routes'];
 
       const mainRoute: Route = routes[0];
@@ -158,12 +137,6 @@ export class MapComponent implements AfterViewInit {
   }
 
   drawPolylines() {
-    /*this.store.dispatch(
-      new DestinationsAction(DestinationsActionType.ADD_ROUTE_DISTANCE, 0)
-    );
-    this.store.dispatch(
-      new DestinationsAction(DestinationsActionType.ADD_ROUTE_TIME, 0)
-    );*/
     for (let i = 0; i < this.routes.length; i++) {
       let oneRoute: Route = this.routes[i][0];
       let oneCoordinates = this.getCoordinates(oneRoute);
@@ -235,7 +208,8 @@ export class MapComponent implements AfterViewInit {
       distance += mainRoute.distance;
       time += mainRoute.duration;
     }
-    this.setRouteInfoSlice(distance, time);
+    const price = 1 + distance * 0.0009 + time * 0.0005;
+    this.setRouteInfoSlice(distance, time, price);
   }
   clearMap(clearMarkers: boolean) {
     if (!this.layerPolylines) {
@@ -245,7 +219,7 @@ export class MapComponent implements AfterViewInit {
     if (clearMarkers && this.layerMarkers) this.layerMarkers!.clearLayers();
   }
 
-  setRouteInfoSlice(distance: number, time: number) {
+  setRouteInfoSlice(distance: number, time: number, price: number) {
     this.store.dispatch(
       new DestinationsAction(
         DestinationsActionType.ADD_ROUTE_DISTANCE,
@@ -255,12 +229,12 @@ export class MapComponent implements AfterViewInit {
     this.store.dispatch(
       new DestinationsAction(DestinationsActionType.ADD_ROUTE_TIME, time)
     );
+    this.store.dispatch(
+      new DestinationsAction(DestinationsActionType.ADD_PRICE, price)
+    );
   }
-  async getLatLong(
-    outermost: boolean,
-    address: string
-  ): Promise<{ latitude: number; longitude: number }> {
-    let params = `q=${address}&format=json&addressdetails=1&polygon_geojson=0`;
+  async getLatLong(outermost: boolean, dest: Destination) {
+    let params = `q=${dest.address}&format=json&addressdetails=1&polygon_geojson=0`;
     let longitude: number = 45.2671;
     let latitude: number = 19.8335;
     const queryStr = new URLSearchParams(params).toString();
@@ -273,9 +247,20 @@ export class MapComponent implements AfterViewInit {
     } else {
       longitude = result.data[0].lon;
       latitude = result.data[0].lat;
-      this.createMarker(outermost, new L.LatLng(latitude, longitude), address);
+      this.createMarker(
+        outermost,
+        new L.LatLng(latitude, longitude),
+        dest.address
+      );
     }
-    return { latitude, longitude };
+
+    this.store.dispatch(
+      new DestinationsAction(DestinationsActionType.UPDATE, {
+        ...dest,
+        longitude,
+        latitude,
+      })
+    );
   }
 
   createMarker(outermost: boolean, latLng: L.LatLng, name: string) {

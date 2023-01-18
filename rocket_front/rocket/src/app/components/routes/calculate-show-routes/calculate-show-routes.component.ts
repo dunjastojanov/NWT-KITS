@@ -20,11 +20,15 @@ export class CalculateShowRoutesComponent implements OnInit {
     store.select('destinations').subscribe((res) => {
       this.destinations = res.destinations;
     });
+
+    this.service.trigger$().subscribe((res) => {
+      if (res === 'back') this.onShow(true);
+    });
   }
 
   ngOnInit(): void {}
 
-  onShow() {
+  onShow(hideError?: boolean) {
     if (
       this.destinations.filter((elem) => elem.address !== '').length ===
       this.destinations.length
@@ -33,7 +37,7 @@ export class CalculateShowRoutesComponent implements OnInit {
         new DestinationsAction(DestinationsActionType.RESET, '')
       );
       this.service.setTrigger('trigger');
-    } else {
+    } else if (!hideError) {
       this.openErrorToast = true;
     }
   }

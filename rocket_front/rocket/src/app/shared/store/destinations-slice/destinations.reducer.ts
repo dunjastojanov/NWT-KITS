@@ -16,6 +16,7 @@ const initialState: DestinationsStateType = {
   ],
   estimated_route_distance: 0,
   estimated_route_time: 0,
+  estimated_price: 0,
   routes: [],
 };
 
@@ -53,7 +54,12 @@ export const destinationsReducer = (
       let newStateUpdate = [...state.destinations];
       let act: UpdatePayloadType = <UpdatePayloadType>action.payload;
       let finalStateUpdate = newStateUpdate.map((dest) =>
-        act.index === dest.index ? { ...dest, address: act.address } : dest
+        act.index === dest.index
+          ? {
+              ...dest,
+              ...act,
+            }
+          : dest
       );
       return {
         ...state,
@@ -88,6 +94,11 @@ export const destinationsReducer = (
       return {
         ...state,
         estimated_route_time: <number>action.payload,
+      };
+    case DestinationsActionType.ADD_PRICE:
+      return {
+        ...state,
+        estimated_price: <number>action.payload,
       };
     case DestinationsActionType.UPDATE_ROUTES:
       return {
