@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import {
   SocialLoginModule,
   GoogleLoginProvider,
@@ -82,8 +83,8 @@ import { RouteService } from './components/routes/route.service';
 import { PaypalTestComponent } from './page/paypal-test/paypal-test.component';
 import { RouteInfoComponent } from './components/routes/route-info/route-info.component';
 import { ChooseRoleComponent } from './modals/choose-role/choose-role.component';
-import {ToastrModule} from "ngx-toastr";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RideRequestPageComponent } from './page/ride-request-page/ride-request-page.component';
 import { RouteComponent } from './page/ride-request-page/route/route.component';
@@ -92,6 +93,7 @@ import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.
 import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reducer';
 import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.component';
+import { SocketService } from './services/sockets/sockets.service';
 
 @NgModule({
   declarations: [
@@ -173,18 +175,17 @@ import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.c
     ShowOnMapComponent,
   ],
   imports: [
+    HttpClientModule,
     DragDropModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({
-        timeOut: 3000,
-        positionClass: 'toast-center-center',
-        preventDuplicates: true,
-      }
-    ),
-    StoreModule.forRoot({loggedUser: loggedUserReducer, destinations: destinationsReducer}, { metaReducers }),
+      timeOut: 3000,
+      positionClass: 'toast-center-center',
+      preventDuplicates: true,
+    }),
     SocialLoginModule,
     StoreModule.forRoot(
       {
@@ -197,6 +198,7 @@ import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.c
     SocialLoginModule,
   ],
   providers: [
+    SocketService,
     RouteService,
     {
       provide: 'SocialAuthServiceConfig',
