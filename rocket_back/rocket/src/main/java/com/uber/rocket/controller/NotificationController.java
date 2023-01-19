@@ -27,6 +27,7 @@ public class NotificationController {
         } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
+    }
     @GetMapping("/greet")
     public String getNotification() {
         System.out.println("Greet se pozove");
