@@ -5,7 +5,9 @@ import {
   DestinationsActionType,
   SwitchPayloadType,
   UpdatePayloadType,
+  UpdateRoutes,
 } from './destinations.actions';
+import { Route } from '../../utils/map/map/route.type';
 
 const initialState: DestinationsStateType = {
   destinations: [
@@ -14,6 +16,8 @@ const initialState: DestinationsStateType = {
   ],
   estimated_route_distance: 0,
   estimated_route_time: 0,
+  estimated_price: 0,
+  routes: [],
 };
 
 export const destinationsReducer = (
@@ -50,7 +54,12 @@ export const destinationsReducer = (
       let newStateUpdate = [...state.destinations];
       let act: UpdatePayloadType = <UpdatePayloadType>action.payload;
       let finalStateUpdate = newStateUpdate.map((dest) =>
-        act.index === dest.index ? {...dest, address: act.address} : dest
+        act.index === dest.index
+          ? {
+              ...dest,
+              ...act,
+            }
+          : dest
       );
       return {
         ...state,
@@ -85,6 +94,54 @@ export const destinationsReducer = (
       return {
         ...state,
         estimated_route_time: <number>action.payload,
+      };
+    case DestinationsActionType.ADD_PRICE:
+      return {
+        ...state,
+        estimated_price: <number>action.payload,
+      };
+    case DestinationsActionType.UPDATE_ROUTES:
+      return {
+        ...state,
+        routes: <UpdateRoutes>action.payload,
+      };
+    case DestinationsActionType.ADD_ROUTE:
+      let newRoute = [...state.routes];
+      newRoute.push(<[Route, Route?]>action.payload);
+      return {
+        ...state,
+        routes: newRoute,
+      };
+    case DestinationsActionType.RESET:
+      return {
+        ...state,
+        routes: [],
+        estimated_route_distance: 0,
+        estimated_route_time: 0,
+      };
+    case DestinationsActionType.SWITCH_ALTERNATIVE:
+      const betweenTwoAdressesRoutes = <[Route, Route?]>action.payload;
+      let newRoutes = [...state.routes];
+      newRoutes = newRoutes.map((elem) => {
+        if (
+          elem[0].geometry.coordinates ===
+          betweenTwoAdressesRoutes[0].geometry.coordinates
+        ) {
+          const newElem0 = { ...elem[0], selected: false };
+          const newElem1 = { ...elem[1]!, selected: true };
+          return [newElem1, newElem0];
+        } else {
+          if (elem[1]) {
+            return [elem[0], elem[1]];
+          }
+          return [elem[0]];
+        }
+      });
+      return {
+        ...state,
+        routes: newRoutes,
+        estimated_route_distance: 0,
+        estimated_route_time: 0,
       };
     default: {
       return state;

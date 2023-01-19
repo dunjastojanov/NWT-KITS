@@ -1,0 +1,64 @@
+
+<div class="flex w-full h-[80vh] gap-3">
+    <show-on-map dimensions="w-[140vh] h-[80vh]" [destinations]="this.destinations" [route]="this.selectedRoute"></show-on-map>
+    <div class="flex flex-col gap-8 px-16 py-12 items-start text-lg w-1/2 overflow-auto ">
+        <div *ngIf="this.haveDestinations()" class="flex flex-col gap-3 w-full">
+            <p class="font-light">Destinations:</p>
+            <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+            <div class="flex flex-col items-end w-full gap-5 pl-5 max-h-20 overflow-auto pr-3">
+                <p *ngFor="let destination of this.destinations" class="text-lg">{{destination.address}}</p>
+            </div>
+        </div>
+        <div *ngIf="this.haveDestinations()" class="w-full pt-5/12"><hr class= "min-w-full"></div>
+        <div class="flex w-full gap-5 items-center justify-between">
+            <p class="font-light">Distance:</p>
+            <p class="font-semibold text-lg">{{this.convertDistance()}}</p>
+        </div>
+        <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+        <div class="flex w-full gap-5 items-center justify-between">
+            <p class="font-light">Estimated travel duration:</p>
+            <p class="font-semibold text-lg">{{this.convertDuration()}}</p>
+        </div>
+        <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+        <div class="flex w-full gap-5 items-center justify-between">
+            <p class="font-light">Estimated price:</p>
+            <p class="font-semibold text-lg">{{this.convertPrice()}}</p>
+        </div>
+        <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+        <div class="flex w-full gap-5 items-center justify-between">
+            <p class="font-light"> Booked for:</p>
+            <p *ngIf="this.rideInfo.isNow" class="font-semibold text-lg">now</p>
+            <p *ngIf="!this.rideInfo.isNow" class="font-semibold text-lg">{{this.convertTime()}}</p>
+        </div>
+        <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+        <div *ngIf="this.rideInfo.friends.length > 0" class="flex flex-col gap-3 w-full">
+            <p class="font-light">Friends:</p>
+            <div class="flex flex-col items-end w-full gap-5 pl-5 max-h-36 overflow-auto pr-3">
+                <p *ngFor="let friend of this.rideInfo.friends" class="text-lg">{{friend}}</p>
+            </div>
+        </div>
+        <div *ngIf="this.rideInfo.friends.length > 0" class="w-full pt-5/12"><hr class= "min-w-full"></div>
+        <div class="flex w-full gap-5 items-center justify-between">
+            <p class="font-light">Payment method:</p>
+            <p *ngIf="this.rideInfo.split" class="font-semibold text-lg">Split fair payment</p>
+            <p *ngIf="!this.rideInfo.split" class="font-semibold text-lg">No split fair payment</p>
+        </div>
+        <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+        <div *ngIf="this.rideInfo.features.length > 0" class="flex flex-col gap-3 w-full">
+            <p class="font-light">Additional features:</p>
+            <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+            <div class="flex justify-end w-full gap-5 pl-5 max-h-32 overflow-auto">
+                <span *ngFor="let feature of this.rideInfo.features" class=" bg-secondary-light text-white mr-2 px-4 py-1 py-0.5 rounded-2xl text-base">{{feature}}</span>
+            </div>
+        </div>
+        <div *ngIf="this.rideInfo.features.length > 0" class="w-full pt-5/12"><hr class= "min-w-full"></div>
+        <div class="flex w-full gap-5 items-center justify-between">
+            <p class="font-light">Vehicle type:</p>
+            <p *ngIf="this.rideInfo.vehicle" class="font-semibold text-lg">{{this.rideInfo.vehicle.charAt(0).toUpperCase() + this.rideInfo.vehicle.slice(1)}}</p>
+            <p *ngIf="!this.rideInfo.vehicle" class="font-semibold text-lg">No vehicle selected</p>
+        </div>
+        <div class="w-full flex justify-center mt-6">
+            <primary-button text="Confirm and continue"></primary-button>
+        </div>
+    </div>
+</div>

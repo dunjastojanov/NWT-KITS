@@ -1,20 +1,21 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {HomepageComponent} from './page/homepage/homepage.component';
-import {ProfilePageComponent} from './page/profile-page/profile-page.component';
-import {GeneralInformationComponent} from './page/profile-page/general-information/general-information.component';
-import {FavouriteRoutesComponent} from './page/profile-page/favourite-routes/favourite-routes.component';
-import {ProfileStatisticsComponent} from './page/profile-page/profile-statistics/profile-statistics.component';
-import {ProfileHistoryComponent} from './page/profile-page/profile-history/profile-history.component';
-import {AdminPageComponent} from './page/admin-page/admin-page.component';
-import {ClientsComponent} from './page/admin-page/clients/clients.component';
-import {DriversComponent} from './page/admin-page/drivers/drivers.component';
-import {AdminHistoryComponent} from './page/admin-page/admin-history/admin-history.component';
-import {AdminStatisticsComponent} from './page/admin-page/admin-statistics/admin-statistics.component';
-import {CurrentRidePageComponent} from './page/current-ride-page/current-ride-page.component';
-import {RideRequestPageComponent} from './page/ride-request-page/ride-request-page.component';
-import {RouteComponent} from './page/ride-request-page/route/route.component';
-import {TimeComponent} from './page/ride-request-page/time/time.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomepageComponent } from './page/homepage/homepage.component';
+import { ProfilePageComponent } from './page/profile-page/profile-page.component';
+import { GeneralInformationComponent } from './page/profile-page/general-information/general-information.component';
+import { FavouriteRoutesComponent } from './page/profile-page/favourite-routes/favourite-routes.component';
+import { ProfileStatisticsComponent } from './page/profile-page/profile-statistics/profile-statistics.component';
+import { ProfileHistoryComponent } from './page/profile-page/profile-history/profile-history.component';
+import { AdminPageComponent } from './page/admin-page/admin-page.component';
+import { ClientsComponent } from './page/admin-page/clients/clients.component';
+import { DriversComponent } from './page/admin-page/drivers/drivers.component';
+import { AdminHistoryComponent } from './page/admin-page/admin-history/admin-history.component';
+import { AdminStatisticsComponent } from './page/admin-page/admin-statistics/admin-statistics.component';
+import { CurrentRidePageComponent } from './page/current-ride-page/current-ride-page.component';
+import { RideRequestPageComponent } from './page/ride-request-page/ride-request-page.component';
+import { RouteComponent } from './page/ride-request-page/route/route.component';
+import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
+import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 
 const routes: Routes = [
   {path: '', component: HomepageComponent},
@@ -44,8 +45,9 @@ const routes: Routes = [
     path: 'ride/book',
     component: RideRequestPageComponent,
     children: [
-      {path: 'route', component: RouteComponent},
-      {path: 'time', component: TimeComponent},
+      { path: 'route', component: RouteComponent },
+      { path: 'info', component: DataInfoComponent },
+      { path: 'confirm', component: ConfirmRideComponent },
     ],
   },
   {path: "ride/current", component: CurrentRidePageComponent},

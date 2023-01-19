@@ -61,8 +61,9 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(daoAuthenticationProvider(), authService, userService);
-        authenticationFilter.setFilterProcessesUrl("/api/login");
+//        CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(daoAuthenticationProvider(), authService, userService);
+//        authenticationFilter.setFilterProcessesUrl("/api/login");
+        http.cors();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
@@ -77,28 +78,16 @@ public class SecurityConfiguration {
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/vehicle/**").hasAnyAuthority(RoleType.DRIVER.name());
 
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/payment/**").hasAnyAuthority(RoleType.CLIENT.name());
-
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/notification/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/confirm/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/images/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/notification").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/login").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
-        http.addFilter(authenticationFilter);
-        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilter(authenticationFilter);
+//        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new CustomAuthorizationFilter(authService), UsernamePasswordAuthenticationFilter.class);
-        http.cors();
         return http.build();
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200/"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"));
-        configuration.setAllowedHeaders(List.of("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 
 

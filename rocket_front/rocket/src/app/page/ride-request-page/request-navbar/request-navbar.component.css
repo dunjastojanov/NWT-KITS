@@ -1,22 +1,18 @@
 .wizard a {
-  padding: 20px 12px 20px;
-  position: relative;
-  text-decoration: none;
-  width: 19.8%;
-  margin-left: 0.25%;
-  text-align: center;
-  text-decoration: none;
-  text-transform: uppercase;
-  cursor: pointer;
+    padding: 20px 12px 20px;
+    position: relative;
+    text-decoration: none;
+    width: 25%;
+    margin-left: 0.25%;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
 }
 
 .gray {
-  background: #f5f4f4;
-  color: #252525;
-}
-
-.wizard:not(.left-arrow) .gray:after {
-  border-left: 30px solid #f5f4f4;
+    background: #f5f4f4;
+    color: #707070;
 }
 
 .yellow {
@@ -24,8 +20,13 @@
   background: #FEC901;
 }
 
+.wizard:not(.left-arrow) .gray:after {
+    border-left: 32px solid #f5f4f4;
+}
+
+
 .wizard:not(.left-arrow) .yellow:after {
-  border-left: 30px solid #FEC901;
+    border-left: 32px solid #FEC901;
 }
 
 .wizard a:hover {
@@ -37,15 +38,15 @@
 }
 
 .wizard:not(.left-arrow) a:before {
-  width: 0;
-  height: 0;
-  border-top: 39px inset transparent;
-  border-bottom: 39px inset transparent;
-  border-left: 30px solid #FFFFFF;
-  position: absolute;
-  content: "";
-  top: 0;
-  left: 0;
+width: 0;
+height: 0;
+border-top: 39px inset transparent;
+border-bottom: 39px inset transparent;
+border-left: 32px solid #FFFFFF;
+position: absolute;
+content: "";
+top: 0;
+left: 0;
 }
 
 .wizard:not(.left-arrow) a:after {

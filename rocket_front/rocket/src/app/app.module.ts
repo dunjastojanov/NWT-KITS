@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import {
   SocialLoginModule,
   GoogleLoginProvider,
@@ -83,13 +84,18 @@ import { InputDestinationComponent } from './components/routes/input-destination
 import { RouteService } from './components/routes/route.service';
 import { RouteInfoComponent } from './components/routes/route-info/route-info.component';
 import { ChooseRoleComponent } from './modals/choose-role/choose-role.component';
-import {ToastrModule} from "ngx-toastr";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RideRequestPageComponent } from './page/ride-request-page/ride-request-page.component';
 import { RouteComponent } from './page/ride-request-page/route/route.component';
-import { TimeComponent } from './page/ride-request-page/time/time.component';
 import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/request-navbar.component';
+import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
+import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
+import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reducer';
+import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.component';
+import { SocketService } from './services/sockets/sockets.service';
+
 import { PaypalComponent } from './modals/paypal/paypal.component';
 import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
 import { StarComponent } from './modals/detailed-route/large-star/star.component';
@@ -169,7 +175,6 @@ import { NotificationListItemComponent } from './shared/utils/notification-list-
     ChooseRoleComponent,
     RideRequestPageComponent,
     RouteComponent,
-    TimeComponent,
     RequestNavbarComponent,
     ViewMoreButtonComponent,
     StarComponent,
@@ -177,8 +182,12 @@ import { NotificationListItemComponent } from './shared/utils/notification-list-
     PaypalComponent,
     NotificationComponent,
     NotificationListItemComponent,
+    DataInfoComponent,
+    ConfirmRideComponent,
+    ShowOnMapComponent,
   ],
   imports: [
+    HttpClientModule,
     CommonModule,
     DragDropModule,
     BrowserModule,
@@ -187,20 +196,23 @@ import { NotificationListItemComponent } from './shared/utils/notification-list-
     BrowserAnimationsModule,
     NgxStarsModule,
     ToastrModule.forRoot({
-        timeOut: 3000,
-        positionClass: 'toast-center-center',
-        preventDuplicates: true,
-      }
-    ),
-    StoreModule.forRoot({loggedUser: loggedUserReducer, destinations: destinationsReducer}, {metaReducers}),
+      timeOut: 3000,
+      positionClass: 'toast-center-center',
+      preventDuplicates: true,
+    }),
     SocialLoginModule,
     StoreModule.forRoot(
-      {loggedUser: loggedUserReducer, destinations: destinationsReducer},
-      {metaReducers}
+      {
+        loggedUser: loggedUserReducer,
+        destinations: destinationsReducer,
+        rideInfo: RideInfoReducer,
+      },
+      { metaReducers }
     ),
     SocialLoginModule,
   ],
   providers: [
+    SocketService,
     RouteService,
     {
       provide: 'SocialAuthServiceConfig',
