@@ -114,8 +114,16 @@ export class MapComponent implements AfterViewInit {
 
       const mainRoute: Route = routes[0];
       mainRoute.selected = true;
+      mainRoute.geometry.coordinates = <[number, number][]>(
+        this.getCoordinates(mainRoute)
+      );
       const alternativeRoute: Route = routes[1];
-      if (alternativeRoute) alternativeRoute.selected = false;
+      if (alternativeRoute) {
+        alternativeRoute.selected = false;
+        alternativeRoute.geometry.coordinates = <[number, number][]>(
+          this.getCoordinates(alternativeRoute)
+        );
+      }
 
       if (alternativeRoute) {
         this.store.dispatch(
@@ -135,28 +143,32 @@ export class MapComponent implements AfterViewInit {
   drawPolylines() {
     for (let i = 0; i < this.routes.length; i++) {
       let oneRoute: Route = this.routes[i][0];
-      let oneCoordinates = this.getCoordinates(oneRoute);
       if (oneRoute.selected) {
-        this.drawMainPolyline(oneCoordinates);
+        this.drawMainPolyline(oneRoute.geometry.coordinates);
       } else {
-        this.drawAlternativePolyline(oneCoordinates, this.routes[i]);
+        this.drawAlternativePolyline(
+          oneRoute.geometry.coordinates,
+          this.routes[i]
+        );
       }
 
       const polyline = this.routes[i][1];
       if (polyline) {
         let secondRoute: Route = polyline;
-        let secondCoordinates = this.getCoordinates(secondRoute);
         if (secondRoute.selected) {
-          this.drawMainPolyline(secondCoordinates);
+          this.drawMainPolyline(secondRoute.geometry.coordinates);
         } else {
-          this.drawAlternativePolyline(secondCoordinates, this.routes[i]);
+          this.drawAlternativePolyline(
+            secondRoute.geometry.coordinates,
+            this.routes[i]
+          );
         }
       }
     }
     this.map.fitBounds(this.bounds);
   }
 
-  getCoordinates(route: { geometry: { coordinates: [number, number][] } }) {
+  getCoordinates(route: Route) {
     const routeCoordinates = route.geometry.coordinates;
     const routeCoordinatesSwitched = routeCoordinates.map(
       (coordinate: [number, number]) => [coordinate[1], coordinate[0]]
@@ -204,7 +216,8 @@ export class MapComponent implements AfterViewInit {
       distance += mainRoute.distance;
       time += mainRoute.duration;
     }
-    const price = 1 + distance * 0.0009 + time * 0.0005;
+    let distanceKm: number = +(distance / 1000).toFixed(1);
+    let price = distanceKm * 120;
     this.setRouteInfoSlice(distance, time, price);
   }
   clearMap(clearMarkers: boolean) {

@@ -35,6 +35,9 @@ export class RouteInfoComponent implements OnInit {
   }
 
   priceOutput(): string {
-    return `${this.price.toFixed(1)} €`;
+    const priceFixed = +this.price.toFixed(1);
+    const priceMin = priceFixed + 120;
+    const priceMax = priceFixed + 600;
+    return `From ${priceMin} to ${priceMax} rsd`;
   }
 }

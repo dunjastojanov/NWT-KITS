@@ -1,3 +1,4 @@
+import { VehicleType } from 'src/app/interfaces/VehicleType';
 import { RideInfo } from 'src/app/page/ride-request-page/data-info/ride-info.type';
 import { RideInfoStateType } from '../types';
 import { RideInfoAction, RideInfoActionType } from './ride-info.actions';
@@ -56,7 +57,7 @@ export const RideInfoReducer = (
         ...state,
         ride: {
           ...state.ride,
-          vehicle: <string>action.payload,
+          vehicle: <VehicleType>action.payload,
         },
       };
     default: {

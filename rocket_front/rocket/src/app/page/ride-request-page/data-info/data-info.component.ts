@@ -59,6 +59,7 @@ export class DataInfoComponent implements OnInit {
   }
 
   addFriend() {
+    if (this.friend === '' || this.ride.friends.includes(this.friend)) return;
     const friends = [...this.ride.friends, this.friend];
     this.saveRide(RideInfoActionType.UPDATE_FRIENDS, friends);
   }

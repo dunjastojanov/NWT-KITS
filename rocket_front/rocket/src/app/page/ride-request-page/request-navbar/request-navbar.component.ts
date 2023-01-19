@@ -21,8 +21,7 @@ export class RequestNavbarComponent implements OnInit {
     { name: '1. Route', link: 'route' },
     { name: '2. Info', link: 'info' },
     { name: '3. Confirm', link: 'confirm' },
-    { name: '4. Get driver', link: 'driver' },
-    { name: '5. Payment', link: 'payment' },
+    { name: '4. Loby', link: 'loby' },
   ];
   ngOnInit(): void {}
 }

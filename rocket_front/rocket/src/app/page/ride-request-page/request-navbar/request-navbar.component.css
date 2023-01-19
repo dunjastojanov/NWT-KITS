@@ -2,7 +2,7 @@
     padding: 20px 12px 20px;
     position: relative;
     text-decoration: none;
-    width: 19.8%;
+    width: 25%;
     margin-left: 0.25%;
     text-align: center;
     text-decoration: none;
@@ -15,17 +15,18 @@
     color: #707070;
 }
 
-.wizard:not(.left-arrow) .gray:after {
-    border-left: 30px solid #f5f4f4;
-}
-
 .yellow {
     color: white;
     background: #FEC901;
 }
 
+.wizard:not(.left-arrow) .gray:after {
+    border-left: 32px solid #f5f4f4;
+}
+
+
 .wizard:not(.left-arrow) .yellow:after {
-    border-left: 30px solid #FEC901;
+    border-left: 32px solid #FEC901;
 }
 
 .wizard a:hover {
@@ -41,7 +42,7 @@ width: 0;
 height: 0;
 border-top: 39px inset transparent;
 border-bottom: 39px inset transparent;
-border-left: 30px solid #FFFFFF;
+border-left: 32px solid #FFFFFF;
 position: absolute;
 content: "";
 top: 0;
