@@ -79,6 +79,7 @@ public class SecurityConfiguration {
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/payment/**").hasAnyAuthority(RoleType.CLIENT.name());
 
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/confirm/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/images/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(authenticationFilter);
