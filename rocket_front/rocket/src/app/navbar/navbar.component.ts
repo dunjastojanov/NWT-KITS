@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store'
 import {User} from '../interfaces/User';
+import {Notification} from '../interfaces/Notification';
 import {LoggedUserAction, LoggedUserActionType} from '../shared/store/logged-user-slice/logged-user.actions';
 
-
 import {StoreType} from '../shared/store/types';
+import {NotificationService} from "../services/notification/notification.service";
 
 @Component({
   selector: 'navbar',
@@ -15,9 +16,12 @@ export class NavbarComponent implements OnInit {
   showPayPalModal = false;
   showLoginModal = false;
   showRegisterModal = false;
+  showNotifications = false;
+
+  notifications:Notification[] = [];
   user: User | null = null;
 
-  constructor(private store: Store<StoreType>) {
+  constructor(private store: Store<StoreType>, private notificationService: NotificationService) {
     let loggedUserSlice = store.select('loggedUser');
     loggedUserSlice.subscribe(
       resData => {
@@ -31,6 +35,12 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.notificationService.getNotification().then(
+      res => {
+        this.notifications = res;
+        console.log(res)
+      }
+    )
   }
 
   toggleLogin = (): void => {
@@ -53,5 +63,9 @@ export class NavbarComponent implements OnInit {
     this.showLoginModal = false;
     this.showRegisterModal = false;
     this.showPayPalModal = !this.showPayPalModal
+  }
+
+  toggleNotifications = (): void => {
+    this.showNotifications = !this.showNotifications;
   }
 }

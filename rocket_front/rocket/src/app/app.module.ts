@@ -94,6 +94,8 @@ import { PaypalComponent } from './modals/paypal/paypal.component';
 import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
 import { StarComponent } from './modals/detailed-route/large-star/star.component';
 import { ReviewComponent } from './modals/review/review.component';
+import { NotificationComponent } from './modals/notification/notification.component';
+import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -173,6 +175,8 @@ import { ReviewComponent } from './modals/review/review.component';
     StarComponent,
     ReviewComponent,
     PaypalComponent,
+    NotificationComponent,
+    NotificationListItemComponent,
   ],
   imports: [
     CommonModule,
