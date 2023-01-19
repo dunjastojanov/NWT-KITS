@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MultiSelectWithIconsComponent } from './multi-select-with-icons.component';
+import {MultiSelectWithIconsComponent} from './multi-select-with-icons.component';
 
 describe('MultiSelectWithIconsComponent', () => {
   let component: MultiSelectWithIconsComponent;
@@ -8,9 +8,9 @@ describe('MultiSelectWithIconsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MultiSelectWithIconsComponent ]
+      declarations: [MultiSelectWithIconsComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(MultiSelectWithIconsComponent);
     component = fixture.componentInstance;

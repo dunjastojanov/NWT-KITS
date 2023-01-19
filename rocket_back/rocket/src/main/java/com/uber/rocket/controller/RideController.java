@@ -1,6 +1,7 @@
 package com.uber.rocket.controller;
 
 import com.uber.rocket.dto.DatePeriod;
+import com.uber.rocket.dto.NewReviewDTO;
 import com.uber.rocket.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/ride")
 public class RideController {
     private final RideService rideService;
-    //TODO ispravi na koriscenje PageRequest ako moze
-
     @Autowired
     public RideController(RideService rideService) {
         this.rideService = rideService;
+
     }
 
     @GetMapping("/{id}")
@@ -24,6 +24,44 @@ public class RideController {
         try {
             return ResponseEntity.ok(rideService.getRideDetails(id));
         } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+    @GetMapping("/favourite")
+    public ResponseEntity<?> getFavouriteRoutesForUser(HttpServletRequest request) {
+        try {
+            return ResponseEntity.ok(rideService.getFavouriteRoutesForUser(request));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @PostMapping("/favourite/{rideId}")
+    public ResponseEntity<?> addFavouriteRoute(HttpServletRequest request, @PathVariable Long rideId) {
+        try {
+            return ResponseEntity.ok(rideService.addFavouriteRoute(request, rideId));
+        }
+        catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity<?> addReview(HttpServletRequest request, @RequestBody NewReviewDTO dto) {
+        try {
+            return ResponseEntity.ok(rideService.addReview(request, dto));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @DeleteMapping("/favourite/{favouriteRouteId}")
+    public ResponseEntity<?> deleteFavouriteRoute(@PathVariable Long favouriteRouteId) {
+        try {
+            rideService.deleteFavouriteRoute(favouriteRouteId);
+            return ResponseEntity.ok("Delete successful.");
+        }
+        catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }

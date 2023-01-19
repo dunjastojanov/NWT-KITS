@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
@@ -7,6 +8,7 @@ import {
   GoogleLoginProvider,
   FacebookLoginProvider,
 } from '@abacritt/angularx-social-login';
+import { NgxStarsModule } from 'ngx-stars';
 import { AuthGuardService } from './auth-guard.service';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
@@ -80,7 +82,6 @@ import { CurrentRideButtonsComponent } from './components/current-ride-info/curr
 import { metaReducers } from './local-storage.service';
 import { InputDestinationComponent } from './components/routes/input-destination/input-destination.component';
 import { RouteService } from './components/routes/route.service';
-import { PaypalTestComponent } from './page/paypal-test/paypal-test.component';
 import { RouteInfoComponent } from './components/routes/route-info/route-info.component';
 import { ChooseRoleComponent } from './modals/choose-role/choose-role.component';
 import { ToastrModule } from 'ngx-toastr';
@@ -95,6 +96,12 @@ import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reduce
 import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.component';
 import { SocketService } from './services/sockets/sockets.service';
 
+import { PaypalComponent } from './modals/paypal/paypal.component';
+import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
+import { StarComponent } from './modals/detailed-route/large-star/star.component';
+import { ReviewComponent } from './modals/review/review.component';
+import { NotificationComponent } from './modals/notification/notification.component';
+import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -138,7 +145,6 @@ import { SocketService } from './services/sockets/sockets.service';
     PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
-    PaypalTestComponent,
     WordCeoComponent,
     StatisticsComponent,
     AdminPageComponent,
@@ -170,17 +176,25 @@ import { SocketService } from './services/sockets/sockets.service';
     RideRequestPageComponent,
     RouteComponent,
     RequestNavbarComponent,
+    ViewMoreButtonComponent,
+    StarComponent,
+    ReviewComponent,
+    PaypalComponent,
+    NotificationComponent,
+    NotificationListItemComponent,
     DataInfoComponent,
     ConfirmRideComponent,
     ShowOnMapComponent,
   ],
   imports: [
     HttpClientModule,
+    CommonModule,
     DragDropModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
+    NgxStarsModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-center-center',

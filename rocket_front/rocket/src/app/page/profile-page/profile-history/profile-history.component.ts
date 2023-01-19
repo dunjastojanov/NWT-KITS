@@ -1,7 +1,6 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {UserService} from "../../../services/user/user.service";
 import {RideHistory} from "../../../interfaces/RideHistory";
-import {RideService} from "../../../services/ride/ride.service";
 
 @Component({
   selector: 'app-profile-history',
@@ -14,7 +13,7 @@ export class ProfileHistoryComponent implements OnInit, OnChanges {
   currentPage: string = '1'
   numberOfPages: number = 1;
 
-  constructor(private service: UserService, private rideService: RideService) {
+  constructor(private service: UserService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -26,18 +25,12 @@ export class ProfileHistoryComponent implements OnInit, OnChanges {
       this.rideHistory = data.content;
       this.numberOfPages = data.totalPages;
     })
-
-    this.rideService.getRide().then(data=> {
-      console.log(data);
-    })
   }
 
   ngOnInit(): void {
     this.fetchHistory();
 
   }
-
-
 
 
 }

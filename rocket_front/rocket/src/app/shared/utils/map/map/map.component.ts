@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
+import {AfterViewInit, Component, Input} from '@angular/core';
+import {Store} from '@ngrx/store';
 import axios from 'axios';
 import * as L from 'leaflet';
 import * as lrm from 'leaflet-routing-machine';
-import { RouteService } from 'src/app/components/routes/route.service';
-import { Destination } from 'src/app/interfaces/Destination';
+import {RouteService} from 'src/app/components/routes/route.service';
+import {Destination} from 'src/app/interfaces/Destination';
 import {
   DestinationsAction,
   DestinationsActionType,
@@ -30,6 +30,7 @@ export class MapComponent implements AfterViewInit {
   routes: [Route, Route?][] = [];
   openErrorToast = false;
   error: boolean = false;
+
   private initMap(): void {
     lrm;
     this.map = L.map('map', {
@@ -184,6 +185,7 @@ export class MapComponent implements AfterViewInit {
     this.bounds = mainRoutePolyline.getBounds();
     mainRoutePolyline.addTo(this.layerPolylines!);
   }
+
   drawAlternativePolyline(
     coordinates: any,
     betweenTwoAdressesRoutes: [Route, Route?]
@@ -220,6 +222,7 @@ export class MapComponent implements AfterViewInit {
     let price = distanceKm * 120;
     this.setRouteInfoSlice(distance, time, price);
   }
+
   clearMap(clearMarkers: boolean) {
     if (!this.layerPolylines) {
       return;
@@ -249,7 +252,7 @@ export class MapComponent implements AfterViewInit {
     const queryStr = new URLSearchParams(params).toString();
     let result = await axios.get(
       'https://nominatim.openstreetmap.org/search?' + queryStr,
-      { headers: { 'Access-Control-Allow-Origin': '*' } }
+      {headers: {'Access-Control-Allow-Origin': '*'}}
     );
     if (result.data.length === 0) {
       this.error = true;

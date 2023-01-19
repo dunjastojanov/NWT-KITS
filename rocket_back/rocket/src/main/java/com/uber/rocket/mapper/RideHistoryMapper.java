@@ -20,6 +20,7 @@ public class RideHistoryMapper implements Mapper<Ride, RideHistoryDTO> {
         dto.setDuration(ride.getDuration());
         dto.setStart(ride.getStart());
         dto.setEnd(ride.getEnd());
+        dto.setId(ride.getId());
         return dto;
     }
 }

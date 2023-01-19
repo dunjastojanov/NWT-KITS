@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { StoreType } from 'src/app/shared/store/types';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {StoreType} from 'src/app/shared/store/types';
 
 @Component({
   selector: 'route-info',

@@ -16,8 +16,8 @@
 }
 
 .yellow {
-    color: white;
-    background: #FEC901;
+  color: white;
+  background: #FEC901;
 }
 
 .wizard:not(.left-arrow) .gray:after {
@@ -30,13 +30,13 @@
 }
 
 .wizard a:hover {
-text-decoration: none;
+  text-decoration: none;
 }
-    
+
 .wizard a:first-child {
-margin-left: 0;
+  margin-left: 0;
 }
-    
+
 .wizard:not(.left-arrow) a:before {
 width: 0;
 height: 0;
@@ -48,21 +48,21 @@ content: "";
 top: 0;
 left: 0;
 }
-    
+
 .wizard:not(.left-arrow) a:after {
-width: 0;
-height: 0;
-border-top: 39px inset transparent;
-border-bottom: 39px inset transparent;
-position: absolute;
-content: "";
-top: 0;
-right: -30px;
-z-index: 2;
+  width: 0;
+  height: 0;
+  border-top: 39px inset transparent;
+  border-bottom: 39px inset transparent;
+  position: absolute;
+  content: "";
+  top: 0;
+  right: -30px;
+  z-index: 2;
 }
-   
+
 
 .wizard a:first-child:before,
 .wizard a:last-child:after {
-border: none;
+  border: none;
 }

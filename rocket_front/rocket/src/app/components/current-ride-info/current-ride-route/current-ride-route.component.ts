@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'current-ride-route',
@@ -11,7 +11,8 @@ export class CurrentRideRouteComponent implements OnInit {
   @Input('endAddress') endAddress!: string;
   @Input('startAddress') startAddress!: string;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

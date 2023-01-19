@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'primary-button',
@@ -8,7 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class PrimaryButtonComponent implements OnInit {
   @Input('text') text!: String;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

@@ -1,5 +1,5 @@
-import { Destination } from 'src/app/interfaces/Destination';
-import { DestinationsStateType } from '../types';
+import {Destination} from 'src/app/interfaces/Destination';
+import {DestinationsStateType} from '../types';
 import {
   DestinationsAction,
   DestinationsActionType,
@@ -11,8 +11,8 @@ import { Route } from '../../utils/map/map/route.type';
 
 const initialState: DestinationsStateType = {
   destinations: [
-    { index: 0, address: '' },
-    { index: 1, address: '' },
+    {index: 0, address: ''},
+    {index: 1, address: ''},
   ],
   estimated_route_distance: 0,
   estimated_route_time: 0,
@@ -43,7 +43,7 @@ export const destinationsReducer = (
       newStateRemove.splice(<number>action.payload, 1);
       let ind = 0;
       let finalStateRemove = newStateRemove.map((dest) => {
-        return { ...dest, index: ind++ };
+        return {...dest, index: ind++};
       });
 
       return {
@@ -67,17 +67,17 @@ export const destinationsReducer = (
       };
     case DestinationsActionType.SWITCH:
       let newStateSwitch = [...state.destinations];
-      let { firstIndex, secondIndex }: SwitchPayloadType = <SwitchPayloadType>(
+      let {firstIndex, secondIndex}: SwitchPayloadType = <SwitchPayloadType>(
         action.payload
       );
       const finalStateSwitch = newStateSwitch.map((element, index) => {
         if (index === firstIndex) {
           let item = newStateSwitch[secondIndex];
-          return { index: firstIndex, address: item.address };
+          return {index: firstIndex, address: item.address};
         }
         if (index === secondIndex) {
           let item = newStateSwitch[firstIndex];
-          return { index: secondIndex, address: item.address };
+          return {index: secondIndex, address: item.address};
         }
         return element;
       });

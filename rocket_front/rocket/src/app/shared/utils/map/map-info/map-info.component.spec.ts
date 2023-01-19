@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MapInfoComponent } from './map-info.component';
+import {MapInfoComponent} from './map-info.component';
 
 describe('MapInfoComponent', () => {
   let component: MapInfoComponent;
@@ -8,9 +8,9 @@ describe('MapInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MapInfoComponent ]
+      declarations: [MapInfoComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(MapInfoComponent);
     component = fixture.componentInstance;

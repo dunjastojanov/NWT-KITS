@@ -1,8 +1,8 @@
 .dot {
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    border: 3px solid white;
-    background: #FBBC02;
-    display: inline-block;
-  }
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  border: 3px solid white;
+  background: #FBBC02;
+  display: inline-block;
+}

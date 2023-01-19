@@ -1,17 +1,23 @@
 <div>
 
   <div class="mt-5">
-
     <app-medium-title [text]="'Favourite routes'"></app-medium-title>
   </div>
 
 
   <div class="flex ">
-    <div *ngFor="let route of favouriteRoutes" class="favourite-route-card" [ngClass]="{'favourite-route-card-tertiary': route.focus===false, 'favourite-route-card-primary': route.focus===true}">
-      <div class="favourite-route-info" [ngClass]="{'favourite-route-info-tertiary': route.focus===false, 'favourite-route-info-primary': route.focus===true}">
+    <div *ngFor="let route of favouriteRoutes" (click)="setFocus(route.id)" class="favourite-route-card"
+         [ngClass]="{'favourite-route-card-tertiary': route.id!==focusId, 'favourite-route-card-primary': route.id==focusId}">
+      <div class="flex justify-end w-full">
+        <icon-button-secondary (click)="deleteFavourite(route.id)" class="mr-2"
+                               [path]="'assets/icons/cancel.png'"></icon-button-secondary>
+      </div>
+      <div class="favourite-route-info"
+           [ngClass]="{'favourite-route-info-tertiary': route.id!==focusId, 'favourite-route-info-primary': route.id==focusId}">
         <app-info [title]="'Start'" [info]="route.start" [size]="'small'"></app-info>
       </div>
-      <div class="favourite-route-info" [ngClass]="{'favourite-route-info-tertiary': route.focus===false, 'favourite-route-info-primary': route.focus===true}">
+      <div class="favourite-route-info"
+           [ngClass]="{'favourite-route-info-tertiary': route.id!==focusId, 'favourite-route-info-primary':route.id==focusId}">
         <app-info [title]="'End'" [info]="route.end" [size]="'small'"></app-info>
       </div>
       <div class="favourite-route-button-div">

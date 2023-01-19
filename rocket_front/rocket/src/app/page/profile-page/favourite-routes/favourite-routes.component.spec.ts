@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { FavouriteRoutesComponent } from './favourite-routes.component';
+import {FavouriteRoutesComponent} from './favourite-routes.component';
 
 describe('FavouriteRoutesComponent', () => {
   let component: FavouriteRoutesComponent;
@@ -8,9 +8,9 @@ describe('FavouriteRoutesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FavouriteRoutesComponent ]
+      declarations: [FavouriteRoutesComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(FavouriteRoutesComponent);
     component = fixture.componentInstance;

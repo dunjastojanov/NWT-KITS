@@ -8,7 +8,9 @@ import {Component, Input, OnInit} from '@angular/core';
 export class MediumTitleComponent implements OnInit {
 
   @Input('text') text!: String;
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

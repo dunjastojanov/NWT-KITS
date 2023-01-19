@@ -1,18 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
-import {
-  FacebookLoginProvider,
-  SocialAuthService,
-  SocialUser,
-} from '@abacritt/angularx-social-login';
-import { Store } from '@ngrx/store';
-import { StoreType } from 'src/app/shared/store/types';
-import {
-  LoggedUserAction,
-  LoggedUserActionType,
-} from 'src/app/shared/store/logged-user-slice/logged-user.actions';
-import { User } from 'src/app/interfaces/User';
-import { UserService } from '../../services/user/user.service';
-import { multiSelectProp } from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
+import {Component, Input, OnInit} from '@angular/core';
+import {FacebookLoginProvider, SocialAuthService, SocialUser,} from '@abacritt/angularx-social-login';
+import {Store} from '@ngrx/store';
+import {StoreType} from 'src/app/shared/store/types';
+import {LoggedUserAction, LoggedUserActionType,} from 'src/app/shared/store/logged-user-slice/logged-user.actions';
+import {User} from 'src/app/interfaces/User';
+import {UserService} from '../../services/user/user.service';
+import {multiSelectProp} from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
 
 @Component({
   selector: 'login',
@@ -133,9 +126,10 @@ export class LoginComponent implements OnInit {
   }
 
   valid(): boolean {
-    return (
-      /^.+[@].+[.].+$/.test(this.email) &&
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,20}$/.test(this.password)
-    );
+    return true;
+    // return (
+    //   /^.+[@].+[.].+$/.test(this.email) &&
+    //   /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,20}$/.test(this.password)
+    // );
   }
 }

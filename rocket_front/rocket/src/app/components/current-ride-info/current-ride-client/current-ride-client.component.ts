@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { sideUser } from 'src/app/interfaces/User';
+import {Component, Input, OnInit} from '@angular/core';
+import {sideUser} from 'src/app/interfaces/User';
 
 @Component({
   selector: 'current-ride-client',
@@ -8,7 +8,9 @@ import { sideUser } from 'src/app/interfaces/User';
 })
 export class CurrentRideClientComponent implements OnInit {
   @Input('client') client!: sideUser;
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

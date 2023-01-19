@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { WordCeoComponent } from './word-ceo.component';
+import {WordCeoComponent} from './word-ceo.component';
 
 describe('WordCeoComponent', () => {
   let component: WordCeoComponent;
@@ -8,9 +8,9 @@ describe('WordCeoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ WordCeoComponent ]
+      declarations: [WordCeoComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(WordCeoComponent);
     component = fixture.componentInstance;

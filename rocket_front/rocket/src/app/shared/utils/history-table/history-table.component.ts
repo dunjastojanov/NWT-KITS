@@ -2,30 +2,40 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {RideHistory} from "../../../interfaces/RideHistory";
 
 @Component({
-  selector: 'app-history-table',
+  selector: 'history-table',
   templateUrl: './history-table.component.html',
   styleUrls: ['./history-table.component.css']
 })
 export class HistoryTableComponent implements OnInit {
+
   constructor() {
+    this._currentPage = this.page;
   }
+
   headers: string[] = [
     'start', 'end', 'driver', 'duration', 'price'
   ]
 
   @Input('rideHistory') rideHistory!: RideHistory[];
-  @Input() currentPage!: string;
-  @Input() numberOfPages!: number;
+  @Input() page!: string;
 
-  @Output() currentPageChange = new EventEmitter<string>();
+  private _currentPage: string = '1';
 
-  openDetailedRoute: boolean = false;
-
-  toggleDetailedRoute = () => {
-    this.openDetailedRoute = !this.openDetailedRoute;
+  get currentPage(): string {
+    return this._currentPage;
   }
 
+  set currentPage(value: string) {
+    if (this._currentPage !== value) {
+      this._currentPage = value;
+      this.pageChange.emit(this._currentPage);
+    }
 
+  }
+
+  @Input() numberOfPages!: number;
+  @Output() pageChange = new EventEmitter<string>();
+  @Output() numberOfPagesChange = new EventEmitter<number>();
 
   ngOnInit(): void {
   }

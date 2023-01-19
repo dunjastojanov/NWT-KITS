@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store'
-import { User } from '../interfaces/User';
-import { LoggedUserAction, LoggedUserActionType } from '../shared/store/logged-user-slice/logged-user.actions';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store'
+import {User} from '../interfaces/User';
+import {Notification} from '../interfaces/Notification';
+import {LoggedUserAction, LoggedUserActionType} from '../shared/store/logged-user-slice/logged-user.actions';
 
-
-import { StoreType } from '../shared/store/types';
+import {StoreType} from '../shared/store/types';
+import {NotificationService} from "../services/notification/notification.service";
 
 @Component({
   selector: 'navbar',
@@ -12,11 +13,15 @@ import { StoreType } from '../shared/store/types';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  showPayPalModal = false;
   showLoginModal = false;
   showRegisterModal = false;
+  showNotifications = false;
+
+  notifications:Notification[] = [];
   user: User | null = null;
-  
-  constructor(private store: Store<StoreType>) {
+
+  constructor(private store: Store<StoreType>, private notificationService: NotificationService) {
     let loggedUserSlice = store.select('loggedUser');
     loggedUserSlice.subscribe(
       resData => {
@@ -25,12 +30,23 @@ export class NavbarComponent implements OnInit {
     )
   }
 
+  hasRole(role: string): boolean {
+    return this.user !== null && this.user?.roles.indexOf(role) !== -1;
+  }
+
   ngOnInit(): void {
+    this.notificationService.getNotification().then(
+      res => {
+        this.notifications = res;
+        console.log(res)
+      }
+    )
   }
 
   toggleLogin = (): void => {
     this.showRegisterModal = false;
     this.showLoginModal = !this.showLoginModal;
+    this.showPayPalModal = false
   }
 
   logout = (): void => {
@@ -38,7 +54,18 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleRegister = (): void => {
+    this.showPayPalModal = false
     this.showLoginModal = false;
-    this.showRegisterModal =!this.showRegisterModal;
+    this.showRegisterModal = !this.showRegisterModal;
+  }
+
+  togglePayPal = (): void => {
+    this.showLoginModal = false;
+    this.showRegisterModal = false;
+    this.showPayPalModal = !this.showPayPalModal
+  }
+
+  toggleNotifications = (): void => {
+    this.showNotifications = !this.showNotifications;
   }
 }

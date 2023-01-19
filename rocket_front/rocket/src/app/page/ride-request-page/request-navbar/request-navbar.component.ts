@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
   selector: 'request-navbar',
@@ -23,5 +23,7 @@ export class RequestNavbarComponent implements OnInit {
     { name: '3. Confirm', link: 'confirm' },
     { name: '4. Loby', link: 'loby' },
   ];
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+  }
 }

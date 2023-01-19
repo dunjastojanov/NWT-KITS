@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {User} from "../../../interfaces/User";
 import {UserService} from "../../../services/user/user.service";
 import {ToastrService} from "ngx-toastr";
+import {Store} from "@ngrx/store";
+import {StoreType} from "../../../shared/store/types";
 
 @Component({
   selector: 'app-profile-picture',
@@ -12,16 +14,17 @@ export class ProfilePictureComponent implements OnInit {
   user: User | null = null;
   selectedImage: File | null = null;
   profilePicture: string | ArrayBuffer | null = null;
-  constructor(private service: UserService, private toastr: ToastrService) {
-    this.setUser().then(() => {
-      if (this.user !== null) {
-        if (this.user.profilePicture !== null) {
+
+  constructor(private store: Store<StoreType>, private service: UserService, private toastr: ToastrService) {
+    let loggedUserSlice = store.select('loggedUser');
+    loggedUserSlice.subscribe(
+      resData => {
+        this.user = resData.user;
+        if (this.user) {
+          this.profilePicture = this.user.profilePicture;
         }
       }
-    });
-  }
-  async setUser() {
-    this.user = await this.service.getUser();
+    )
   }
 
   ngOnInit(): void {
@@ -30,9 +33,9 @@ export class ProfilePictureComponent implements OnInit {
   onSave() {
     if (this.selectedImage) {
       this.service.editProfileImage(this.selectedImage).then(result => {
-        if (result.object) {
-          this.toastr.success(result.message)
-        }
+          if (result.object) {
+            this.toastr.success(result.message)
+          }
         }
       ).catch(
         () => {
@@ -42,7 +45,7 @@ export class ProfilePictureComponent implements OnInit {
     }
   }
 
-  onFileSelected(event:Event) {
+  onFileSelected(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       this.selectedImage = target.files[0];

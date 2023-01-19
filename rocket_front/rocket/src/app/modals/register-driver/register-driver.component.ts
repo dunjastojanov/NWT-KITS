@@ -1,4 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {UserService} from "../../services/user/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-register-driver',
@@ -10,6 +12,22 @@ export class RegisterDriverComponent implements OnInit {
   @Input('open') open!: boolean;
   @Input('closeFunc') closeFunc!: () => void
 
+  selectedItems: string[] = [];
+
+  setSelectedItems(items: string[]) {
+    this.selectedItems = items;
+  }
+
+  driver = {
+    email: '',
+    firstName: '',
+    lastName: '',
+    city: '',
+    vehicleType: 'limousine',
+    phoneNumber: '',
+    kidFriendly: false,
+    petFriendly: false
+  }
 
   types: any = [
     {value: "limousine", text: "Limousine"},
@@ -36,9 +54,22 @@ export class RegisterDriverComponent implements OnInit {
     this.closeFunc();
   }
 
-  constructor() { }
+  constructor(private service: UserService, private toastr: ToastrService) {
+  }
 
   ngOnInit(): void {
   }
 
+  save() {
+    let dto = this.driver;
+    if (this.selectedItems.includes("Kid friendly")) {
+      this.driver.kidFriendly = true;
+    }
+    if (this.selectedItems.includes("Pet friendly")) {
+      this.driver.petFriendly = true;
+    }
+    this.service.registerDriver(dto).then(() => {
+      this.toastr.success("Driver Saved");
+    })
+  }
 }

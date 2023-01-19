@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../interfaces/User";
-import {UserService} from "../../services/user/user.service";
+import {Store} from "@ngrx/store";
+import {StoreType} from "../../shared/store/types";
 
 @Component({
   selector: 'app-edit-profile',
@@ -17,11 +18,14 @@ export class EditProfileComponent implements OnInit {
   showProfilePicture: boolean = false;
 
   user: User | null = null;
-  constructor(private service: UserService) {
-    this.setUser().then(() => {});
-  }
-  async setUser() {
-    this.user = await this.service.getUser();
+
+  constructor(private store: Store<StoreType>) {
+    let loggedUserSlice = store.select('loggedUser');
+    loggedUserSlice.subscribe(
+      resData => {
+        this.user = resData.user;
+      }
+    )
   }
 
   ngOnInit(): void {

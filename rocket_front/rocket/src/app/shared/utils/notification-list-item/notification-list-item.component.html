@@ -1,0 +1,8 @@
+
+<div class="w-full border-b-4 border-secondary-light">
+  <h5>{{notification.title}}</h5>
+  <secondary-button text="Show" (click)="toggleShowModal()"></secondary-button>
+
+</div>
+
+<notification [notification]="notification" [open]="showModal" [closeFunc]="toggleShowModal"></notification>

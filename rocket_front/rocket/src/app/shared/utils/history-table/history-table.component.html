@@ -17,7 +17,7 @@
         <td class="data">{{item.duration}}</td>
         <td class="data">{{item.price}}</td>
         <td>
-          <secondary-button class="text-xs" [text]="'VIEW MORE'" (click)="toggleDetailedRoute()"></secondary-button>
+          <view-more-button [id]="item.id"></view-more-button>
         </td>
       </tr>
       </tbody>
@@ -26,10 +26,9 @@
   </div>
   <div class="flex mt-3">
     <div class="mx-auto">
-      <pagination [(currentPage)]="currentPage" [numberOfPages]="numberOfPages"></pagination>
+      <pagination [(currentPage)]="currentPage" [(numberOfPages)]="numberOfPages"></pagination>
     </div>
   </div>
 
-  <app-detailed-route [open]="openDetailedRoute" [closeFunc]="toggleDetailedRoute"></app-detailed-route>
 
 </div>

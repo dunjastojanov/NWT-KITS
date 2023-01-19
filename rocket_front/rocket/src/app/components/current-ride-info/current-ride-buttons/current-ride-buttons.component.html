@@ -1,9 +1,12 @@
 <div *ngIf="user" class="absolute right-32 bottom-6 flex gap-3">
-    <button-icon [fillButton]="isFavorite" icon="./assets/icons/favorite.png" [text]="isFavorite ? 'Unmark route as favorite' : 'Mark route as favorite'"></button-icon>
-    <button-icon icon="./assets/icons/exclamation-mark.png" text="Report driver" (click)="toggleReportModal()"></button-icon>
-    <button-icon icon="./assets/icons/cancel.png" text="Cancel ride"></button-icon>
-    <report-driver [open]="openReportModal" [closeFunc]="toggleReportModal" [driver]="driverName!"></report-driver>
-</div> 
+  <button-icon [fillButton]="isFavorite" icon="./assets/icons/favorite.png"
+               [text]="isFavorite ? 'Unmark route as favorite' : 'Mark route as favorite'"></button-icon>
+  <button-icon icon="./assets/icons/exclamation-mark.png" text="Report driver"
+               (click)="toggleReportModal()"></button-icon>
+  <button-icon icon="./assets/icons/cancel.png" text="Cancel ride"></button-icon>
+  <report-driver [open]="openReportModal" [closeFunc]="toggleReportModal" [driver]="driverName!"></report-driver>
+</div>
 <div *ngIf="!user" class="absolute right-32 flex gap-3 bottom-6">
-    <secondary-button [disabled]="dissablePatch" [text]="patchingRide ? 'End ride' : 'Start ride'" (click)="togglePatchingRide()"></secondary-button>
-</div> 
+  <secondary-button [disabled]="dissablePatch" [text]="patchingRide ? 'End ride' : 'Start ride'"
+                    (click)="togglePatchingRide()"></secondary-button>
+</div>

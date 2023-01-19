@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'icon',
@@ -8,7 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class IconComponent implements OnInit {
   @Input('path') path!: string;
   @Input('bounce') bounce: boolean;
-  constructor() { 
+
+  constructor() {
     this.bounce = true;
   }
 

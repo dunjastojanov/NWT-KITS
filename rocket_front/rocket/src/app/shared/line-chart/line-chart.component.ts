@@ -3,26 +3,31 @@ import Chart from 'chart.js/auto';
 import {ReportData} from "../../interfaces/Report";
 
 @Component({
-  selector: 'app-line-chart',
+  selector: 'line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.css']
 })
 export class LineChartComponent implements OnInit, OnChanges {
 
-  constructor() {}
-  ngOnInit(): void {}
-  ngOnChanges(changes:SimpleChanges) {
+  constructor() {
+  }
+
+  ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
     this.createChart();
   }
+
   public chart: any;
-  @Input("type")public type!: string;
+  @Input("type") public type!: string;
   @Input("data") data!: ReportData;
-  @Input("average")public average!: number;
-  @Input("total")public total!: number;
+  @Input("average") public average!: number;
+  @Input("total") public total!: number;
 
-  @Input("unit")public unit!: string;
+  @Input("unit") public unit!: string;
 
-  createChart(){
+  createChart() {
 
     if (this.chart !== undefined) {
       this.chart.destroy();
@@ -38,7 +43,7 @@ export class LineChartComponent implements OnInit, OnChanges {
         ]
       },
       options: {
-        aspectRatio:2.5
+        aspectRatio: 2.5
       }
 
     });

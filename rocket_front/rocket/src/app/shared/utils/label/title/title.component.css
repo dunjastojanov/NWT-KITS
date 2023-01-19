@@ -1,5 +1,5 @@
 @tailwind base;
 
 .title {
-    @apply font-bold text-6xl w-fit
+  @apply font-bold text-6xl w-fit
 }

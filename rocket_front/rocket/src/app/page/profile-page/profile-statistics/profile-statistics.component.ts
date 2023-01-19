@@ -10,7 +10,7 @@ import {SelectItem} from "../../../interfaces/SelectItem";
 })
 export class ProfileStatisticsComponent implements OnInit {
 
-  reportData: Report ={average: 0, data: {datasets: [], labels: []}, total: 0};
+  reportData: Report = {average: 0, data: {datasets: [], labels: []}, total: 0};
   startDate: string = new Date().toISOString().slice(0, 10).replace("2023", "2020");
   endDate: string = new Date().toISOString().slice(0, 10).replace("2023", "2027");
   type: string = "kilometers";
@@ -29,8 +29,12 @@ export class ProfileStatisticsComponent implements OnInit {
   }
 
   onShow() {
-    this.service.getUserStatistics({startDate: this.startDate + " 00:00", endDate: this.endDate + " 23:59"}, this.type).then(result=> {
+    this.service.getUserStatistics({
+      startDate: this.startDate + " 00:00",
+      endDate: this.endDate + " 23:59"
+    }, this.type).then(result => {
       this.reportData = result;
-    });  }
+    });
+  }
 
 }

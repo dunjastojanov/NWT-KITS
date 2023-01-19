@@ -8,8 +8,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RideDetailsDto {
+public class RideDetails {
+
+    Long id;
     String driver;
+    String passenger;
+    String driverProfileImage;
     String start;
     String end;
     String price;

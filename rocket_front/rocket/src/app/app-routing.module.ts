@@ -1,4 +1,3 @@
-import {PaypalTestComponent} from "./page/paypal-test/paypal-test.component";
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomepageComponent } from './page/homepage/homepage.component';
@@ -19,29 +18,29 @@ import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.
 import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 
 const routes: Routes = [
-  { path: '', component: HomepageComponent },
+  {path: '', component: HomepageComponent},
   {
     path: 'profile',
     component: ProfilePageComponent,
     children: [
-      { path: 'information', component: GeneralInformationComponent },
-      { path: 'favourites', component: FavouriteRoutesComponent },
-      { path: 'statistics', component: ProfileStatisticsComponent },
-      { path: 'history', component: ProfileHistoryComponent },
+      {path: 'information', component: GeneralInformationComponent},
+      {path: 'favourites', component: FavouriteRoutesComponent},
+      {path: 'statistics', component: ProfileStatisticsComponent},
+      {path: 'history', component: ProfileHistoryComponent},
     ],
   },
   {
     path: 'admin',
     component: AdminPageComponent,
     children: [
-      { path: 'information', component: GeneralInformationComponent },
-      { path: 'clients', component: ClientsComponent },
-      { path: 'drivers', component: DriversComponent },
-      { path: 'history', component: AdminHistoryComponent },
-      { path: 'statistics', component: AdminStatisticsComponent },
+      {path: 'information', component: GeneralInformationComponent},
+      {path: 'clients', component: ClientsComponent},
+      {path: 'drivers', component: DriversComponent},
+      {path: 'history', component: AdminHistoryComponent},
+      {path: 'statistics', component: AdminStatisticsComponent},
     ],
   },
-  { path: 'ride/current', component: CurrentRidePageComponent },
+  {path: 'ride/current', component: CurrentRidePageComponent},
   {
     path: 'ride/book',
     component: RideRequestPageComponent,
@@ -52,11 +51,11 @@ const routes: Routes = [
     ],
   },
   {path: "ride/current", component: CurrentRidePageComponent},
-  {path: "test", component: PaypalTestComponent}
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

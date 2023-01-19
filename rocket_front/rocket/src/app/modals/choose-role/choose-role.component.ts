@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { multiSelectProp } from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {multiSelectProp} from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
 
 @Component({
   selector: 'choose-role',
@@ -15,13 +15,17 @@ export class ChooseRoleComponent implements OnInit {
   openErrorToast = false;
 
   selectedItems: string[] = [];
-  constructor() {}
 
-  ngOnInit(): void {}
+  constructor() {
+  }
+
+  ngOnInit(): void {
+  }
 
   setSelectedItems(items: string[]) {
     this.selectedItems = items;
   }
+
   sendSelectedItems() {
     if (this.selectedItems.length != 1) {
       this.toggleErrorToast();

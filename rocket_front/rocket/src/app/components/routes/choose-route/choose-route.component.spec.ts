@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ChooseRouteComponent } from './choose-route.component';
+import {ChooseRouteComponent} from './choose-route.component';
 
 describe('ChooseRouteComponent', () => {
   let component: ChooseRouteComponent;
@@ -8,9 +8,9 @@ describe('ChooseRouteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChooseRouteComponent ]
+      declarations: [ChooseRouteComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ChooseRouteComponent);
     component = fixture.componentInstance;
