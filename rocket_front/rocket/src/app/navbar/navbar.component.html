@@ -1,9 +1,9 @@
 <nav class="navbar">
-    <div class="container flex flex-wrap justify-between items-start mx-auto">
-      <p routerLink='' class="flex items-center mt-2 hover:cursor-pointer">
-          <icon path="./assets/logo.png" class="mr-3 sm:h-9 !w-10 !h-10"></icon>
-          <span class="self-center text-xl font-semibold whitespace-nowrap ">Rocket</span>
-      </p>
+  <div class="container flex flex-wrap justify-between items-start mx-auto">
+    <p routerLink='' class="flex items-center mt-2 hover:cursor-pointer">
+      <icon path="./assets/logo.png" class="mr-3 sm:h-9 !w-10 !h-10"></icon>
+      <span class="self-center text-xl font-semibold whitespace-nowrap ">Rocket</span>
+    </p>
     <div class="md:flex gap-7 items-center w-4/6 md:w-auto">
       <div class="flex gap-4 md:order-2 justify-end">
         <primary-button *ngIf="!user" text="Login" (click)="toggleLogin()"></primary-button>
@@ -23,24 +23,23 @@
         <ul
           class="flex flex-col p-2 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
 
-
           <li *ngIf="hasRole('CLIENT')  || hasRole('DRIVER')">
             <p class="navbar-link" routerLink='profile'>Profile</p>
           </li>
           <li *ngIf="hasRole('ADMINISTRATOR')">
             <p class="navbar-link" routerLink='admin'>Profile & Administrative Panel</p>
           </li>
-          <li *ngIf="user">
-            <p class="navbar-link" *ngIf="hasRole('CLIENT')" routerLink='ride/book'>Book a ride</p>
+          <li *ngIf="hasRole('CLIENT')">
+            <p class="navbar-link"  routerLink='ride/book'>Book a ride</p>
           </li>
-          <li *ngIf="user">
+          <li *ngIf="hasRole('CLIENT') || hasRole('DRIVER')">
             <p class="navbar-link" routerLink='ride/current'>Current ride</p>
           </li>
           <li>
             <a class="navbar-link" href=''>Home</a>
           </li>
-          <li>
-            <button *ngIf="user" (click)="togglePayPal()"><p class="navbar-link">PayPal</p></button>
+          <li *ngIf="hasRole('CLIENT')">
+            <button (click)="togglePayPal()"><p class="navbar-link">PayPal</p></button>
           </li>
           <li *ngIf="!user">
             <a class="navbar-link" href='#pricing'>Pricing</a>
@@ -49,19 +48,16 @@
             <a class="navbar-link" href='#about'>About</a>
           </li>
           <li *ngIf="user">
-            <p class="navbar-link" (mouseover)="toggleNotifications()" >Notifications</p>
+            <p class="navbar-link" (click)="toggleNotifications()">Notifications</p>
           </li>
 
-          <div *ngIf="showNotifications" (mouseleave)="toggleNotifications()" class="absolute w-96 h-48 top-16 right-44 bg-white z-50">
+          <div *ngIf="showNotifications" (mouseleave)="toggleNotifications()"
+               class="absolute w-96 h-48 top-16 right-44 bg-white z-50">
             <div *ngFor="let notification of notifications">
-
-
-              <notification-list-item [notification]="notification" ></notification-list-item>
-
+              <notification-list-item [notification]="notification"></notification-list-item>
             </div>
-
-
           </div>
+
         </ul>
       </div>
     </div>
@@ -69,5 +65,5 @@
 </nav>
 
 <login [open]="showLoginModal" [closeFunc]="toggleLogin" [openRegisterModal]="toggleRegister"></login>
-<paypal class="!w-3/5" [open]="showPayPalModal" [closeFunc]="togglePayPal" ></paypal>
+<paypal class="!w-3/5" [open]="showPayPalModal" [closeFunc]="togglePayPal"></paypal>
 <register [open]="showRegisterModal" [closeFunc]="toggleRegister" [openLoginModal]="toggleLogin"></register>

@@ -28,10 +28,8 @@ export class PersonalInformationComponent implements OnInit {
     let loggedUserSlice = store.select('loggedUser');
     loggedUserSlice.subscribe(
       resData => {
-
         if (resData.user) {
-          this.data = resData.user;
-
+          this.data = {...resData.user}
         }
       }
     )
@@ -40,7 +38,12 @@ export class PersonalInformationComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  hasRole(role: string): boolean {
+    return this.data !== null && this.data?.roles.indexOf(role) !== -1;
+  }
+
   onSave(): void {
+
     if (this.data) {
       let dto = {
         firstName: this.data.firstName,
@@ -49,11 +52,22 @@ export class PersonalInformationComponent implements OnInit {
         city: this.data.city
       }
 
-      this.service.editUser(dto).then(result => {
-        this.toastr.success(result.message)
-      }).catch(error => {
-        this.toastr.error("Error with updating profile")
-      })
+      if (this.hasRole("DRIVER")) {
+        this.service.editDriver(dto).then(result => {
+          this.toastr.success("You have successfully sent the request for changing your data.")
+        }).catch(error => {
+          this.toastr.error("Error with updating profile")
+        })
+      }
+      else {
+        this.service.editUser(dto).then(result => {
+          this.toastr.success(result.message)
+        }).catch(error => {
+          this.toastr.error("Error with updating profile")
+        })
+      }
+
+
     }
 
 

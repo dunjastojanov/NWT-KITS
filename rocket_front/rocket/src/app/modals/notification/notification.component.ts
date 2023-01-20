@@ -16,7 +16,12 @@ export class NotificationComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  isBasic(type: "DRIVER_RIDE_REQUEST" | "PASSENGER_RIDE_REQUEST" | "UPDATE_DRIVER_REQUEST" | "RIDE_CANCELED" | "RIDE_CONFIRMED" | "RIDE_SCHEDULED") {
+    return type === "RIDE_CANCELED" || type === "RIDE_CONFIRMED" || type === "RIDE_SCHEDULED";
+  }
+
   onAccept() {
+
     if (this.notification.type === "DRIVER_RIDE_REQUEST") {
 
     }

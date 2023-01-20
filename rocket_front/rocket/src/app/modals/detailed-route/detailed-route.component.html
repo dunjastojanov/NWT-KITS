@@ -10,7 +10,6 @@
       </svg>
     </button>
 
-
     <div class="flex">
 
       <div class="bg-secondary-dark w-1/4"></div>
@@ -18,7 +17,8 @@
         <h3 class="mb-4 text-xl font-medium text-gray-900 text-center w-full">Detailed view</h3>
 
         <div class="flex items-center">
-          <img alt="profile-image" class="ml-3 w-20 h-20 rounded-full" [src]="ride.driverProfileImage"/>
+          <img alt="profile-image" class="ml-3 w-20 h-20 rounded-full"
+               [src]="ride.driverProfileImage || 'assets/profile-placeholder.png'"/>
           <app-info [title]="'Driver'" [info]="ride.driver"></app-info>
           <app-info class="ml-auto" [title]="'Price'" [info]="ride.price.toString() + ' din'"></app-info>
           <app-info [title]="'Duration'" [info]="ride.duration.toString()  + ' min'"></app-info>
@@ -38,17 +38,15 @@
           <div class="flex items-bottom">
             <p class="font-bold text-xl m-3">Reviews</p>
             <div class="flex items-center mb-5 mt-3">
-
               <star *ngFor="let number of numbers" [rating]="ride.rating" [number]="number" size="large"></star>
-
-
             </div>
           </div>
           <div class="flex items-center">
             <div *ngFor="let review of ride.reviews"
                  class="review-card m-2 w-1/2 p-3 pl-6 bg-tertiary-light rounded-md">
               <div class="flex items-center">
-                <img alt="profile-image" class="w-14 h-14 rounded-full" [src]="review.reviewerProfileImage"/>
+                <img alt="profile-image" class="w-14 h-14 rounded-full"
+                     [src]="review.reviewerProfileImage  || 'assets/profile-placeholder.png'"/>
                 <app-info [title]="'Passenger'" [info]="review.reviewer"></app-info>
               </div>
               <p>
