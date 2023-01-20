@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CurrentRide } from 'src/app/interfaces/Ride';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import { StoreType } from 'src/app/shared/store/types';
 
 @Component({
@@ -18,4 +22,8 @@ export class CurrentRideInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  setNull() {
+    this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
+  }
 }

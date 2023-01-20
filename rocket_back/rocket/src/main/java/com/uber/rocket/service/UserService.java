@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,12 +49,12 @@ public class UserService {
         return client.get();
     }
 
-    public RidingPal getRidingPal(String email) {
+    public UserDTO getRidingPal(String email) {
         User user = this.getUserByEmail(email);
         return this.createRidingPal(user);
     }
-    private RidingPal createRidingPal(User user) {
-        return new RidingPal(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getProfilePicture());
+    private UserDTO createRidingPal(User user) {
+        return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getProfilePicture(), user.getRoles().iterator().next().getRole());
     }
     public String register(UserRegistrationDTO userRegistrationDTO) throws IllegalAccessException {
         userRegistrationDTO.validateClassAttributes(userRegistrationDTO);

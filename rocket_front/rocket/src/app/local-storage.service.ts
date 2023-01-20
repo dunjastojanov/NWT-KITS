@@ -8,11 +8,13 @@ function localStorageSyncReducer(
   return localStorageSync({
     keys: [
       {
-        loggedUser: {
+        currentRide: {
           encrypt: (state) => window.btoa(state),
           decrypt: (state) => window.atob(state),
         },
-        currentRide: {
+      },
+      {
+        loggedUser: {
           encrypt: (state) => window.btoa(state),
           decrypt: (state) => window.atob(state),
         },

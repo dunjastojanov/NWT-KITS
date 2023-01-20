@@ -5,6 +5,7 @@ import com.uber.rocket.entity.ride.FavouriteRoute;
 import com.uber.rocket.entity.ride.Review;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.user.User;
+import com.uber.rocket.mapper.FavouriteRouteMapper;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
 import com.uber.rocket.repository.FavouriteRouteRepository;
@@ -42,13 +43,14 @@ public class RideService {
 
     @Autowired
     private FavouriteRouteRepository favouriteRouteRepository;
-
+    @Autowired
+    private FavouriteRouteMapper favouriteRouteMapper;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 
     public List<FavouriteRouteDTO> getFavouriteRoutesForUser(HttpServletRequest request) {
         List<FavouriteRoute> favouriteRoutes = favouriteRouteRepository.findAllByUser(userService.getUserByEmail(userService.getLoggedUser(request).getEmail()));
-        return favouriteRoutes.stream().map(FavouriteRouteDTO::new).collect(Collectors.toList());
+        return favouriteRoutes.stream().map(route -> favouriteRouteMapper.mapToDto(route)).collect(Collectors.toList());
     }
 
     public FavouriteRouteDTO addFavouriteRoute(HttpServletRequest request, Long rideId) {
@@ -57,7 +59,7 @@ public class RideService {
         favouriteRoute.setRide(getRide(rideId));
         favouriteRoute.setUser(userService.getUserByEmail(user.getEmail()));
         favouriteRoute = favouriteRouteRepository.save(favouriteRoute);
-        return new FavouriteRouteDTO(favouriteRoute);
+        return favouriteRouteMapper.mapToDto(favouriteRoute);
     }
 
     public void deleteFavouriteRoute(Long favouriteRouteId) {

@@ -16,6 +16,7 @@ import { RideRequestPageComponent } from './page/ride-request-page/ride-request-
 import { RouteComponent } from './page/ride-request-page/route/route.component';
 import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
 import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
+import { LobyComponent } from './page/ride-request-page/loby/loby.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -48,7 +49,7 @@ const routes: Routes = [
       { path: 'route', component: RouteComponent },
       { path: 'info', component: DataInfoComponent },
       { path: 'confirm', component: ConfirmRideComponent },
-      { path: 'loby', component: CurrentRidePageComponent },
+      { path: 'loby', component: LobyComponent },
     ],
   },
   { path: 'ride/current', component: CurrentRidePageComponent },

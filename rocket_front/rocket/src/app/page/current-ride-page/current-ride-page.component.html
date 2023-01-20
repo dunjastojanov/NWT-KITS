@@ -1,6 +1,6 @@
-<div *ngIf="currentRide">
+<div *ngIf="currentRide" class="flex">
+  <show-on-map id="currentridemap" dimensions="w-[100vh] h-[91vh]" [destinations]="currentRide.destinations" [route]="currentRide.route!"></show-on-map>
   <current-ride-info></current-ride-info>
-  <app-current-ride-map dimensions="w-[220vh] h-[70vh]" [destinations]="currentRide.destinations" [route]="currentRide.route!"></app-current-ride-map>
 </div>
 
 <div class="p-12 flex flex-col gap-12 items-center" *ngIf="!currentRide">

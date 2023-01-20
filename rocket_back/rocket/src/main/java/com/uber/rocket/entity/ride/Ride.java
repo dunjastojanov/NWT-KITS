@@ -35,13 +35,6 @@ public class Ride {
     @NotNull
     private String routeLocation;
 
-    @Nullable
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="destination", joinColumns=@JoinColumn(name="ride_id"))
-    @Column(name="destination")
-    @OrderColumn
-    private List<String> destinations;
-
     private LocalDateTime startTime;
     @Nullable
     private LocalDateTime endTime;
@@ -64,15 +57,5 @@ public class Ride {
     public User getDriver() {
         return vehicle.getDriver();
     }
-
-    public String getStart() {
-        return destinations.get(0);
-    }
-
-    public String getEnd() {
-        return destinations.get(destinations.size() - 1);
-    }
-
-
 
 }

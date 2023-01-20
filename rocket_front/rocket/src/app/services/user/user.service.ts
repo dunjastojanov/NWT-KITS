@@ -4,6 +4,7 @@ import { sideUser, User } from 'src/app/interfaces/User';
 import { http } from 'src/app/shared/api/axios-wrapper';
 import { loggedUserToken } from 'src/app/shared/consts';
 import { CookieService } from 'ngx-cookie-service';
+import { CurrentRide } from 'src/app/interfaces/Ride';
 
 interface NewDriver {
   firstName: string;
@@ -47,6 +48,16 @@ export class UserService {
       );
       return <User>result.data;
     }
+    return null;
+  }
+
+  async getCurrentRide(email: string): Promise<CurrentRide | null> {
+    /*if (this.getToken()) {
+      let result: AxiosResponse<CurrentRide | null> = await http.get(
+        `/api/ride/currentRide/${email}`
+      );
+      return <CurrentRide>result.data;
+    }*/
     return null;
   }
 

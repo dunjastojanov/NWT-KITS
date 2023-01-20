@@ -2,12 +2,14 @@ package com.uber.rocket.controller;
 
 import com.uber.rocket.dto.DatePeriod;
 import com.uber.rocket.dto.NewReviewDTO;
+import com.uber.rocket.dto.RideDTO;
 import com.uber.rocket.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/ride")
@@ -19,6 +21,12 @@ public class RideController {
 
     }
 
+    @PostMapping("currentRide")
+    public ResponseEntity<?> createRide(@RequestBody RideDTO ride) {
+        System.out.println(ride);
+
+        return ResponseEntity.ok("Ok");
+    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getRideDetails(@PathVariable Long id) {
         try {

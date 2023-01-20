@@ -9,10 +9,13 @@ import { StoreType } from 'src/app/shared/store/types';
 import { Route } from 'src/app/shared/utils/map/map/route.type';
 import { RideInfo } from '../data-info/ride-info.type';
 import { ToastrService } from 'ngx-toastr';
+import { encode } from '@googlemaps/polyline-codec';
 import {
   CurrentRideAction,
   CurrentRideActionType,
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import { CurrentRide } from 'src/app/interfaces/Ride';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-confirm-ride',
@@ -26,13 +29,15 @@ export class ConfirmRideComponent implements OnInit {
   estimated_distance: number = 0;
   estimated_time: number = 0;
   routes: Route[] = [];
-  selectedRoute: Route | null = null;
+  selectedRoute: string | null = null;
   user: User | null = null;
+  currentRide: CurrentRide | null = null;
   constructor(
     private store: Store<StoreType>,
     private service: RouteService,
     private rideService: RideService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {
     this.store.select('destinations').subscribe((resData) => {
       this.destinations = resData.destinations;
@@ -45,13 +50,17 @@ export class ConfirmRideComponent implements OnInit {
         if (one && one.selected) return one;
         return two!;
       });
-      this.selectedRoute = this.routes[0];
+      if (this.routes[0])
+        this.selectedRoute = encode(this.routes[0].geometry.coordinates);
     });
     this.store.select('rideInfo').subscribe((resData) => {
       this.rideInfo = resData.ride;
     });
     this.store.select('loggedUser').subscribe((resData) => {
       this.user = resData.user;
+    });
+    this.store.select('currentRide').subscribe((resData) => {
+      this.currentRide = resData.currentRide;
     });
   }
 
@@ -93,16 +102,21 @@ export class ConfirmRideComponent implements OnInit {
     if (this.valid()) {
       const currentRide = this.rideService.createCurrentRide(
         this.rideInfo,
+        this.estimated_distance,
         this.estimated_price,
+        +this.convertPrice().split(' ')[0],
         this.selectedRoute!,
         this.destinations,
         this.user!
       );
-      //await this.rideService(currentRude);
+      await this.rideService.saveCurrentRide(currentRide);
       this.store.dispatch(
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)
       );
-      this.toastr.success('Dobar');
+      this.router.navigate(['/ride/book/loby']);
+      this.toastr.success(
+        'Ride successfully booked. Waiting for available driver.'
+      );
     } else {
       this.toastr.error('Please fill all fields.');
     }
