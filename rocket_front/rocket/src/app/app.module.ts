@@ -102,7 +102,6 @@ import { ReviewComponent } from './modals/review/review.component';
 import { NotificationComponent } from './modals/notification/notification.component';
 import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
 import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
-import { CurrentRideMapComponent } from './components/current-ride-info/current-ride-map/current-ride-map.component';
 import { LobyComponent } from './page/ride-request-page/loby/loby.component';
 
 @NgModule({
@@ -188,7 +187,6 @@ import { LobyComponent } from './page/ride-request-page/loby/loby.component';
     DataInfoComponent,
     ConfirmRideComponent,
     ShowOnMapComponent,
-    CurrentRideMapComponent,
     LobyComponent,
   ],
   imports: [

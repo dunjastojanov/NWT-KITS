@@ -5,6 +5,7 @@ import com.uber.rocket.dto.NewReviewDTO;
 import com.uber.rocket.dto.RideDTO;
 import com.uber.rocket.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +23,11 @@ public class RideController {
     }
 
     @PostMapping("currentRide")
-    public ResponseEntity<?> createRide(@RequestBody RideDTO ride) {
-        System.out.println(ride);
-
-        return ResponseEntity.ok("Ok");
+    public ResponseEntity<?> createRide(@RequestBody @Valid RideDTO ride) {
+        Boolean success = this.rideService.createRide(ride);
+        if (success)
+            return ResponseEntity.ok("Ride successfully created");
+        return new  ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getRideDetails(@PathVariable Long id) {

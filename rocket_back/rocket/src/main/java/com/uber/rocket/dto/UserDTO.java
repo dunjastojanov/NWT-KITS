@@ -3,15 +3,21 @@ package com.uber.rocket.dto;
 import com.uber.rocket.entity.user.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import javax.validation.constraints.*;
 @Data
 @NoArgsConstructor
 public class UserDTO {
+    @PositiveOrZero
     Long id;
+    @NotBlank
     String firstName;
+    @NotBlank
     String lastName;
+    @Email
     String email;
+    //staviti Not Blank
     String profilePicture;
+    @NotBlank
     String role;
 
     public UserDTO(Long id, String firstName, String lastName, String email, String profilePicture, String role) {

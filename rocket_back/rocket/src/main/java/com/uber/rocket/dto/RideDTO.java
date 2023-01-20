@@ -6,27 +6,45 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class RideDTO {
+    @PositiveOrZero
     Long rideId;
+    @Valid
     UserDTO client;
+    @Valid
+    @Size(min = 0)
     StatusUserDTO[] ridingPals;
-    boolean isSplitFair;
+    Boolean isSplitFair;
+    @Null
+    @Valid
     StatusUserDTO driver;
-    boolean isRouteFavorite;
-    double estimatedDistance;
-    double estimatedTime;
-    double price;
+    Boolean isRouteFavorite;
+    @Positive
+    Double estimatedDistance;
+    @Positive
+    Double estimatedTime;
+    @Positive
+    Double price;
+    @NotBlank
     String route;
+    @Valid
+    @Size(min = 2)
     DestinationDTO[] destinations;
+    @Valid
     VehicleDTO vehicle;
-    boolean isNow;
+    Boolean isNow;
+    @NotBlank
     String time;
+    @Size(min = 0)
     List<String> features;
     public void setIsNow(Boolean isNow) {
         this.isNow = isNow;

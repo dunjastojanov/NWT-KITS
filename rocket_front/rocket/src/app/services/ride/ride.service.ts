@@ -40,6 +40,7 @@ export class RideService {
     ride.estimatedDistance = distance;
     ride.estimatedTime = duration;
     ride.isRouteFavorite = false;
+    ride.vehicle = { type: rideInfo.vehicle! };
     ride.ridingPals = rideInfo.friends.map((fr) => {
       return { ...fr, status: UserRidingStatus.WAITING };
     });
@@ -54,12 +55,11 @@ export class RideService {
   }
 
   async saveCurrentRide(currentRide: CurrentRide) {
-    console.log(currentRide);
     let result: AxiosResponse<CurrentRide | null> = await http.post(
       `/api/ride/currentRide`,
       currentRide
     );
-    console.log(result);
+    return result.data;
   }
 
   async getFavourites(): Promise<any | null> {

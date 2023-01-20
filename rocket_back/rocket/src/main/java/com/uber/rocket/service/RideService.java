@@ -47,7 +47,12 @@ public class RideService {
     private FavouriteRouteMapper favouriteRouteMapper;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-
+    public Boolean createRide(RideDTO ride) {
+        //kroz ride sacuvaj passengers -> client i riding pals
+        //kroz ride sacuvaj split fair
+        //drivera ne namestam jer ga nema, kad pravim dto za nazad stavim samo da ima status
+        //GDE TREBA ROUTE FAVOURITE
+    }
     public List<FavouriteRouteDTO> getFavouriteRoutesForUser(HttpServletRequest request) {
         List<FavouriteRoute> favouriteRoutes = favouriteRouteRepository.findAllByUser(userService.getUserByEmail(userService.getLoggedUser(request).getEmail()));
         return favouriteRoutes.stream().map(route -> favouriteRouteMapper.mapToDto(route)).collect(Collectors.toList());

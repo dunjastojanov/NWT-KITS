@@ -47,10 +47,10 @@ public class Ride {
     private Boolean splitFare;
 
     @NotNull
-    private int price;
+    private double price;
 
     @NotNull
-    private int duration;
+    private double duration;
 
     private double length;
 

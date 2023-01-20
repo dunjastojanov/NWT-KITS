@@ -38,7 +38,7 @@ export class CurrentRide {
 }
 
 export enum UserRidingStatus {
-  WAITING = 'waiting',
-  ACCEPTED = 'accepted',
-  DENIED = 'denied',
+  WAITING = 'Waiting...',
+  ACCEPTED = 'Accepted',
+  DENIED = 'Denied',
 }

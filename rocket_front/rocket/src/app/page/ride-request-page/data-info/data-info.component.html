@@ -43,14 +43,14 @@
                 <multi-select (selectedItems)="setFeatures($event)" [itemProps]="[{path:'./assets/icons/kids.png', title:'Kid friendly', selected: featureIsSelected('Kid friendly')},{path:'./assets/icons/pets.png', title:'Pet friendly', selected: featureIsSelected('Pet friendly')}]"></multi-select>
                 <select [value]="this.ride.vehicle ? this.ride.vehicle : ''" #types (change)="setVehicleType(types.value)" class="w-full block text-sm bg-transparent border-0 border-b-2 border-tertiary-medium appearance-none focus:outline-none focus:ring-0 focus:border-secondary-light peer" >
                     <option value="" disabled selected>Vehicle type</option>
-                    <option value="limousine">Limousine</option>
-                    <option value="hatchback">Hatchback</option>
-                    <option value="caravan">Caravan</option>
-                    <option value="coupe">Coupe</option>
-                    <option value="convertible">Convertible</option>
-                    <option value="minivan">Minivan</option>
-                    <option value="suv">Suv</option>
-                    <option value="pickup">Pickup</option>
+                    <option value="Limousine">Limousine</option>
+                    <option value="Hatchback">Hatchback</option>
+                    <option value="Caravan">Caravan</option>
+                    <option value="Coupe">Coupe</option>
+                    <option value="Convertible">Convertible</option>
+                    <option value="Minivan">Minivan</option>
+                    <option value="Suv">Suv</option>
+                    <option value="Pickup">Pickup</option>
                 </select>
             </div>     
         </div>

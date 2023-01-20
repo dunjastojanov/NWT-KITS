@@ -28,5 +28,5 @@ export interface RidingPal {
   email: string;
   profilePicture: string;
   role?: string;
-  status: UserRidingStatus;
+  status?: UserRidingStatus;
 }
