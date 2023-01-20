@@ -9,6 +9,7 @@ import com.uber.rocket.service.LoginService;
 import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -119,6 +120,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(userService.validateRegistrationToken(token));
         } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+    @GetMapping(path = "/pal/{email}")
+    public ResponseEntity<?> getRidingPal(@PathVariable("email") String email) {
+        try {
+            System.out.println(email);
+            return ResponseEntity.status(HttpStatus.OK).body(userService.getRidingPal(email));
+        } catch (RuntimeException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

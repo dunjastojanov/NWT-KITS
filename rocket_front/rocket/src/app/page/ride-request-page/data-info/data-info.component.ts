@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
+import { ToastrService } from 'ngx-toastr';
 import { RouteService } from 'src/app/components/routes/route.service';
+import { sideUser } from 'src/app/interfaces/User';
+import { UserService } from 'src/app/services/user/user.service';
 import {
   RideInfoAction,
   RideInfoActionType,
@@ -16,13 +19,19 @@ import { RideInfo } from './ride-info.type';
 })
 export class DataInfoComponent implements OnInit {
   ride: RideInfo = new RideInfo();
-  constructor(private store: Store<StoreType>, private service: RouteService) {
+  constructor(
+    private store: Store<StoreType>,
+    private service: RouteService,
+    private userService: UserService,
+    private toastr: ToastrService
+  ) {
     this.store.select('rideInfo').subscribe((resData) => {
       this.ride = resData.ride;
     });
   }
 
   friend: string = '';
+  pals: string[] = [];
   ngOnInit(): void {
     this.service.setTrigger('nesto');
   }
@@ -58,19 +67,28 @@ export class DataInfoComponent implements OnInit {
     this.friend = value;
   }
 
-  addFriend() {
-    if (this.friend === '' || this.ride.friends.includes(this.friend)) return;
-    const friends = [...this.ride.friends, this.friend];
+  async addFriend() {
+    if (this.friend === '' || this.pals.includes(this.friend)) return;
+    const pal = await this.userService.getRidingPal(this.friend);
+    if (!pal) {
+      this.toastr.error(`There is no user with email ${this.friend}`);
+      return;
+    }
+    this.pals.push(this.friend);
+    const friends: sideUser[] = [...this.ride.friends, pal];
     this.saveRide(RideInfoActionType.UPDATE_FRIENDS, friends);
   }
-  removeFriend(email: string) {
-    const friends = this.ride.friends.filter((fr) => fr !== email);
+  removeFriend(pal: sideUser) {
+    const friends: sideUser[] = this.ride.friends.filter(
+      (fr) => fr.email !== pal.email
+    );
+    this.pals = this.pals.filter((fr) => fr !== pal.email);
     this.saveRide(RideInfoActionType.UPDATE_FRIENDS, friends);
   }
 
   saveRide(
     actionType: RideInfoActionType,
-    payload: string | string[] | boolean
+    payload: string | string[] | boolean | sideUser[]
   ) {
     this.store.dispatch(new RideInfoAction(actionType, payload));
   }

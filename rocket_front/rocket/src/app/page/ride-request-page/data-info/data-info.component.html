@@ -24,9 +24,12 @@
                 </div>
                 <hr class= "w-full">
                 <div class="flex flex-col gap-3 max-h-64 overflow-auto">
-                    <div *ngFor="let friend of this.ride.friends" class="flex justify-center w-full gap-5">
-                        <p class="font-light text-[#707070] text-base">{{friend}}</p>
-                        <button-icon (click)="removeFriend(friend)" icon="./assets/icons/cancel.png" dimension="!w-6 !h-6" groupHoverDimension="!w-4 !h-4"></button-icon>
+                    <div *ngFor="let friend of this.ride.friends" class="flex items-center justify-center w-full gap-5">
+                        <div class="flex gap-2 items-center mt-4">
+                            <img alt="driver-image" class="profile-image !w-10 !h-10 !m-0" src="./assets/fiona.jpg"/>
+                            <field class="!text-xl" [title]="friend.email!" [value]="friend.firstName + ' ' + friend.lastName"></field>
+                        </div>
+                        <button-icon (click)="removeFriend(friend)" icon="./assets/icons/cancel.png" dimension="!w-7 !h-7" groupHoverDimension="!w-5 !h-5" class="mt-5"></button-icon>
                     </div>
                 </div>
             </div>     

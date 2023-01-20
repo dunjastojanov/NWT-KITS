@@ -11,7 +11,7 @@ export interface User {
 }
 
 export interface sideUser {
-  id: string;
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;

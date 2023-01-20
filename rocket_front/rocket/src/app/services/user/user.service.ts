@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AxiosResponse } from 'axios';
-import { User } from 'src/app/interfaces/User';
+import { sideUser, User } from 'src/app/interfaces/User';
 import { http } from 'src/app/shared/api/axios-wrapper';
 import { loggedUserToken } from 'src/app/shared/consts';
 import { CookieService } from 'ngx-cookie-service';
@@ -28,7 +28,6 @@ export class UserService {
         string,
         URLSearchParams
       >('/api/user/login', data);
-      console.log(result);
       this.setToken(result.data);
       return true;
     } catch (err) {
@@ -53,15 +52,13 @@ export class UserService {
 
   async getClients(filter: string, number: string, size: number): Promise<any> {
     if (this.getToken()) {
-      let result: AxiosResponse = await http.get(
-        '/api/user/', {
-          params: {
-            filter: filter,
-            number: number,
-            size: size
-          }
-        }
-      );
+      let result: AxiosResponse = await http.get('/api/user/', {
+        params: {
+          filter: filter,
+          number: number,
+          size: size,
+        },
+      });
       return result.data;
     }
     return [];
@@ -69,15 +66,13 @@ export class UserService {
 
   async getDrivers(filter: string, number: string, size: number): Promise<any> {
     if (this.getToken()) {
-      let result: AxiosResponse = await http.get(
-        '/api/vehicle/', {
-          params: {
-            filter: filter,
-            number: number,
-            size: size
-          }
-        }
-      );
+      let result: AxiosResponse = await http.get('/api/vehicle/', {
+        params: {
+          filter: filter,
+          number: number,
+          size: size,
+        },
+      });
       return result.data;
     }
     return [];
@@ -135,7 +130,6 @@ export class UserService {
         '/api/ride/8/' + (+currentPage - 1).toString()
       );
       return result.data;
-
     }
     return null;
   }
@@ -149,8 +143,15 @@ export class UserService {
 
   async registerDriver(dto: NewDriver) {
     let result: AxiosResponse<any> = await http.post<object>(
-      '/api/vehicle', dto
+      '/api/vehicle',
+      dto
     );
     return result.data;
+  }
+
+  async getRidingPal(email: string): Promise<sideUser | null> {
+    let result: AxiosResponse<any> = await http.get(`/api/user/pal/${email}`);
+    if (result) return result.data;
+    return null;
   }
 }

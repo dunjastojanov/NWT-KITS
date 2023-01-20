@@ -1,33 +1,32 @@
 <div class="p-7 px-16">
   <div class="flex justify-center items-center relative">
-    <app-title title="Current ride"
-               [subtitle]="'Your vehicle is arriving in ' + currentRide.minutesToCome + ' minutes'"></app-title>
-    <current-ride-buttons [user]="!currentRide.client" [isFavorite]="currentRide.isRouteFavorite!"
-                          [driverName]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName"></current-ride-buttons>
+    <app-title title="Current ride"></app-title>
+    <current-ride-buttons [user]="currentRide!.isSplitFair" [isFavorite]="currentRide!.isRouteFavorite!"
+                          [driverName]="currentRide!.driver?.firstName + ' ' + currentRide!.driver?.lastName"></current-ride-buttons>
   </div>
   <div class="flex w-full justify-center gap-12 mt-12">
 
     <div class="flex flex-col items-center gap-4 py-5 w-1/4">
-      <current-ride-client *ngIf="currentRide.client" [client]="currentRide.client"></current-ride-client>
-      <current-ride-pals [pals]="currentRide.ridingPals"></current-ride-pals>
-      <checkbox *ngIf="!currentRide.client" [checked]="currentRide.isSplitFair!" [disabled]="true"
+      <current-ride-client *ngIf="currentRide!.client" [client]="currentRide!.client"></current-ride-client>
+      <current-ride-pals [pals]="currentRide!.ridingPals!"></current-ride-pals>
+      <checkbox *ngIf="!currentRide!.client" [checked]="currentRide!.isSplitFair" [disabled]="true"
                 text="Split fair"></checkbox>
     </div>
 
-    <div class="flex flex-col gap-3 items-center py-5 border-l border-r w-1/4">
+    <div *ngIf="currentRide!.driver" class="flex flex-col gap-3 items-center py-5 border-l border-r w-1/4">
       <div class="flex flex-col items-start mt-auto">
         <img alt="driver-image" class="profile-image self-center !m-0" src="./assets/fiona.jpg"/>
-        <field title="Driver" [subValue]="currentRide.driver.email"
-               [value]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName"
+        <field title="Driver" [subValue]="currentRide!.driver!.email"
+               [value]="currentRide!.driver!.firstName + ' ' + currentRide!.driver!.lastName"
                icon="./assets/icons/driver.png"></field>
       </div>
     </div>
 
     <current-ride-route class="w-1/4"
-                        [startAddress]="currentRide.destinations[0].address"
-                        [endAddress]="currentRide.destinations[currentRide.destinations.length-1].address"
-                        [price]="currentRide.price.toString()"
-                        [estimatedTime]="currentRide.estimatedTime"
+                        [startAddress]="currentRide!.destinations[0].address"
+                        [endAddress]="currentRide!.destinations[currentRide!.destinations.length-1].address"
+                        [price]="currentRide!.price.toString()"
+                        [estimatedTime]="currentRide!.estimatedTime.toString()"
     >
     </current-ride-route>
   </div>

@@ -2,10 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { RouteService } from 'src/app/components/routes/route.service';
 import { Destination } from 'src/app/interfaces/Destination';
+import { User } from 'src/app/interfaces/User';
 import { VehiclePrices } from 'src/app/interfaces/VehiclesPrices';
+import { RideService } from 'src/app/services/ride/ride.service';
 import { StoreType } from 'src/app/shared/store/types';
 import { Route } from 'src/app/shared/utils/map/map/route.type';
 import { RideInfo } from '../data-info/ride-info.type';
+import { ToastrService } from 'ngx-toastr';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 
 @Component({
   selector: 'app-confirm-ride',
@@ -20,7 +27,13 @@ export class ConfirmRideComponent implements OnInit {
   estimated_time: number = 0;
   routes: Route[] = [];
   selectedRoute: Route | null = null;
-  constructor(private store: Store<StoreType>, private service: RouteService) {
+  user: User | null = null;
+  constructor(
+    private store: Store<StoreType>,
+    private service: RouteService,
+    private rideService: RideService,
+    private toastr: ToastrService
+  ) {
     this.store.select('destinations').subscribe((resData) => {
       this.destinations = resData.destinations;
       this.estimated_price = resData.estimated_price;
@@ -36,6 +49,9 @@ export class ConfirmRideComponent implements OnInit {
     });
     this.store.select('rideInfo').subscribe((resData) => {
       this.rideInfo = resData.ride;
+    });
+    this.store.select('loggedUser').subscribe((resData) => {
+      this.user = resData.user;
     });
   }
 
@@ -72,5 +88,33 @@ export class ConfirmRideComponent implements OnInit {
     if (this.rideInfo.vehicle)
       return `${VehiclePrices[this.rideInfo.vehicle] + priceFixed} rsd.`;
     return `${priceFixed} rsd`;
+  }
+  async onConfirm() {
+    if (this.valid()) {
+      const currentRide = this.rideService.createCurrentRide(
+        this.rideInfo,
+        this.estimated_price,
+        this.selectedRoute!,
+        this.destinations,
+        this.user!
+      );
+      //await this.rideService(currentRude);
+      this.store.dispatch(
+        new CurrentRideAction(CurrentRideActionType.SET, currentRide)
+      );
+      this.toastr.success('Dobar');
+    } else {
+      this.toastr.error('Please fill all fields.');
+    }
+  }
+  valid(): boolean {
+    if (!this.haveDestinations()) return false;
+    if (!this.selectedRoute) return false;
+    return this.validRideInfo();
+  }
+  validRideInfo(): boolean {
+    if (!this.rideInfo.vehicle) return false;
+    if (!this.rideInfo.isNow && !this.rideInfo.time) return false;
+    return true;
   }
 }

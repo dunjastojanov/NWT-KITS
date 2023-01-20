@@ -1,19 +1,27 @@
-import {localStorageSync} from 'ngrx-store-localstorage';
-import {ActionReducer, MetaReducer} from '@ngrx/store';
-import {StoreType} from './shared/store/types';
+import { localStorageSync } from 'ngrx-store-localstorage';
+import { ActionReducer, MetaReducer } from '@ngrx/store';
+import { StoreType } from './shared/store/types';
 
-function localStorageSyncReducer(reducer: ActionReducer<StoreType>): ActionReducer<StoreType> {
+function localStorageSyncReducer(
+  reducer: ActionReducer<StoreType>
+): ActionReducer<StoreType> {
   return localStorageSync({
     keys: [
       {
-        'loggedUser': {
-          encrypt: state => window.btoa(state),
-          decrypt: state => window.atob(state)
-        }
+        loggedUser: {
+          encrypt: (state) => window.btoa(state),
+          decrypt: (state) => window.atob(state),
+        },
+        currentRide: {
+          encrypt: (state) => window.btoa(state),
+          decrypt: (state) => window.atob(state),
+        },
       },
     ],
-    rehydrate: true
+    rehydrate: true,
   })(reducer);
 }
 
-export const metaReducers: Array<MetaReducer<StoreType, any>> = [localStorageSyncReducer];
+export const metaReducers: Array<MetaReducer<StoreType, any>> = [
+  localStorageSyncReducer,
+];

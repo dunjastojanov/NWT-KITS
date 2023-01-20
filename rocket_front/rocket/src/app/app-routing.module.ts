@@ -18,29 +18,29 @@ import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.
 import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 
 const routes: Routes = [
-  {path: '', component: HomepageComponent},
+  { path: '', component: HomepageComponent },
   {
     path: 'profile',
     component: ProfilePageComponent,
     children: [
-      {path: 'information', component: GeneralInformationComponent},
-      {path: 'favourites', component: FavouriteRoutesComponent},
-      {path: 'statistics', component: ProfileStatisticsComponent},
-      {path: 'history', component: ProfileHistoryComponent},
+      { path: 'information', component: GeneralInformationComponent },
+      { path: 'favourites', component: FavouriteRoutesComponent },
+      { path: 'statistics', component: ProfileStatisticsComponent },
+      { path: 'history', component: ProfileHistoryComponent },
     ],
   },
   {
     path: 'admin',
     component: AdminPageComponent,
     children: [
-      {path: 'information', component: GeneralInformationComponent},
-      {path: 'clients', component: ClientsComponent},
-      {path: 'drivers', component: DriversComponent},
-      {path: 'history', component: AdminHistoryComponent},
-      {path: 'statistics', component: AdminStatisticsComponent},
+      { path: 'information', component: GeneralInformationComponent },
+      { path: 'clients', component: ClientsComponent },
+      { path: 'drivers', component: DriversComponent },
+      { path: 'history', component: AdminHistoryComponent },
+      { path: 'statistics', component: AdminStatisticsComponent },
     ],
   },
-  {path: 'ride/current', component: CurrentRidePageComponent},
+  { path: 'ride/current', component: CurrentRidePageComponent },
   {
     path: 'ride/book',
     component: RideRequestPageComponent,
@@ -48,14 +48,14 @@ const routes: Routes = [
       { path: 'route', component: RouteComponent },
       { path: 'info', component: DataInfoComponent },
       { path: 'confirm', component: ConfirmRideComponent },
+      { path: 'loby', component: CurrentRidePageComponent },
     ],
   },
-  {path: "ride/current", component: CurrentRidePageComponent},
+  { path: 'ride/current', component: CurrentRidePageComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

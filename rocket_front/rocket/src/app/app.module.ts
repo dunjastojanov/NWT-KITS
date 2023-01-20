@@ -95,13 +95,15 @@ import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/conf
 import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reducer';
 import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.component';
 import { SocketService } from './services/sockets/sockets.service';
-
 import { PaypalComponent } from './modals/paypal/paypal.component';
 import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
 import { StarComponent } from './modals/detailed-route/large-star/star.component';
 import { ReviewComponent } from './modals/review/review.component';
 import { NotificationComponent } from './modals/notification/notification.component';
 import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
+import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
+import { CurrentRideMapComponent } from './components/current-ride-info/current-ride-map/current-ride-map.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -185,6 +187,7 @@ import { NotificationListItemComponent } from './shared/utils/notification-list-
     DataInfoComponent,
     ConfirmRideComponent,
     ShowOnMapComponent,
+    CurrentRideMapComponent,
   ],
   imports: [
     HttpClientModule,
@@ -206,6 +209,7 @@ import { NotificationListItemComponent } from './shared/utils/notification-list-
         loggedUser: loggedUserReducer,
         destinations: destinationsReducer,
         rideInfo: RideInfoReducer,
+        currentRide: CurrentRideReducer,
       },
       { metaReducers }
     ),
