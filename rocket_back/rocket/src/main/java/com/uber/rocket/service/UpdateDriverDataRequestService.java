@@ -13,6 +13,9 @@ public class UpdateDriverDataRequestService {
     @Autowired
     private UpdateDriverRequestRepository updateDriverRequestRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public void createDriverDataRequest(UpdateUserDataDTO updateUserDataDTO, Long driverId) {
         UpdateDriverDataRequest updateDriverDataRequest = new UpdateDriverDataRequest();
         updateDriverDataRequest.setDriverId(driverId);
@@ -22,6 +25,7 @@ public class UpdateDriverDataRequestService {
         updateDriverDataRequest.setCity(updateUserDataDTO.getCity());
         updateDriverDataRequest.setValidated(false);
         updateDriverRequestRepository.save(updateDriverDataRequest);
+        notificationService.addUpdateDriverDataRequestNotification(updateDriverDataRequest);
     }
 
     public UpdateDriverDataRequest getById(Long id) {

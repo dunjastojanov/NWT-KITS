@@ -6,6 +6,7 @@ import com.uber.rocket.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,11 +22,11 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "notification_sequence")
     @Setter(AccessLevel.NONE)
     private Long id;
-    @NotNull
+    @Nullable
     @ManyToOne
     User user;
     @NotNull
-    String html;
+    String templateVariables;
     @NotNull
     String title;
     @NotNull
@@ -35,5 +36,7 @@ public class Notification {
     boolean read;
     @Nullable
     Long entityId;
+    @Nullable
+    LocalDateTime sent;
 
 }
