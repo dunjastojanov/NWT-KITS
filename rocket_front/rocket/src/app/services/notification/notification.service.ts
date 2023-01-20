@@ -13,7 +13,14 @@ export class NotificationService {
     let result: AxiosResponse = await http.get(
       '/api/notification'
     );
-    console.log(result);
+    return result.data;
+  }
+
+  async setRead(id: string) {
+    let result: AxiosResponse = await http.put(
+      '/api/notification/' + id
+    );
+    console.log(result.data);
     return result.data;
   }
 }

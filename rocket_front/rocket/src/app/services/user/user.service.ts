@@ -28,7 +28,6 @@ export class UserService {
         string,
         URLSearchParams
       >('/api/user/login', data);
-      console.log(result);
       this.setToken(result.data);
       return true;
     } catch (err) {
@@ -105,6 +104,16 @@ export class UserService {
   }): Promise<any> {
     if (this.getToken()) {
       let result: AxiosResponse<any> = await http.put<object>('/api/user', dto);
+      return <any>result.data;
+    }
+    return null;
+  }
+
+  async editDriver(dto: { firstName: string, lastName: string, city: string, phoneNumber: string }): Promise<any> {
+    if (this.getToken()) {
+      let result: AxiosResponse<any> = await http.put<object>(
+        '/api/vehicle', dto
+      );
       return <any>result.data;
     }
     return null;

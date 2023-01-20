@@ -25,4 +25,7 @@ public class RideCancellation {
     @NotNull
     private String description;
 
+    @ManyToOne
+    private Ride ride;
+
 }

@@ -24,7 +24,6 @@ export class LineChartComponent implements OnInit, OnChanges {
   @Input("data") data!: ReportData;
   @Input("average") public average!: number;
   @Input("total") public total!: number;
-
   @Input("unit") public unit!: string;
 
   createChart() {

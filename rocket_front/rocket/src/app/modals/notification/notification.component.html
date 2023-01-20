@@ -13,16 +13,16 @@
     <div class="py-6 px-6 lg:px-8 w-full">
       <h3 class="mb-4 text-xl font-medium text-gray-900 text-center w-full">{{notification.title}}</h3>
 
-      <div *ngIf="notification.type === 'BASIC'" class="flex items-center justify-center mt-2 gap-2">
+      <div *ngIf="isBasic(notification.type)" class="flex items-center justify-center mt-2 gap-2">
         <secondary-button (click)="closeFunc()" text="OKAY"></secondary-button>
       </div>
 
-      <div *ngIf="notification.type !== 'BASIC'" class="flex items-center justify-center mt-2 gap-2">
+      <embedded-html [html]="notification.html"></embedded-html>
+
+      <div *ngIf="!isBasic(notification.type)" class="flex items-center justify-center mt-2 gap-2">
         <secondary-button (click)="onDeny()" text="DENY"></secondary-button>
         <primary-button (click)="onAccept()" text="ACCEPT"></primary-button>
       </div>
-
-
 
     </div>
   </div>

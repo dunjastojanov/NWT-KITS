@@ -13,12 +13,16 @@ public class UpdateDriverPictureRequestService {
     @Autowired
     private UpdateDriverPictureRequestRepository updateDriverPictureRequestRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public void createDriverPictureRequest(String newProfilePath, Long id) {
         UpdateDriverPictureRequest updateDriverPictureRequest = new UpdateDriverPictureRequest();
         updateDriverPictureRequest.setDriverId(id);
         updateDriverPictureRequest.setProfilePicture(newProfilePath);
         updateDriverPictureRequest.setValidated(false);
         updateDriverPictureRequestRepository.save(updateDriverPictureRequest);
+        notificationService.addUpdateDriverPictureRequestNotification(updateDriverPictureRequest);
     }
 
     public UpdateDriverPictureRequest getById(Long id) {
