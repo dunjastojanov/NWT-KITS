@@ -4,6 +4,8 @@ import com.uber.rocket.dto.ForgetPasswordDTO;
 import com.uber.rocket.dto.PasswordChangeDTO;
 import com.uber.rocket.dto.UpdateUserDataDTO;
 import com.uber.rocket.dto.UserRegistrationDTO;
+import com.uber.rocket.service.AuthService;
+import com.uber.rocket.service.LoginService;
 import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
@@ -22,12 +25,25 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LoginService loginService;
+
     @PostMapping
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userRegistrationDTO));
         } catch (RuntimeException | IllegalAccessException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+
+    @PostMapping("/login")
+    public String loginUser(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            return loginService.login(request, response);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception.getMessage());
         }
     }
 

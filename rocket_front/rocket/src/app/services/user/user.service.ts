@@ -1,8 +1,9 @@
-import {Injectable} from '@angular/core';
-import {AxiosResponse} from 'axios';
-import {User} from 'src/app/interfaces/User';
-import {http} from 'src/app/shared/api/axios-wrapper';
-import {loggedUserToken} from 'src/app/shared/consts';
+import { Injectable } from '@angular/core';
+import { AxiosResponse } from 'axios';
+import { User } from 'src/app/interfaces/User';
+import { http } from 'src/app/shared/api/axios-wrapper';
+import { loggedUserToken } from 'src/app/shared/consts';
+import { CookieService } from 'ngx-cookie-service';
 
 interface NewDriver {
   firstName: string;
@@ -19,15 +20,14 @@ interface NewDriver {
   providedIn: 'root',
 })
 export class UserService {
-  constructor() {
-  }
+  constructor(private cookieService: CookieService) {}
 
   async loginUser(data: any): Promise<boolean> {
     try {
       let result: AxiosResponse<string> = await http.post<
         string,
         URLSearchParams
-      >('/api/login', data);
+      >('/api/user/login', data);
       this.setToken(result.data);
       return true;
     } catch (err) {
@@ -37,6 +37,7 @@ export class UserService {
 
   setToken(token: string) {
     window.localStorage.setItem(loggedUserToken, token);
+    this.cookieService.set('access_token', token);
   }
 
   async getUser(): Promise<User | null> {
@@ -83,23 +84,26 @@ export class UserService {
 
   async editProfileImage(image: File): Promise<any> {
     if (this.getToken()) {
-
       const formData = new FormData();
       formData.append('file', image);
 
       let result: AxiosResponse<any> = await http.put<FormData>(
-        '/api/user/image', formData
+        '/api/user/image',
+        formData
       );
       return <any>result.data;
     }
     return null;
   }
 
-  async editUser(dto: { firstName: string, lastName: string, city: string, phoneNumber: string }): Promise<any> {
+  async editUser(dto: {
+    firstName: string;
+    lastName: string;
+    city: string;
+    phoneNumber: string;
+  }): Promise<any> {
     if (this.getToken()) {
-      let result: AxiosResponse<any> = await http.put<object>(
-        '/api/user', dto
-      );
+      let result: AxiosResponse<any> = await http.put<object>('/api/user', dto);
       return <any>result.data;
     }
     return null;
@@ -115,10 +119,14 @@ export class UserService {
     return null;
   }
 
-  async getUserStatistics(dto: { startDate: string, endDate: string }, type: string): Promise<any> {
+  async getUserStatistics(
+    dto: { startDate: string; endDate: string },
+    type: string
+  ): Promise<any> {
     if (this.getToken()) {
       let result: AxiosResponse<any> = await http.put<object>(
-        '/api/ride/report/' + type, dto
+        '/api/ride/report/' + type,
+        dto
       );
       return <any>result.data;
     }
