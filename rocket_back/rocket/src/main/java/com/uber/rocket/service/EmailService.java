@@ -92,6 +92,7 @@ public class EmailService {
                 return content.replace(REPLACEMENT_STRING, "https://localhost:8443/api/user/confirm/" + injectedString);
             }
             case FORGOTTEN_PASSWORD -> {
+                //TODO napravi stranicu za confirm forgot password
                 return content.replace(REPLACEMENT_STRING, "http://localhost:4200/reset/password/" + injectedString);
             }
             case DRIVER_REGISTRATION_NOTIFICATION -> {

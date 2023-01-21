@@ -19,12 +19,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 @Configuration
@@ -32,9 +26,6 @@ import java.util.List;
 public class SecurityConfiguration {
     @Autowired
     private AuthService authService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -61,8 +52,6 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(daoAuthenticationProvider(), authService, userService);
-//        authenticationFilter.setFilterProcessesUrl("/api/login");
         http.cors();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -76,6 +65,9 @@ public class SecurityConfiguration {
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/vehicle").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/vehicle/validate/**").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/vehicle/**").hasAnyAuthority(RoleType.DRIVER.name());
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/chat").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/chat").hasAnyAuthority(RoleType.ADMINISTRATOR.name(),RoleType.CLIENT.name());
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/chat/message").hasAnyAuthority(RoleType.ADMINISTRATOR.name(),RoleType.CLIENT.name());
 
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/payment/**").hasAnyAuthority(RoleType.CLIENT.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/notification/**").permitAll();
@@ -84,8 +76,6 @@ public class SecurityConfiguration {
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/login").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
-//        http.addFilter(authenticationFilter);
-//        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new CustomAuthorizationFilter(authService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

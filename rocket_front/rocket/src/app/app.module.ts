@@ -102,6 +102,7 @@ import { ReviewComponent } from './modals/review/review.component';
 import { NotificationComponent } from './modals/notification/notification.component';
 import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
 import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedded-html.component';
+import { AdminChatPageComponent } from './page/admin-chat-page/admin-chat-page.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -185,6 +186,7 @@ import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedd
     ConfirmRideComponent,
     ShowOnMapComponent,
     EmbeddedHtmlComponent,
+    AdminChatPageComponent,
   ],
   imports: [
     HttpClientModule,
