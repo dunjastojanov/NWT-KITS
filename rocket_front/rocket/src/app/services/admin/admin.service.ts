@@ -2,9 +2,7 @@ import {Injectable} from '@angular/core';
 import {AxiosResponse} from "axios";
 import {http} from "../../shared/api/axios-wrapper";
 import {loggedUserToken} from "../../shared/consts";
-import {sideUser} from "../../interfaces/User";
 import {UserChatInfo} from "../../interfaces/UserChatInfo";
-import {MessageInfo} from "../../interfaces/MessageInfo";
 
 @Injectable({
   providedIn: 'root'
@@ -39,23 +37,10 @@ export class AdminService {
     return null;
   }
 
-  async getAdminData() {
-    let result: AxiosResponse<sideUser | null> = await http.get<sideUser | null>('/api/user/logged');
-    return result.data;
-  }
-
   async getAllAdminsChat(): Promise<UserChatInfo[]> {
     let result: AxiosResponse<UserChatInfo[]> = await http.get<UserChatInfo[]>('/api/chat');
     return result.data;
   }
 
-  async getMessagesWith(receiverEmail: string): Promise<MessageInfo[]> {
-    let result: AxiosResponse<MessageInfo[]> = await http.get<MessageInfo[]>('/api/chat/message/' + receiverEmail);
-    return result.data;
-  }
 
-  async sendMessage(dto: { message: string, receiverEmail: string }): Promise<MessageInfo[]> {
-    let result: AxiosResponse<MessageInfo[]> = await http.post<MessageInfo[]>('/api/chat/', dto);
-    return result.data;
-  }
 }

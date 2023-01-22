@@ -103,6 +103,7 @@ import { NotificationComponent } from './modals/notification/notification.compon
 import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
 import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedded-html.component';
 import { AdminChatPageComponent } from './page/admin-chat-page/admin-chat-page.component';
+import { UserChatModalComponent } from './modals/user-chat-modal/user-chat-modal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -187,6 +188,7 @@ import { AdminChatPageComponent } from './page/admin-chat-page/admin-chat-page.c
     ShowOnMapComponent,
     EmbeddedHtmlComponent,
     AdminChatPageComponent,
+    UserChatModalComponent,
   ],
   imports: [
     HttpClientModule,

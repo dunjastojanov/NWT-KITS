@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {http} from "../../shared/api/axios-wrapper";
-import {sideUser} from "../../interfaces/User";
+import {User} from "../../interfaces/User";
 import {UserChatInfo} from "../../interfaces/UserChatInfo";
 import {MessageInfo} from "../../interfaces/MessageInfo";
 import {AdminService} from "../../services/admin/admin.service";
+import {UserService} from "../../services/user/user.service";
+import {ChatService} from "../../services/chat/chat.service";
 
 
 @Component({
@@ -13,12 +14,12 @@ import {AdminService} from "../../services/admin/admin.service";
 })
 export class AdminChatPageComponent implements OnInit {
   users: UserChatInfo[] = []
-  loggedAdmin: sideUser | null = null;
+  loggedAdmin: User | null = null;
   messages: MessageInfo[] = [];
   message: string = "";
   talkingTo: string = "";
 
-  constructor(private adminService: AdminService) {
+  constructor(private adminService: AdminService, private userService: UserService, private chatService: ChatService) {
 
   }
 
@@ -29,7 +30,7 @@ export class AdminChatPageComponent implements OnInit {
         this.users = result;
       }
     );
-    this.adminService.getAdminData().then(
+    this.userService.getUser().then(
       result => {
         this.loggedAdmin = result;
       }
@@ -41,7 +42,7 @@ export class AdminChatPageComponent implements OnInit {
       message: this.message,
       receiverEmail: this.talkingTo
     }
-    this.adminService.sendMessage(dto).then(
+    this.chatService.sendMessage(dto).then(
       result => {
         this.messages = result;
       }
@@ -50,7 +51,7 @@ export class AdminChatPageComponent implements OnInit {
 
   getMessagesWith(email: string) {
     this.talkingTo = email;
-    this.adminService.getMessagesWith(email).then(result => {
+    this.chatService.getMessagesWith(email).then(result => {
       this.messages = result
     })
   }
