@@ -47,7 +47,6 @@ export class ShowOnMapComponent implements AfterViewInit {
   }
   private drawPolyline() {
     const routes = this.route!.split(' ').slice(0, -1);
-    console.log(routes);
     for (let i = 0; i < routes.length; i++) {
       const coordinates = decode(routes[i]);
       const mainRoutePolyline = L.polyline(coordinates, {
@@ -56,8 +55,6 @@ export class ShowOnMapComponent implements AfterViewInit {
       });
       if (i === 0) this.bounds = mainRoutePolyline.getBounds();
       else this.bounds!.extend(mainRoutePolyline.getBounds());
-      //this.mapShow.fitBounds(mainRoutePolyline.getBounds());
-      console.log(mainRoutePolyline);
       mainRoutePolyline.addTo(this.mapShow);
     }
     this.mapShow.fitBounds(this.bounds);

@@ -33,6 +33,11 @@ public class RideController {
         }
     }
 
+    @GetMapping(path = "/currentRide/{email}")
+    public ResponseEntity<?> getUsersCurrentRide(@PathVariable("email") String email) {
+        RideDTO rideDTO = this.rideService.getUserCurrentRideByEmail(email);
+        return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
+    }
     @GetMapping(path = "/pal/{email}")
     public ResponseEntity<?> getRidingPal(@PathVariable("email") String email) {
         try {

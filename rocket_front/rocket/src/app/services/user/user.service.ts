@@ -52,12 +52,12 @@ export class UserService {
   }
 
   async getCurrentRide(email: string): Promise<CurrentRide | null> {
-    /*if (this.getToken()) {
+    if (this.getToken()) {
       let result: AxiosResponse<CurrentRide | null> = await http.get(
         `/api/ride/currentRide/${email}`
       );
       return <CurrentRide>result.data;
-    }*/
+    }
     return null;
   }
 
@@ -116,10 +116,16 @@ export class UserService {
     return null;
   }
 
-  async editDriver(dto: { firstName: string, lastName: string, city: string, phoneNumber: string }): Promise<any> {
+  async editDriver(dto: {
+    firstName: string;
+    lastName: string;
+    city: string;
+    phoneNumber: string;
+  }): Promise<any> {
     if (this.getToken()) {
       let result: AxiosResponse<any> = await http.put<object>(
-        '/api/vehicle', dto
+        '/api/vehicle',
+        dto
       );
       return <any>result.data;
     }

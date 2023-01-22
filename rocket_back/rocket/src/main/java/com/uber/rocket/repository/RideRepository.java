@@ -28,6 +28,6 @@ public interface RideRepository extends PagingAndSortingRepository<Ride, Long> {
     List<Ride> findByDriverAndDatePeriod(User user, LocalDateTime start, LocalDateTime end);
     @Query("FROM Ride ride WHERE :vehicle = ride.vehicle")
     Page<Ride> findByVehicleDriver(Pageable pageable, Vehicle vehicle);
-    @Query(value = "select * FROM ride r JOIN passenger p on p.ride_id = r.id where p.user_id = ?1", nativeQuery = true)
+    @Query(value = "select * FROM ride r JOIN passenger p on p.ride_id = r.id where p.user_id = ?1 and r.status != 'DENIED' and r.status != 'ENDED'", nativeQuery = true)
     List<Ride> findByPassengers(Long id);
 }

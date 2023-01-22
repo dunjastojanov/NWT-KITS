@@ -26,7 +26,8 @@ public class Vehicle {
 
     private boolean kidFriendly;
 
-    private String currentLocation;
+    private double longitude;
+    private double latitude;
 
     @Enumerated(EnumType.STRING)
     private VehicleStatus status;
