@@ -1,6 +1,8 @@
 package com.uber.rocket.repository;
 
+import com.uber.rocket.entity.ride.Passenger;
 import com.uber.rocket.entity.ride.Ride;
+import com.uber.rocket.entity.ride.RideStatus;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
 import org.springframework.data.domain.Page;
@@ -19,10 +21,13 @@ public interface RideRepository extends PagingAndSortingRepository<Ride, Long> {
     List<Ride> findByPassengerAndDatePeriod(@Param("user") User user, @Param("start") LocalDateTime start, @Param("end")LocalDateTime end);
     @Query("FROM Ride ride WHERE ride.startTime > :start AND ride.endTime < :end ORDER BY ride.startTime")
     List<Ride> findByDatePeriod(@Param("start")LocalDateTime start, @Param("end")LocalDateTime end);
-    Page<Ride> findByPassengers(Pageable pageable, User passengers);
+    @Query(value = "select r FROM Ride r JOIN Passenger p on p member of r.passengers where p.user = :user and r.vehicle is not null")
+    Page<Ride> findByPassengers(Pageable pageable, User user);
+    Page<Ride> findAllByStatus(Pageable pageable, RideStatus status);
     @Query("FROM Ride ride WHERE :user = ride.vehicle.driver AND ride.startTime > :start AND ride.endTime < :end ORDER BY ride.startTime")
     List<Ride> findByDriverAndDatePeriod(User user, LocalDateTime start, LocalDateTime end);
     @Query("FROM Ride ride WHERE :vehicle = ride.vehicle")
     Page<Ride> findByVehicleDriver(Pageable pageable, Vehicle vehicle);
-
+    @Query(value = "select * FROM ride r JOIN passenger p on p.ride_id = r.id where p.user_id = ?1", nativeQuery = true)
+    List<Ride> findByPassengers(Long id);
 }

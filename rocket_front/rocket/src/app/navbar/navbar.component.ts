@@ -60,7 +60,7 @@ export class NavbarComponent implements OnInit {
   logout = (): void => {
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGOUT));
     this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
-    this.router.navigate(['/']);
+    window.location.href = '/';
   };
 
   toggleRegister = (): void => {

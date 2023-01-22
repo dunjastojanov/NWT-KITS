@@ -49,13 +49,6 @@ public class UserService {
         return client.get();
     }
 
-    public UserDTO getRidingPal(String email) {
-        User user = this.getUserByEmail(email);
-        return this.createRidingPal(user);
-    }
-    private UserDTO createRidingPal(User user) {
-        return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getProfilePicture(), user.getRoles().iterator().next().getRole());
-    }
     public String register(UserRegistrationDTO userRegistrationDTO) throws IllegalAccessException {
         userRegistrationDTO.validateClassAttributes(userRegistrationDTO);
         Optional<User> user = userRepository.findByEmail(userRegistrationDTO.getEmail());

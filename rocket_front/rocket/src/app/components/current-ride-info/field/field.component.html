@@ -4,7 +4,7 @@
 
 <p *ngIf="!status" class="font-semibold text-xl"> {{value}} </p>
 
-<p *ngIf="status" [ngClass]="{'text-blue-600' : status === 'Waiting...', 'text-red-600' : status === 'Denied', 'text-green-500': status === 'Accepted'}" class="font-semibold text-xl"> {{value}} </p>
+<p *ngIf="status" [ngClass]="{'text-blue-600' : status === 'WAITING', 'text-red-600' : status === 'DENIED', 'text-green-500': status === 'ACCEPTED'}" class="font-semibold text-xl"> {{value}} </p>
 
 <p *ngIf="subValue" class="font-light"> {{subValue}} </p>
 

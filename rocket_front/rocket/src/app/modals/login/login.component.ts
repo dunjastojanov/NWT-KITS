@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
           email: socialUser.email,
           firstName: socialUser.firstName,
           lastName: socialUser.lastName,
-          roles: ['client'],
+          roles: ['CLIENT'],
           profilePicture: socialUser.photoUrl,
         };
         await this.login(user);

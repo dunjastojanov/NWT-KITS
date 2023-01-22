@@ -122,15 +122,6 @@ public class UserController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
-    @GetMapping(path = "/pal/{email}")
-    public ResponseEntity<?> getRidingPal(@PathVariable("email") String email) {
-        try {
-            System.out.println(email);
-            return ResponseEntity.status(HttpStatus.OK).body(userService.getRidingPal(email));
-        } catch (RuntimeException exception) {
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
 
     @PostMapping(path = "/confirm")
     public ResponseEntity<?> validateChangingPassword(@Valid @RequestBody ForgetPasswordDTO forgetPasswordDTO) {

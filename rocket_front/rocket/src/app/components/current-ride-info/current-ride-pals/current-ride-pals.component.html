@@ -4,7 +4,7 @@
     <div class="flex gap-2 items-center mt-4" *ngFor="let pal of ridingPals">
       <img alt="driver-image" class="profile-image !w-10 !h-10 !m-0" src="./assets/fiona.jpg"/>
       <field *ngIf="!pal.status" class="!text-xl" [title]="pal.email!" [value]="pal.firstName + ' ' + pal.lastName"></field>
-      <field *ngIf="pal.status" [status]="pal.status!" class="!text-xl" [value]="pal.status!" [title]="pal.firstName + ' ' + pal.lastName"></field>
+      <field *ngIf="pal.status" [status]="pal.status!" class="!text-xl" [value]="pal.status! === 'WAITING' ? 'Waiting...' : pal.status!.charAt(0) + pal.status!.slice(1).toLowerCase()" [title]="pal.firstName + ' ' + pal.lastName"></field>
     </div>
   </div>
  

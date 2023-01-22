@@ -1,10 +1,10 @@
 export const VehiclePrices = {
-  Limousine: 500,
-  Hatchback: 320,
-  Caravan: 400,
-  Coupe: 120,
-  Convertible: 340,
-  Minivan: 620,
-  Suv: 300,
-  Pickup: 200,
+  LIMOUSINE: 500,
+  HATCHBACK: 320,
+  CARAVAN: 400,
+  COUPE: 120,
+  CONVERTIBLE: 340,
+  MINIVAN: 600,
+  SUV: 300,
+  PICKUP: 200,
 };

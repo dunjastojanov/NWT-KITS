@@ -32,6 +32,7 @@ export class DataInfoComponent implements OnInit {
 
   friend: string = '';
   pals: string[] = [];
+
   ngOnInit(): void {
     this.service.setTrigger('nesto');
   }
@@ -57,12 +58,39 @@ export class DataInfoComponent implements OnInit {
 
   setTime(event: any) {
     const newHours: string[] = event.target.value.split(':');
-    const newDate = moment();
+    const newDate = moment().startOf('day');
     newDate.set({ hour: +newHours[0], minute: +newHours[1] });
+    const now = moment();
+    const diff = moment.duration(newDate.diff(now));
+    const diffInHours = diff.as('hours');
+    if (diffInHours < 0 || diffInHours > 5) {
+      this.saveRide(RideInfoActionType.UPDATE_IS_NOW, false);
+      this.saveRide(RideInfoActionType.UPDATE_TIME, '');
+      this.toastr.error('You can schedule ride for maximum 5 hours from now.');
+      event.target.value = '';
+      return;
+    }
+    const correctDate = moment();
+    if (this.needToChangeDate(correctDate, diffInHours)) {
+      correctDate.add(1, 'days');
+    }
+    correctDate.set({ hour: +newHours[0], minute: +newHours[1] });
     this.saveRide(RideInfoActionType.UPDATE_IS_NOW, false);
-    this.saveRide(RideInfoActionType.UPDATE_TIME, newDate.format());
+    this.saveRide(RideInfoActionType.UPDATE_TIME, correctDate.format());
   }
 
+  needToChangeDate(now: moment.Moment, diffInHours: number): boolean {
+    let hour = 19;
+    let diff = 5;
+    for (let i = 0; i < 5; i++) {
+      if (+now.format('HH') === hour && diffInHours >= diff) {
+        return true;
+      }
+      hour++;
+      diff--;
+    }
+    return false;
+  }
   setFriend(value: any) {
     this.friend = value;
   }
@@ -70,8 +98,8 @@ export class DataInfoComponent implements OnInit {
   async addFriend() {
     if (this.friend === '' || this.pals.includes(this.friend)) return;
     const pal = await this.userService.getRidingPal(this.friend);
-    if (!pal) {
-      this.toastr.error(`There is no user with email ${this.friend}`);
+    if (typeof pal === 'string') {
+      this.toastr.error(pal);
       return;
     }
     this.pals.push(this.friend);
@@ -93,7 +121,9 @@ export class DataInfoComponent implements OnInit {
     this.store.dispatch(new RideInfoAction(actionType, payload));
   }
 
-  showTime(): string {
+  showTime() {
+    console.log(this.ride.time);
+    if (this.ride.time === '' || this.ride.isNow || !this.ride.time) return '';
     const time: string = this.ride.time!.split('T')[1];
     const timeSplit: string[] = time.split(':');
     return `${timeSplit[0]}:${timeSplit[1]}`;

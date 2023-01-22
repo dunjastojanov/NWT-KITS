@@ -22,7 +22,7 @@ public class RideDTO {
     UserDTO client;
     @Valid
     @Size(min = 0)
-    StatusUserDTO[] ridingPals;
+    List<StatusUserDTO> ridingPals;
     Boolean isSplitFair;
     @Null
     @Valid
@@ -33,12 +33,12 @@ public class RideDTO {
     @Positive
     Double estimatedTime;
     @Positive
-    Double price;
+    Integer price;
     @NotBlank
     String route;
     @Valid
     @Size(min = 2)
-    DestinationDTO[] destinations;
+    List<DestinationDTO> destinations;
     @Valid
     VehicleDTO vehicle;
     Boolean isNow;

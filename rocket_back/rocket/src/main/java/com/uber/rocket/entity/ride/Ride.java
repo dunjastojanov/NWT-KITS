@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
+import com.uber.rocket.entity.user.VehicleType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @Table
 @Setter
 @Getter
+@ToString
 public class Ride {
     @Id
     @SequenceGenerator(name = "ride_sequence", sequenceName = "ride_sequence", allocationSize = 1)
@@ -26,11 +28,16 @@ public class Ride {
 
     @OneToMany
     @NotNull
-    private Collection<User> passengers;
-
+    @JoinColumn(name = "ride_id")
+    private Collection<Passenger> passengers;
     @OneToOne
     @Nullable
     private Vehicle vehicle;
+
+    @Enumerated(EnumType.STRING)
+    private VehicleType vehicleTypeRequested;
+    private boolean petFriendly;
+    private boolean kidFriendly;
 
     @NotNull
     private String routeLocation;
@@ -47,15 +54,21 @@ public class Ride {
     private Boolean splitFare;
 
     @NotNull
-    private double price;
+    private int price;
+
+    //menjano
+    @NotNull
+    private Double duration;
 
     @NotNull
-    private double duration;
-
     private double length;
 
     public User getDriver() {
         return vehicle.getDriver();
+    }
+
+    public List<User> getUsers() {
+        return passengers.stream().map(Passenger::getUser).toList();
     }
 
 }

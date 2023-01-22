@@ -1,13 +1,13 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
-import com.uber.rocket.entity.ride.FavouriteRoute;
-import com.uber.rocket.entity.ride.Review;
-import com.uber.rocket.entity.ride.Ride;
+import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.mapper.FavouriteRouteMapper;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
+import com.uber.rocket.mapper.RideMapper;
+import com.uber.rocket.repository.DestinationRepository;
 import com.uber.rocket.repository.FavouriteRouteRepository;
 import com.uber.rocket.repository.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RideService {
 
     @Autowired
@@ -45,13 +47,38 @@ public class RideService {
     private FavouriteRouteRepository favouriteRouteRepository;
     @Autowired
     private FavouriteRouteMapper favouriteRouteMapper;
+
+    @Autowired
+    private DestinationRepository destinationRepository;
+    @Autowired
+    private RideMapper rideMapper;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public Boolean createRide(RideDTO ride) {
-        //kroz ride sacuvaj passengers -> client i riding pals
-        //kroz ride sacuvaj split fair
-        //drivera ne namestam jer ga nema, kad pravim dto za nazad stavim samo da ima status
-        //GDE TREBA ROUTE FAVOURITE
+    public String createRide(RideDTO rideDTO) {
+        Ride ride = rideMapper.mapToEntity(rideDTO);
+        List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
+        ride = this.repository.save(ride);
+        for (Destination destination : destinations) {
+            destination.setRide(ride);
+            this.destinationRepository.save(destination);
+        }
+        return "Ride successfully created.";
+    }
+
+    public UserDTO getRidingPal(String email) {
+        User user = this.userService.getUserByEmail(email);
+        List<Ride> rides = getUserCurrentRide(user);
+        if (rides.size() > 0) { return null; }
+        return this.createRidingPal(user);
+    }
+    private UserDTO createRidingPal(User user) {
+        return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getProfilePicture(), user.getRoles().iterator().next().getRole());
+    }
+
+    @Transactional
+    public List<Ride> getUserCurrentRide(User user) {
+        List<Ride> rides = repository.findByPassengers(user.getId());
+        return rides;
     }
     public List<FavouriteRouteDTO> getFavouriteRoutesForUser(HttpServletRequest request) {
         List<FavouriteRoute> favouriteRoutes = favouriteRouteRepository.findAllByUser(userService.getUserByEmail(userService.getLoggedUser(request).getEmail()));
@@ -93,7 +120,7 @@ public class RideService {
     }
 
     public Page<RideHistoryDTO> getAllRideHistory(int page, int size) {
-        return getRideHistory(repository.findAll(PageRequest.of(page, size, Sort.by("startTime"))));
+        return getRideHistory(repository.findAllByStatus(PageRequest.of(page, size, Sort.by("startTime")), RideStatus.ENDED));
     }
 
     private Page<RideHistoryDTO> getRideHistory(Page<Ride> rides) {

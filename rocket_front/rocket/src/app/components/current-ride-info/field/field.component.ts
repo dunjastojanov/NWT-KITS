@@ -1,6 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserRidingStatus } from 'src/app/interfaces/Ride';
-
 @Component({
   selector: 'field',
   templateUrl: './field.component.html',
@@ -11,7 +9,7 @@ export class FieldComponent implements OnInit {
   @Input('value') value!: string;
   @Input('subValue') subValue?: string;
   @Input('icon') titleIcon?: string;
-  @Input('status') status?: UserRidingStatus | null;
+  @Input('status') status?: string | null;
 
   constructor() {}
 

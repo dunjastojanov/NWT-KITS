@@ -160,9 +160,14 @@ export class UserService {
     return result.data;
   }
 
-  async getRidingPal(email: string): Promise<sideUser | null> {
-    let result: AxiosResponse<any> = await http.get(`/api/user/pal/${email}`);
-    if (result) return result.data;
-    return null;
+  async getRidingPal(email: string): Promise<sideUser | string> {
+    try {
+      let result: AxiosResponse<any> = await http.get(`/api/ride/pal/${email}`);
+      return result.data;
+    } catch (err: any) {
+      if (err.message === 'Forbidden')
+        return `User ${email} already has scheduled ride.`;
+      else return `There is no user with email ${email}`;
+    }
   }
 }

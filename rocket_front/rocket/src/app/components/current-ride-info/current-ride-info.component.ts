@@ -30,9 +30,16 @@ export class CurrentRideInfoComponent implements OnInit {
 
   public convertTime(): string {
     if (this.currentRide!.time) {
-      const date = this.currentRide!.time.split('T')[0];
-      const time = this.currentRide!.time.split('T')[1].split('+')[0];
-      return `${date} ${time}`;
+      if (typeof this.currentRide!.time === 'string') {
+        const date = this.currentRide!.time.split('T')[0];
+        const time = this.currentRide!.time.split('T')[1].split('+')[0];
+        return `${date} ${time}`;
+      } else {
+        const convertedDate = this.currentRide!.time as Date;
+        return `${convertedDate.getFullYear()}-${
+          convertedDate.getMonth() + 1
+        }-${convertedDate.getDate()} ${convertedDate.getHours()}:${convertedDate.getMinutes()}`;
+      }
     }
     return 'No time selected';
   }
@@ -51,11 +58,7 @@ export class CurrentRideInfoComponent implements OnInit {
 
   convertPrice(): string {
     const priceFixed = +this.currentRide!.price.toFixed(1);
-    if (this.currentRide!.vehicle)
-      return `${
-        VehiclePrices[this.currentRide!.vehicle.type] + priceFixed
-      } rsd.`;
-    return `From ${priceFixed + 120} to ${priceFixed + 600} rsd`;
+    return `${priceFixed} rsd.`;
   }
 
   setStatus() {

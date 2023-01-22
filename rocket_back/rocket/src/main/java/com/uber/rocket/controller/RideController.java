@@ -3,6 +3,7 @@ package com.uber.rocket.controller;
 import com.uber.rocket.dto.DatePeriod;
 import com.uber.rocket.dto.NewReviewDTO;
 import com.uber.rocket.dto.RideDTO;
+import com.uber.rocket.dto.UserDTO;
 import com.uber.rocket.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,24 @@ public class RideController {
 
     @PostMapping("currentRide")
     public ResponseEntity<?> createRide(@RequestBody @Valid RideDTO ride) {
-        Boolean success = this.rideService.createRide(ride);
-        if (success)
-            return ResponseEntity.ok("Ride successfully created");
-        return new  ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        try{
+            return ResponseEntity.ok(this.rideService.createRide(ride));
+        } catch (Exception exception) {
+           exception.printStackTrace();
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(path = "/pal/{email}")
+    public ResponseEntity<?> getRidingPal(@PathVariable("email") String email) {
+        try {
+            UserDTO user = rideService.getRidingPal(email);
+            if (user != null)
+                return ResponseEntity.status(HttpStatus.OK).body(user);
+            else return new ResponseEntity<>("User already has scheduled ride.", HttpStatus.FORBIDDEN);
+        } catch (RuntimeException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getRideDetails(@PathVariable Long id) {

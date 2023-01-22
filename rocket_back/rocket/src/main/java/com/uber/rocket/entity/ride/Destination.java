@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Table
 @Setter
 @Getter
+@ToString
 public class Destination {
     @Id
     @SequenceGenerator(name = "destination_sequence", sequenceName = "destination_sequence", allocationSize = 1)

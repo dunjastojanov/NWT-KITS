@@ -1,5 +1,6 @@
 package com.uber.rocket.dto;
 
+import com.uber.rocket.entity.ride.UserRidingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,5 @@ public class StatusUserDTO {
     String profilePicture;
     @NotBlank
     String role;
-    @NotBlank
-    String status;
+    UserRidingStatus status;
 }

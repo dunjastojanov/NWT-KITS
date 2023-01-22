@@ -16,6 +16,7 @@ import {
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import { CurrentRide } from 'src/app/interfaces/Ride';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-confirm-ride',
