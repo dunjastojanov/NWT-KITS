@@ -17,6 +17,7 @@ import {
   CurrentRideAction,
   CurrentRideActionType,
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'login',
@@ -32,9 +33,6 @@ export class LoginComponent implements OnInit {
   openChooseRoleModal = false;
   userRoleItems: multiSelectProp[] = [];
 
-  openErrorToast = false;
-  openSuccessToast = false;
-
   user: User | null = null;
 
   email: string;
@@ -43,7 +41,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private service: UserService,
     private socialAuthService: SocialAuthService,
-    private store: Store<StoreType>
+    private store: Store<StoreType>,
+    private toastr: ToastrService,
   ) {
     this.email = '';
     this.password = '';
@@ -75,20 +74,12 @@ export class LoginComponent implements OnInit {
     this.openChooseRoleModal = !this.openChooseRoleModal;
   };
 
-  toggleErrorToast = () => {
-    this.openErrorToast = !this.openErrorToast;
-  };
-
-  toggleSuccessToast = () => {
-    this.openSuccessToast = !this.openSuccessToast;
-  };
-
   signInWithFB(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }
 
-  async login(user: User) {
-    this.openSuccessToast = true;
+  login(user: User) {
+    this.toastr.success("Login successful!");
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
     const currentRide = await this.service.getCurrentRide(user.email);
     if (currentRide) {
@@ -117,13 +108,16 @@ export class LoginComponent implements OnInit {
         } else if (this.user && this.user.roles.length > 1) {
           this.chooseRoleForLogin();
         } else {
-          this.openErrorToast = true; //token nije upisan
+          this.toastr.error("Invalid email or password.")
+          //token nije upisan
         }
       } else {
-        this.openErrorToast = true; //ne postoji user sa unetim kredencijalima
+        this.toastr.error("Invalid email or password.")
+        //ne postoji user sa unetim kredencijalima
       }
     } else {
-      this.openErrorToast = true; //email ili sifra nisu u dobrom formatu upisani
+      this.toastr.error("Invalid email or password.")
+      //email ili sifra nisu u dobrom formatu upisani
     }
   }
 

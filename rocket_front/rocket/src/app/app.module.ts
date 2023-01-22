@@ -50,7 +50,6 @@ import { SelectComponent } from './shared/utils/input/select/select.component';
 import { EditProfileComponent } from './modals/edit-profile/edit-profile.component';
 import { DetailedRouteComponent } from './modals/detailed-route/detailed-route.component';
 import { PersonalInformationComponent } from './modals/edit-profile/personal-information/personal-information.component';
-import { PaymentInformationComponent } from './modals/edit-profile/payment-information/payment-information.component';
 import { ProfilePictureComponent } from './modals/edit-profile/profile-picture/profile-picture.component';
 import { WordCeoComponent } from './page/homepage/word-ceo/word-ceo.component';
 import { StatisticsComponent } from './page/homepage/statistics/statistics.component';
@@ -101,6 +100,7 @@ import { StarComponent } from './modals/detailed-route/large-star/star.component
 import { ReviewComponent } from './modals/review/review.component';
 import { NotificationComponent } from './modals/notification/notification.component';
 import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
+import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedded-html.component';
 import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
 import { LobyComponent } from './page/ride-request-page/loby/loby.component';
 
@@ -144,7 +144,6 @@ import { LobyComponent } from './page/ride-request-page/loby/loby.component';
     EditProfileComponent,
     DetailedRouteComponent,
     PersonalInformationComponent,
-    PaymentInformationComponent,
     ProfilePictureComponent,
     IconComponent,
     WordCeoComponent,
@@ -187,6 +186,7 @@ import { LobyComponent } from './page/ride-request-page/loby/loby.component';
     DataInfoComponent,
     ConfirmRideComponent,
     ShowOnMapComponent,
+    EmbeddedHtmlComponent,
     LobyComponent,
   ],
   imports: [

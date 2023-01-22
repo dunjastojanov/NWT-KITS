@@ -2,6 +2,9 @@ package com.uber.rocket.controller;
 
 import com.uber.rocket.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +31,15 @@ public class NotificationController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> setNotificationAsRead(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(notificationService.setNotificationAsRead(id));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
     @GetMapping("/greet")
     public String getNotification() {
         System.out.println("Greet se pozove");

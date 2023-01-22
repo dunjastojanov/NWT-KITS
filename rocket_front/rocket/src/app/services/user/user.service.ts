@@ -116,6 +116,16 @@ export class UserService {
     return null;
   }
 
+  async editDriver(dto: { firstName: string, lastName: string, city: string, phoneNumber: string }): Promise<any> {
+    if (this.getToken()) {
+      let result: AxiosResponse<any> = await http.put<object>(
+        '/api/vehicle', dto
+      );
+      return <any>result.data;
+    }
+    return null;
+  }
+
   async getUserStatistics(
     dto: { startDate: string; endDate: string },
     type: string

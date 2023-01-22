@@ -1,8 +1,8 @@
 
-<div class="w-full border-b-4 border-secondary-light">
+<div (click)="toggleShowModal()" class="flex justify-between m-1 hover:bg-tertiary-light hover:cursor-pointer p-4 ">
   <h5>{{notification.title}}</h5>
-  <secondary-button text="Show" (click)="toggleShowModal()"></secondary-button>
 
+  <p class="text-tertiary-medium m-l-auto">{{getDate()}}</p>
 </div>
 
 <notification [notification]="notification" [open]="showModal" [closeFunc]="toggleShowModal"></notification>

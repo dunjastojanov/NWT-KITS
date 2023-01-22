@@ -25,6 +25,7 @@ export class NavbarComponent implements OnInit {
   showLoginModal = false;
   showRegisterModal = false;
   showNotifications = false;
+  newNotification = false;
 
   notifications: Notification[] = [];
   user: User | null = null;
@@ -45,10 +46,11 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.notificationService.getNotification().then((res) => {
-      this.notifications = res;
-      console.log(res);
-    });
+    this.notificationService.getNotification().then(
+      res => {
+        this.notifications = res;
+      }
+    )
   }
 
   toggleLogin = (): void => {

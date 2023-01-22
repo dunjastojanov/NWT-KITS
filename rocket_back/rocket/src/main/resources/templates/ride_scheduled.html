@@ -1,0 +1,32 @@
+<div style="font-family: Arial,sans-serif; margin: 0; padding: 0;">
+    <h3 th:text="${status}" style="margin: 20px 0 15px 0;text-align: center"> kmvjkrnjk</h3>
+
+    <div style="display: flex; justify-content: center; margin: 30px; gap: 20px;">
+
+        <div style="height: 100%; border-right: 0.5px solid #9a9a9a; padding: 20px;display: flex; flex-direction: column; justify-content: center;">
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Start</h5>
+                <h4 th:text="${start}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">End</h5>
+                <h4 th:text="${end}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Number of passengers</h5>
+                <h4 th:text="${numberOfPassengers}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+        </div>
+
+        <div style="height: 100%; padding: 20px; display: flex; flex-direction: column; justify-content: center;">
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Price</h5>
+                <h4 th:text="${price}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Estimated time</h5>
+                <h4 th:text="${time}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+        </div>
+    </div>
+</div>

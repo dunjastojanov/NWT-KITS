@@ -1,0 +1,34 @@
+<div style="font-family: Arial,sans-serif; margin: 0; padding: 0;">
+    <div style="display: flex; justify-content: center; margin: 30px; gap: 20px;">
+        <div style="height: 100%; border-right: 0.5px solid #9a9a9a; padding: 20px;display: flex; flex-direction: column; justify-content: center;">
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Start</h5>
+                <h4 th:text="${start}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">End</h5>
+                <h4 th:text="${end}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Number of passengers</h5>
+                <h4 th:text="${numberOfPassengers}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+        </div>
+        <div style="height: 100%; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <img style="width: 150px; height: 150px; object-fit: cover; object-position: center; border-radius: 150px;"
+                 th:src="${path}" alt="driver-image"/>
+            <h3 th:text="${driver}" style="margin: 20px 0 5px 0;"></h3>
+            <h4 th:text="${email}" style="margin: 5px 0 10px 0;font-weight: lighter; color: #333333;"></h4>
+        </div>
+        <div style="height: 100%; border-left: 0.5px solid #9a9a9a; padding: 20px; display: flex; flex-direction: column; justify-content: center;">
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Price</h5>
+                <h4 th:text="${price}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Estimated time</h5>
+                <h4 th:text="${time}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+        </div>
+    </div>
+</div>

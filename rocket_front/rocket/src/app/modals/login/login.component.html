@@ -52,8 +52,6 @@
     </div>
   </div>
 </div>
-<toast-error message="Invalid email or password" [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
-<toast-success message="Login successful!" [open]="openSuccessToast" [closeFunc]="toggleSuccessToast"></toast-success>
 <forgot-password [open]="openForgotPasswordModal" [closeFunc]="toggleForgotPasswordModal"></forgot-password>
 <choose-role [open]="openChooseRoleModal" [closeFunc]="toggleChooseRoleModal" [userRoleItems]="userRoleItems"
              (onConfirmRole)="loginWithOneRole($event)"></choose-role>
