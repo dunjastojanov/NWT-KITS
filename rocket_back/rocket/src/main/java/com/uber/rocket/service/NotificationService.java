@@ -3,6 +3,8 @@ package com.uber.rocket.service;
 import com.uber.rocket.dto.NotificationDTO;
 import com.uber.rocket.entity.notification.Notification;
 import com.uber.rocket.entity.notification.NotificationType;
+import com.uber.rocket.entity.ride.Destination;
+import com.uber.rocket.entity.ride.Passenger;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.ride.RideCancellation;
 import com.uber.rocket.entity.user.UpdateDriverDataRequest;
@@ -30,6 +32,9 @@ public class NotificationService {
     NotificationMapper notificationMapper;
     @Autowired
     UserService userService;
+
+    @Autowired
+    DestinationService destinationService;
 
     public List<NotificationDTO> getNotificationsForUser(HttpServletRequest request) {
         User user = userService.getUserFromRequest(request);
@@ -107,9 +112,9 @@ public class NotificationService {
     }
 
     public void addRideCanceledNotifications(RideCancellation rideCancellation) {
-        for (User user: rideCancellation.getRide().getPassengers()) {
+        for (Passenger passenger: rideCancellation.getRide().getPassengers()) {
             Notification notification = new Notification();
-            notification.setUser(user);
+            notification.setUser(passenger.getUser());
             notification.setType(NotificationType.RIDE_CANCELED);
             notification.setTitle("Ride has been canceled");
             notification.setTemplateVariables(templateProcessor.getVariableString(getRideCancellationVariables(rideCancellation)));
@@ -124,9 +129,11 @@ public class NotificationService {
 
         switch (ride.getStatus()) {
             case CONFIRMED -> {
+                String startAddress = this.destinationService.getStartAddressByRide(ride);
+                String endAddress = this.destinationService.getEndAddressByRide(ride);
                 notification.setTitle("Driver assigned");
                 notification.setType(NotificationType.RIDE_CONFIRMED);
-                Map<String, String> variables = getRideVariables(ride);
+                Map<String, String> variables = getRideVariables(ride, startAddress, endAddress);
                 variables.put("status", "Driver has been assigned. They are on their way.");
                 notification.setTemplateVariables(templateProcessor.getVariableString(variables));
             }
@@ -147,11 +154,13 @@ public class NotificationService {
 
     private Map<String, String> getScheduledRideVariables(Ride ride) {
         Map<String, String> variables = new HashMap<>();
+        String startAddress = this.destinationService.getStartAddressByRide(ride);
+        String endAddress = this.destinationService.getEndAddressByRide(ride);
         variables.put("numberOfPassengers", String.valueOf(ride.getPassengers().size()));
         variables.put("price", String.valueOf(ride.getPrice()));
         variables.put("time", String.valueOf(ride.getPrice()));
-        variables.put("start", ride.getStart());
-        variables.put("end", ride.getEnd());
+        variables.put("start", startAddress);
+        variables.put("end", endAddress);
         return variables;
     }
 
@@ -165,15 +174,17 @@ public class NotificationService {
     }
 
     private Notification createRideRequestNotification(User user, Ride ride) {
+        String startAddress = this.destinationService.getStartAddressByRide(ride);
+        String endAddress = this.destinationService.getEndAddressByRide(ride);
         Notification notification = new Notification();
         notification.setUser(user);
         notification.setTitle("Ride request");
-        notification.setTemplateVariables(templateProcessor.getVariableString(getRideVariables(ride)));
+        notification.setTemplateVariables(templateProcessor.getVariableString(getRideVariables(ride, startAddress, endAddress)));
         notification.setEntityId(ride.getId());
         return notification;
     }
 
-    private static Map<String, String> getRideVariables(Ride ride) {
+    private static Map<String, String> getRideVariables(Ride ride, String startAddress, String endAddress) {
         Map<String, String> variables = new HashMap<>();
         variables.put("numberOfPassengers", String.valueOf(ride.getPassengers().size()));
         variables.put("path", getProfilePicture(ride.getDriver()));
@@ -181,8 +192,8 @@ public class NotificationService {
         variables.put("email", ride.getDriver().getEmail());
         variables.put("price", String.valueOf(ride.getPrice()));
         variables.put("time", String.valueOf(ride.getPrice()));
-        variables.put("start", ride.getStart());
-        variables.put("end", ride.getEnd());
+        variables.put("start", startAddress);
+        variables.put("end", endAddress);
         return variables;
     }
 

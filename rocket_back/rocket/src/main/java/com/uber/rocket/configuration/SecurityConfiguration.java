@@ -77,6 +77,8 @@ public class SecurityConfiguration {
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/vehicle/validate/**").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/vehicle/**").hasAnyAuthority(RoleType.DRIVER.name());
 
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/ride/**").authenticated();
+
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/payment/**").hasAnyAuthority(RoleType.CLIENT.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/notification/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/confirm/**").permitAll();

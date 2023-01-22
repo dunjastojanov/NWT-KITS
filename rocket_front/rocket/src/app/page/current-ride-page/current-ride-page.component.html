@@ -1,11 +1,11 @@
-<div *ngIf="currentRide">
-  <current-ride-info [ride]="currentRide"></current-ride-info>
-  <app-map height="h-[70vh]"></app-map>
+<div *ngIf="currentRide" class="flex">
+  <show-on-map id="currentridemap" dimensions="w-[120vh] h-[91vh]" [destinations]="currentRide.destinations" [route]="currentRide.route!"></show-on-map>
+  <current-ride-info></current-ride-info>
 </div>
 
 <div class="p-12 flex flex-col gap-12 items-center" *ngIf="!currentRide">
   <app-title title="No current ride available"
              subtitle="Please click button below to book a ride, or navigate to the page"></app-title>
-  <primary-button text="Book a ride" routerLink='ride/book'></primary-button>
+  <primary-button text="Book a ride" routerLink='/ride/book'></primary-button>
 </div>
 

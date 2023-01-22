@@ -20,6 +20,12 @@
   background: #FEC901;
 }
 
+.disabled {
+  background: #fbfbfb;
+  color: #c7c7c7;
+  pointer-events: none;
+}
+
 .wizard:not(.left-arrow) .gray:after {
     border-left: 32px solid #f5f4f4;
 }
@@ -27,6 +33,10 @@
 
 .wizard:not(.left-arrow) .yellow:after {
     border-left: 32px solid #FEC901;
+}
+
+.wizard:not(.left-arrow) .disabled:after {
+  border-left: 32px solid #fbfbfb;
 }
 
 .wizard a:hover {

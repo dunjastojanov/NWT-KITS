@@ -1,5 +1,5 @@
-import { Action } from '@ngrx/store';
 import { Destination } from 'src/app/interfaces/Destination';
+import { CurrentRide } from 'src/app/interfaces/Ride';
 import { User } from 'src/app/interfaces/User';
 import { RideInfo } from 'src/app/page/ride-request-page/data-info/ride-info.type';
 import { Route } from '../utils/map/map/route.type';
@@ -20,8 +20,12 @@ export type RideInfoStateType = {
   ride: RideInfo;
 };
 
+export type CurrentRideStateType = {
+  currentRide: CurrentRide | null;
+};
 export type StoreType = {
   loggedUser: LoggedUserStateType;
   destinations: DestinationsStateType;
   rideInfo: RideInfoStateType;
+  currentRide: CurrentRideStateType;
 };

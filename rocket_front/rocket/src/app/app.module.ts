@@ -94,7 +94,6 @@ import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/conf
 import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reducer';
 import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.component';
 import { SocketService } from './services/sockets/sockets.service';
-
 import { PaypalComponent } from './modals/paypal/paypal.component';
 import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
 import { StarComponent } from './modals/detailed-route/large-star/star.component';
@@ -102,6 +101,9 @@ import { ReviewComponent } from './modals/review/review.component';
 import { NotificationComponent } from './modals/notification/notification.component';
 import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
 import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedded-html.component';
+import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
+import { LobyComponent } from './page/ride-request-page/loby/loby.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -185,6 +187,7 @@ import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedd
     ConfirmRideComponent,
     ShowOnMapComponent,
     EmbeddedHtmlComponent,
+    LobyComponent,
   ],
   imports: [
     HttpClientModule,
@@ -206,6 +209,7 @@ import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedd
         loggedUser: loggedUserReducer,
         destinations: destinationsReducer,
         rideInfo: RideInfoReducer,
+        currentRide: CurrentRideReducer,
       },
       { metaReducers }
     ),
