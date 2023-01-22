@@ -14,6 +14,7 @@ export class ShowOnMapComponent implements AfterViewInit {
   @Input('route') route!: string | null;
   @Input('id') id!: string;
   private mapShow: any;
+  bounds: L.LatLngBounds | null = null;
   constructor() {}
 
   ngAfterViewInit(): void {
@@ -45,13 +46,21 @@ export class ShowOnMapComponent implements AfterViewInit {
     }
   }
   private drawPolyline() {
-    const coordinates = decode(this.route!);
-    const mainRoutePolyline = L.polyline(coordinates, {
-      color: '#E1A901',
-      weight: 4,
-    });
-    this.mapShow.fitBounds(mainRoutePolyline.getBounds());
-    mainRoutePolyline.addTo(this.mapShow);
+    const routes = this.route!.split(' ').slice(0, -1);
+    console.log(routes);
+    for (let i = 0; i < routes.length; i++) {
+      const coordinates = decode(routes[i]);
+      const mainRoutePolyline = L.polyline(coordinates, {
+        color: '#E1A901',
+        weight: 4,
+      });
+      if (i === 0) this.bounds = mainRoutePolyline.getBounds();
+      else this.bounds!.extend(mainRoutePolyline.getBounds());
+      //this.mapShow.fitBounds(mainRoutePolyline.getBounds());
+      console.log(mainRoutePolyline);
+      mainRoutePolyline.addTo(this.mapShow);
+    }
+    this.mapShow.fitBounds(this.bounds);
   }
 
   private drawMarkers() {

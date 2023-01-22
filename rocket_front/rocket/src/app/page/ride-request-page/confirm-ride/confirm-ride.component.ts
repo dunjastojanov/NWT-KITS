@@ -16,7 +16,6 @@ import {
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import { CurrentRide } from 'src/app/interfaces/Ride';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-confirm-ride',
@@ -30,7 +29,7 @@ export class ConfirmRideComponent implements OnInit {
   estimated_distance: number = 0;
   estimated_time: number = 0;
   routes: Route[] = [];
-  selectedRoute: string | null = null;
+  selectedRoute: string = '';
   user: User | null = null;
   currentRide: CurrentRide | null = null;
   constructor(
@@ -51,8 +50,9 @@ export class ConfirmRideComponent implements OnInit {
         if (one && one.selected) return one;
         return two!;
       });
-      if (this.routes[0])
-        this.selectedRoute = encode(this.routes[0].geometry.coordinates);
+      for (const route of this.routes) {
+        this.selectedRoute += encode(route.geometry.coordinates) + ' ';
+      }
     });
     this.store.select('rideInfo').subscribe((resData) => {
       this.rideInfo = resData.ride;
