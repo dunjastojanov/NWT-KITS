@@ -8,8 +8,8 @@ import lombok.*;
 @Builder
 public class RideHistoryDTO {
     private String driver;
-    private int price;
-    private int duration;
+    private double price;
+    private double duration;
     private String start;
     private String end;
     private Long id;

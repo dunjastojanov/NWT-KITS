@@ -10,7 +10,7 @@
                     <div class="w-5/12 pt-1"><hr class= "w-full"></div>
                 </div>
                 <p class="font-semibold ">Choose time: </p>
-                <input (input)="setTime($event)" [value]="(!this.ride.isNow && this.ride.time) ? showTime() : ''" type="time" class="w-full block text-sm bg-transparent border-0 border-b-2 border-tertiary-medium appearance-none focus:outline-none focus:ring-0 focus:border-secondary-light peer" />
+                <input (input)="setTime($event)" [value]="showTime()" type="time" class="w-full block text-sm bg-transparent border-0 border-b-2 border-tertiary-medium appearance-none focus:outline-none focus:ring-0 focus:border-secondary-light peer" />
             </div>
         </div>
     </div>
@@ -24,9 +24,12 @@
                 </div>
                 <hr class= "w-full">
                 <div class="flex flex-col gap-3 max-h-64 overflow-auto">
-                    <div *ngFor="let friend of this.ride.friends" class="flex justify-center w-full gap-5">
-                        <p class="font-light text-[#707070] text-base">{{friend}}</p>
-                        <button-icon (click)="removeFriend(friend)" icon="./assets/icons/cancel.png" dimension="!w-6 !h-6" groupHoverDimension="!w-4 !h-4"></button-icon>
+                    <div *ngFor="let friend of this.ride.friends" class="flex items-center justify-center w-full gap-5">
+                        <div class="flex gap-2 items-center mt-4">
+                            <img alt="driver-image" class="profile-image !w-10 !h-10 !m-0" src="./assets/fiona.jpg"/>
+                            <field class="!text-xl" [title]="friend.email!" [value]="friend.firstName + ' ' + friend.lastName"></field>
+                        </div>
+                        <button-icon (click)="removeFriend(friend)" icon="./assets/icons/cancel.png" dimension="!w-7 !h-7" groupHoverDimension="!w-5 !h-5" class="mt-5"></button-icon>
                     </div>
                 </div>
             </div>     
@@ -40,14 +43,14 @@
                 <multi-select (selectedItems)="setFeatures($event)" [itemProps]="[{path:'./assets/icons/kids.png', title:'Kid friendly', selected: featureIsSelected('Kid friendly')},{path:'./assets/icons/pets.png', title:'Pet friendly', selected: featureIsSelected('Pet friendly')}]"></multi-select>
                 <select [value]="this.ride.vehicle ? this.ride.vehicle : ''" #types (change)="setVehicleType(types.value)" class="w-full block text-sm bg-transparent border-0 border-b-2 border-tertiary-medium appearance-none focus:outline-none focus:ring-0 focus:border-secondary-light peer" >
                     <option value="" disabled selected>Vehicle type</option>
-                    <option value="limousine">Limousine</option>
-                    <option value="hatchback">Hatchback</option>
-                    <option value="caravan">Caravan</option>
-                    <option value="coupe">Coupe</option>
-                    <option value="convertible">Convertible</option>
-                    <option value="minivan">Minivan</option>
-                    <option value="suv">Suv</option>
-                    <option value="pickup">Pickup</option>
+                    <option value="LIMOUSINE">Limousine</option>
+                    <option value="HATCHBACK">Hatchback</option>
+                    <option value="CARAVAN">Caravan</option>
+                    <option value="COUPE">Coupe</option>
+                    <option value="CONVERTIBLE">Convertible</option>
+                    <option value="MINIVAN">Minivan</option>
+                    <option value="SUV">Suv</option>
+                    <option value="PICKUP">Pickup</option>
                 </select>
             </div>     
         </div>

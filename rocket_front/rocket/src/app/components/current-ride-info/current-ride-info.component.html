@@ -1,34 +1,89 @@
-<div class="p-7 px-16">
-  <div class="flex justify-center items-center relative">
-    <app-title title="Current ride"
-               [subtitle]="'Your vehicle is arriving in ' + currentRide.minutesToCome + ' minutes'"></app-title>
-    <current-ride-buttons [user]="!currentRide.client" [isFavorite]="currentRide.isRouteFavorite!"
-                          [driverName]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName"></current-ride-buttons>
-  </div>
-  <div class="flex w-full justify-center gap-12 mt-12">
+<div class="flex flex-col items-center gap-4 p-7 px-16 w-[110vh] overflow-auto">
 
-    <div class="flex flex-col items-center gap-4 py-5 w-1/4">
-      <current-ride-client *ngIf="currentRide.client" [client]="currentRide.client"></current-ride-client>
-      <current-ride-pals [pals]="currentRide.ridingPals"></current-ride-pals>
-      <checkbox *ngIf="!currentRide.client" [checked]="currentRide.isSplitFair!" [disabled]="true"
-                text="Split fair"></checkbox>
+  <div class="flex justify-center items-center relative">
+    <app-title title="Current ride"></app-title>
+  </div>
+
+  <div class="relative w-full h-16">
+    <current-ride-buttons [role]="currentRide!.client!.role!" [isFavorite]="currentRide!.isRouteFavorite!"
+    [driverName]="currentRide!.driver ? currentRide!.driver.firstName + ' ' + currentRide!.driver.lastName : null"></current-ride-buttons>
+  </div>
+
+  <div class="flex flex-col w-full gap-5">
+    
+    <div class="flex justify-between gap-3 w-full">
+      <div class="flex flex-col gap-4 w-[60%]">
+        <p class="font-light text-lg self-start"> Requested ride: </p>
+        <current-ride-client *ngIf="currentRide!.client" [client]="currentRide!.client"></current-ride-client>
+      </div>
+      <div class="w-[40%] flex flex-col items-start">
+        <current-ride-pals *ngIf="currentRide!.ridingPals!.length > 0" [pals]="currentRide!.ridingPals!"></current-ride-pals>
+      </div>
+    </div>
+    
+    <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+
+    <div class="flex flex-col gap-3 w-full">
+      <div class="flex justify-between gap-5 w-full">
+        <div class="flex gap-3 w-1/2">
+          <img alt="driver-image" class="w-20 h-20 rounded-full object-cover" src="./assets/fiona.jpg"/>
+          <field title="Driver" [status]="setStatus()" [subValue]="currentRide!.driver ? currentRide!.driver.email : ''" [value]="currentRide!.driver ? currentRide!.driver!.firstName + ' ' + currentRide!.driver!.lastName : 'Waiting for driver...'" icon="./assets/icons/driver.png"></field>
+        </div>
+        <div class="flex flex-col w-1/2 items-start gap-3">
+          <field title="Vehicle" icon="./assets/icons/vehicle.png" [subValue]="currentRide!.vehicle ? currentRide!.vehicle.type : ''"></field>
+          <div class="flex justify-start w-full gap-5 max-h-32 overflow-auto">
+            <span *ngFor="let feature of currentRide!.features" class=" bg-secondary-light text-white px-4 py-1 rounded-2xl text-sm">{{feature}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+
+    <div class="flex w-full gap-5 items-center justify-between text-2xl">
+      <p class="font-light"> Booked for:</p>
+      <p class="font-semibold text-lg">{{this.convertTime()}}</p>
+    </div>
+    
+    <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+
+    <div class="flex w-full gap-5 items-center justify-between text-2xl">
+      <p class="font-light">Payment method:</p>
+      <p *ngIf="currentRide!.isSplitFair" class="font-semibold">Split fair payment</p>
+      <p *ngIf="!currentRide!.isSplitFair" class="font-semibold">No split fair payment</p>
     </div>
 
-    <div class="flex flex-col gap-3 items-center py-5 border-l border-r w-1/4">
-      <div class="flex flex-col items-start mt-auto">
-        <img alt="driver-image" class="profile-image self-center !m-0" src="./assets/fiona.jpg"/>
-        <field title="Driver" [subValue]="currentRide.driver.email"
-               [value]="currentRide.driver.firstName + ' ' + currentRide.driver.lastName"
-               icon="./assets/icons/driver.png"></field>
+    <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+    
+    <div class="flex flex-col gap-3 w-full">
+      <p class="font-light text-2xl">Destinations:</p>
+      <div class="flex flex-col items-end w-full gap-5 pl-5 max-h-32 overflow-auto pr-3">
+          <p *ngFor="let destination of currentRide!.destinations" class="text-lg">
+            <field [title]="destination.address" icon="./assets/icons/pin-black.png"></field>
+          </p>
       </div>
     </div>
 
-    <current-ride-route class="w-1/4"
-                        [startAddress]="currentRide.destinations[0].address"
-                        [endAddress]="currentRide.destinations[currentRide.destinations.length-1].address"
-                        [price]="currentRide.price.toString()"
-                        [estimatedTime]="currentRide.estimatedTime"
-    >
-    </current-ride-route>
+    <div class="w-full pt-5/12"><hr class= "min-w-full"></div>
+
+    <div class="flex w-full justify-between text-xl">
+      <div class="flex flex-col w-[30%] items-start justify-between">
+        <field title="Distance" icon="./assets/icons/distance.png"></field>
+        <p class="font-semibold text-lg">{{this.convertDistance()}}</p>
+      </div>
+      
+      <div class="flex flex-col w-[40%] items-center justify-between">
+        <field title="Estimated travel duration" icon="./assets/icons/estimated-time.png"></field>
+        <p class="font-semibold text-lg">{{this.convertDuration()}}</p>
+      </div>
+      
+      <div class="flex flex-col w-[30%] items-end justify-between">
+        <field title="Price" icon="./assets/icons/price.png"></field>
+        <p class="font-semibold text-lg">{{this.convertPrice()}}</p>
+      </div>
+    </div>
+
+  <div (click)="setNull()">set null</div>
+  
   </div>
 </div>

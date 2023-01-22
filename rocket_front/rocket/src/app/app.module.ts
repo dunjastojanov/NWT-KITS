@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-
-
 import {
   SocialLoginModule,
   GoogleLoginProvider,
@@ -95,7 +93,6 @@ import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.
 import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reducer';
 import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.component';
 import { SocketService } from './services/sockets/sockets.service';
-
 import { PaypalComponent } from './modals/paypal/paypal.component';
 import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
 import { StarComponent } from './modals/detailed-route/large-star/star.component';
@@ -105,6 +102,9 @@ import { NotificationListItemComponent } from './shared/utils/notification-list-
 import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedded-html.component';
 import { SortPipe } from './shared/utils/history-table/sort.pipe';
 import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confirm-ride.component";
+import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
+import { LobyComponent } from './page/ride-request-page/loby/loby.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -188,11 +188,11 @@ import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confir
     DataInfoComponent,
     ShowOnMapComponent,
     EmbeddedHtmlComponent,
+    LobyComponent,
     SortPipe,
   ],
   imports: [
     HttpClientModule,
-
     CommonModule,
     DragDropModule,
     BrowserModule,
@@ -211,6 +211,7 @@ import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confir
         loggedUser: loggedUserReducer,
         destinations: destinationsReducer,
         rideInfo: RideInfoReducer,
+        currentRide: CurrentRideReducer,
       },
       { metaReducers }
     ),

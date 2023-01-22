@@ -1,16 +1,24 @@
-import {Component, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store'
-import {User} from '../interfaces/User';
-import {Notification} from '../interfaces/Notification';
-import {LoggedUserAction, LoggedUserActionType} from '../shared/store/logged-user-slice/logged-user.actions';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { User } from '../interfaces/User';
+import { Notification } from '../interfaces/Notification';
+import {
+  LoggedUserAction,
+  LoggedUserActionType,
+} from '../shared/store/logged-user-slice/logged-user.actions';
 
-import {StoreType} from '../shared/store/types';
-import {NotificationService} from "../services/notification/notification.service";
+import { StoreType } from '../shared/store/types';
+import { NotificationService } from '../services/notification/notification.service';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from '../shared/store/current-ride-slice/current-ride.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
   showPayPalModal = false;
@@ -19,16 +27,18 @@ export class NavbarComponent implements OnInit {
   showNotifications = false;
   newNotification = false;
 
-  notifications:Notification[] = [];
+  notifications: Notification[] = [];
   user: User | null = null;
 
-  constructor(private store: Store<StoreType>, private notificationService: NotificationService) {
+  constructor(
+    private store: Store<StoreType>,
+    private notificationService: NotificationService,
+    private router: Router
+  ) {
     let loggedUserSlice = store.select('loggedUser');
-    loggedUserSlice.subscribe(
-      resData => {
-        this.user = resData.user;
-      }
-    )
+    loggedUserSlice.subscribe((resData) => {
+      this.user = resData.user;
+    });
   }
 
   hasRole(role: string): boolean {
@@ -39,7 +49,6 @@ export class NavbarComponent implements OnInit {
     this.notificationService.getNotification().then(
       res => {
         this.notifications = res;
-
       }
     )
   }
@@ -47,26 +56,28 @@ export class NavbarComponent implements OnInit {
   toggleLogin = (): void => {
     this.showRegisterModal = false;
     this.showLoginModal = !this.showLoginModal;
-    this.showPayPalModal = false
-  }
+    this.showPayPalModal = false;
+  };
 
   logout = (): void => {
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGOUT));
-  }
+    this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
+    window.location.href = '/';
+  };
 
   toggleRegister = (): void => {
-    this.showPayPalModal = false
+    this.showPayPalModal = false;
     this.showLoginModal = false;
     this.showRegisterModal = !this.showRegisterModal;
-  }
+  };
 
   togglePayPal = (): void => {
     this.showLoginModal = false;
     this.showRegisterModal = false;
-    this.showPayPalModal = !this.showPayPalModal
-  }
+    this.showPayPalModal = !this.showPayPalModal;
+  };
 
   toggleNotifications = (): void => {
     this.showNotifications = !this.showNotifications;
-  }
+  };
 }
