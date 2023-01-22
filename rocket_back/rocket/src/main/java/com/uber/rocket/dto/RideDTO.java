@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -63,5 +64,21 @@ public class RideDTO {
     }
     public Boolean getIsSplitFair() {
         return this.isSplitFair;
+    }
+    public void addRidingPal(StatusUserDTO user) {
+        if (this.ridingPals != null) {
+            this.ridingPals.add(user);
+        } else {
+            this.ridingPals = new ArrayList<>();
+            this.ridingPals.add(user);
+        }
+    }
+    public void addDestination(DestinationDTO destinationDTO) {
+        if (this.destinations != null) {
+            this.destinations.add(destinationDTO);
+        } else {
+            this.destinations = new ArrayList<>();
+            this.destinations.add(destinationDTO);
+        }
     }
 }

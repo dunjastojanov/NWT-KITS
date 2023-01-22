@@ -96,28 +96,24 @@ class Http {
   // Handle global app errors
   // We can handle generic app errors depending on the status code
   private handleError(error: any) {
+    if (!error.status) return;
     const { status } = error;
 
     switch (status) {
       case StatusCode.BadRequest: {
         throw Error('Bad request');
-        break;
       }
       case StatusCode.InternalServerError: {
         throw Error('InternalServerError');
-        break;
       }
       case StatusCode.Forbidden: {
         throw Error('Forbidden');
-        break;
       }
       case StatusCode.Unauthorized: {
         throw Error('Unauthorized');
-        break;
       }
       case StatusCode.TooManyRequests: {
         throw Error('TooManyRequests');
-        break;
       }
     }
   }

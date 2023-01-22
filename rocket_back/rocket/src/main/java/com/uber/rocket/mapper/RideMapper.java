@@ -1,11 +1,10 @@
 package com.uber.rocket.mapper;
 
-import com.uber.rocket.dto.DestinationDTO;
-import com.uber.rocket.dto.RideDTO;
-import com.uber.rocket.dto.StatusUserDTO;
-import com.uber.rocket.dto.UserDTO;
+import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.User;
+import com.uber.rocket.entity.user.Vehicle;
+import com.uber.rocket.repository.FavouriteRouteRepository;
 import com.uber.rocket.repository.PassengerRepository;
 import com.uber.rocket.service.DestinationService;
 import com.uber.rocket.service.RideService;
@@ -14,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -29,13 +31,113 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
     @Autowired
     PassengerRepository passengerRepository;
 
-    DateTimeFormatter entityFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+    @Autowired
+    FavouriteRouteRepository favouriteRouteRepository;
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     @Override
     public RideDTO mapToDto(Ride ride) {
-        return null;
+        RideDTO rideDTO = new RideDTO();
+        rideDTO.setRideId(ride.getId());
+        List<Passenger> passengers = ride.getPassengers().stream().toList();
+        rideDTO.setRidingPals(new ArrayList<>());
+        rideDTO.setFeatures(new ArrayList<>());
+
+        for (int i = 0; i < passengers.size(); i++) {
+            User user = passengers.get(i).getUser();
+            if (i == 0) {
+                rideDTO.setClient(this.createUserDTO(user));
+            } else {
+                rideDTO.addRidingPal(this.createStatusUserDTO(user, passengers.get(i).getUserRidingStatus()));
+            }
+        }
+        VehicleDTO vehicleDTO = new VehicleDTO();
+        Vehicle vehicle = ride.getVehicle();
+        if (vehicle != null) {
+            vehicleDTO.setType(vehicle.getVehicleType());
+            vehicleDTO.setLongitude(vehicle.getLongitude());
+            vehicleDTO.setLatitude(vehicle.getLatitude());
+
+            User user = vehicle.getDriver();
+            UserRidingStatus status;
+            if (ride.getStatus() == RideStatus.REQUESTED) {
+                status = UserRidingStatus.WAITING;
+            }  else if (ride.getStatus() == RideStatus.DENIED) {
+                status = UserRidingStatus.DENIED;
+            } else {
+                status = UserRidingStatus.ACCEPTED;
+            }
+            rideDTO.setDriver(this.createStatusUserDTO(user, status));
+        } else {
+            vehicleDTO.setType(ride.getVehicleTypeRequested());
+        }
+        rideDTO.setVehicle(vehicleDTO);
+
+        List<String> features = new ArrayList<>();
+        if (ride.isKidFriendly()) features.add("Kid friendly");
+        if (ride.isPetFriendly()) features.add("Pet friendly");
+        rideDTO.setFeatures(features);
+
+        rideDTO.setRoute(ride.getRouteLocation());
+
+        LocalDateTime dateTime = ride.getStartTime();
+        OffsetDateTime offsetDateTime = dateTime.atOffset(ZoneOffset.UTC);
+        String formattedDateTime = offsetDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        rideDTO.setTime(formattedDateTime);
+
+        ride.setStatus(RideStatus.REQUESTED);
+
+        rideDTO.setIsSplitFair(ride.getSplitFare());
+
+        rideDTO.setPrice(ride.getPrice());
+
+        rideDTO.setEstimatedTime(ride.getDuration());
+
+        rideDTO.setEstimatedDistance(ride.getLength());
+
+        List<Destination> destinations = this.destinationService.getDestinationsByRide(ride);
+        for (int i = 0; i< destinations.size();i++) {
+            rideDTO.addDestination(this.mapToDestinationDTO(destinations.get(i), i));
+        }
+
+        FavouriteRoute favouriteRoute = favouriteRouteRepository.findByUserAndRide(passengers.get(0).getUser(), ride);
+        if (favouriteRoute != null) {
+            rideDTO.setIsRouteFavorite(true);
+        } else {
+            rideDTO.setIsRouteFavorite(false);
+        }
+        return rideDTO;
     }
 
+    private DestinationDTO mapToDestinationDTO(Destination destination, int i) {
+        DestinationDTO destinationDTO = new DestinationDTO();
+        destinationDTO.setAddress(destination.getAddress());
+        destinationDTO.setLatitude(destination.getLatitude());
+        destinationDTO.setLongitude(destination.getLongitude());
+        destinationDTO.setIndex(i);
+        return destinationDTO;
+    }
+    private UserDTO createUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(user.getEmail());
+        userDTO.setId(user.getId());
+        userDTO.setRole(user.getRoles().iterator().next().getRole());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setProfilePicture(user.getProfilePicture());
+        return userDTO;
+    }
+    private StatusUserDTO createStatusUserDTO(User user, UserRidingStatus status) {
+        StatusUserDTO userDTO = new StatusUserDTO();
+        userDTO.setEmail(user.getEmail());
+        userDTO.setId(user.getId());
+        userDTO.setRole(user.getRoles().iterator().next().getRole());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setProfilePicture(user.getProfilePicture());
+        userDTO.setStatus(status);
+        return userDTO;
+    }
     public Ride mapToEntity(RideDTO rideDTO) {
         Ride ride = new Ride();
         List<Passenger> passengers = new ArrayList<Passenger>();
@@ -66,7 +168,7 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
 
         ride.setRouteLocation(rideDTO.getRoute());
 
-        ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), entityFormatter));
+        ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), formatter));
 
         ride.setStatus(RideStatus.REQUESTED);
 

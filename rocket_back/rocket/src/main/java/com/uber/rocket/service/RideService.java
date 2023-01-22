@@ -67,18 +67,24 @@ public class RideService {
 
     public UserDTO getRidingPal(String email) {
         User user = this.userService.getUserByEmail(email);
-        List<Ride> rides = getUserCurrentRide(user);
-        if (rides.size() > 0) { return null; }
+        RideDTO ride = getUserCurrentRide(user);
+        if (ride != null) { return null; }
         return this.createRidingPal(user);
     }
     private UserDTO createRidingPal(User user) {
         return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getProfilePicture(), user.getRoles().iterator().next().getRole());
     }
 
+    public RideDTO getUserCurrentRideByEmail(String email) {
+        User user = this.userService.getUserByEmail(email);
+        return this.getUserCurrentRide(user);
+    }
     @Transactional
-    public List<Ride> getUserCurrentRide(User user) {
+    public RideDTO getUserCurrentRide(User user) {
         List<Ride> rides = repository.findByPassengers(user.getId());
-        return rides;
+        if (rides.size() > 0)
+            return this.rideMapper.mapToDto(rides.get(0));
+        return null;
     }
     public List<FavouriteRouteDTO> getFavouriteRoutesForUser(HttpServletRequest request) {
         List<FavouriteRoute> favouriteRoutes = favouriteRouteRepository.findAllByUser(userService.getUserByEmail(userService.getLoggedUser(request).getEmail()));

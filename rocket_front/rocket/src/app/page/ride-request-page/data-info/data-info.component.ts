@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { RouteService } from 'src/app/components/routes/route.service';
-import { sideUser } from 'src/app/interfaces/User';
+import { sideUser, User } from 'src/app/interfaces/User';
 import { UserService } from 'src/app/services/user/user.service';
 import {
   RideInfoAction,
@@ -19,6 +19,7 @@ import { RideInfo } from './ride-info.type';
 })
 export class DataInfoComponent implements OnInit {
   ride: RideInfo = new RideInfo();
+  private user: User | null = null;
   constructor(
     private store: Store<StoreType>,
     private service: RouteService,
@@ -27,6 +28,9 @@ export class DataInfoComponent implements OnInit {
   ) {
     this.store.select('rideInfo').subscribe((resData) => {
       this.ride = resData.ride;
+    });
+    this.store.select('loggedUser').subscribe((resData) => {
+      this.user = resData.user;
     });
   }
 
@@ -97,6 +101,10 @@ export class DataInfoComponent implements OnInit {
 
   async addFriend() {
     if (this.friend === '' || this.pals.includes(this.friend)) return;
+    if (this.friend === this.user?.email) {
+      this.toastr.error('You cannot ride with yourself.');
+      return;
+    }
     const pal = await this.userService.getRidingPal(this.friend);
     if (typeof pal === 'string') {
       this.toastr.error(pal);
@@ -122,7 +130,6 @@ export class DataInfoComponent implements OnInit {
   }
 
   showTime() {
-    console.log(this.ride.time);
     if (this.ride.time === '' || this.ride.isNow || !this.ride.time) return '';
     const time: string = this.ride.time!.split('T')[1];
     const timeSplit: string[] = time.split(':');
