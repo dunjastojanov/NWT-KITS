@@ -12,11 +12,13 @@ export class HistoryTableComponent implements OnInit {
     this._currentPage = this.page;
   }
 
-  headers: string[] = [
+  headers: ('start'| 'end'| 'driver'| 'duration'| 'price')[] = [
     'start', 'end', 'driver', 'duration', 'price'
   ]
 
   @Input('rideHistory') rideHistory!: RideHistory[];
+
+  sortBy: 'start'| 'end'| 'driver'| 'duration'| 'price' = 'start';
   @Input() page!: string;
 
   private _currentPage: string = '1';

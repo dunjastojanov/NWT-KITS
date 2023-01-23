@@ -18,6 +18,7 @@ import {
   CurrentRideActionType,
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import { ToastrService } from 'ngx-toastr';
+import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
 
 @Component({
   selector: 'login',
@@ -42,7 +43,8 @@ export class LoginComponent implements OnInit {
     private service: UserService,
     private socialAuthService: SocialAuthService,
     private store: Store<StoreType>,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private vehicleService: VehicleService
   ) {
     this.email = '';
     this.password = '';
@@ -66,6 +68,10 @@ export class LoginComponent implements OnInit {
     );
   }
 
+  hasRole(user: User | null, role: string): boolean {
+    return user !== null && user?.roles.indexOf(role) !== -1;
+  }
+
   toggleForgotPasswordModal = () => {
     this.openForgotPasswordModal = !this.openForgotPasswordModal;
   };
@@ -81,6 +87,11 @@ export class LoginComponent implements OnInit {
   async login(user: User) {
     this.toastr.success('Login successful!');
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
+
+    if (this.hasRole(user, 'DRIVER')) {
+      this.vehicleService.changeStatus("ACTIVE").then(()=>{})
+    }
+
     const currentRide = await this.service.getCurrentRide(user.email);
     if (currentRide) {
       this.store.dispatch(

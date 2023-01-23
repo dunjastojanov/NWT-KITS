@@ -90,7 +90,6 @@ import { RideRequestPageComponent } from './page/ride-request-page/ride-request-
 import { RouteComponent } from './page/ride-request-page/route/route.component';
 import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/request-navbar.component';
 import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
-import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reducer';
 import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.component';
 import { SocketService } from './services/sockets/sockets.service';
@@ -101,8 +100,11 @@ import { ReviewComponent } from './modals/review/review.component';
 import { NotificationComponent } from './modals/notification/notification.component';
 import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
 import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedded-html.component';
+import { SortPipe } from './shared/utils/history-table/sort.pipe';
+import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confirm-ride.component";
 import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
 import { LobyComponent } from './page/ride-request-page/loby/loby.component';
+import { StatusToggleComponent } from './navbar/status-toggle/status-toggle.component';
 
 @NgModule({
   declarations: [
@@ -110,6 +112,7 @@ import { LobyComponent } from './page/ride-request-page/loby/loby.component';
     NavbarComponent,
     HomepageComponent,
     PrimaryButtonComponent,
+    ConfirmRideComponent,
     BannerComponent,
     CalculateInfoComponent,
     TitleComponent,
@@ -184,10 +187,11 @@ import { LobyComponent } from './page/ride-request-page/loby/loby.component';
     NotificationComponent,
     NotificationListItemComponent,
     DataInfoComponent,
-    ConfirmRideComponent,
     ShowOnMapComponent,
     EmbeddedHtmlComponent,
     LobyComponent,
+    SortPipe,
+    StatusToggleComponent,
   ],
   imports: [
     HttpClientModule,

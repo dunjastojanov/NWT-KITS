@@ -3,8 +3,10 @@ package com.uber.rocket.service;
 import com.uber.rocket.dto.DriverRegistrationDTO;
 import com.uber.rocket.dto.EvaluationDTO;
 import com.uber.rocket.dto.UpdateUserDataDTO;
+import com.uber.rocket.dto.UserDataDTO;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.mapper.UpdateUserDataMapper;
+import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,8 @@ public class VehicleService {
 
     @Autowired
     private UpdateUserDataMapper updateUserDataMapper;
+    @Autowired
+    private UserRepository userRepository;
 
     public Object registerDriver(DriverRegistrationDTO driverRegistrationDTO) throws IOException {
         User driver = userService.registerDriver(driverRegistrationDTO);
@@ -42,6 +46,10 @@ public class VehicleService {
 
     public Vehicle getVehicleByDriver(User driver) {
         return vehicleRepository.findFirstByDriver(driver);
+    }
+
+    public Vehicle getVehicleByDriver(UserDataDTO driver) {
+        return vehicleRepository.findFirstByDriverId(driver.getId());
     }
 
     private void createVehicle(DriverRegistrationDTO driverRegistrationDTO, User driver) {
@@ -97,6 +105,18 @@ public class VehicleService {
         } else {
             imageService.deletePicture(driverPictureRequest.getProfilePicture());
             return "Request is successfully denied";
+        }
+    }
+
+    public Object updateDriverStatus(HttpServletRequest request, String status) {
+        User user = userService.getUserFromRequest(request);
+        Vehicle vehicle = vehicleRepository.findFirstByDriver(user);
+        try {
+            vehicle.setStatus(VehicleStatus.valueOf(status.toUpperCase()));
+            return vehicleRepository.save(vehicle).getStatus() != VehicleStatus.INACTIVE;
+
+        } catch (IllegalArgumentException exception) {
+            throw new RuntimeException("Status name does not exist");
         }
     }
 }
