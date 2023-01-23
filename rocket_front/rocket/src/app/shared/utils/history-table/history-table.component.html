@@ -3,14 +3,14 @@
     <table class="table">
       <thead class="header">
       <tr>
-        <th *ngFor="let header of headers" scope="col" class="header-row">
+        <th *ngFor="let header of headers" scope="col" class="header-row cursor-pointer" (click)="sortBy = header">
           {{header.toString()[0].toUpperCase() + header.toString().slice(1)}}
         </th>
         <th scope="col" class="py-3 px-6"></th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let item of rideHistory" class="row">
+      <tr *ngFor="let item of rideHistory | sort: sortBy" class="row">
         <td class="data">{{item.start}}</td>
         <td class="data">{{item.end}}</td>
         <td class="data">{{item.driver}}</td>
