@@ -3,7 +3,7 @@
         <button (click)="initSockets()" style="width: 100px; height: 100px; background-color: green;">Inicijalizuj</button>
         <button (click)="sendMessage()" style="width: 100px; height: 100px; background-color: yellow;">Posalji poruku</button>
     </span>
-    
+
     <banner></banner>
     <calculate-info></calculate-info>
     <word-ceo></word-ceo>
@@ -13,6 +13,6 @@
 </div>
 <toast-error message="Payment was not successful" [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
 <toast-success message="Payment was successful!" [open]="openSuccessToast" [closeFunc]="toggleSuccessToast"></toast-success>
-
+<app-new-password [open]="openNewPasswordModal" [closeFunc]="togglePasswordModal"></app-new-password>
 
 

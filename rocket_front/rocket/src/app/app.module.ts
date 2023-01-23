@@ -104,6 +104,7 @@ import { NotificationListItemComponent } from './shared/utils/notification-list-
 import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedded-html.component';
 import { AdminChatPageComponent } from './page/admin-chat-page/admin-chat-page.component';
 import { UserChatModalComponent } from './modals/user-chat-modal/user-chat-modal.component';
+import { NewPasswordComponent } from './modals/new-password/new-password.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -189,6 +190,7 @@ import { UserChatModalComponent } from './modals/user-chat-modal/user-chat-modal
     EmbeddedHtmlComponent,
     AdminChatPageComponent,
     UserChatModalComponent,
+    NewPasswordComponent,
   ],
   imports: [
     HttpClientModule,
