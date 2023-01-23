@@ -12,9 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -197,4 +195,14 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserDataDTO getRandomAdmin() {
+        Role role = roleService.getRoleByUserRole(RoleType.ADMINISTRATOR);
+        List<User> admins = userRepository.findAllByRolesContaining(role);
+        if (admins.size() == 1) {
+            return new UserDataDTO(admins.get(0));
+        }
+        Random random = new Random();
+        int randomIndex = random.nextInt(admins.size());
+        return new UserDataDTO(admins.get(randomIndex));
+    }
 }

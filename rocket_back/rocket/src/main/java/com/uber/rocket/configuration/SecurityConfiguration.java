@@ -1,11 +1,9 @@
 package com.uber.rocket.configuration;
 
 import com.uber.rocket.entity.user.RoleType;
-import com.uber.rocket.security.CustomAuthenticationFilter;
 import com.uber.rocket.security.CustomAuthorizationFilter;
 import com.uber.rocket.service.AuthService;
 import com.uber.rocket.service.CustomUserDetailsService;
-import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,6 +55,7 @@ public class SecurityConfiguration {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/logged").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/random/admin").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/user/**").hasAnyAuthority(RoleType.CLIENT.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/image/**").hasAnyAuthority(RoleType.CLIENT.name(), RoleType.ADMINISTRATOR.name(), RoleType.DRIVER.name());
