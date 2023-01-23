@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
     private socialAuthService: SocialAuthService,
     private store: Store<StoreType>,
     private socketService: SocketService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
     private toastr: ToastrService,
     private vehicleService: VehicleService
   ) {
@@ -93,7 +93,7 @@ export class LoginComponent implements OnInit {
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
 
     if (this.hasRole(user, 'DRIVER')) {
-      this.vehicleService.changeStatus("ACTIVE").then(()=>{})
+      this.vehicleService.changeStatus('ACTIVE').then(() => {});
     }
 
     const currentRide = await this.service.getCurrentRide(user.email);
