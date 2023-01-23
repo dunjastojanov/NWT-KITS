@@ -48,6 +48,15 @@ public class VehicleController {
         }
     }
 
+    @PutMapping("/{status}")
+    public ResponseEntity<?> updateDriverStatus(HttpServletRequest request, @PathVariable String status){
+        try {
+            return ResponseEntity.ok(vehicleService.updateDriverStatus(request, status));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
     @PostMapping("/validate/image")
     public ResponseEntity<?> validateVehiclePictureUpdate(@RequestBody EvaluationDTO evaluationDTO) {
         try {

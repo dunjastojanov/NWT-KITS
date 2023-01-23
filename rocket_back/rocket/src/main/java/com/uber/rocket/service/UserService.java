@@ -4,6 +4,7 @@ import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.tokens.ConformationTokenType;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.UserRepository;
+import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +24,9 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private VehicleRepository vehicleRepository;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -82,7 +86,12 @@ public class UserService {
     }
 
     public UserDataDTO getLoggedUser(HttpServletRequest request) {
-        return new UserDataDTO(getUserFromRequest(request));
+        UserDataDTO dto = new UserDataDTO(getUserFromRequest(request));
+        if (dto.getRoles().contains("DRIVER")) {
+            VehicleStatus status = vehicleRepository.findFirstByDriverId(dto.getId()).getStatus();
+            dto.setStatus(status.name());
+        }
+        return dto;
     }
 
     public ResponseObjectDTO updateUser(HttpServletRequest request, UpdateUserDataDTO updateUserDataDTO) {

@@ -104,6 +104,7 @@ import { SortPipe } from './shared/utils/history-table/sort.pipe';
 import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confirm-ride.component";
 import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
 import { LobyComponent } from './page/ride-request-page/loby/loby.component';
+import { StatusToggleComponent } from './navbar/status-toggle/status-toggle.component';
 
 @NgModule({
   declarations: [
@@ -190,6 +191,7 @@ import { LobyComponent } from './page/ride-request-page/loby/loby.component';
     EmbeddedHtmlComponent,
     LobyComponent,
     SortPipe,
+    StatusToggleComponent,
   ],
   imports: [
     HttpClientModule,

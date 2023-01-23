@@ -14,6 +14,7 @@ import {
   CurrentRideActionType,
 } from '../shared/store/current-ride-slice/current-ride.actions';
 import { Router } from '@angular/router';
+import { VehicleService } from '../services/vehicle/vehicle.service';
 
 @Component({
   selector: 'navbar',
@@ -33,7 +34,8 @@ export class NavbarComponent implements OnInit {
   constructor(
     private store: Store<StoreType>,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private vehicleService: VehicleService
   ) {
     let loggedUserSlice = store.select('loggedUser');
     loggedUserSlice.subscribe((resData) => {
@@ -60,9 +62,13 @@ export class NavbarComponent implements OnInit {
   };
 
   logout = (): void => {
+    this.router.navigate(['/']).then(()=> {
+      if (this.hasRole('DRIVER')) {
+        this.vehicleService.changeStatus("INACTIVE").then(()=>{})
+      }
+    });
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGOUT));
     this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
-    window.location.href = '/';
   };
 
   toggleRegister = (): void => {
