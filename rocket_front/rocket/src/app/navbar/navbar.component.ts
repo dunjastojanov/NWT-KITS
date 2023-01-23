@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { User } from '../interfaces/User';
-import { Notification } from '../interfaces/Notification';
+import { Notif } from '../interfaces/Notification';
 import {
   LoggedUserAction,
   LoggedUserActionType,
@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
   showNotifications = false;
   newNotification = false;
 
-  notifications: Notification[] = [];
+  notifications: Notif[] = [];
   user: User | null = null;
 
   constructor(
@@ -39,6 +39,9 @@ export class NavbarComponent implements OnInit {
     loggedUserSlice.subscribe((resData) => {
       this.user = resData.user;
     });
+    this.store.select('notifications').subscribe((res) => {
+      this.notifications = res.notifications;
+    });
   }
 
   hasRole(role: string): boolean {
@@ -46,11 +49,11 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.notificationService.getNotification().then(
+    /*this.notificationService.getNotification().then(
       res => {
         this.notifications = res;
       }
-    )
+    )*/
   }
 
   toggleLogin = (): void => {

@@ -102,6 +102,7 @@ import { NotificationComponent } from './modals/notification/notification.compon
 import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
 import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedded-html.component';
 import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
+import { NotificationsReducer } from './shared/store/notifications-slice/notifications.reducer';
 import { LobyComponent } from './page/ride-request-page/loby/loby.component';
 
 @NgModule({
@@ -210,6 +211,7 @@ import { LobyComponent } from './page/ride-request-page/loby/loby.component';
         destinations: destinationsReducer,
         rideInfo: RideInfoReducer,
         currentRide: CurrentRideReducer,
+        notifications: NotificationsReducer,
       },
       { metaReducers }
     ),

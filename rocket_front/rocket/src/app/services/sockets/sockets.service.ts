@@ -10,12 +10,22 @@ import {
 } from '@angular/common/http';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
+import { Notif } from 'src/app/interfaces/Notification';
+import {
+  NotificationsAction,
+  NotificationsActionType,
+} from 'src/app/shared/store/notifications-slice/notifications.actions';
+import { StoreType } from 'src/app/shared/store/types';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class SocketService {
   isCustomSocketOpened: boolean = false;
 
-  constructor(private httpService: HttpClient) {}
+  constructor(
+    private httpService: HttpClient,
+    private store: Store<StoreType>
+  ) {}
 
   serverUrl = 'http://localhost:8443/ws';
   stompClient: any;
@@ -33,10 +43,13 @@ export class SocketService {
     });
   }
 
-  sendMessageUsingSocket() {
+  sendRideRequestToPalUsingSocket(email: string) {
+    console.log(email);
     // this.stompClient.send("/socket-subscriber/send/message", {}, JSON.stringify(message));
     this.httpService
-      .get('http://localhost:8443/api/notification/greet')
+      .get(
+        `http://localhost:8443/api/notification/send-ride-request-invitation/${email}`
+      )
       .subscribe((data: any) => {
         console.log(data);
       });
@@ -55,9 +68,15 @@ export class SocketService {
       );
     }
   }
-
   // Funkcija koja se poziva kada server posalje poruku na topic na koji se klijent pretplatio
   handleResult(message: any) {
-    alert(message);
+    console.log(message);
+    const notifications: Notif[] = JSON.parse(message.body);
+    this.store.dispatch(
+      new NotificationsAction(
+        NotificationsActionType.SET_NOTIFICATIONS,
+        notifications
+      )
+    );
   }
 }
