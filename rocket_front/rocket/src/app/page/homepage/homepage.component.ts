@@ -10,14 +10,7 @@ import { SocketService } from 'src/app/services/sockets/sockets.service';
   styleUrls: ['./homepage.component.css'],
 })
 export class HomepageComponent implements OnInit {
-  constructor(
-    private socketService: SocketService,
-    private route: ActivatedRoute
-  ) {}
-
-  initSockets() {
-    this.socketService.initializeWebSocketConnection();
-  }
+  constructor(private route: ActivatedRoute) {}
 
   openErrorToast = false;
   openSuccessToast = false;
@@ -28,7 +21,7 @@ export class HomepageComponent implements OnInit {
       let payerId = params['PayerID'];
       if (paymentId && payerId) {
         this.triggerPaymentExecution(paymentId, payerId);
-        setTimeout((args) => {
+        setTimeout((args: any) => {
           window.location.href = 'http://localhost:4200/';
         }, 5000);
       }
@@ -36,9 +29,6 @@ export class HomepageComponent implements OnInit {
     });
   }
 
-  sendMessage() {
-    this.socketService.sendMessageUsingSocket();
-  }
   toggleErrorToast = () => {
     this.openErrorToast = !this.openErrorToast;
   };

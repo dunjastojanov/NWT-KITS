@@ -12,12 +12,14 @@ import {
 } from 'src/app/shared/store/logged-user-slice/logged-user.actions';
 import { User } from 'src/app/interfaces/User';
 import { UserService } from '../../services/user/user.service';
+import { NotificationService } from '../../services/notification/notification.service';
 import { multiSelectProp } from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
 import {
   CurrentRideAction,
   CurrentRideActionType,
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import { ToastrService } from 'ngx-toastr';
+import { SocketService } from 'src/app/services/sockets/sockets.service';
 import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
 
 @Component({
@@ -43,6 +45,8 @@ export class LoginComponent implements OnInit {
     private service: UserService,
     private socialAuthService: SocialAuthService,
     private store: Store<StoreType>,
+    private socketService: SocketService,
+    private notificationService: NotificationService
     private toastr: ToastrService,
     private vehicleService: VehicleService
   ) {
@@ -93,11 +97,13 @@ export class LoginComponent implements OnInit {
     }
 
     const currentRide = await this.service.getCurrentRide(user.email);
+    await this.notificationService.loadNotifications();
     if (currentRide) {
       this.store.dispatch(
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)
       );
     }
+    this.socketService.initializeWebSocketConnection();
     this.closeFunc();
   }
 

@@ -50,6 +50,9 @@ public class RideService {
 
     @Autowired
     private DestinationRepository destinationRepository;
+
+    @Autowired
+    private NotificationService notificationService;
     @Autowired
     private RideMapper rideMapper;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -61,6 +64,9 @@ public class RideService {
         for (Destination destination : destinations) {
             destination.setRide(ride);
             this.destinationRepository.save(destination);
+        }
+        for (int i = 1; i < ride.getPassengers().size(); i++) {
+            this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
         }
         return "Ride successfully created.";
     }

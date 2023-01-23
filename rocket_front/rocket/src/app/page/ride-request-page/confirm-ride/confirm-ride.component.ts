@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { RouteService } from 'src/app/components/routes/route.service';
 import { Destination } from 'src/app/interfaces/Destination';
-import { User } from 'src/app/interfaces/User';
+import { RidingPal, User } from 'src/app/interfaces/User';
 import { VehiclePrices } from 'src/app/interfaces/VehiclesPrices';
 import { RideService } from 'src/app/services/ride/ride.service';
 import { StoreType } from 'src/app/shared/store/types';
@@ -16,6 +16,7 @@ import {
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import { CurrentRide } from 'src/app/interfaces/Ride';
 import { Router } from '@angular/router';
+import { SocketService } from 'src/app/services/sockets/sockets.service';
 
 @Component({
   selector: 'app-confirm-ride',
@@ -37,7 +38,8 @@ export class ConfirmRideComponent implements OnInit {
     private service: RouteService,
     private rideService: RideService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private socketService: SocketService
   ) {
     this.store.select('destinations').subscribe((resData) => {
       this.destinations = resData.destinations;
@@ -111,6 +113,7 @@ export class ConfirmRideComponent implements OnInit {
         this.user!
       );
       await this.rideService.saveCurrentRide(currentRide);
+      this.sendMessage(currentRide.ridingPals);
       this.store.dispatch(
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)
       );
@@ -131,5 +134,13 @@ export class ConfirmRideComponent implements OnInit {
     if (!this.rideInfo.vehicle) return false;
     if (!this.rideInfo.isNow && !this.rideInfo.time) return false;
     return true;
+  }
+  async sendMessage(pals?: RidingPal[]) {
+    console.log(pals);
+    if (pals) {
+      pals.map((pal) =>
+        this.socketService.sendRideRequestToPalUsingSocket(pal.email)
+      );
+    }
   }
 }
