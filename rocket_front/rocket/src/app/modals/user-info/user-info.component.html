@@ -28,4 +28,6 @@
   </div>
 </div>
 
+<block-user [open]="showBlock" [closeFunc]="toggleBlock" [user]="user"></block-user>
+
 <div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>

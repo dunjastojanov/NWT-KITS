@@ -161,9 +161,9 @@ export class UserService {
     return null;
   }
 
-  async blockUser(email: string) {
-    let result: AxiosResponse<any> = await http.delete<object>(
-      '/api/user/' + email
+  async blockUser(email: string, message: string) {
+    let result: AxiosResponse<any> = await http.post<object>(
+      '/api/user/block/' + email, message
     );
     return result.data;
   }
@@ -185,5 +185,20 @@ export class UserService {
         return `User ${email} already has scheduled ride.`;
       else return `There is no user with email ${email}`;
     }
+  }
+
+  async changePassword(dto: { oldPassword: string; newPassword: string }) {
+    let result: AxiosResponse<any> = await http.put<object>(
+      '/api/user/password',
+      dto
+    );
+    return result.data;
+  }
+
+  async cancelRide(rideId: string, message: string) {
+    let result: AxiosResponse<any> = await http.post<object>(
+      '/api/user/cancel/' + rideId, message
+    );
+    return result.data;
   }
 }

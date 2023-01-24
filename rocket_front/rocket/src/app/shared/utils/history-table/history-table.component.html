@@ -11,6 +11,7 @@
       </thead>
       <tbody>
       <tr *ngFor="let item of rideHistory | sort: sortBy" class="row">
+        <td class="data">{{item.date}}</td>
         <td class="data">{{item.start}}</td>
         <td class="data">{{item.end}}</td>
         <td class="data">{{item.driver}}</td>

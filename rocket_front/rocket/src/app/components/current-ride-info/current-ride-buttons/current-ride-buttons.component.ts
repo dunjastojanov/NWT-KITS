@@ -9,8 +9,11 @@ export class CurrentRideButtonsComponent implements OnInit {
   @Input('role') role!: string;
   @Input('isFavorite') isFavorite: boolean;
   @Input('driverName') driverName!: string | null;
+  @Input('rideId') rideId!: number | undefined;
 
   openReportModal = false;
+
+  openCancelModal = false;
 
   patchingRide = false;
   dissablePatch = false;
@@ -23,6 +26,10 @@ export class CurrentRideButtonsComponent implements OnInit {
 
   toggleReportModal() {
     this.openReportModal = !this.openReportModal;
+  }
+
+  toggleCancelModal() {
+    this.openCancelModal =!this.openCancelModal;
   }
 
   togglePatchingRide() {

@@ -4,12 +4,10 @@ import com.uber.rocket.dto.ForgetPasswordDTO;
 import com.uber.rocket.dto.PasswordChangeDTO;
 import com.uber.rocket.dto.UpdateUserDataDTO;
 import com.uber.rocket.dto.UserRegistrationDTO;
-import com.uber.rocket.service.AuthService;
 import com.uber.rocket.service.LoginService;
 import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,6 +74,14 @@ public class UserController {
         }
     }
 
+    @GetMapping("/history")
+    public ResponseEntity<?> getAllNonAdministratorUsers() {
+        try {
+            return ResponseEntity.ok(userService.getAllNonAdministratorUsers());
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
 
     @PutMapping("/password")
     public ResponseEntity<?> updatePassword(@Valid @RequestBody PasswordChangeDTO passwordChangeDTO, HttpServletRequest request) {
@@ -95,10 +101,10 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{email}")
-    public ResponseEntity<?> blockUser(@PathVariable String email) {
+    @PostMapping("/block/{email}")
+    public ResponseEntity<?> blockUser(@PathVariable String email, @RequestBody String reason) {
         try {
-            return ResponseEntity.ok(userService.blockUser(email));
+            return ResponseEntity.ok(userService.blockUser(email, reason));
         } catch (RuntimeException | IOException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }

@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Notif } from '../../interfaces/Notification';
+import {VehicleService} from "../../services/vehicle/vehicle.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'notification',
@@ -11,24 +13,18 @@ export class NotificationComponent implements OnInit {
   @Input('closeFunc') closeFunc!: () => void;
   @Input('notification') notification!: Notif;
 
-  constructor() {}
+  showReviewModal = false;
+
+  toggleReviewModal() {
+    this.showReviewModal =!this.showReviewModal;
+  }
+
+  constructor(private vehicleService: VehicleService, private toastr: ToastrService) { }
 
   ngOnInit(): void {}
 
-  isBasic(
-    type:
-      | 'DRIVER_RIDE_REQUEST'
-      | 'PASSENGER_RIDE_REQUEST'
-      | 'UPDATE_DRIVER_REQUEST'
-      | 'RIDE_CANCELED'
-      | 'RIDE_CONFIRMED'
-      | 'RIDE_SCHEDULED'
-  ) {
-    return (
-      type === 'RIDE_CANCELED' ||
-      type === 'RIDE_CONFIRMED' ||
-      type === 'RIDE_SCHEDULED'
-    );
+  isBasic(type: string) {
+    return type === "RIDE_CANCELED" || type === "RIDE_CONFIRMED" || type === "RIDE_SCHEDULED" || type === "USER_BLOCKED";
   }
 
   onAccept() {
@@ -37,7 +33,18 @@ export class NotificationComponent implements OnInit {
     }
     if (this.notification.type === 'PASSENGER_RIDE_REQUEST') {
     }
-    if (this.notification.type === 'UPDATE_DRIVER_REQUEST') {
+    if (this.notification.type === 'UPDATE_DRIVER_DATA_REQUEST') {
+      this.vehicleService.respondDriverDataUpdateRequest(this.notification.entityId, true).then((res)=>{
+        this.toastr.success(res);
+      });
+    }
+    if (this.notification.type === 'UPDATE_DRIVER_PICTURE_REQUEST') {
+      this.vehicleService.respondDriverImageUpdateRequest(this.notification.entityId, true).then ((res)=> {
+        this.toastr.success(res);
+      })
+    }
+    if (this.notification.type === 'RIDE_REVIEW') {
+      this.toggleReviewModal()
     }
   }
 
@@ -46,7 +53,15 @@ export class NotificationComponent implements OnInit {
     }
     if (this.notification.type === 'PASSENGER_RIDE_REQUEST') {
     }
-    if (this.notification.type === 'UPDATE_DRIVER_REQUEST') {
+    if (this.notification.type === 'UPDATE_DRIVER_DATA_REQUEST') {
+      this.vehicleService.respondDriverDataUpdateRequest(this.notification.entityId, false).then((res)=>{
+        this.toastr.success(res);
+      });
+    }
+    if (this.notification.type === "UPDATE_DRIVER_PICTURE_REQUEST") {
+      this.vehicleService.respondDriverImageUpdateRequest(this.notification.entityId, false).then ((res)=> {
+        this.toastr.success(res);
+      })
     }
     this.closeFunc();
   }

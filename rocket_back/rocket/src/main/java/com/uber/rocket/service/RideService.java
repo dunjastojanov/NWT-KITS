@@ -7,9 +7,7 @@ import com.uber.rocket.mapper.FavouriteRouteMapper;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
 import com.uber.rocket.mapper.RideMapper;
-import com.uber.rocket.repository.DestinationRepository;
-import com.uber.rocket.repository.FavouriteRouteRepository;
-import com.uber.rocket.repository.RideRepository;
+import com.uber.rocket.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +36,11 @@ public class RideService {
     private UserService userService;
     @Autowired
     private RideRepository repository;
+
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private RideCancellationRepository rideCancellationRepository;
     @Autowired
     private ReviewService reviewService;
     @Autowired
@@ -51,8 +54,6 @@ public class RideService {
     @Autowired
     private DestinationRepository destinationRepository;
 
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private RideMapper rideMapper;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -120,22 +121,16 @@ public class RideService {
         }
     }
 
-    public Page<RideHistoryDTO> getRideHistoryForUser(HttpServletRequest request, int page, int size) {
+    public Page<RideHistory> getRideHistoryForUser(HttpServletRequest request, int page, int size) {
         User user = userService.getUserFromRequest(request);
-        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("CLIENT"))) {
-            return getRideHistory(repository.findByPassengers(PageRequest.of(page, size, Sort.by("startTime")), user));
-        }
-        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("DRIVER"))) {
-            return getRideHistory(repository.findByVehicleDriver(PageRequest.of(page, size, Sort.by("startTime")), vehicleService.getVehicleByDriver(user)));
-        }
-        return null;
+        return getRideHistory(page, size, user);
     }
 
-    public Page<RideHistoryDTO> getAllRideHistory(int page, int size) {
+    public Page<RideHistory> getAllRideHistory(int page, int size) {
         return getRideHistory(repository.findAllByStatus(PageRequest.of(page, size, Sort.by("startTime")), RideStatus.ENDED));
     }
 
-    private Page<RideHistoryDTO> getRideHistory(Page<Ride> rides) {
+    private Page<RideHistory> getRideHistory(Page<Ride> rides) {
         return rides.map(ride -> rideHistoryMapper.mapToDto(ride));
     }
 
@@ -241,7 +236,34 @@ public class RideService {
         } else throw new RuntimeException("Ride doesn't exist");
     }
 
-    public Review addReview(HttpServletRequest request, NewReviewDTO dto) {
+    public Review addReview(HttpServletRequest request, NewReviewDTO dto) throws RuntimeException{
         return reviewService.addReview(request, dto, getRide(dto.getRideId()));
+    }
+
+    public Object getRideHistoryForUser(int page, int size, String email) {
+        User user = userService.getUserByEmail(email);
+        return getRideHistory(page, size, user);
+    }
+
+    private Page<RideHistory> getRideHistory(int page, int size, User user) {
+        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("CLIENT"))) {
+            return getRideHistory(repository.findByPassengers(PageRequest.of(page, size, Sort.by("startTime")), user));
+        }
+        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("DRIVER"))) {
+            return getRideHistory(repository.findByVehicleDriver(PageRequest.of(page, size, Sort.by("startTime")), vehicleService.getVehicleByDriver(user)));
+        }
+        return null;
+    }
+
+    public void cancelRide(Long id, String reason) {
+        Ride ride = getRide(id);
+        RideCancellation rideCancellation = new RideCancellation();
+        rideCancellation.setDriver(ride.getDriver());
+        rideCancellation.setRide(ride);
+        rideCancellation.setDescription(reason);
+        ride.setStatus(RideStatus.DENIED);
+        repository.save(ride);
+        notificationService.addRideCanceledNotifications(rideCancellation);
+        rideCancellationRepository.save(rideCancellation);
     }
 }

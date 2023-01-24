@@ -1,18 +1,15 @@
 package com.uber.rocket.service;
 
-import com.uber.rocket.dto.DriverRegistrationDTO;
-import com.uber.rocket.dto.EvaluationDTO;
-import com.uber.rocket.dto.UpdateUserDataDTO;
-import com.uber.rocket.dto.UserDataDTO;
+import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.mapper.UpdateUserDataMapper;
-import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 
 @Service
@@ -25,6 +22,9 @@ public class VehicleService {
     private UserService userService;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private ImageService imageService;
 
     @Autowired
@@ -35,8 +35,6 @@ public class VehicleService {
 
     @Autowired
     private UpdateUserDataMapper updateUserDataMapper;
-    @Autowired
-    private UserRepository userRepository;
 
     public Object registerDriver(DriverRegistrationDTO driverRegistrationDTO) throws IOException {
         User driver = userService.registerDriver(driverRegistrationDTO);
@@ -46,10 +44,6 @@ public class VehicleService {
 
     public Vehicle getVehicleByDriver(User driver) {
         return vehicleRepository.findFirstByDriver(driver);
-    }
-
-    public Vehicle getVehicleByDriver(UserDataDTO driver) {
-        return vehicleRepository.findFirstByDriverId(driver.getId());
     }
 
     private void createVehicle(DriverRegistrationDTO driverRegistrationDTO, User driver) {
@@ -66,8 +60,7 @@ public class VehicleService {
         return userService.getDriversByFilter(size, number, filter);
     }
 
-    public Object updateDriverData(HttpServletRequest request, UpdateUserDataDTO updateUserDataDTO) {
-        updateUserDataDTO.validateClassAttributes(updateUserDataDTO);
+    public Object updateDriverData(HttpServletRequest request, @Valid UpdateDriverDto updateUserDataDTO) {
         User user = userService.getUserFromRequest(request);
         updateDriverDataRequestService.createDriverDataRequest(updateUserDataDTO, user.getId());
         return "Successfully requested the update of drivers information";
@@ -88,6 +81,12 @@ public class VehicleService {
         if (evaluationDTO.isConfirmed()) {
             User user = userService.getById(driverDataRequest.getDriverId());
             userService.updateUserData(user, updateUserDataMapper.mapToDto(driverDataRequest));
+            Vehicle vehicle = vehicleRepository.findFirstByDriver(user);
+            vehicle.setVehicleType(driverDataRequest.getType());
+            vehicle.setKidFriendly(driverDataRequest.isKidFriendly());
+            vehicle.setPetFriendly(driverDataRequest.isPetFriendly());
+            vehicleRepository.save(vehicle);
+            notificationService.deleteNotification(driverDataRequest.getId());
             return "Request is successfully confirmed";
         } else {
             return "Request is successfully denied";
@@ -118,5 +117,9 @@ public class VehicleService {
         } catch (IllegalArgumentException exception) {
             throw new RuntimeException("Status name does not exist");
         }
+    }
+    public Object getVehicleByDriver(HttpServletRequest request) {
+        User user = userService.getUserFromRequest(request);
+        return new VehicleDTO(getVehicleByDriver(user));
     }
 }

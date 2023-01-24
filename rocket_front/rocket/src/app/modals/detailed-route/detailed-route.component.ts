@@ -25,7 +25,8 @@ export class DetailedRouteComponent implements OnInit {
     driverProfileImage: "",
     duration: 0,
     end: "",
-    passenger: "",
+    passengers: [],
+    routeLocation: "",
     price: 0,
     rating: 0,
     reviews: [],
@@ -49,7 +50,7 @@ export class DetailedRouteComponent implements OnInit {
   }
 
   addFavorite(id: string): void {
-    this.rideService.addFavorite(id).then(result => {
+    this.rideService.addFavorite(id).then(() => {
       this.toastr.success("Favorite route added");
 
     }).catch(error => {
@@ -59,4 +60,7 @@ export class DetailedRouteComponent implements OnInit {
     )
   }
 
+  book() {
+    //TODO add call for booking this ride
+  }
 }
