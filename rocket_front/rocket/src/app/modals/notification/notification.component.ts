@@ -11,13 +11,19 @@ export class NotificationComponent implements OnInit {
   @Input('closeFunc') closeFunc!: () => void;
   @Input('notification') notification!: Notification;
 
+  showReviewModal = false;
+
+  toggleReviewModal() {
+    this.showReviewModal =!this.showReviewModal;
+  }
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  isBasic(type: "DRIVER_RIDE_REQUEST" | "PASSENGER_RIDE_REQUEST" | "UPDATE_DRIVER_REQUEST" | "RIDE_CANCELED" | "RIDE_CONFIRMED" | "RIDE_SCHEDULED") {
-    return type === "RIDE_CANCELED" || type === "RIDE_CONFIRMED" || type === "RIDE_SCHEDULED";
+  isBasic(type: string) {
+    return type === "RIDE_CANCELED" || type === "RIDE_CONFIRMED" || type === "RIDE_SCHEDULED" || type === "USER_BLOCKED";
   }
 
   onAccept() {
@@ -29,6 +35,10 @@ export class NotificationComponent implements OnInit {
 
     }
     if (this.notification.type === "UPDATE_DRIVER_REQUEST") {
+
+    }
+    if (this.notification.type === "RIDE_REVIEW") {
+
 
     }
 

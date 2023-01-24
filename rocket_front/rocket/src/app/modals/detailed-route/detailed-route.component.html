@@ -12,7 +12,10 @@
 
     <div class="flex">
 
-      <div class="bg-secondary-dark w-1/4"></div>
+      <div class="bg-secondary-dark w-1/4">
+        <!--TODO: Add route-->
+      </div>
+
       <div class="py-6 px-6 lg:px-8 w-3/4">
         <h3 class="mb-4 text-xl font-medium text-gray-900 text-center w-full">Detailed view</h3>
 
@@ -24,6 +27,14 @@
           <app-info [title]="'Duration'" [info]="ride.duration.toString()  + ' min'"></app-info>
           <icon-button-secondary class="mr-2" (click)="addFavorite(ride.id)"
                                  [path]="'assets/icons/favorite.png'"></icon-button-secondary>
+          <icon-button-secondary class="mr-2"
+                                 [path]="'assets/icons/book.png'"></icon-button-secondary>
+        </div>
+        <div class="flex flex-column items-center">
+          <h5 class="mb-4 font-small text-gray-900 text-center w-full">Passengers</h5>
+          <p *ngFor="let passenger of ride.passengers">
+            {{passenger}}
+          </p>
         </div>
         <div class="flex items-center">
           <app-info [title]="'Start'" [info]="ride.start"></app-info>

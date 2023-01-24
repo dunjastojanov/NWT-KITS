@@ -108,6 +108,12 @@ public class TemplateProcessor {
             case RIDE_CANCELED -> {
                 return "ride_canceled";
             }
+            case USER_BLOCKED -> {
+                return "user_blocked";
+            }
+            case RIDE_REVIEW -> {
+                return "ride_review";
+            }
         }
         return null;
     }

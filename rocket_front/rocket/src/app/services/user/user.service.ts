@@ -186,4 +186,12 @@ export class UserService {
       else return `There is no user with email ${email}`;
     }
   }
+
+  async changePassword(dto: { oldPassword: string; newPassword: string }) {
+    let result: AxiosResponse<any> = await http.put<object>(
+      '/api/user/password',
+      dto
+    );
+    return result.data;
+  }
 }

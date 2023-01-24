@@ -2,7 +2,9 @@ package com.uber.rocket.controller;
 
 import com.uber.rocket.dto.DriverRegistrationDTO;
 import com.uber.rocket.dto.EvaluationDTO;
+import com.uber.rocket.dto.UpdateDriverDto;
 import com.uber.rocket.dto.UpdateUserDataDTO;
+import com.uber.rocket.entity.user.UpdateDriverDataRequest;
 import com.uber.rocket.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,8 +32,17 @@ public class VehicleController {
         }
     }
 
+    @GetMapping("/vehicle")
+    public ResponseEntity<?> getVehicleForLoggedDriver(HttpServletRequest request) {
+        try {
+            return ResponseEntity.ok().body(vehicleService.getVehicleByDriver(request));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
     @PutMapping
-    public ResponseEntity<?> updateDriverData(@Valid @RequestBody UpdateUserDataDTO updateUserDataDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateDriverData(@Valid @RequestBody UpdateDriverDto updateUserDataDTO, HttpServletRequest request) {
         try {
             return ResponseEntity.ok(vehicleService.updateDriverData(request, updateUserDataDTO));
         } catch (RuntimeException exception) {

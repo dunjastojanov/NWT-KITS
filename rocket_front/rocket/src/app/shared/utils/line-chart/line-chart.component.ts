@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import Chart from 'chart.js/auto';
-import {ReportData} from "../../interfaces/Report";
+import {ReportData} from "../../../interfaces/Report";
 
 @Component({
   selector: 'line-chart',

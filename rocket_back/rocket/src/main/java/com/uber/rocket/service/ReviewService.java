@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,7 +29,10 @@ public class ReviewService {
         return reviewRepository.findAllByRide(ride);
     }
 
-    public Review addReview(HttpServletRequest request, NewReviewDTO dto, Ride ride) {
+    public Review addReview(HttpServletRequest request, NewReviewDTO dto, Ride ride) throws RuntimeException{
+        if (ride.getEndTime().isBefore(LocalDateTime.now().minusDays(3))) {
+            throw new RuntimeException("Your time window for leaving a review has passed.");
+        }
         Review review = new Review();
         review.setPassenger(userService.getUserFromRequest(request));
         review.setDescription(dto.getDescription());

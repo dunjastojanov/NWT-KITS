@@ -61,13 +61,13 @@ export class RegisterDriverComponent implements OnInit {
   }
 
   save() {
-    let dto = this.driver;
     if (this.selectedItems.includes("Kid friendly")) {
       this.driver.kidFriendly = true;
     }
     if (this.selectedItems.includes("Pet friendly")) {
       this.driver.petFriendly = true;
     }
+    let dto = this.driver;
     this.service.registerDriver(dto).then(() => {
       this.toastr.success("Driver Saved");
     })

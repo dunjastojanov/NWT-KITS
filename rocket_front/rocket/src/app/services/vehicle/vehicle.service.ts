@@ -19,4 +19,12 @@ export class VehicleService {
     return <boolean>result.data;
 
   }
+
+  async getVehicle() {
+    let result: AxiosResponse = await http.get(
+      '/api/vehicle/vehicle',
+    );
+    return result.data;
+
+  }
 }

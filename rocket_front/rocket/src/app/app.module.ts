@@ -39,7 +39,7 @@ import { ProfileHistoryComponent } from './page/profile-page/profile-history/pro
 import { ProfileBannerComponent } from './page/profile-page/profile-banner/profile-banner.component';
 import { InfoComponent } from './shared/utils/label/info/info.component';
 import { MediumTitleComponent } from './shared/utils/label/medium-title/medium-title.component';
-import { LineChartComponent } from './shared/line-chart/line-chart.component';
+import { LineChartComponent } from './shared/utils/line-chart/line-chart.component';
 import { LoginComponent } from './modals/login/login.component';
 import { RegisterComponent } from './modals/register/register.component';
 import { ForgotPasswordComponent } from './modals/forgot-password/forgot-password.component';
@@ -105,6 +105,7 @@ import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confir
 import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
 import { LobyComponent } from './page/ride-request-page/loby/loby.component';
 import { StatusToggleComponent } from './navbar/status-toggle/status-toggle.component';
+import { ChangePasswordComponent } from './modals/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -192,6 +193,7 @@ import { StatusToggleComponent } from './navbar/status-toggle/status-toggle.comp
     LobyComponent,
     SortPipe,
     StatusToggleComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     HttpClientModule,

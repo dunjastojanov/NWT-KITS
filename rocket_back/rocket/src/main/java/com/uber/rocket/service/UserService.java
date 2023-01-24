@@ -6,6 +6,7 @@ import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -27,6 +25,9 @@ public class UserService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -153,13 +154,14 @@ public class UserService {
         return "We have sent an email for changing password";
     }
 
-    public Object blockUser(String email) throws IOException {
+    public Object blockUser(String email, String reason) throws IOException {
         User user = getUserByEmail(email);
         if (user.isBlocked())
             throw new RuntimeException("User is already blocked");
         user.setBlocked(true);
         userRepository.save(user);
         emailService.sendEmailByEmailSubject(user, EmailSubject.BLOCKED_NOTIFICATION);
+        notificationService.addBlockedUserNotification(reason, user);
         return "User is successfully blocked";
     }
 
@@ -178,7 +180,12 @@ public class UserService {
 
     public Object getDriversByFilter(int size, int number, String filter) {
         String role = RoleType.DRIVER.name();
-        return userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter, PageRequest.of(number, size));
+        Page<UserDataDTO> dtos = userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter, PageRequest.of(number, size));
+        return dtos.stream().peek(dto-> {
+            if (dto.getRoles().contains("DRIVER")) {
+                dto.setStatus(vehicleRepository.findFirstByDriverId(dto.getId()).getStatus().name());
+            }
+        });
     }
 
     public Object getClientByFilter(int size, int number, String filter) {
@@ -207,4 +214,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public List<SimpleUser> getAllNonAdministratorUsers() {
+        return userRepository.findAllNonAdministratorUsers();
+    }
 }

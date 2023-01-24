@@ -2,6 +2,7 @@ package com.uber.rocket.controller;
 
 import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.service.NotificationService;
+import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -19,10 +20,13 @@ public class NotificationController {
     private NotificationService notificationService;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
     @GetMapping
     public ResponseEntity<?> getNotificationsForUser(HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(notificationService.getNotificationsForUser(request));
+            return ResponseEntity.ok(notificationService.getNotificationsForUser(userService.getUserFromRequest(request)));
         } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }

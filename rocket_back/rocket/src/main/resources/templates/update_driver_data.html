@@ -9,6 +9,11 @@
                 <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Last name</h5>
                 <h4 th:text="${lastName}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
             </div>
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Phone number</h5>
+                <h4 th:text="${phoneNumber}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+
 
         </div>
         <div style="height: 100%; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -19,12 +24,16 @@
         </div>
         <div style="height: 100%; border-left: 0.5px solid #9a9a9a; padding: 20px; display: flex; flex-direction: column; justify-content: center;">
             <div style="margin: 10px">
-                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Phone number</h5>
-                <h4 th:text="${phoneNumber}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
-            </div>
-            <div style="margin: 10px">
                 <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">City</h5>
                 <h4 th:text="${city}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Type of vehicle</h5>
+                <h4 th:text="${type}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
+            </div>
+            <div style="margin: 10px">
+                <h5 style="margin: 0; padding: 0; font-weight: bold; color: #333333;">Additional features</h5>
+                <h4 th:text="${features}" style="margin: 0; padding: 0; font-weight: lighter;"></h4>
             </div>
         </div>
     </div>

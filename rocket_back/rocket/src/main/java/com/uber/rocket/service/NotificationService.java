@@ -3,7 +3,6 @@ package com.uber.rocket.service;
 import com.uber.rocket.dto.NotificationDTO;
 import com.uber.rocket.entity.notification.Notification;
 import com.uber.rocket.entity.notification.NotificationType;
-import com.uber.rocket.entity.ride.Destination;
 import com.uber.rocket.entity.ride.Passenger;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.ride.RideCancellation;
@@ -12,11 +11,11 @@ import com.uber.rocket.entity.user.UpdateDriverPictureRequest;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.mapper.NotificationMapper;
 import com.uber.rocket.repository.NotificationRepository;
+import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.utils.TemplateProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -31,13 +30,12 @@ public class NotificationService {
     @Autowired
     NotificationMapper notificationMapper;
     @Autowired
-    UserService userService;
+    UserRepository userRepository;
 
     @Autowired
     DestinationService destinationService;
 
-    public List<NotificationDTO> getNotificationsForUser(HttpServletRequest request) {
-        User user = userService.getUserFromRequest(request);
+    public List<NotificationDTO> getNotificationsForUser(User user) {
         if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("ADMINISTRATOR"))) {
             return notificationRepository.findAllByUser(null).stream().map(notificationMapper::mapToDto).toList();
         }
@@ -69,7 +67,8 @@ public class NotificationService {
     }
 
     private Map<String, String> getUpdateDriverPictureRequestVariables(UpdateDriverPictureRequest request) {
-        User driver = userService.getById(request.getDriverId());
+        User driver = getDriver(request.getDriverId());
+
         Map<String, String> variables = new HashMap<>();
         variables.put("driver", driver.getFullName());
         variables.put("email", driver.getEmail());
@@ -78,7 +77,7 @@ public class NotificationService {
     }
 
     private Map<String, String> getUpdateDriverDataRequestVariables(UpdateDriverDataRequest request) {
-        User driver = userService.getById(request.getDriverId());
+        User driver = getDriver(request.getDriverId());
         Map<String, String> variables = new HashMap<>();
         variables.put("firstName", request.getFirstName());
         variables.put("lastName", request.getLastName());
@@ -87,8 +86,28 @@ public class NotificationService {
         variables.put("phoneNumber", request.getPhoneNumber());
         variables.put("city", request.getCity());
         variables.put("path", getProfilePicture(driver));
-
+        variables.put("features", getAdditionalFeatures(request));
+        variables.put("type", request.getType().getName());
         return variables;
+    }
+
+    private static String getAdditionalFeatures(UpdateDriverDataRequest request) {
+        List<String> features = new ArrayList<String>();
+        if (request.isKidFriendly()) {
+            features.add("Kid friendly");
+        }
+        if( request.isPetFriendly()) {
+            features.add("Pet friendly");
+        }
+        return String.join(" && ", features);
+    }
+
+    private User getDriver(Long request) {
+        Optional<User> optional = userRepository.findById(request);
+        if (optional.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        return optional.get();
     }
 
     private static String getProfilePicture(User user) {
@@ -120,6 +139,36 @@ public class NotificationService {
             notification.setTemplateVariables(templateProcessor.getVariableString(getRideCancellationVariables(rideCancellation)));
             save(notification);
         }
+    }
+
+    public void addRideReviewNotification(User user, Ride ride) {
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setType(NotificationType.RIDE_REVIEW);
+        notification.setTitle("Ride review");
+        notification.setTemplateVariables(templateProcessor.getVariableString(getRideVariables(ride, this.destinationService.getStartAddressByRide(ride), this.destinationService.getEndAddressByRide(ride))));
+        notification.setEntityId(ride.getId());
+        save(notification);
+    }
+
+    public void addBlockedUserNotification(String reason, User user) {
+        Notification notification = createBlockedUserNotification(reason, user);
+        notification.setType(NotificationType.USER_BLOCKED);
+        save(notification);
+    }
+
+    private Notification createBlockedUserNotification(String reason, User user) {
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setTitle("Blocked");
+        notification.setTemplateVariables(templateProcessor.getVariableString(getBlockedUserVariables(reason)));
+        return notification;
+    }
+
+    private Map<String, String> getBlockedUserVariables(String reason) {
+        Map<String, String> variables = new HashMap<>();
+        variables.put("description", reason);
+        return variables;
     }
 
     public void addRideStatusChangeNotification(Ride ride, User user) {

@@ -12,7 +12,8 @@ public class RideDetails {
 
     Long id;
     String driver;
-    String passenger;
+    List<String> passengers;
+    String routeLocation;
     String driverProfileImage;
     String start;
     String end;

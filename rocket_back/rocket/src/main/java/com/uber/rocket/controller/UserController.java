@@ -7,6 +7,7 @@ import com.uber.rocket.dto.UserRegistrationDTO;
 import com.uber.rocket.service.AuthService;
 import com.uber.rocket.service.LoginService;
 import com.uber.rocket.service.UserService;
+import com.uber.rocket.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,7 +43,8 @@ public class UserController {
     @PostMapping("/login")
     public String loginUser(HttpServletRequest request, HttpServletResponse response) {
         try {
-            return loginService.login(request, response);
+            String token = loginService.login(request, response);
+            return token;
         } catch (Exception exception) {
             throw new RuntimeException(exception.getMessage());
         }
@@ -76,6 +78,14 @@ public class UserController {
         }
     }
 
+    @GetMapping("/history")
+    public ResponseEntity<?> getAllNonAdministratorUsers() {
+        try {
+            return ResponseEntity.ok(userService.getAllNonAdministratorUsers());
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
 
     @PutMapping("/password")
     public ResponseEntity<?> updatePassword(@Valid @RequestBody PasswordChangeDTO passwordChangeDTO, HttpServletRequest request) {
@@ -96,9 +106,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{email}")
-    public ResponseEntity<?> blockUser(@PathVariable String email) {
+    public ResponseEntity<?> blockUser(@PathVariable String email, @RequestBody String reason) {
         try {
-            return ResponseEntity.ok(userService.blockUser(email));
+            return ResponseEntity.ok(userService.blockUser(email, reason));
         } catch (RuntimeException | IOException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
