@@ -54,7 +54,10 @@
           </li>
 
           <div *ngIf="showNotifications" (mouseleave)="toggleNotifications()"
-               class="absolute w-96 h-48 top-16 right-44 bg-white z-50">
+               class="absolute w-96 h-full top-16 right-44 bg-transparent z-50">
+            <div *ngIf="notifications.length < 1" class="flex justify-between m-1 bg-white hover:bg-tertiary-light hover:cursor-pointer p-4 ">
+              <h5>No new notifications</h5>
+            </div>
             <div *ngFor="let notification of notifications">
               <notification-list-item [notification]="notification"></notification-list-item>
             </div>

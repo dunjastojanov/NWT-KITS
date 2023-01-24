@@ -28,6 +28,6 @@
   </div>
 </div>
 
-<review *ngIf="notification.type == 'RIDE_REVIEW'" [rideId]="notification.resourceId" [open]="showReviewModal" [closeFunc]="toggleReviewModal"></review>
+<review *ngIf="notification.type == 'RIDE_REVIEW'" [rideId]="notification.entityId" [open]="showReviewModal" [closeFunc]="toggleReviewModal"></review>
 
 <div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>

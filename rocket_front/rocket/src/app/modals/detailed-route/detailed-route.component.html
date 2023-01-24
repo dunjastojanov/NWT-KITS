@@ -28,7 +28,7 @@
           <icon-button-secondary class="mr-2" (click)="addFavorite(ride.id)"
                                  [path]="'assets/icons/favorite.png'"></icon-button-secondary>
           <icon-button-secondary class="mr-2"
-                                 [path]="'assets/icons/book.png'"></icon-button-secondary>
+                                 [path]="'assets/icons/book.png'" (click)="book()"></icon-button-secondary>
         </div>
         <div class="flex flex-column items-center">
           <h5 class="mb-4 font-small text-gray-900 text-center w-full">Passengers</h5>

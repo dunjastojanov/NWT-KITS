@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Notif } from '../../interfaces/Notification';
+import {VehicleService} from "../../services/vehicle/vehicle.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'notification',
@@ -17,7 +19,7 @@ export class NotificationComponent implements OnInit {
     this.showReviewModal =!this.showReviewModal;
   }
 
-  constructor() { }
+  constructor(private vehicleService: VehicleService, private toastr: ToastrService) { }
 
   ngOnInit(): void {}
 
@@ -31,9 +33,18 @@ export class NotificationComponent implements OnInit {
     }
     if (this.notification.type === 'PASSENGER_RIDE_REQUEST') {
     }
-    if (this.notification.type === 'UPDATE_DRIVER_REQUEST') {
+    if (this.notification.type === 'UPDATE_DRIVER_DATA_REQUEST') {
+      this.vehicleService.respondDriverDataUpdateRequest(this.notification.entityId, true).then((res)=>{
+        this.toastr.success(res);
+      });
     }
-    if (this.notification.type === "RIDE_REVIEW") {
+    if (this.notification.type === 'UPDATE_DRIVER_PICTURE_REQUEST') {
+      this.vehicleService.respondDriverImageUpdateRequest(this.notification.entityId, true).then ((res)=> {
+        this.toastr.success(res);
+      })
+    }
+    if (this.notification.type === 'RIDE_REVIEW') {
+      this.toggleReviewModal()
     }
   }
 
@@ -42,7 +53,15 @@ export class NotificationComponent implements OnInit {
     }
     if (this.notification.type === 'PASSENGER_RIDE_REQUEST') {
     }
-    if (this.notification.type === 'UPDATE_DRIVER_REQUEST') {
+    if (this.notification.type === 'UPDATE_DRIVER_DATA_REQUEST') {
+      this.vehicleService.respondDriverDataUpdateRequest(this.notification.entityId, false).then((res)=>{
+        this.toastr.success(res);
+      });
+    }
+    if (this.notification.type === "UPDATE_DRIVER_PICTURE_REQUEST") {
+      this.vehicleService.respondDriverImageUpdateRequest(this.notification.entityId, false).then ((res)=> {
+        this.toastr.success(res);
+      })
     }
     this.closeFunc();
   }

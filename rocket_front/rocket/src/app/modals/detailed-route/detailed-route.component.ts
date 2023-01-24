@@ -60,4 +60,7 @@ export class DetailedRouteComponent implements OnInit {
     )
   }
 
+  book() {
+    //TODO add call for booking this ride
+  }
 }

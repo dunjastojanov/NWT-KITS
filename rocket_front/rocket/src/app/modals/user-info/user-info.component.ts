@@ -15,6 +15,12 @@ export class UserInfoComponent implements OnInit {
   @Input('closeFunc') closeFunc!: () => void;
   @Input('user') user!: User;
 
+  showBlock: boolean = false;
+
+  toggleBlock() {
+    this.showBlock =!this.showBlock;
+  }
+
   private service: UserService;
   private toastr: ToastrService;
 
@@ -26,9 +32,7 @@ export class UserInfoComponent implements OnInit {
   information: any = []
 
   onBlock() {
-    this.service.blockUser(this.user.email).then((result) => {
-      this.toastr.success(result);
-    });
+    this.toggleBlock()
   }
 
   ngOnInit(): void {

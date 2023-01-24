@@ -27,4 +27,18 @@ export class VehicleService {
     return result.data;
 
   }
+
+  async respondDriverDataUpdateRequest(resourceId: string, confirmed: boolean) {
+    let result: AxiosResponse = await http.post(
+      '/api/vehicle/validate', {id: resourceId, confirmed: confirmed}
+    );
+    return result.data;
+  }
+
+  async respondDriverImageUpdateRequest(resourceId: string, confirmed: boolean) {
+    let result: AxiosResponse = await http.post(
+      '/api/vehicle/validate/image', {id: resourceId, confirmed: confirmed}
+    );
+    return result.data;
+  }
 }

@@ -107,6 +107,8 @@ import { NotificationsReducer } from './shared/store/notifications-slice/notific
 import { LobyComponent } from './page/ride-request-page/loby/loby.component';
 import { StatusToggleComponent } from './navbar/status-toggle/status-toggle.component';
 import { ChangePasswordComponent } from './modals/change-password/change-password.component';
+import { BlockUserComponent } from './modals/block-user/block-user.component';
+import { CancelRideComponent } from './modals/cancel-ride/cancel-ride.component';
 
 @NgModule({
   declarations: [
@@ -195,6 +197,8 @@ import { ChangePasswordComponent } from './modals/change-password/change-passwor
     SortPipe,
     StatusToggleComponent,
     ChangePasswordComponent,
+    BlockUserComponent,
+    CancelRideComponent,
   ],
   imports: [
     HttpClientModule,
