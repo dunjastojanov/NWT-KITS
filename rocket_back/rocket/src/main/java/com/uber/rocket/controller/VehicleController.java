@@ -3,8 +3,6 @@ package com.uber.rocket.controller;
 import com.uber.rocket.dto.DriverRegistrationDTO;
 import com.uber.rocket.dto.EvaluationDTO;
 import com.uber.rocket.dto.UpdateDriverDto;
-import com.uber.rocket.dto.UpdateUserDataDTO;
-import com.uber.rocket.entity.user.UpdateDriverDataRequest;
 import com.uber.rocket.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -95,5 +93,4 @@ public class VehicleController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
-
 }

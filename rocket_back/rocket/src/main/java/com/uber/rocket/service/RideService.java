@@ -55,14 +55,8 @@ public class RideService {
     private DestinationRepository destinationRepository;
 
     @Autowired
-    private NotificationService notificationService;
-    @Autowired
     private RideMapper rideMapper;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ReviewRepository reviewRepository;
 
     public String createRide(RideDTO rideDTO) {
         Ride ride = rideMapper.mapToEntity(rideDTO);
@@ -246,7 +240,7 @@ public class RideService {
         return reviewService.addReview(request, dto, getRide(dto.getRideId()));
     }
 
-    public Object getRideHistoryForUser(HttpServletRequest request, int page, int size, String email) {
+    public Object getRideHistoryForUser(int page, int size, String email) {
         User user = userService.getUserByEmail(email);
         return getRideHistory(page, size, user);
     }
@@ -267,6 +261,8 @@ public class RideService {
         rideCancellation.setDriver(ride.getDriver());
         rideCancellation.setRide(ride);
         rideCancellation.setDescription(reason);
+        ride.setStatus(RideStatus.DENIED);
+        repository.save(ride);
         notificationService.addRideCanceledNotifications(rideCancellation);
         rideCancellationRepository.save(rideCancellation);
     }

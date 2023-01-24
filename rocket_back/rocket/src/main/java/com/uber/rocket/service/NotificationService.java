@@ -14,7 +14,6 @@ import com.uber.rocket.repository.NotificationRepository;
 import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.utils.TemplateProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,22 +33,15 @@ public class NotificationService {
     UserRepository userRepository;
 
     @Autowired
+    AuthService authService;
+
+    @Autowired
     DestinationService destinationService;
 
-<<<<<<< HEAD
-=======
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
-    public List<NotificationDTO> getNotificationsForUser(HttpServletRequest request) {
-        User user = userService.getUserFromRequest(request);
-        return getNotificationsForUser(user);
-    }
-
->>>>>>> develop
     public List<NotificationDTO> getNotificationsForUser(User user) {
         if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("ADMINISTRATOR"))) {
-            return notificationRepository.findAllByUser(null).stream().map(notificationMapper::mapToDto).toList();
+            List<Notification> byUserIsNull = notificationRepository.findByUserIsNull();
+            return byUserIsNull.stream().map(notificationMapper::mapToDto).toList();
         }
         return notificationRepository.findAllByUser(user).stream().map(notificationMapper::mapToDto).toList();
     }
@@ -67,8 +59,6 @@ public class NotificationService {
         notification.setRead(false);
         notification.setSent(LocalDateTime.now());
         notification = notificationRepository.save(notification);
-        System.out.println(notification.getUser().getEmail());
-        //messagingTemplate.convertAndSendToUser(notification.getUser().getEmail(), "/queue/notifications", notification.getType());
         return notification;
     }
 
@@ -77,13 +67,12 @@ public class NotificationService {
         notification.setTitle("Update request");
         notification.setTemplateVariables(templateProcessor.getVariableString(getUpdateDriverPictureRequestVariables(request)));
         notification.setEntityId(request.getId());
-        notification.setType(NotificationType.UPDATE_DRIVE_PICTURE_REQUEST);
+        notification.setType(NotificationType.UPDATE_DRIVER_PICTURE_REQUEST);
         save(notification);
     }
 
     private Map<String, String> getUpdateDriverPictureRequestVariables(UpdateDriverPictureRequest request) {
         User driver = getDriver(request.getDriverId());
-
         Map<String, String> variables = new HashMap<>();
         variables.put("driver", driver.getFullName());
         variables.put("email", driver.getEmail());
@@ -107,7 +96,7 @@ public class NotificationService {
     }
 
     private static String getAdditionalFeatures(UpdateDriverDataRequest request) {
-        List<String> features = new ArrayList<String>();
+        List<String> features = new ArrayList<>();
         if (request.isKidFriendly()) {
             features.add("Kid friendly");
         }
@@ -139,10 +128,10 @@ public class NotificationService {
         return save(notification);
     }
 
-    public Notification addPassengerRequestNotification(User user, Ride ride) {
+    public void addPassengerRequestNotification(User user, Ride ride) {
         Notification notification = createRideRequestNotification(user, ride);
         notification.setType(NotificationType.PASSENGER_RIDE_REQUEST);
-        return save(notification);
+        save(notification);
     }
 
     public void addRideCanceledNotifications(RideCancellation rideCancellation) {
@@ -203,29 +192,33 @@ public class NotificationService {
             }
             case SCHEDULED -> {
                 notification.setTitle("Ride scheduled");
-                notification.setType(NotificationType.RIDE_CANCELED);
+                notification.setType(NotificationType.RIDE_SCHEDULED);
                 Map<String, String> variables = getScheduledRideVariables(ride);
                 variables.put("status", "Your drive has been scheduled.");
                 notification.setTemplateVariables(templateProcessor.getVariableString(variables));
             }
         }
-
         save(notification);
     }
-
-
-
 
     private Map<String, String> getScheduledRideVariables(Ride ride) {
         Map<String, String> variables = new HashMap<>();
         String startAddress = this.destinationService.getStartAddressByRide(ride);
         String endAddress = this.destinationService.getEndAddressByRide(ride);
-        variables.put("numberOfPassengers", String.valueOf(ride.getPassengers().size()));
+        variables.put("passengers", getPassengers(ride));
         variables.put("price", String.valueOf(ride.getPrice()));
         variables.put("time", String.valueOf(ride.getPrice()));
         variables.put("start", startAddress);
         variables.put("end", endAddress);
         return variables;
+    }
+
+    private static String getPassengers(Ride ride) {
+        List<String> passengers = new ArrayList<>();
+        for (User passenger: ride.getUsers()) {
+            passengers.add(passenger.getFullName());
+        }
+        return String.join(" && ", passengers);
     }
 
     private Map<String, String> getRideCancellationVariables(RideCancellation rideCancellation) {
@@ -250,14 +243,17 @@ public class NotificationService {
 
     private static Map<String, String> getRideVariables(Ride ride, String startAddress, String endAddress) {
         Map<String, String> variables = new HashMap<>();
-        variables.put("numberOfPassengers", String.valueOf(ride.getPassengers().size()));
-        //variables.put("path", getProfilePicture(ride.getDriver()));
-        //variables.put("driver", ride.getDriver().getFullName());
-        //variables.put("email", ride.getDriver().getEmail());
+        variables.put("passengers", getPassengers(ride));
         variables.put("price", String.valueOf(ride.getPrice()));
         variables.put("time", String.valueOf(ride.getPrice()));
         variables.put("start", startAddress);
         variables.put("end", endAddress);
+
+        if (ride.getDriver() != null) {
+            variables.put("driver", ride.getDriver().getFullName());
+            variables.put("email", ride.getDriver().getEmail());
+            variables.put("path", getProfilePicture(ride.getDriver()));
+        }
         return variables;
     }
 
@@ -270,5 +266,15 @@ public class NotificationService {
             return notificationRepository.save(notification);
         }
         return null;
+    }
+
+    public void deleteNotification(Long entityId) {
+        Optional<Notification> notification = notificationRepository.findNotificationByEntityId(entityId);
+        notification.ifPresent(value -> notificationRepository.delete(value));
+    }
+
+    public void deleteNotificationById(Long id) {
+        Optional<Notification> notification = notificationRepository.findById(id);
+        notification.ifPresent(value -> notificationRepository.delete(value));
     }
 }

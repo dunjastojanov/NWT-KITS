@@ -6,7 +6,7 @@ import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -180,18 +184,19 @@ public class UserService {
 
     public Object getDriversByFilter(int size, int number, String filter) {
         String role = RoleType.DRIVER.name();
-        Page<UserDataDTO> dtos = userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter, PageRequest.of(number, size));
-        return dtos.stream().peek(dto-> {
+        List<UserDataDTO> dtos = userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter);
+        dtos =  dtos.stream().peek(dto-> {
             if (dto.getRoles().contains("DRIVER")) {
                 dto.setStatus(vehicleRepository.findFirstByDriverId(dto.getId()).getStatus().name());
             }
-        });
+        }).collect(Collectors.toList());
+        return new PageImpl<>(dtos, PageRequest.of(number, size), dtos.size());
+
     }
 
     public Object getClientByFilter(int size, int number, String filter) {
         String role = RoleType.CLIENT.name();
         return userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter, PageRequest.of(number, size));
-
     }
 
     public User getById(Long userId) {

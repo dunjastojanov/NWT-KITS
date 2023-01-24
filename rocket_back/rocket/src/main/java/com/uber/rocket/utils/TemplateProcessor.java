@@ -1,7 +1,6 @@
 package com.uber.rocket.utils;
 
 import com.uber.rocket.entity.notification.Notification;
-import com.uber.rocket.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -14,7 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -22,14 +22,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class TemplateProcessor {
     private final ResourceLoader resourceLoader;
     private final SpringTemplateEngine templateEngine;
-    private final NotificationRepository notificationRepository;
 
     @Autowired
-    public TemplateProcessor(ResourceLoader resourceLoader,
-                             NotificationRepository notificationRepository) {
+    public TemplateProcessor(ResourceLoader resourceLoader) {
         templateEngine = new SpringTemplateEngine();
         this.resourceLoader = resourceLoader;
-        this.notificationRepository = notificationRepository;
     }
 
     public String process(Map<String, String> variables, String templateName) {
@@ -51,7 +48,9 @@ public class TemplateProcessor {
         String[] entryStrings = variables.split(";");
         for (String entryString : entryStrings) {
             String[] entry = entryString.split(",");
-            variablesMap.put(entry[0], entry[1]);
+            if (entry.length > 1) {
+                variablesMap.put(entry[0], entry[1]);
+            }
         }
         return variablesMap;
     }
@@ -93,7 +92,7 @@ public class TemplateProcessor {
             case DRIVER_RIDE_REQUEST, PASSENGER_RIDE_REQUEST -> {
                 return "ride_request";
             }
-            case UPDATE_DRIVE_PICTURE_REQUEST -> {
+            case UPDATE_DRIVER_PICTURE_REQUEST -> {
                 return "update_driver_picture";
             }
             case UPDATE_DRIVER_DATA_REQUEST -> {

@@ -4,13 +4,10 @@ import com.uber.rocket.dto.ForgetPasswordDTO;
 import com.uber.rocket.dto.PasswordChangeDTO;
 import com.uber.rocket.dto.UpdateUserDataDTO;
 import com.uber.rocket.dto.UserRegistrationDTO;
-import com.uber.rocket.service.AuthService;
 import com.uber.rocket.service.LoginService;
 import com.uber.rocket.service.UserService;
-import com.uber.rocket.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,8 +40,7 @@ public class UserController {
     @PostMapping("/login")
     public String loginUser(HttpServletRequest request, HttpServletResponse response) {
         try {
-            String token = loginService.login(request, response);
-            return token;
+            return loginService.login(request, response);
         } catch (Exception exception) {
             throw new RuntimeException(exception.getMessage());
         }
@@ -105,7 +101,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{email}")
+    @PostMapping("/block/{email}")
     public ResponseEntity<?> blockUser(@PathVariable String email, @RequestBody String reason) {
         try {
             return ResponseEntity.ok(userService.blockUser(email, reason));
