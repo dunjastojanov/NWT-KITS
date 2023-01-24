@@ -106,9 +106,9 @@ public class RideController {
     }
 
     @GetMapping("/{size}/{page}/{email}")
-    public ResponseEntity<?> getRideHistoryForUser(HttpServletRequest request, @PathVariable int page, @PathVariable int size, @PathVariable String email) {
+    public ResponseEntity<?> getRideHistoryForUser(@PathVariable int page, @PathVariable int size, @PathVariable String email) {
         try {
-            return ResponseEntity.ok(rideService.getRideHistoryForUser(request, page, size, email));
+            return ResponseEntity.ok(rideService.getRideHistoryForUser(page, size, email));
         } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
