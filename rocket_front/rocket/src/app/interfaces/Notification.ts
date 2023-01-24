@@ -11,6 +11,6 @@ export interface Notif {
     | 'RIDE_CONFIRMED'
     | 'RIDE_SCHEDULED';
   read: boolean;
-  resourceId: string;
+  entityId: string;
   sent: string[];
 }

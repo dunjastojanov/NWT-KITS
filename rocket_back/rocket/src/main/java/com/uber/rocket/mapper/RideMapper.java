@@ -12,6 +12,7 @@ import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
+@Transactional
 public class RideMapper implements Mapper<Ride, RideDTO> {
     @Autowired
     UserService userService;
@@ -36,6 +38,7 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
     DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public RideDTO mapToDto(Ride ride) {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setRideId(ride.getId());
@@ -95,6 +98,8 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
 
         rideDTO.setEstimatedDistance(ride.getLength());
 
+        rideDTO.setIsNow(ride.isNow());
+
         List<Destination> destinations = this.destinationService.getDestinationsByRide(ride);
         for (int i = 0; i< destinations.size();i++) {
             rideDTO.addDestination(this.mapToDestinationDTO(destinations.get(i), i));
@@ -109,7 +114,8 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
         return rideDTO;
     }
 
-    private DestinationDTO mapToDestinationDTO(Destination destination, int i) {
+    @Transactional(Transactional.TxType.REQUIRED)
+    public DestinationDTO mapToDestinationDTO(Destination destination, int i) {
         DestinationDTO destinationDTO = new DestinationDTO();
         destinationDTO.setAddress(destination.getAddress());
         destinationDTO.setLatitude(destination.getLatitude());
@@ -117,7 +123,9 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
         destinationDTO.setIndex(i);
         return destinationDTO;
     }
-    private UserDTO createUserDTO(User user) {
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public UserDTO createUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(user.getEmail());
         userDTO.setId(user.getId());
@@ -127,7 +135,9 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
         userDTO.setProfilePicture(user.getProfilePicture());
         return userDTO;
     }
-    private StatusUserDTO createStatusUserDTO(User user, UserRidingStatus status) {
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public StatusUserDTO createStatusUserDTO(User user, UserRidingStatus status) {
         StatusUserDTO userDTO = new StatusUserDTO();
         userDTO.setEmail(user.getEmail());
         userDTO.setId(user.getId());
@@ -138,6 +148,8 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
         userDTO.setStatus(status);
         return userDTO;
     }
+
+    @Transactional(Transactional.TxType.REQUIRED)
     public Ride mapToEntity(RideDTO rideDTO) {
         Ride ride = new Ride();
         List<Passenger> passengers = new ArrayList<Passenger>();
@@ -180,9 +192,11 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
 
         ride.setLength(rideDTO.getEstimatedDistance());
 
+        ride.setNow(rideDTO.getIsNow());
         return ride;
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Destination> mapToDestination(List<DestinationDTO> destinationsDTO) {
         List<Destination> dests = new ArrayList<Destination>();
         for (DestinationDTO dto : destinationsDTO) {

@@ -19,6 +19,16 @@ export const NotificationsReducer = (
         ...state,
         notifications: <Notif[]>action.payload!,
       };
+    case NotificationsActionType.SET_NOTIFICATION_TRUE:
+      let notifs = [...state.notifications];
+      let updateNotif = <Notif>action.payload;
+      let finalNotifs = notifs.map((notif) =>
+        notif.id === updateNotif.id ? { ...notif, read: true } : notif
+      );
+      return {
+        ...state,
+        notifications: finalNotifs,
+      };
 
     default: {
       return state;

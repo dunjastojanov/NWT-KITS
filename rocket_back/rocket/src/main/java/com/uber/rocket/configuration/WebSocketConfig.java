@@ -34,6 +34,7 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
                 .simpDestMatchers("/app/**").authenticated()
                 .simpSubscribeDestMatchers("/user/**").authenticated()
                 .simpSubscribeDestMatchers("/user/queue/notifications").authenticated()
+                .simpSubscribeDestMatchers("/user/queue/rides").authenticated()
                 .anyMessage().denyAll();
     }
 

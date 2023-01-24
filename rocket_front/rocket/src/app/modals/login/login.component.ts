@@ -96,8 +96,8 @@ export class LoginComponent implements OnInit {
       this.vehicleService.changeStatus('ACTIVE').then(() => {});
     }
 
-    const currentRide = await this.service.getCurrentRide(user.email);
     await this.notificationService.loadNotifications();
+    const currentRide = await this.service.getCurrentRide(user.email);
     if (currentRide) {
       this.store.dispatch(
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)

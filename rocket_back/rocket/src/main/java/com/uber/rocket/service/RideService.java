@@ -3,27 +3,31 @@ package com.uber.rocket.service;
 import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.User;
+import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.mapper.FavouriteRouteMapper;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
 import com.uber.rocket.mapper.RideMapper;
 import com.uber.rocket.repository.DestinationRepository;
 import com.uber.rocket.repository.FavouriteRouteRepository;
+import com.uber.rocket.repository.PassengerRepository;
 import com.uber.rocket.repository.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,16 +51,95 @@ public class RideService {
     private FavouriteRouteRepository favouriteRouteRepository;
     @Autowired
     private FavouriteRouteMapper favouriteRouteMapper;
-
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
     @Autowired
     private DestinationRepository destinationRepository;
 
     @Autowired
+    private PassengerRepository passengerRepository;
+    @Autowired
     private NotificationService notificationService;
     @Autowired
     private RideMapper rideMapper;
+
+    @PersistenceContext
+    EntityManager entityManager;
+
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void changeRidePalDriverStatus(String rideId, ChangeStatusDTO changeStatusDTO) {
+        Optional<Ride> rideOpt = this.repository.findById(Long.parseLong(rideId));
+        User user = this.userService.getById(Long.parseLong(changeStatusDTO.getUserId()));
+        if (rideOpt.isPresent()) {
+            Ride ride = rideOpt.get();
+            if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("DRIVER")) {
+                ride = setDriverStatus(ride, changeStatusDTO);
+            }
+            if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("CLIENT")) {
+                ride = setClientStatus(ride, changeStatusDTO);
+            }
+            //setStatusIfAllConfirmed(ride);
+            System.out.println(ride);
+            ride = this.repository.save(ride);
+            this.updateStatusOverSocket(ride);
+            System.out.println(ride);
+        } else {
+            throw new RuntimeException("Ride not found");
+        }
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void updateStatusOverSocket(Ride ride) {
+        Vehicle vehicle = ride.getVehicle();
+        try{
+            if (vehicle != null) {
+                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/queue/rides", ride.getId());
+            }
+            for (Passenger passenger : ride.getPassengers()) {
+                messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/rides", ride.getId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /*private void setStatusIfAllConfirmed(Ride ride) {
+        boolean allPassengersAccepted = true;
+        if (ride.getStatus() == RideStatus.CONFIRMED || ride.getStatus() == RideStatus.SCHEDULED) {
+            for (Passenger passenger : ride.getPassengers()) {
+                if (passenger.getUserRidingStatus() != UserRidingStatus.ACCEPTED) {
+                    allPassengersAccepted = false;
+                }
+            }
+            if (allPassengersAccepted) ride.setStatus(RideStatus.CONFIRMED);
+        }
+    }*/
+    private Ride setClientStatus(Ride ride,  ChangeStatusDTO changeStatusDTO) {
+        for (Passenger passenger : ride.getPassengers()) {
+            if (Objects.equals(passenger.getUser().getId(), Long.parseLong(changeStatusDTO.getUserId()))) {
+                if (changeStatusDTO.getRidingStatus() == UserRidingStatus.DENIED) {
+                    ride.setStatus(RideStatus.DENIED);
+                    passenger.setUserRidingStatus(UserRidingStatus.DENIED);
+                } else if (changeStatusDTO.getRidingStatus() == UserRidingStatus.ACCEPTED) {
+                    passenger.setUserRidingStatus(UserRidingStatus.ACCEPTED);
+                }
+                this.passengerRepository.save(passenger);
+            }
+        }
+        return ride;
+    }
+    private Ride setDriverStatus(Ride ride,  ChangeStatusDTO changeStatusDTO) {
+        if (changeStatusDTO.getRidingStatus() == UserRidingStatus.DENIED) {
+            ride.setStatus(RideStatus.DENIED);
+        } else if (changeStatusDTO.getRidingStatus() == UserRidingStatus.ACCEPTED) {
+            if (ride.isNow()) {
+                System.out.println("Setting confirmed on " + ride.getId());
+                ride.setStatus(RideStatus.CONFIRMED);
+            } else ride.setStatus(RideStatus.SCHEDULED);
+        }
+        return ride;
+    }
     public String createRide(RideDTO rideDTO) {
         Ride ride = rideMapper.mapToEntity(rideDTO);
         List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
@@ -73,6 +156,7 @@ public class RideService {
 
     public UserDTO getRidingPal(String email) {
         User user = this.userService.getUserByEmail(email);
+        if (!user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("CLIENT")) throw new RuntimeException("User not found");
         RideDTO ride = getUserCurrentRide(user);
         if (ride != null) { return null; }
         return this.createRidingPal(user);
@@ -85,6 +169,14 @@ public class RideService {
         User user = this.userService.getUserByEmail(email);
         return this.getUserCurrentRide(user);
     }
+
+    public RideDTO getUserCurrentRideById(Long id) {
+        Optional<Ride> ride = this.repository.findById(id);
+        if (ride.isPresent())
+            return this.rideMapper.mapToDto(ride.get());
+        return null;
+    }
+
     @Transactional
     public RideDTO getUserCurrentRide(User user) {
         List<Ride> rides = repository.findByPassengers(user.getId());

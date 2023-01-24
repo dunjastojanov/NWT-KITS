@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import { encode } from '@googlemaps/polyline-codec';
+import { Store } from '@ngrx/store';
 import { AxiosResponse } from 'axios';
 import { Destination } from 'src/app/interfaces/Destination';
 import { CurrentRide, UserRidingStatus } from 'src/app/interfaces/Ride';
-import { sideUser, User } from 'src/app/interfaces/User';
+import { User } from 'src/app/interfaces/User';
 import { RideInfo } from 'src/app/page/ride-request-page/data-info/ride-info.type';
-import { Route } from 'src/app/shared/utils/map/map/route.type';
+import { StoreType } from 'src/app/shared/store/types';
 import { http } from '../../shared/api/axios-wrapper';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RideService {
-  constructor() {}
+  constructor(private store: Store<StoreType>) {}
 
   async validateRide(ride: CurrentRide) {}
 
@@ -84,6 +84,13 @@ export class RideService {
     rideId: string;
   }) {
     let result: AxiosResponse = await http.post('/api/ride/review', dto);
+    return result.data;
+  }
+
+  async getCurrentRide(id: number) {
+    let result: AxiosResponse<CurrentRide | null> = await http.get(
+      `/api/ride/currentRideId/${id}`
+    );
     return result.data;
   }
 }

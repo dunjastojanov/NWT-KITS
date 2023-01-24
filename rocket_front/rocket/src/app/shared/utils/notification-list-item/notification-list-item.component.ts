@@ -1,6 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Notif } from '../../../interfaces/Notification';
 import { NotificationService } from '../../../services/notification/notification.service';
+import {
+  NotificationsAction,
+  NotificationsActionType,
+} from '../../store/notifications-slice/notifications.actions';
+import { StoreType } from '../../store/types';
 
 @Component({
   selector: 'notification-list-item',
@@ -10,7 +16,10 @@ import { NotificationService } from '../../../services/notification/notification
 export class NotificationListItemComponent implements OnInit {
   @Input('notification') notification!: Notif;
   showModal = false;
-  constructor(private notificationService: NotificationService) {}
+  constructor(
+    private notificationService: NotificationService,
+    private store: Store<StoreType>
+  ) {}
 
   ngOnInit(): void {}
 
@@ -20,7 +29,13 @@ export class NotificationListItemComponent implements OnInit {
     if (this.showModal) {
       this.notificationService.setRead(this.notification.id).then((result) => {
         console.log(result);
-        this.notification.read = true;
+        //this.notification.read = true;
+        /*this.store.dispatch(
+          new NotificationsAction(
+            NotificationsActionType.SET_NOTIFICATION_TRUE,
+            this.notification
+          )
+        );*/
       });
     }
   }

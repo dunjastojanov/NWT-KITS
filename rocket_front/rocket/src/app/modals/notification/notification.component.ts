@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { SocketService } from 'src/app/services/sockets/sockets.service';
 import { Notif } from '../../interfaces/Notification';
+import { UserRidingStatus } from 'src/app/interfaces/Ride';
 
 @Component({
   selector: 'notification',
@@ -11,7 +13,7 @@ export class NotificationComponent implements OnInit {
   @Input('closeFunc') closeFunc!: () => void;
   @Input('notification') notification!: Notif;
 
-  constructor() {}
+  constructor(private socketService: SocketService) {}
 
   ngOnInit(): void {}
 
@@ -33,9 +35,18 @@ export class NotificationComponent implements OnInit {
 
   onAccept() {
     if (this.notification.type === 'DRIVER_RIDE_REQUEST') {
-      //this.notification ima ride id koji se zove resourceId i koji user je prihvation/odbio i zove se userId
+      this.socketService.sendResponseOnRideRequest(
+        this.notification.entityId,
+        this.notification.userId,
+        UserRidingStatus.ACCEPTED
+      );
     }
     if (this.notification.type === 'PASSENGER_RIDE_REQUEST') {
+      this.socketService.sendResponseOnRideRequest(
+        this.notification.entityId,
+        this.notification.userId,
+        UserRidingStatus.ACCEPTED
+      );
     }
     if (this.notification.type === 'UPDATE_DRIVER_REQUEST') {
     }
@@ -43,8 +54,18 @@ export class NotificationComponent implements OnInit {
 
   onDeny() {
     if (this.notification.type === 'DRIVER_RIDE_REQUEST') {
+      this.socketService.sendResponseOnRideRequest(
+        this.notification.entityId,
+        this.notification.userId,
+        UserRidingStatus.DENIED
+      );
     }
     if (this.notification.type === 'PASSENGER_RIDE_REQUEST') {
+      this.socketService.sendResponseOnRideRequest(
+        this.notification.entityId,
+        this.notification.userId,
+        UserRidingStatus.DENIED
+      );
     }
     if (this.notification.type === 'UPDATE_DRIVER_REQUEST') {
     }

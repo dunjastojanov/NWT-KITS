@@ -1,9 +1,6 @@
 package com.uber.rocket.controller;
 
-import com.uber.rocket.dto.DatePeriod;
-import com.uber.rocket.dto.NewReviewDTO;
-import com.uber.rocket.dto.RideDTO;
-import com.uber.rocket.dto.UserDTO;
+import com.uber.rocket.dto.*;
 import com.uber.rocket.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +35,15 @@ public class RideController {
         RideDTO rideDTO = this.rideService.getUserCurrentRideByEmail(email);
         return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
     }
+
+    @GetMapping(path = "/currentRideId/{id}")
+    public ResponseEntity<?> getUsersCurrentRide(@PathVariable("id") Long id) {
+        System.out.println(id);
+        RideDTO rideDTO = this.rideService.getUserCurrentRideById(id);
+        System.out.println(rideDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
+    }
+
     @GetMapping(path = "/pal/{email}")
     public ResponseEntity<?> getRidingPal(@PathVariable("email") String email) {
         try {
@@ -48,6 +54,10 @@ public class RideController {
         } catch (RuntimeException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+    @PostMapping(path = "/status/{rideId}")
+    public void changeRidePalDriverStatus(@PathVariable("rideId") String rideId, @RequestBody ChangeStatusDTO changeStatusDTO) {
+        rideService.changeRidePalDriverStatus(rideId, changeStatusDTO);
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getRideDetails(@PathVariable Long id) {

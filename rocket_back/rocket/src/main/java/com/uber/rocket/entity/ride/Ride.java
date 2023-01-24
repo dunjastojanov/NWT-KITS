@@ -42,6 +42,7 @@ public class Ride {
     @NotNull
     private String routeLocation;
 
+    private boolean now;
     private LocalDateTime startTime;
     @Nullable
     private LocalDateTime endTime;
