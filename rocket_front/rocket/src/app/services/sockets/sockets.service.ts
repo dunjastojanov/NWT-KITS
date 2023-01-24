@@ -65,10 +65,7 @@ export class SocketService {
         userId: userId,
         ridingStatus: status,
       })
-      .subscribe((data: any) => {
-        console.log('status');
-        console.log(data);
-      });
+      .subscribe((data: any) => {});
   }
 
   openSocket() {
@@ -103,15 +100,13 @@ export class SocketService {
   }
 
   async handleResultRide(message: any) {
-    console.log(message);
     const id: number = JSON.parse(message.body);
-    console.log(id);
     const currentRide = await this.rideService.getCurrentRide(id);
-    console.log(currentRide);
     if (currentRide) {
       this.store.dispatch(
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)
       );
     }
+    await this.rideService.onRideStatusChanged();
   }
 }

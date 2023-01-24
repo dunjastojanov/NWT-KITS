@@ -1,10 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AxiosResponse } from 'axios';
+import { ToastrService } from 'ngx-toastr';
 import { Destination } from 'src/app/interfaces/Destination';
-import { CurrentRide, UserRidingStatus } from 'src/app/interfaces/Ride';
+import {
+  CurrentRide,
+  RideStatus,
+  UserRidingStatus,
+} from 'src/app/interfaces/Ride';
 import { User } from 'src/app/interfaces/User';
 import { RideInfo } from 'src/app/page/ride-request-page/data-info/ride-info.type';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import { StoreType } from 'src/app/shared/store/types';
 import { http } from '../../shared/api/axios-wrapper';
 
@@ -12,7 +21,12 @@ import { http } from '../../shared/api/axios-wrapper';
   providedIn: 'root',
 })
 export class RideService {
-  constructor(private store: Store<StoreType>) {}
+  currentRide: CurrentRide | null = null;
+  constructor(private store: Store<StoreType>, private toastr: ToastrService) {
+    this.store.select('currentRide').subscribe((data) => {
+      this.currentRide = data.currentRide;
+    });
+  }
 
   async validateRide(ride: CurrentRide) {}
 
@@ -92,5 +106,48 @@ export class RideService {
       `/api/ride/currentRideId/${id}`
     );
     return result.data;
+  }
+
+  async onRideStatusChanged() {
+    if (!this.currentRide) return;
+    if (this.currentRide.rideStatus === RideStatus.DENIED) {
+      //ovo ne ide driveru
+      this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
+      this.toastr.error('Ride is denied. You can try to book ride again.');
+    }
+    if (this.currentRide.rideStatus === RideStatus.CONFIRMED) {
+      //pokreni simulaciju
+      //skini novac
+    }
+    if (
+      this.currentRide.ridingPals &&
+      this.currentRide.rideStatus === RideStatus.REQUESTED
+    ) {
+      if (
+        this.currentRide.ridingPals.length ===
+        this.currentRide.ridingPals.filter(
+          (pal) => pal.status! === UserRidingStatus.ACCEPTED
+        ).length
+      ) {
+        this.toastr.success('Looking for driver, please wait');
+        await this.lookForDriver();
+      }
+    }
+    if (this.currentRide.rideStatus === RideStatus.STARTED) {
+      // sacuvaj u bazu da je ride started i promeni start time
+    }
+    if (this.currentRide.rideStatus === RideStatus.ENDED) {
+      // sacuvaj u bazu da je ride ended i promeni end time i current ride = null
+    }
+  }
+
+  async lookForDriver() {
+    if (this.currentRide) {
+      const result = await http.get(
+        `/api/ride/currentRideId/${this.currentRide.rideId}`
+      );
+      console.log('Look for driver');
+      console.log(result);
+    }
   }
 }

@@ -63,9 +63,6 @@ public class RideService {
     @Autowired
     private RideMapper rideMapper;
 
-    @PersistenceContext
-    EntityManager entityManager;
-
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Transactional(Transactional.TxType.REQUIRED)

@@ -88,7 +88,7 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
         String formattedDateTime = offsetDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         rideDTO.setTime(formattedDateTime);
 
-        ride.setStatus(RideStatus.REQUESTED);
+        rideDTO.setRideStatus(ride.getStatus());
 
         rideDTO.setIsSplitFair(ride.getSplitFare());
 
@@ -182,7 +182,7 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
 
         ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), formatter));
 
-        ride.setStatus(RideStatus.REQUESTED);
+        ride.setStatus(rideDTO.getRideStatus());
 
         ride.setSplitFare(rideDTO.getIsSplitFair());
 
