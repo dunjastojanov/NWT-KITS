@@ -14,6 +14,7 @@ import com.uber.rocket.repository.NotificationRepository;
 import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.utils.TemplateProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,17 @@ public class NotificationService {
     @Autowired
     DestinationService destinationService;
 
+<<<<<<< HEAD
+=======
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    public List<NotificationDTO> getNotificationsForUser(HttpServletRequest request) {
+        User user = userService.getUserFromRequest(request);
+        return getNotificationsForUser(user);
+    }
+
+>>>>>>> develop
     public List<NotificationDTO> getNotificationsForUser(User user) {
         if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("ADMINISTRATOR"))) {
             return notificationRepository.findAllByUser(null).stream().map(notificationMapper::mapToDto).toList();
@@ -54,7 +66,10 @@ public class NotificationService {
     private Notification save(Notification notification) {
         notification.setRead(false);
         notification.setSent(LocalDateTime.now());
-        return notificationRepository.save(notification);
+        notification = notificationRepository.save(notification);
+        System.out.println(notification.getUser().getEmail());
+        //messagingTemplate.convertAndSendToUser(notification.getUser().getEmail(), "/queue/notifications", notification.getType());
+        return notification;
     }
 
     public void addUpdateDriverPictureRequestNotification(UpdateDriverPictureRequest request) {
@@ -236,9 +251,9 @@ public class NotificationService {
     private static Map<String, String> getRideVariables(Ride ride, String startAddress, String endAddress) {
         Map<String, String> variables = new HashMap<>();
         variables.put("numberOfPassengers", String.valueOf(ride.getPassengers().size()));
-        variables.put("path", getProfilePicture(ride.getDriver()));
-        variables.put("driver", ride.getDriver().getFullName());
-        variables.put("email", ride.getDriver().getEmail());
+        //variables.put("path", getProfilePicture(ride.getDriver()));
+        //variables.put("driver", ride.getDriver().getFullName());
+        //variables.put("email", ride.getDriver().getEmail());
         variables.put("price", String.valueOf(ride.getPrice()));
         variables.put("time", String.valueOf(ride.getPrice()));
         variables.put("start", startAddress);

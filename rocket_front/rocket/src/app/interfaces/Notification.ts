@@ -1,4 +1,4 @@
-export interface Notification {
+export interface Notif {
   title: string;
   id: string;
   html: string;

@@ -103,6 +103,7 @@ import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedd
 import { SortPipe } from './shared/utils/history-table/sort.pipe';
 import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confirm-ride.component";
 import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
+import { NotificationsReducer } from './shared/store/notifications-slice/notifications.reducer';
 import { LobyComponent } from './page/ride-request-page/loby/loby.component';
 import { StatusToggleComponent } from './navbar/status-toggle/status-toggle.component';
 import { ChangePasswordComponent } from './modals/change-password/change-password.component';
@@ -216,6 +217,7 @@ import { ChangePasswordComponent } from './modals/change-password/change-passwor
         destinations: destinationsReducer,
         rideInfo: RideInfoReducer,
         currentRide: CurrentRideReducer,
+        notifications: NotificationsReducer,
       },
       { metaReducers }
     ),
