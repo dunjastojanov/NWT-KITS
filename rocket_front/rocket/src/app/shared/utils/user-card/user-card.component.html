@@ -1,7 +1,7 @@
 <div class="user-card">
 
   <div class="user-image-container"
-       [ngClass]="{'active': user.status==='active', 'inactive': user.status==='inactive'}">
+       [ngClass]="{'active': user.status==='ACTIVE', 'inactive': user.status==='INACTIVE'}">
     <img class="user-image" src="{{user.profilePicture ? user.profilePicture : 'assets/profile-placeholder.png'}}"
          alt="">
   </div>

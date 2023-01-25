@@ -1,16 +1,19 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'current-ride-buttons',
   templateUrl: './current-ride-buttons.component.html',
-  styleUrls: ['./current-ride-buttons.component.css']
+  styleUrls: ['./current-ride-buttons.component.css'],
 })
 export class CurrentRideButtonsComponent implements OnInit {
-  @Input('user') user!: boolean
-  @Input('isFavorite') isFavorite: boolean
-  @Input('driverName') driverName?: string;
+  @Input('role') role!: string;
+  @Input('isFavorite') isFavorite: boolean;
+  @Input('driverName') driverName!: string | null;
+  @Input('rideId') rideId!: number | undefined;
 
   openReportModal = false;
+
+  openCancelModal = false;
 
   patchingRide = false;
   dissablePatch = false;
@@ -19,11 +22,14 @@ export class CurrentRideButtonsComponent implements OnInit {
     this.isFavorite = false;
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   toggleReportModal() {
     this.openReportModal = !this.openReportModal;
+  }
+
+  toggleCancelModal() {
+    this.openCancelModal =!this.openCancelModal;
   }
 
   togglePatchingRide() {

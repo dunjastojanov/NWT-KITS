@@ -33,6 +33,14 @@ public class UpdateDriverDataRequest {
     private String city;
 
     @NotNull
+    private boolean kidFriendly;
+
+    @NotNull
+    private boolean petFriendly;
+
+    @NotNull
+    private VehicleType type;
+    @NotNull
     private boolean validated;
 
 }

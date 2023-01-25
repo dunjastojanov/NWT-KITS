@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import * as L from 'leaflet';
 import { Destination } from 'src/app/interfaces/Destination';
-import { Route } from '../map/route.type';
+import { decode } from '@googlemaps/polyline-codec';
 
 @Component({
   selector: 'show-on-map',
@@ -11,8 +11,10 @@ import { Route } from '../map/route.type';
 export class ShowOnMapComponent implements AfterViewInit {
   @Input('dimensions') dimensions!: string;
   @Input('destinations') destinations!: Destination[];
-  @Input('route') route!: Route | null;
+  @Input('route') route!: string | null;
+  @Input('id') id!: string;
   private mapShow: any;
+  bounds: L.LatLngBounds | null = null;
   constructor() {}
 
   ngAfterViewInit(): void {
@@ -21,7 +23,7 @@ export class ShowOnMapComponent implements AfterViewInit {
   }
 
   private initMap(): void {
-    this.mapShow = L.map('mapShow', {
+    this.mapShow = L.map(this.id, {
       center: [45.2671, 19.8335],
       zoom: 8,
     });
@@ -44,12 +46,18 @@ export class ShowOnMapComponent implements AfterViewInit {
     }
   }
   private drawPolyline() {
-    const mainRoutePolyline = L.polyline(this.route!.geometry.coordinates, {
-      color: '#E1A901',
-      weight: 4,
-    });
-    this.mapShow.fitBounds(mainRoutePolyline.getBounds());
-    mainRoutePolyline.addTo(this.mapShow);
+    const routes = this.route!.split(' ').slice(0, -1);
+    for (let i = 0; i < routes.length; i++) {
+      const coordinates = decode(routes[i]);
+      const mainRoutePolyline = L.polyline(coordinates, {
+        color: '#E1A901',
+        weight: 4,
+      });
+      if (i === 0) this.bounds = mainRoutePolyline.getBounds();
+      else this.bounds!.extend(mainRoutePolyline.getBounds());
+      mainRoutePolyline.addTo(this.mapShow);
+    }
+    this.mapShow.fitBounds(this.bounds);
   }
 
   private drawMarkers() {

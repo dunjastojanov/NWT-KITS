@@ -1,14 +1,13 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
-import com.uber.rocket.entity.ride.FavouriteRoute;
-import com.uber.rocket.entity.ride.Review;
-import com.uber.rocket.entity.ride.Ride;
+import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.User;
+import com.uber.rocket.mapper.FavouriteRouteMapper;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
-import com.uber.rocket.repository.FavouriteRouteRepository;
-import com.uber.rocket.repository.RideRepository;
+import com.uber.rocket.mapper.RideMapper;
+import com.uber.rocket.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RideService {
 
     @Autowired
@@ -35,6 +36,11 @@ public class RideService {
     private UserService userService;
     @Autowired
     private RideRepository repository;
+
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private RideCancellationRepository rideCancellationRepository;
     @Autowired
     private ReviewService reviewService;
     @Autowired
@@ -42,13 +48,54 @@ public class RideService {
 
     @Autowired
     private FavouriteRouteRepository favouriteRouteRepository;
+    @Autowired
+    private FavouriteRouteMapper favouriteRouteMapper;
 
+    @Autowired
+    private DestinationRepository destinationRepository;
+
+    @Autowired
+    private RideMapper rideMapper;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    public String createRide(RideDTO rideDTO) {
+        Ride ride = rideMapper.mapToEntity(rideDTO);
+        List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
+        ride = this.repository.save(ride);
+        for (Destination destination : destinations) {
+            destination.setRide(ride);
+            this.destinationRepository.save(destination);
+        }
+        for (int i = 1; i < ride.getPassengers().size(); i++) {
+            this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
+        }
+        return "Ride successfully created.";
+    }
 
+    public UserDTO getRidingPal(String email) {
+        User user = this.userService.getUserByEmail(email);
+        RideDTO ride = getUserCurrentRide(user);
+        if (ride != null) { return null; }
+        return this.createRidingPal(user);
+    }
+    private UserDTO createRidingPal(User user) {
+        return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getProfilePicture(), user.getRoles().iterator().next().getRole());
+    }
+
+    public RideDTO getUserCurrentRideByEmail(String email) {
+        User user = this.userService.getUserByEmail(email);
+        return this.getUserCurrentRide(user);
+    }
+    @Transactional
+    public RideDTO getUserCurrentRide(User user) {
+        List<Ride> rides = repository.findByPassengers(user.getId());
+        if (rides.size() > 0)
+            return this.rideMapper.mapToDto(rides.get(0));
+        return null;
+    }
     public List<FavouriteRouteDTO> getFavouriteRoutesForUser(HttpServletRequest request) {
         List<FavouriteRoute> favouriteRoutes = favouriteRouteRepository.findAllByUser(userService.getUserByEmail(userService.getLoggedUser(request).getEmail()));
-        return favouriteRoutes.stream().map(FavouriteRouteDTO::new).collect(Collectors.toList());
+        return favouriteRoutes.stream().map(route -> favouriteRouteMapper.mapToDto(route)).collect(Collectors.toList());
     }
 
     public FavouriteRouteDTO addFavouriteRoute(HttpServletRequest request, Long rideId) {
@@ -57,7 +104,7 @@ public class RideService {
         favouriteRoute.setRide(getRide(rideId));
         favouriteRoute.setUser(userService.getUserByEmail(user.getEmail()));
         favouriteRoute = favouriteRouteRepository.save(favouriteRoute);
-        return new FavouriteRouteDTO(favouriteRoute);
+        return favouriteRouteMapper.mapToDto(favouriteRoute);
     }
 
     public void deleteFavouriteRoute(Long favouriteRouteId) {
@@ -74,22 +121,16 @@ public class RideService {
         }
     }
 
-    public Page<RideHistoryDTO> getRideHistoryForUser(HttpServletRequest request, int page, int size) {
+    public Page<RideHistory> getRideHistoryForUser(HttpServletRequest request, int page, int size) {
         User user = userService.getUserFromRequest(request);
-        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("CLIENT"))) {
-            return getRideHistory(repository.findByPassengers(PageRequest.of(page, size, Sort.by("startTime")), user));
-        }
-        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("DRIVER"))) {
-            return getRideHistory(repository.findByVehicleDriver(PageRequest.of(page, size, Sort.by("startTime")), vehicleService.getVehicleByDriver(user)));
-        }
-        return null;
+        return getRideHistory(page, size, user);
     }
 
-    public Page<RideHistoryDTO> getAllRideHistory(int page, int size) {
-        return getRideHistory(repository.findAll(PageRequest.of(page, size, Sort.by("startTime"))));
+    public Page<RideHistory> getAllRideHistory(int page, int size) {
+        return getRideHistory(repository.findAllByStatus(PageRequest.of(page, size, Sort.by("startTime")), RideStatus.ENDED));
     }
 
-    private Page<RideHistoryDTO> getRideHistory(Page<Ride> rides) {
+    private Page<RideHistory> getRideHistory(Page<Ride> rides) {
         return rides.map(ride -> rideHistoryMapper.mapToDto(ride));
     }
 
@@ -195,7 +236,34 @@ public class RideService {
         } else throw new RuntimeException("Ride doesn't exist");
     }
 
-    public Review addReview(HttpServletRequest request, NewReviewDTO dto) {
+    public Review addReview(HttpServletRequest request, NewReviewDTO dto) throws RuntimeException{
         return reviewService.addReview(request, dto, getRide(dto.getRideId()));
+    }
+
+    public Object getRideHistoryForUser(int page, int size, String email) {
+        User user = userService.getUserByEmail(email);
+        return getRideHistory(page, size, user);
+    }
+
+    private Page<RideHistory> getRideHistory(int page, int size, User user) {
+        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("CLIENT"))) {
+            return getRideHistory(repository.findByPassengers(PageRequest.of(page, size, Sort.by("startTime")), user));
+        }
+        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("DRIVER"))) {
+            return getRideHistory(repository.findByVehicleDriver(PageRequest.of(page, size, Sort.by("startTime")), vehicleService.getVehicleByDriver(user)));
+        }
+        return null;
+    }
+
+    public void cancelRide(Long id, String reason) {
+        Ride ride = getRide(id);
+        RideCancellation rideCancellation = new RideCancellation();
+        rideCancellation.setDriver(ride.getDriver());
+        rideCancellation.setRide(ride);
+        rideCancellation.setDescription(reason);
+        ride.setStatus(RideStatus.DENIED);
+        repository.save(ride);
+        notificationService.addRideCanceledNotifications(rideCancellation);
+        rideCancellationRepository.save(rideCancellation);
     }
 }

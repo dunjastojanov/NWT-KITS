@@ -29,7 +29,6 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      console.log(params)
       this.payPalListener(params);
       const forgottenPasswordToken = params['token'];
       if (forgottenPasswordToken) {
@@ -66,5 +65,4 @@ export class HomepageComponent implements OnInit {
   togglePasswordModal = () => {
     this.openNewPasswordModal = !this.openNewPasswordModal;
   }
-
 }

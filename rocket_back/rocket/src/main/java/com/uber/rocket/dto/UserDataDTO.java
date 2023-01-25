@@ -11,6 +11,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDataDTO {
+    private Long id;
     private String email;
     private String profilePicture;
     private String firstName;
@@ -18,8 +19,10 @@ public class UserDataDTO {
     private String phoneNumber;
     private String city;
     private ArrayList<String> roles;
+    private String status = "";
 
     public UserDataDTO(User user) {
+        this.id = user.getId();
         this.email = user.getEmail();
         this.profilePicture = user.getProfilePicture();
         this.firstName = user.getFirstName();

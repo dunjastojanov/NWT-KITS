@@ -1,12 +1,26 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FacebookLoginProvider, SocialAuthService, SocialUser,} from '@abacritt/angularx-social-login';
-import {Store} from '@ngrx/store';
-import {StoreType} from 'src/app/shared/store/types';
-import {LoggedUserAction, LoggedUserActionType,} from 'src/app/shared/store/logged-user-slice/logged-user.actions';
-import {User} from 'src/app/interfaces/User';
-import {UserService} from '../../services/user/user.service';
-import {multiSelectProp} from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
-import {ToastrService} from "ngx-toastr";
+import { Component, Input, OnInit } from '@angular/core';
+import {
+  FacebookLoginProvider,
+  SocialAuthService,
+  SocialUser,
+} from '@abacritt/angularx-social-login';
+import { Store } from '@ngrx/store';
+import { StoreType } from 'src/app/shared/store/types';
+import {
+  LoggedUserAction,
+  LoggedUserActionType,
+} from 'src/app/shared/store/logged-user-slice/logged-user.actions';
+import { User } from 'src/app/interfaces/User';
+import { UserService } from '../../services/user/user.service';
+import { NotificationService } from '../../services/notification/notification.service';
+import { multiSelectProp } from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import { ToastrService } from 'ngx-toastr';
+import { SocketService } from 'src/app/services/sockets/sockets.service';
+import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
 
 @Component({
   selector: 'login',
@@ -31,25 +45,35 @@ export class LoginComponent implements OnInit {
     private service: UserService,
     private socialAuthService: SocialAuthService,
     private store: Store<StoreType>,
+    private socketService: SocketService,
+    private notificationService: NotificationService,
     private toastr: ToastrService,
+    private vehicleService: VehicleService
   ) {
     this.email = '';
     this.password = '';
   }
 
   ngOnInit() {
-    this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
-      let user: User = {
-        city: "", phoneNumber: "",
-        id: socialUser.id,
-        email: socialUser.email,
-        firstName: socialUser.firstName,
-        lastName: socialUser.lastName,
-        roles: ['client'],
-        profilePicture: socialUser.photoUrl
-      };
-      this.login(user);
-    });
+    this.socialAuthService.authState.subscribe(
+      async (socialUser: SocialUser) => {
+        let user: User = {
+          city: '',
+          phoneNumber: '',
+          id: socialUser.id,
+          email: socialUser.email,
+          firstName: socialUser.firstName,
+          lastName: socialUser.lastName,
+          roles: ['CLIENT'],
+          profilePicture: socialUser.photoUrl,
+        };
+        await this.login(user);
+      }
+    );
+  }
+
+  hasRole(user: User | null, role: string): boolean {
+    return user !== null && user?.roles.indexOf(role) !== -1;
   }
 
   toggleForgotPasswordModal = () => {
@@ -64,15 +88,28 @@ export class LoginComponent implements OnInit {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }
 
-  login(user: User) {
-    this.toastr.success("Login successful!");
+  async login(user: User) {
+    this.toastr.success('Login successful!');
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
+
+    if (this.hasRole(user, 'DRIVER')) {
+      this.vehicleService.changeStatus('ACTIVE').then(() => {});
+    }
+
+    const currentRide = await this.service.getCurrentRide(user.email);
+    await this.notificationService.loadNotifications();
+    if (currentRide) {
+      this.store.dispatch(
+        new CurrentRideAction(CurrentRideActionType.SET, currentRide)
+      );
+    }
+    this.socketService.initializeWebSocketConnection();
     this.closeFunc();
   }
 
-  loginWithOneRole(role: string) {
+  async loginWithOneRole(role: string) {
     this.user!.roles = [role];
-    this.login(this.user!);
+    await this.login(this.user!);
     this.toggleChooseRoleModal();
   }
 
@@ -84,19 +121,19 @@ export class LoginComponent implements OnInit {
       if (success) {
         this.user = await this.service.getUser();
         if (this.user && this.user.roles.length === 1) {
-          this.login(this.user);
+          await this.login(this.user);
         } else if (this.user && this.user.roles.length > 1) {
           this.chooseRoleForLogin();
         } else {
-          this.toastr.error("Invalid email or password.")
+          this.toastr.error('Invalid email or password.');
           //token nije upisan
         }
       } else {
-        this.toastr.error("Invalid email or password.")
+        this.toastr.error('Invalid email or password.');
         //ne postoji user sa unetim kredencijalima
       }
     } else {
-      this.toastr.error("Invalid email or password.")
+      this.toastr.error('Invalid email or password.');
       //email ili sifra nisu u dobrom formatu upisani
     }
   }

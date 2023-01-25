@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, Input} from '@angular/core';
-import {Store} from '@ngrx/store';
+import { AfterViewInit, Component, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
 import axios from 'axios';
 import * as L from 'leaflet';
 import * as lrm from 'leaflet-routing-machine';
-import {RouteService} from 'src/app/components/routes/route.service';
-import {Destination} from 'src/app/interfaces/Destination';
+import { RouteService } from 'src/app/components/routes/route.service';
+import { Destination } from 'src/app/interfaces/Destination';
 import {
   DestinationsAction,
   DestinationsActionType,
@@ -12,6 +12,7 @@ import {
 import { StoreType } from 'src/app/shared/store/types';
 import { Route, url } from './route.type';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-map',
@@ -57,7 +58,11 @@ export class MapComponent implements AfterViewInit {
 
   subscription: Subscription;
 
-  constructor(private service: RouteService, private store: Store<StoreType>) {
+  constructor(
+    private service: RouteService,
+    private store: Store<StoreType>,
+    private toastr: ToastrService
+  ) {
     this.subscription = this.store
       .select('destinations')
       .subscribe((resData) => {
@@ -99,7 +104,6 @@ export class MapComponent implements AfterViewInit {
 
   async createRoutes() {
     if (this.error) {
-      this.toggleErrorToast();
       return;
     }
     for (let i = 0; i < this.destinations.length - 1; i++) {
@@ -110,35 +114,43 @@ export class MapComponent implements AfterViewInit {
   }
 
   async osrm(start: Destination, end: Destination) {
-    await axios.get(url(start, end)).then((response) => {
-      const routes = response.data['routes'];
+    await axios
+      .get(url(start, end))
+      .then((response) => {
+        const routes = response.data['routes'];
 
-      const mainRoute: Route = routes[0];
-      mainRoute.selected = true;
-      mainRoute.geometry.coordinates = <[number, number][]>(
-        this.getCoordinates(mainRoute)
-      );
-      const alternativeRoute: Route = routes[1];
-      if (alternativeRoute) {
-        alternativeRoute.selected = false;
-        alternativeRoute.geometry.coordinates = <[number, number][]>(
-          this.getCoordinates(alternativeRoute)
+        const mainRoute: Route = routes[0];
+        mainRoute.selected = true;
+        mainRoute.geometry.coordinates = <[number, number][]>(
+          this.getCoordinates(mainRoute)
         );
-      }
+        const alternativeRoute: Route = routes[1];
+        if (alternativeRoute) {
+          alternativeRoute.selected = false;
+          alternativeRoute.geometry.coordinates = <[number, number][]>(
+            this.getCoordinates(alternativeRoute)
+          );
+        }
 
-      if (alternativeRoute) {
-        this.store.dispatch(
-          new DestinationsAction(DestinationsActionType.ADD_ROUTE, [
-            mainRoute,
-            alternativeRoute,
-          ])
-        );
-      } else {
-        this.store.dispatch(
-          new DestinationsAction(DestinationsActionType.ADD_ROUTE, [mainRoute])
-        );
-      }
-    });
+        if (alternativeRoute) {
+          this.store.dispatch(
+            new DestinationsAction(DestinationsActionType.ADD_ROUTE, [
+              mainRoute,
+              alternativeRoute,
+            ])
+          );
+        } else {
+          this.store.dispatch(
+            new DestinationsAction(DestinationsActionType.ADD_ROUTE, [
+              mainRoute,
+            ])
+          );
+        }
+      })
+      .catch((err) => {
+        //this.toastr.error('An error has occured, please try again.');
+        this.error = true;
+      });
   }
 
   drawPolylines() {
@@ -252,10 +264,11 @@ export class MapComponent implements AfterViewInit {
     const queryStr = new URLSearchParams(params).toString();
     let result = await axios.get(
       'https://nominatim.openstreetmap.org/search?' + queryStr,
-      {headers: {'Access-Control-Allow-Origin': '*'}}
+      { headers: { 'Access-Control-Allow-Origin': '*' } }
     );
     if (result.data.length === 0) {
       this.error = true;
+      this.toastr.error('Invalid input, please try again.');
     } else {
       longitude = result.data[0].lon;
       latitude = result.data[0].lat;

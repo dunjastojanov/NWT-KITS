@@ -6,11 +6,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RideHistoryDTO {
+public class RideHistory {
     private String driver;
-    private int price;
-    private int duration;
+    private double price;
+    private double duration;
     private String start;
     private String end;
+
+    private String date;
     private Long id;
 }

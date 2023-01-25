@@ -39,7 +39,7 @@ import { ProfileHistoryComponent } from './page/profile-page/profile-history/pro
 import { ProfileBannerComponent } from './page/profile-page/profile-banner/profile-banner.component';
 import { InfoComponent } from './shared/utils/label/info/info.component';
 import { MediumTitleComponent } from './shared/utils/label/medium-title/medium-title.component';
-import { LineChartComponent } from './shared/line-chart/line-chart.component';
+import { LineChartComponent } from './shared/utils/line-chart/line-chart.component';
 import { LoginComponent } from './modals/login/login.component';
 import { RegisterComponent } from './modals/register/register.component';
 import { ForgotPasswordComponent } from './modals/forgot-password/forgot-password.component';
@@ -90,11 +90,9 @@ import { RideRequestPageComponent } from './page/ride-request-page/ride-request-
 import { RouteComponent } from './page/ride-request-page/route/route.component';
 import { RequestNavbarComponent } from './page/ride-request-page/request-navbar/request-navbar.component';
 import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
-import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 import { RideInfoReducer } from './shared/store/ride-info-slice/ride-info.reducer';
 import { ShowOnMapComponent } from './shared/utils/map/show-on-map/show-on-map.component';
 import { SocketService } from './services/sockets/sockets.service';
-
 import { PaypalComponent } from './modals/paypal/paypal.component';
 import { ViewMoreButtonComponent } from './shared/utils/history-table/view-more-button/view-more-button.component';
 import { StarComponent } from './modals/detailed-route/large-star/star.component';
@@ -106,12 +104,23 @@ import { AdminChatPageComponent } from './page/admin-chat-page/admin-chat-page.c
 import { UserChatModalComponent } from './modals/user-chat-modal/user-chat-modal.component';
 import { NewPasswordComponent } from './modals/new-password/new-password.component';
 import { RegistrationVerificationComponent } from './page/registration-verification/registration-verification.component';
+import { SortPipe } from './shared/utils/history-table/sort.pipe';
+import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confirm-ride.component";
+import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
+import { NotificationsReducer } from './shared/store/notifications-slice/notifications.reducer';
+import { LobyComponent } from './page/ride-request-page/loby/loby.component';
+import { StatusToggleComponent } from './navbar/status-toggle/status-toggle.component';
+import { ChangePasswordComponent } from './modals/change-password/change-password.component';
+import { BlockUserComponent } from './modals/block-user/block-user.component';
+import { CancelRideComponent } from './modals/cancel-ride/cancel-ride.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     HomepageComponent,
     PrimaryButtonComponent,
+    ConfirmRideComponent,
     BannerComponent,
     CalculateInfoComponent,
     TitleComponent,
@@ -186,9 +195,14 @@ import { RegistrationVerificationComponent } from './page/registration-verificat
     NotificationComponent,
     NotificationListItemComponent,
     DataInfoComponent,
-    ConfirmRideComponent,
     ShowOnMapComponent,
     EmbeddedHtmlComponent,
+    LobyComponent,
+    SortPipe,
+    StatusToggleComponent,
+    ChangePasswordComponent,
+    BlockUserComponent,
+    CancelRideComponent,
     AdminChatPageComponent,
     UserChatModalComponent,
     NewPasswordComponent,
@@ -214,6 +228,8 @@ import { RegistrationVerificationComponent } from './page/registration-verificat
         loggedUser: loggedUserReducer,
         destinations: destinationsReducer,
         rideInfo: RideInfoReducer,
+        currentRide: CurrentRideReducer,
+        notifications: NotificationsReducer,
       },
       { metaReducers }
     ),

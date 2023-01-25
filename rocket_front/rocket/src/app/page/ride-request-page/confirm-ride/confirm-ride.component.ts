@@ -2,10 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { RouteService } from 'src/app/components/routes/route.service';
 import { Destination } from 'src/app/interfaces/Destination';
+import { RidingPal, User } from 'src/app/interfaces/User';
 import { VehiclePrices } from 'src/app/interfaces/VehiclesPrices';
+import { RideService } from 'src/app/services/ride/ride.service';
 import { StoreType } from 'src/app/shared/store/types';
 import { Route } from 'src/app/shared/utils/map/map/route.type';
 import { RideInfo } from '../data-info/ride-info.type';
+import { ToastrService } from 'ngx-toastr';
+import { encode } from '@googlemaps/polyline-codec';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import { CurrentRide } from 'src/app/interfaces/Ride';
+import { Router } from '@angular/router';
+import { SocketService } from 'src/app/services/sockets/sockets.service';
 
 @Component({
   selector: 'app-confirm-ride',
@@ -19,8 +30,17 @@ export class ConfirmRideComponent implements OnInit {
   estimated_distance: number = 0;
   estimated_time: number = 0;
   routes: Route[] = [];
-  selectedRoute: Route | null = null;
-  constructor(private store: Store<StoreType>, private service: RouteService) {
+  selectedRoute: string = '';
+  user: User | null = null;
+  currentRide: CurrentRide | null = null;
+  constructor(
+    private store: Store<StoreType>,
+    private service: RouteService,
+    private rideService: RideService,
+    private toastr: ToastrService,
+    private router: Router,
+    private socketService: SocketService
+  ) {
     this.store.select('destinations').subscribe((resData) => {
       this.destinations = resData.destinations;
       this.estimated_price = resData.estimated_price;
@@ -32,10 +52,18 @@ export class ConfirmRideComponent implements OnInit {
         if (one && one.selected) return one;
         return two!;
       });
-      this.selectedRoute = this.routes[0];
+      for (const route of this.routes) {
+        this.selectedRoute += encode(route.geometry.coordinates) + ' ';
+      }
     });
     this.store.select('rideInfo').subscribe((resData) => {
       this.rideInfo = resData.ride;
+    });
+    this.store.select('loggedUser').subscribe((resData) => {
+      this.user = resData.user;
+    });
+    this.store.select('currentRide').subscribe((resData) => {
+      this.currentRide = resData.currentRide;
     });
   }
 
@@ -72,5 +100,47 @@ export class ConfirmRideComponent implements OnInit {
     if (this.rideInfo.vehicle)
       return `${VehiclePrices[this.rideInfo.vehicle] + priceFixed} rsd.`;
     return `${priceFixed} rsd`;
+  }
+  async onConfirm() {
+    if (this.valid()) {
+      const currentRide = this.rideService.createCurrentRide(
+        this.rideInfo,
+        this.estimated_distance,
+        this.estimated_price,
+        +this.convertPrice().split(' ')[0],
+        this.selectedRoute!,
+        this.destinations,
+        this.user!
+      );
+      await this.rideService.saveCurrentRide(currentRide);
+      this.sendMessage(currentRide.ridingPals);
+      this.store.dispatch(
+        new CurrentRideAction(CurrentRideActionType.SET, currentRide)
+      );
+      this.router.navigate(['/ride/book/loby']);
+      this.toastr.success(
+        'Ride successfully booked. Waiting for available driver.'
+      );
+    } else {
+      this.toastr.error('Please fill all fields.');
+    }
+  }
+  valid(): boolean {
+    if (!this.haveDestinations()) return false;
+    if (!this.selectedRoute) return false;
+    return this.validRideInfo();
+  }
+  validRideInfo(): boolean {
+    if (!this.rideInfo.vehicle) return false;
+    if (!this.rideInfo.isNow && !this.rideInfo.time) return false;
+    return true;
+  }
+  async sendMessage(pals?: RidingPal[]) {
+    console.log(pals);
+    if (pals) {
+      pals.map((pal) =>
+        this.socketService.sendRideRequestToPalUsingSocket(pal.email)
+      );
+    }
   }
 }

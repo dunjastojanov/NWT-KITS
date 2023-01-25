@@ -1,9 +1,10 @@
-import {Injectable} from '@angular/core';
-import {AxiosResponse} from 'axios';
-import {User} from 'src/app/interfaces/User';
-import {http} from 'src/app/shared/api/axios-wrapper';
-import {loggedUserToken} from 'src/app/shared/consts';
-import {CookieService} from 'ngx-cookie-service';
+import { Injectable } from '@angular/core';
+import { AxiosResponse } from 'axios';
+import { sideUser, User } from 'src/app/interfaces/User';
+import { http } from 'src/app/shared/api/axios-wrapper';
+import { loggedUserToken } from 'src/app/shared/consts';
+import { CookieService } from 'ngx-cookie-service';
+import { CurrentRide } from 'src/app/interfaces/Ride';
 
 interface NewDriver {
   firstName: string;
@@ -51,17 +52,25 @@ export class UserService {
     return null;
   }
 
+  async getCurrentRide(email: string): Promise<CurrentRide | null> {
+    if (this.getToken()) {
+      let result: AxiosResponse<CurrentRide | null> = await http.get(
+        `/api/ride/currentRide/${email}`
+      );
+      return <CurrentRide>result.data;
+    }
+    return null;
+  }
+
   async getClients(filter: string, number: string, size: number): Promise<any> {
     if (this.getToken()) {
-      let result: AxiosResponse = await http.get(
-        '/api/user/', {
-          params: {
-            filter: filter,
-            number: number,
-            size: size
-          }
-        }
-      );
+      let result: AxiosResponse = await http.get('/api/user/', {
+        params: {
+          filter: filter,
+          number: number,
+          size: size,
+        },
+      });
       return result.data;
     }
     return [];
@@ -69,15 +78,13 @@ export class UserService {
 
   async getDrivers(filter: string, number: string, size: number): Promise<any> {
     if (this.getToken()) {
-      let result: AxiosResponse = await http.get(
-        '/api/vehicle/', {
-          params: {
-            filter: filter,
-            number: number,
-            size: size
-          }
-        }
-      );
+      let result: AxiosResponse = await http.get('/api/vehicle/', {
+        params: {
+          filter: filter,
+          number: number,
+          size: size,
+        },
+      });
       return result.data;
     }
     return [];
@@ -110,10 +117,16 @@ export class UserService {
     return null;
   }
 
-  async editDriver(dto: { firstName: string, lastName: string, city: string, phoneNumber: string }): Promise<any> {
+  async editDriver(dto: {
+    firstName: string;
+    lastName: string;
+    city: string;
+    phoneNumber: string;
+  }): Promise<any> {
     if (this.getToken()) {
       let result: AxiosResponse<any> = await http.put<object>(
-        '/api/vehicle', dto
+        '/api/vehicle',
+        dto
       );
       return <any>result.data;
     }
@@ -145,21 +158,47 @@ export class UserService {
         '/api/ride/8/' + (+currentPage - 1).toString()
       );
       return result.data;
-
     }
     return null;
   }
 
-  async blockUser(email: string) {
-    let result: AxiosResponse<any> = await http.delete<object>(
-      '/api/user/' + email
+  async blockUser(email: string, message: string) {
+    let result: AxiosResponse<any> = await http.post<object>(
+      '/api/user/block/' + email, message
     );
     return result.data;
   }
 
   async registerDriver(dto: NewDriver) {
     let result: AxiosResponse<any> = await http.post<object>(
-      '/api/vehicle', dto
+      '/api/vehicle',
+      dto
+    );
+    return result.data;
+  }
+
+  async getRidingPal(email: string): Promise<sideUser | string> {
+    try {
+      let result: AxiosResponse<any> = await http.get(`/api/ride/pal/${email}`);
+      return result.data;
+    } catch (err: any) {
+      if (err.message === 'Forbidden')
+        return `User ${email} already has scheduled ride.`;
+      else return `There is no user with email ${email}`;
+    }
+  }
+
+  async changePassword(dto: { oldPassword: string; newPassword: string }) {
+    let result: AxiosResponse<any> = await http.put<object>(
+      '/api/user/password',
+      dto
+    );
+    return result.data;
+  }
+
+  async cancelRide(rideId: string, message: string) {
+    let result: AxiosResponse<any> = await http.post<object>(
+      '/api/user/cancel/' + rideId, message
     );
     return result.data;
   }

@@ -22,7 +22,9 @@
       <div class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
         <ul
           class="flex flex-col p-2 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
-
+          <li *ngIf="hasRole('DRIVER')">
+            <status-toggle></status-toggle>
+          </li>
           <li *ngIf="hasRole('CLIENT')  || hasRole('DRIVER')">
             <p class="navbar-link" routerLink='profile'>Profile</p>
           </li>
@@ -55,7 +57,10 @@
           </li>
 
           <div *ngIf="showNotifications" (mouseleave)="toggleNotifications()"
-               class="absolute w-96 h-48 top-16 right-44 bg-white z-50">
+               class="absolute w-96 h-full top-16 right-44 bg-transparent z-50">
+            <div *ngIf="notifications.length < 1" class="flex justify-between m-1 bg-white hover:bg-tertiary-light hover:cursor-pointer p-4 ">
+              <h5>No new notifications</h5>
+            </div>
             <div *ngFor="let notification of notifications">
               <notification-list-item [notification]="notification"></notification-list-item>
             </div>

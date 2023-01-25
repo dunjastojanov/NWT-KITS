@@ -1,3 +1,4 @@
+import { sideUser } from 'src/app/interfaces/User';
 import { VehicleType } from 'src/app/interfaces/VehicleType';
 import { RideInfo } from 'src/app/page/ride-request-page/data-info/ride-info.type';
 import { RideInfoStateType } from '../types';
@@ -33,7 +34,7 @@ export const RideInfoReducer = (
         ...state,
         ride: {
           ...state.ride,
-          friends: <string[]>action.payload,
+          friends: <sideUser[]>action.payload,
         },
       };
     case RideInfoActionType.UPDATE_SPLIT:

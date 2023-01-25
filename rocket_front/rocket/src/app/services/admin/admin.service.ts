@@ -27,6 +27,16 @@ export class AdminService {
     return null;
   }
 
+  async getHistoryForEmail(currentPage: string, email: string): Promise<any> {
+    if (this.getToken()) {
+      let result: AxiosResponse<any> = await http.get<object>(
+        '/api/ride/8/' + (+currentPage - 1).toString() + '/' + email
+      );
+      return <any>result.data;
+    }
+    return null;
+  }
+
   async getStatistics(dto: { startDate: string, endDate: string }, type: string): Promise<any> {
     if (this.getToken()) {
       let result: AxiosResponse<any> = await http.put<object>(
