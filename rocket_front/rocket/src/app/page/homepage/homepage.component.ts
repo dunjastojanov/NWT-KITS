@@ -57,10 +57,6 @@ export class HomepageComponent implements OnInit {
     }
   }
 
-  sendMessage() {
-    this.socketService.sendMessageUsingSocket();
-  }
-
 
   togglePasswordModal = () => {
     this.openNewPasswordModal = !this.openNewPasswordModal;
