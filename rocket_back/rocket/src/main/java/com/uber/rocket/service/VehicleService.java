@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class VehicleService {
@@ -118,5 +120,11 @@ public class VehicleService {
         } catch (IllegalArgumentException exception) {
             throw new RuntimeException("Status name does not exist");
         }
+    }
+    public List<Vehicle> findAvailableDrivers(VehicleType type, boolean kidFriendly,boolean petFriendly) {
+        return this.getActiveVehicleByRequirements(type, kidFriendly, petFriendly);
+    }
+    public List<Vehicle> getActiveVehicleByRequirements(VehicleType type, boolean kidFriendly,boolean petFriendly) {
+        return this.vehicleRepository.findByStatusAndTypeAndKidAndPetFriendly(VehicleStatus.ACTIVE, type, kidFriendly, petFriendly);
     }
 }

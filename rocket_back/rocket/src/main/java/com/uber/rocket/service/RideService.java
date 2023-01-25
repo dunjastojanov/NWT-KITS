@@ -4,6 +4,7 @@ import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
+import com.uber.rocket.entity.user.VehicleType;
 import com.uber.rocket.mapper.FavouriteRouteMapper;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
@@ -174,6 +175,78 @@ public class RideService {
         return null;
     }
 
+    public Vehicle lookForDriver(Long id) {
+        Optional<Ride> rideOpt = this.repository.findById(id);
+        if (rideOpt.isPresent()) {
+            Ride ride = rideOpt.get();
+            //dobavi sve vehicles koji imaju status active, trazeni type, kid frinedly, pet frinedly
+            // za ova vozila pogledaj vozace koji nisu blocked
+            List<Vehicle> vehicles = this.vehicleService.findAvailableDrivers(ride.getVehicleTypeRequested(), ride.isKidFriendly(), ride.isPetFriendly());
+            if (vehicles.size() == 0) {
+                return null;
+            }
+            //IZ VEHICLES FILTRIRAJ DRIVERE KOJI NEMAJU NIJEDNU VOZNJU
+            List<Vehicle> first = this.filterFirstPriorityDrivers(vehicles);
+            if (first.size() > 0) {
+                //nadji najblizi
+            } else {
+                List<Vehicle> second = this.filterSecondPriorityDrivers(vehicles);
+                //FILTRIRAJ AKO NEMAJU TRENUTNU A IMAJU BUDUCU
+                if (second.size() > 0) {
+                    //nadji najblizi
+                } else {
+                    //AKO JE OVO PRAZNO FILTRIJAJ DRIVERE KOJI NEMAJU BUDUCU A IMAJU TRENUTNU
+                    List<Vehicle> third = this.filterThirdPriorityDrivers(vehicles);
+                    if (third.size() > 0) {
+                        //nadji najblizi
+                    }
+                }
+            }
+            //AKO PREOSTANE SAMO KOJI IMAJU I TRENUTNU I BUDUCU VRATI NULL
+            return null;
+        }
+        return null;
+    }
+
+    private List<Vehicle> filterThirdPriorityDrivers(List<Vehicle> vehicles) {
+        List<Vehicle> availableVehicles = new ArrayList<Vehicle>();
+        for (Vehicle vehicle : vehicles) {
+            if (availableForFuture(vehicle))
+                availableVehicles.add(vehicle);
+        }
+        return availableVehicles;
+    }
+
+    private List<Vehicle> filterSecondPriorityDrivers(List<Vehicle> vehicles) {
+        List<Vehicle> availableVehicles = new ArrayList<Vehicle>();
+        for (Vehicle vehicle : vehicles) {
+            if (currentlyAvailable(vehicle))
+                availableVehicles.add(vehicle);
+        }
+        return availableVehicles;
+    }
+    private List<Vehicle> filterFirstPriorityDrivers(List<Vehicle> vehicles) {
+        List<Vehicle> availableVehicles = new ArrayList<Vehicle>();
+        for (Vehicle vehicle : vehicles) {
+            if (fullyAvailable(vehicle))
+                availableVehicles.add(vehicle);
+        }
+        return availableVehicles;
+    }
+    private boolean fullyAvailable(Vehicle vehicle) {
+        List<Ride> rides = this.repository.findByDriverAndActiveOrScheduled(vehicle.getDriver(), RideStatus.DENIED, RideStatus.ENDED);
+        return rides.size() == 0;
+    }
+
+    private boolean currentlyAvailable(Vehicle vehicle) {
+        List<Ride> rides = this.repository.findByDriverAndActiveOrScheduled(vehicle.getDriver(), RideStatus.DENIED, RideStatus.ENDED);
+        return rides.size() == 1 && rides.get(0).getStatus() != RideStatus.SCHEDULED;
+    }
+    private boolean availableForFuture(Vehicle vehicle) {
+        List<Ride> rides = this.repository.findByDriverAndActiveOrScheduled(vehicle.getDriver(), RideStatus.DENIED, RideStatus.ENDED);
+        return rides.size() == 1 && rides.get(0).getStatus() == RideStatus.SCHEDULED;
+    }
+
     @Transactional
     public RideDTO getUserCurrentRide(User user) {
         List<Ride> rides = repository.findByPassengers(user.getId());
@@ -205,7 +278,6 @@ public class RideService {
             return ride.get();
         } else {
             throw new RuntimeException("Ride with given id does not exist.");
-
         }
     }
 

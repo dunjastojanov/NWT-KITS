@@ -118,6 +118,7 @@ export class RideService {
     if (this.currentRide.rideStatus === RideStatus.CONFIRMED) {
       //pokreni simulaciju
       //skini novac
+      //posalji notifikaciju korisnicima
     }
     if (
       this.currentRide.ridingPals &&
@@ -144,7 +145,7 @@ export class RideService {
   async lookForDriver() {
     if (this.currentRide) {
       const result = await http.get(
-        `/api/ride/currentRideId/${this.currentRide.rideId}`
+        `/api/ride/look-driver/${this.currentRide.rideId}`
       );
       console.log('Look for driver');
       console.log(result);

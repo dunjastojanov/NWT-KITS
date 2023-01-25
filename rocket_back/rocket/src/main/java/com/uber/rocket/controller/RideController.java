@@ -1,6 +1,7 @@
 package com.uber.rocket.controller;
 
 import com.uber.rocket.dto.*;
+import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/ride")
@@ -38,10 +40,18 @@ public class RideController {
 
     @GetMapping(path = "/currentRideId/{id}")
     public ResponseEntity<?> getUsersCurrentRide(@PathVariable("id") Long id) {
-        System.out.println(id);
         RideDTO rideDTO = this.rideService.getUserCurrentRideById(id);
-        System.out.println(rideDTO);
         return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
+    }
+
+    @GetMapping(path = "/look-driver/{id}")
+    public ResponseEntity<?> lookForDriver(@PathVariable("id") Long id) {
+        try{
+            List<Vehicle> vehicles = this.rideService.lookForDriver(id);
+            return ResponseEntity.status(HttpStatus.OK).body(vehicles);
+        } catch (Exception e) {
+            return new ResponseEntity<>("There is no driver available.", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping(path = "/pal/{email}")
