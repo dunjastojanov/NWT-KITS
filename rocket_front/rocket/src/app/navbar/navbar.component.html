@@ -29,6 +29,9 @@
           <li *ngIf="hasRole('ADMINISTRATOR')">
             <p class="navbar-link" routerLink='admin'>Profile & Administrative Panel</p>
           </li>
+          <li *ngIf="hasRole('ADMINISTRATOR')">
+            <a class="navbar-link" href="http://localhost:4200/admin/chat">Chat</a>
+          </li>
           <li *ngIf="hasRole('CLIENT')">
             <p class="navbar-link"  routerLink='ride/book'>Book a ride</p>
           </li>

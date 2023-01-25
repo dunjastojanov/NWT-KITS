@@ -1,6 +1,6 @@
 export interface MessageInfo {
   receiver: string;
   sender: string;
-  sentAt: Date;
+  sentAt: string;
   message: string;
 }

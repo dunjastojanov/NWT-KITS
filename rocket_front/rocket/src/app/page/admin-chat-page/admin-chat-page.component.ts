@@ -5,6 +5,7 @@ import {MessageInfo} from "../../interfaces/MessageInfo";
 import {AdminService} from "../../services/admin/admin.service";
 import {UserService} from "../../services/user/user.service";
 import {ChatService} from "../../services/chat/chat.service";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -19,7 +20,7 @@ export class AdminChatPageComponent implements OnInit {
   message: string = "";
   talkingTo: string = "";
 
-  constructor(private adminService: AdminService, private userService: UserService, private chatService: ChatService) {
+  constructor(private adminService: AdminService, private userService: UserService, private chatService: ChatService, private toastService: ToastrService) {
 
   }
 
@@ -42,11 +43,18 @@ export class AdminChatPageComponent implements OnInit {
       message: this.message,
       receiverEmail: this.talkingTo
     }
-    this.chatService.sendMessage(dto).then(
-      result => {
-        this.messages = result;
-      }
-    )
+    console.log(this.talkingTo)
+    if (this.message === "") {
+      this.toastService.error("Message mustn't be blank")
+    } else if (this.talkingTo === "") {
+      this.toastService.error("You have to choose user")
+    } else {
+      this.chatService.sendMessage(dto).then(
+        result => {
+          this.messages = result;
+        }
+      )
+    }
   }
 
   getMessagesWith(email: string) {
@@ -56,7 +64,4 @@ export class AdminChatPageComponent implements OnInit {
     })
   }
 
-  prettyPrintDate(sentAt: Date) {
-    return sentAt.toLocaleDateString('en-US');
-  }
 }

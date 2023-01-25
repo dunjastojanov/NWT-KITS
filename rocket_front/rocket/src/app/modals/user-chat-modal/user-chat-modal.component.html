@@ -8,20 +8,22 @@
       </svg>
     </button>
   </div>
-  <div *ngIf="!show" class="rounded-lg bg-white border-solid border-2 border-black" style="width: 22rem;height: 30rem">
+  <div *ngIf="!show" class="rounded-lg bg-white " style="width: 22rem;height: 30rem">
     <div class="flex flex-col">
+
       <div class="flex flex-row items-center gap-x-4 bg-secondary-dark p-3 rounded-t-lg" (click)="changeView()">
         <img [src]="admin?.profilePicture||'assets/profile-placeholder.png'"
              alt="profile picture"
              class="rounded-full h-8 w-8 ">
         <p class="text-white">{{admin?.firstName + " " + admin?.lastName}}</p>
       </div>
-      <div *ngFor="let message of messages"
-           class="overflow-y-auto overflow-x-hidden snap-y flex flex-col gap-3 mx-2 my-4 h-80 relative">
-        <div [ngClass]="message.sender===admin?.email?'sender_chat_bubble':'receiver_chat_bubble'">
+      <div
+        class="overflow-y-scroll overflow-x-hidden flex flex-col mx-2 my-1 relative" style="height: 355px">
+        <div *ngFor="let message of messages"
+             [ngClass]="message.sender===admin?.email?'receiver_chat_bubble':'sender_chat_bubble'">
           <p
             style="overflow-wrap: break-word;white-space: pre-wrap;text-overflow: ellipsis;">{{message.message}}</p>
-          <p class="text-xs text-right">{{prettyPrintDate(message.sentAt)}}</p>
+          <p class="text-xs text-right">{{message.sentAt}}</p>
         </div>
       </div>
       <hr>
