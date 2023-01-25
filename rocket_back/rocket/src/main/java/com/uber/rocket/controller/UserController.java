@@ -1,9 +1,6 @@
 package com.uber.rocket.controller;
 
-import com.uber.rocket.dto.ForgetPasswordDTO;
-import com.uber.rocket.dto.PasswordChangeDTO;
-import com.uber.rocket.dto.UpdateUserDataDTO;
-import com.uber.rocket.dto.UserRegistrationDTO;
+import com.uber.rocket.dto.*;
 import com.uber.rocket.service.LoginService;
 import com.uber.rocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 
 @RestController
@@ -32,6 +28,7 @@ public class UserController {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userRegistrationDTO));
         } catch (RuntimeException | IllegalAccessException exception) {
+            System.out.println(exception.getMessage());
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
@@ -140,7 +137,7 @@ public class UserController {
 
 
     @PostMapping(path = "/password")
-    public ResponseEntity<?> forgottenPassword(@NotBlank @RequestParam("email") String email) {
+    public ResponseEntity<?> forgottenPassword(@RequestBody String email) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(userService.confirmForgottenPassword(email));
         } catch (RuntimeException exception) {
@@ -148,5 +145,13 @@ public class UserController {
         }
     }
 
+    @GetMapping(path = "/random/admin")
+    public ResponseEntity<?> getRandomAdmin() {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.getRandomAdmin());
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
 
 }

@@ -100,6 +100,10 @@ import { ReviewComponent } from './modals/review/review.component';
 import { NotificationComponent } from './modals/notification/notification.component';
 import { NotificationListItemComponent } from './shared/utils/notification-list-item/notification-list-item.component';
 import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedded-html.component';
+import { AdminChatPageComponent } from './page/admin-chat-page/admin-chat-page.component';
+import { UserChatModalComponent } from './modals/user-chat-modal/user-chat-modal.component';
+import { NewPasswordComponent } from './modals/new-password/new-password.component';
+import { RegistrationVerificationComponent } from './page/registration-verification/registration-verification.component';
 import { SortPipe } from './shared/utils/history-table/sort.pipe';
 import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confirm-ride.component";
 import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
@@ -199,6 +203,10 @@ import { CancelRideComponent } from './modals/cancel-ride/cancel-ride.component'
     ChangePasswordComponent,
     BlockUserComponent,
     CancelRideComponent,
+    AdminChatPageComponent,
+    UserChatModalComponent,
+    NewPasswordComponent,
+    RegistrationVerificationComponent,
   ],
   imports: [
     HttpClientModule,

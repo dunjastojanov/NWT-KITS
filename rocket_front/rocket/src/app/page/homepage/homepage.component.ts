@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AxiosResponse } from 'axios';
-import { http } from '../../shared/api/axios-wrapper';
-import { SocketService } from 'src/app/services/sockets/sockets.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Params} from '@angular/router';
+import {SocketService} from 'src/app/services/sockets/sockets.service';
+import {PaypalService} from "../../services/paypal/paypal.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'homepage',
@@ -10,51 +10,55 @@ import { SocketService } from 'src/app/services/sockets/sockets.service';
   styleUrls: ['./homepage.component.css'],
 })
 export class HomepageComponent implements OnInit {
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private socketService: SocketService,
+    private route: ActivatedRoute,
+    private payPalService: PaypalService,
+    private toastService:ToastrService
+  ) {
+  }
 
-  openErrorToast = false;
-  openSuccessToast = false;
+  initSockets() {
+    this.socketService.initializeWebSocketConnection();
+  }
+
+
+  openNewPasswordModal: boolean = false;
+
+  token: string = "";
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      const paymentId = params['paymentId'];
-      let payerId = params['PayerID'];
-      if (paymentId && payerId) {
-        this.triggerPaymentExecution(paymentId, payerId);
-        setTimeout((args: any) => {
-          window.location.href = 'http://localhost:4200/';
-        }, 5000);
+      this.payPalListener(params);
+      const forgottenPasswordToken = params['token'];
+      if (forgottenPasswordToken) {
+        this.token = forgottenPasswordToken;
+        this.togglePasswordModal();
       }
-      // do something with the parameters
     });
   }
 
-  toggleErrorToast = () => {
-    this.openErrorToast = !this.openErrorToast;
-  };
-
-  toggleSuccessToast = () => {
-    this.openSuccessToast = !this.openSuccessToast;
-  };
-
-  async triggerPaymentExecution(
-    paymentId: string,
-    payerId: string
-  ): Promise<void> {
-    try {
-      let data = {
-        payerId: payerId,
-        paymentId: paymentId,
-      };
-      let link: AxiosResponse<any> | void = await http
-        .post<string, Object>('/api/payment/confirm', data)
-        .then((value) => {
-          if (value.data === 'Successful payment') {
-            this.toggleSuccessToast();
+  private payPalListener(params: Params) {
+    const paymentId = params['paymentId'];
+    let payerId = params['PayerID'];
+    if (paymentId && payerId) {
+      this.payPalService.triggerPaymentExecution(paymentId, payerId).then(
+        result => {
+          if (result === 'Successful payment') {
+            this.toastService.success("Successful payment");
+          } else {
+            this.toastService.error("Unsuccessful payment");
           }
-        });
-    } catch (err) {
-      this.toggleErrorToast();
+        }
+      );
+      setTimeout(() => {
+        window.location.href = 'http://localhost:4200/';
+      }, 5000);
     }
+  }
+
+
+  togglePasswordModal = () => {
+    this.openNewPasswordModal = !this.openNewPasswordModal;
   }
 }

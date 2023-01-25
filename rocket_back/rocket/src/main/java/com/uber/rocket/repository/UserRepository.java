@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<UserDataDTO> searchAllFirstNameStartingWithOrLastNameStartingWith(@Param("role") String role, @Param("filter") String filter);
     @Query("SELECT user FROM User user LEFT JOIN user.roles role WHERE role.role != 'ADMINISTRATOR'")
     List<SimpleUser> findAllNonAdministratorUsers();
+
+    List<User> findAll();
 }

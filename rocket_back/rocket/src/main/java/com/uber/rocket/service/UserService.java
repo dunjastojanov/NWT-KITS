@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -71,6 +72,7 @@ public class UserService {
         try {
             emailService.sendEmailWithTokenByEmailSubject(client, token, EmailSubject.REGISTRATION_EMAIL);
         } catch (IOException e) {
+            System.out.println("ovde puca 1");
             throw new RuntimeException("There was some error in sending email");
         }
         return "Successful registration. We have sent an email for registration verification";
@@ -83,11 +85,11 @@ public class UserService {
         return user;
     }
 
-    public ResponseObjectDTO validateRegistrationToken(String token) {
+    public String validateRegistrationToken(String token) {
         User user = confirmationTokenService.validateToken(token);
         user.setBlocked(false);
         userRepository.save(user);
-        return new ResponseObjectDTO(null, "Successful registration verification");
+        return "Successful registration verification";
     }
 
     public UserDataDTO getLoggedUser(HttpServletRequest request) {
@@ -219,6 +221,20 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserDataDTO getRandomAdmin() {
+        Role role = roleService.getRoleByUserRole(RoleType.ADMINISTRATOR);
+        ArrayList<User> admins= (ArrayList<User>) userRepository.findAll();
+        admins.removeIf(user -> !user.getRoles().contains(role));
+        if(admins.size()==0){
+            throw new RuntimeException("There is no admin");
+        }
+        if (admins.size() == 1) {
+            return new UserDataDTO(admins.get(0));
+        }
+        Random random = new Random();
+        int randomIndex = random.nextInt(admins.size());
+        return new UserDataDTO(admins.get(randomIndex));
+    }
     public List<SimpleUser> getAllNonAdministratorUsers() {
         return userRepository.findAllNonAdministratorUsers();
     }

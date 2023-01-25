@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {AxiosResponse} from "axios";
 import {http} from "../../shared/api/axios-wrapper";
 import {loggedUserToken} from "../../shared/consts";
+import {UserChatInfo} from "../../interfaces/UserChatInfo";
 
 @Injectable({
   providedIn: 'root'
@@ -45,4 +46,11 @@ export class AdminService {
     }
     return null;
   }
+
+  async getAllAdminsChat(): Promise<UserChatInfo[]> {
+    let result: AxiosResponse<UserChatInfo[]> = await http.get<UserChatInfo[]>('/api/chat');
+    return result.data;
+  }
+
+
 }

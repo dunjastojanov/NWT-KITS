@@ -1,0 +1,7 @@
+.receiver_chat_bubble{
+  @apply bg-gray-200 mx-4 p-3 rounded-lg max-w-sm w-fit my-2
+}
+
+.sender_chat_bubble{
+  @apply bg-yellow-300 mx-4 p-3 max-w-sm self-end rounded-lg my-2
+}
