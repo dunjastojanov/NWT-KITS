@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 
 @RestController
@@ -29,6 +28,7 @@ public class UserController {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userRegistrationDTO));
         } catch (RuntimeException | IllegalAccessException exception) {
+            System.out.println(exception.getMessage());
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
@@ -129,7 +129,7 @@ public class UserController {
 
 
     @PostMapping(path = "/password")
-    public ResponseEntity<?> forgottenPassword(@NotBlank @RequestParam("email") String email) {
+    public ResponseEntity<?> forgottenPassword(@RequestBody String email) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(userService.confirmForgottenPassword(email));
         } catch (RuntimeException exception) {
@@ -145,6 +145,5 @@ public class UserController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
-
 
 }

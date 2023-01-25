@@ -73,6 +73,7 @@ public class SecurityConfiguration {
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/confirm/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/images/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/password").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/login").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(new CustomAuthorizationFilter(authService), UsernamePasswordAuthenticationFilter.class);

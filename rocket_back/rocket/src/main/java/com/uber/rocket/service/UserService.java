@@ -59,6 +59,7 @@ public class UserService {
         try {
             emailService.sendEmailWithTokenByEmailSubject(client, token, EmailSubject.REGISTRATION_EMAIL);
         } catch (IOException e) {
+            System.out.println("ovde puca 1");
             throw new RuntimeException("There was some error in sending email");
         }
         return "Successful registration. We have sent an email for registration verification";
@@ -71,11 +72,11 @@ public class UserService {
         return user;
     }
 
-    public ResponseObjectDTO validateRegistrationToken(String token) {
+    public String validateRegistrationToken(String token) {
         User user = confirmationTokenService.validateToken(token);
         user.setBlocked(false);
         userRepository.save(user);
-        return new ResponseObjectDTO(null, "Successful registration verification");
+        return "Successful registration verification";
     }
 
     public UserDataDTO getLoggedUser(HttpServletRequest request) {
@@ -197,7 +198,11 @@ public class UserService {
 
     public UserDataDTO getRandomAdmin() {
         Role role = roleService.getRoleByUserRole(RoleType.ADMINISTRATOR);
-        List<User> admins = userRepository.findAllByRolesContaining(role);
+        ArrayList<User> admins= (ArrayList<User>) userRepository.findAll();
+        admins.removeIf(user -> !user.getRoles().contains(role));
+        if(admins.size()==0){
+            throw new RuntimeException("There is no admin");
+        }
         if (admins.size() == 1) {
             return new UserDataDTO(admins.get(0));
         }

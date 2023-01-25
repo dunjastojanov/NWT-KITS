@@ -1,12 +1,10 @@
 package com.uber.rocket.controller;
 
+import com.uber.rocket.dto.CreateMessageDTO;
 import com.uber.rocket.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,9 +15,9 @@ public class MessageController {
     private MessageService messageService;
 
     @PostMapping
-    public ResponseEntity<?> createMessage(HttpServletRequest request) {
+    public ResponseEntity<?> createMessage(@RequestBody CreateMessageDTO createMessageDTO, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok().body(messageService.createMessage(request));
+            return ResponseEntity.ok().body(messageService.createMessage(request, createMessageDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -34,10 +32,10 @@ public class MessageController {
         }
     }
 
-    @GetMapping(path = "/message")
-    public ResponseEntity<?> getAllMessages(HttpServletRequest request) {
+    @GetMapping(path = "/message/{receiverEmail}")
+    public ResponseEntity<?> getAllMessages(HttpServletRequest request, @PathVariable String receiverEmail) {
         try {
-            return ResponseEntity.ok().body(messageService.getMessagesForLoggedUser(request));
+            return ResponseEntity.ok().body(messageService.getMessagesForLoggedUser(request,receiverEmail));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
