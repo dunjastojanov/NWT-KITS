@@ -69,11 +69,15 @@ export class RideService {
   }
 
   async saveCurrentRide(currentRide: CurrentRide) {
-    let result: AxiosResponse<CurrentRide | null> = await http.post(
-      `/api/ride/currentRide`,
-      currentRide
-    );
-    return result.data;
+    try {
+      let result: AxiosResponse<number> = await http.post(
+        `/api/ride/currentRide`,
+        currentRide
+      );
+      return result.data;
+    } catch {
+      return -1;
+    }
   }
 
   async getFavourites(): Promise<any | null> {
@@ -131,7 +135,6 @@ export class RideService {
         ).length
       ) {
         this.toastr.success('Looking for driver, please wait');
-        await this.lookForDriver();
       }
     }
     if (this.currentRide.rideStatus === RideStatus.STARTED) {
@@ -139,16 +142,6 @@ export class RideService {
     }
     if (this.currentRide.rideStatus === RideStatus.ENDED) {
       // sacuvaj u bazu da je ride ended i promeni end time i current ride = null
-    }
-  }
-
-  async lookForDriver() {
-    if (this.currentRide) {
-      const result = await http.get(
-        `/api/ride/look-driver/${this.currentRide.rideId}`
-      );
-      console.log('Look for driver');
-      console.log(result);
     }
   }
 }

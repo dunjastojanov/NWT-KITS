@@ -31,4 +31,20 @@ public class DestinationService {
         List<Destination> destinations = this.getDestinationsByRide(ride);
         return destinations.get(destinations.size() - 1).getAddress();
     }
+    @Transactional
+    public Destination getStartDestinationByRide(Ride ride) {
+        List<Destination> destinations = this.getDestinationsByRide(ride);
+        return destinations.get(0);
+    }
+
+    @Transactional
+    public Destination getEndDestinationByRide(Ride ride) {
+        List<Destination> destinations = this.getDestinationsByRide(ride);
+        return destinations.get(destinations.size() - 1);
+    }
+
+    @Transactional
+    public void save(Destination destination) {
+        this.repository.save(destination);
+    }
 }

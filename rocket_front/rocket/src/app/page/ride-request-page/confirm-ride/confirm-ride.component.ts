@@ -112,11 +112,16 @@ export class ConfirmRideComponent implements OnInit {
         this.destinations,
         this.user!
       );
-      await this.rideService.saveCurrentRide(currentRide);
-      this.sendMessage(currentRide.ridingPals);
+      const rideId: number = await this.rideService.saveCurrentRide(
+        currentRide
+      );
+      currentRide.rideId = rideId;
       this.store.dispatch(
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)
       );
+      if (currentRide.ridingPals && currentRide.ridingPals.length > 0)
+        this.sendMessage(currentRide.ridingPals);
+
       this.router.navigate(['/ride/book/loby']);
       this.toastr.success(
         'Ride successfully booked. Waiting for available driver.'
@@ -135,12 +140,9 @@ export class ConfirmRideComponent implements OnInit {
     if (!this.rideInfo.isNow && !this.rideInfo.time) return false;
     return true;
   }
-  async sendMessage(pals?: RidingPal[]) {
-    console.log(pals);
-    if (pals) {
-      pals.map((pal) =>
-        this.socketService.sendRideRequestToPalUsingSocket(pal.email)
-      );
-    }
+  async sendMessage(pals: RidingPal[]) {
+    pals.map((pal) =>
+      this.socketService.sendRideRequestToPalUsingSocket(pal.email)
+    );
   }
 }

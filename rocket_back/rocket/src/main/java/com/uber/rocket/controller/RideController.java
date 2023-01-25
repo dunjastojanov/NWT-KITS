@@ -27,7 +27,6 @@ public class RideController {
         try{
             return ResponseEntity.ok(this.rideService.createRide(ride));
         } catch (Exception exception) {
-           exception.printStackTrace();
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -43,17 +42,6 @@ public class RideController {
         RideDTO rideDTO = this.rideService.getUserCurrentRideById(id);
         return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
     }
-
-    @GetMapping(path = "/look-driver/{id}")
-    public ResponseEntity<?> lookForDriver(@PathVariable("id") Long id) {
-        try{
-            List<Vehicle> vehicles = this.rideService.lookForDriver(id);
-            return ResponseEntity.status(HttpStatus.OK).body(vehicles);
-        } catch (Exception e) {
-            return new ResponseEntity<>("There is no driver available.", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping(path = "/pal/{email}")
     public ResponseEntity<?> getRidingPal(@PathVariable("email") String email) {
         try {

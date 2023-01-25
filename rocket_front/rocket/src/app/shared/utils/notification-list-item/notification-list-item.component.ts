@@ -28,7 +28,6 @@ export class NotificationListItemComponent implements OnInit {
 
     if (this.showModal) {
       this.notificationService.setRead(this.notification.id).then((result) => {
-        console.log(result);
         //this.notification.read = true;
         /*this.store.dispatch(
           new NotificationsAction(

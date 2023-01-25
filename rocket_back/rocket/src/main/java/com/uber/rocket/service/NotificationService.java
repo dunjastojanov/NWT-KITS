@@ -113,6 +113,7 @@ public class NotificationService {
     }
 
     public Notification addDriverRideRequestNotification(User user, Ride ride) {
+        System.out.println("Ovo se pozove");
         Notification notification = createRideRequestNotification(user, ride);
         notification.setType(NotificationType.DRIVER_RIDE_REQUEST);
         return save(notification);

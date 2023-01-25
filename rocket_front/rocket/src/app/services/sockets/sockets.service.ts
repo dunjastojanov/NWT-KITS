@@ -16,16 +16,21 @@ import {
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import { http } from 'src/app/shared/api/axios-wrapper';
 import { RideService } from '../ride/ride.service';
+import { User } from 'src/app/interfaces/User';
 
 @Injectable()
 export class SocketService {
   isCustomSocketOpened: boolean = false;
-
+  user: User | null = null;
   constructor(
     private httpService: HttpClient,
     private store: Store<StoreType>,
     private rideService: RideService
-  ) {}
+  ) {
+    this.store.select('loggedUser').subscribe((res) => {
+      this.user = res.user;
+    });
+  }
 
   serverUrl = 'http://localhost:8443/ws';
   stompClient: any;
@@ -44,15 +49,12 @@ export class SocketService {
   }
 
   sendRideRequestToPalUsingSocket(email: string) {
-    console.log(email);
     // this.stompClient.send("/socket-subscriber/send/message", {}, JSON.stringify(message));
     this.httpService
       .get(
         `http://localhost:8443/api/notification/send-ride-request-invitation/${email}`
       )
-      .subscribe((data: any) => {
-        console.log(data);
-      });
+      .subscribe((data: any) => {});
   }
 
   sendResponseOnRideRequest(
@@ -89,7 +91,6 @@ export class SocketService {
   }
 
   handleResultNotification(message: any) {
-    console.log(message);
     const notifications: Notif[] = JSON.parse(message.body);
     this.store.dispatch(
       new NotificationsAction(
@@ -103,9 +104,14 @@ export class SocketService {
     const id: number = JSON.parse(message.body);
     const currentRide = await this.rideService.getCurrentRide(id);
     if (currentRide) {
-      this.store.dispatch(
-        new CurrentRideAction(CurrentRideActionType.SET, currentRide)
-      );
+      if (
+        this.user?.roles[0] === 'CLIENT' ||
+        (this.user?.roles[0] === 'DRIVER' && currentRide.vehicle)
+      ) {
+        this.store.dispatch(
+          new CurrentRideAction(CurrentRideActionType.SET, currentRide)
+        );
+      }
     }
     await this.rideService.onRideStatusChanged();
   }

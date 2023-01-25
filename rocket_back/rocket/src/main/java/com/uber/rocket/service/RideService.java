@@ -13,6 +13,9 @@ import com.uber.rocket.repository.DestinationRepository;
 import com.uber.rocket.repository.FavouriteRouteRepository;
 import com.uber.rocket.repository.PassengerRepository;
 import com.uber.rocket.repository.RideRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,7 +58,7 @@ public class RideService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
     @Autowired
-    private DestinationRepository destinationRepository;
+    private DestinationService destinationService;
 
     @Autowired
     private PassengerRepository passengerRepository;
@@ -66,6 +69,13 @@ public class RideService {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    private class VehicleLastDestination {
+        Destination endDestinationCurrentRide;
+        Vehicle vehicle;
+    }
     @Transactional(Transactional.TxType.REQUIRED)
     public void changeRidePalDriverStatus(String rideId, ChangeStatusDTO changeStatusDTO) {
         Optional<Ride> rideOpt = this.repository.findById(Long.parseLong(rideId));
@@ -73,21 +83,34 @@ public class RideService {
         if (rideOpt.isPresent()) {
             Ride ride = rideOpt.get();
             if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("DRIVER")) {
-                ride = setDriverStatus(ride, changeStatusDTO);
+                ride = setDriverStatus(ride, changeStatusDTO, user);
             }
             if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("CLIENT")) {
                 ride = setClientStatus(ride, changeStatusDTO);
             }
-            //setStatusIfAllConfirmed(ride);
             System.out.println(ride);
             ride = this.repository.save(ride);
             this.updateStatusOverSocket(ride);
             System.out.println(ride);
+            if (this.allAcceptedRide(ride)) {
+                this.lookForDriver(ride);
+                System.out.println(ride);
+            }
         } else {
             throw new RuntimeException("Ride not found");
         }
     }
 
+    private boolean allAcceptedRide(Ride ride) {
+        if (ride.getStatus() == RideStatus.REQUESTED) {
+            for (Passenger passenger : ride.getPassengers()) {
+                if (passenger.getUserRidingStatus() != UserRidingStatus.ACCEPTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     @Transactional(Transactional.TxType.REQUIRED)
     public void updateStatusOverSocket(Ride ride) {
         Vehicle vehicle = ride.getVehicle();
@@ -102,17 +125,6 @@ public class RideService {
             e.printStackTrace();
         }
     }
-    /*private void setStatusIfAllConfirmed(Ride ride) {
-        boolean allPassengersAccepted = true;
-        if (ride.getStatus() == RideStatus.CONFIRMED || ride.getStatus() == RideStatus.SCHEDULED) {
-            for (Passenger passenger : ride.getPassengers()) {
-                if (passenger.getUserRidingStatus() != UserRidingStatus.ACCEPTED) {
-                    allPassengersAccepted = false;
-                }
-            }
-            if (allPassengersAccepted) ride.setStatus(RideStatus.CONFIRMED);
-        }
-    }*/
     private Ride setClientStatus(Ride ride,  ChangeStatusDTO changeStatusDTO) {
         for (Passenger passenger : ride.getPassengers()) {
             if (Objects.equals(passenger.getUser().getId(), Long.parseLong(changeStatusDTO.getUserId()))) {
@@ -127,29 +139,33 @@ public class RideService {
         }
         return ride;
     }
-    private Ride setDriverStatus(Ride ride,  ChangeStatusDTO changeStatusDTO) {
+    private Ride setDriverStatus(Ride ride,  ChangeStatusDTO changeStatusDTO, User driver) {
         if (changeStatusDTO.getRidingStatus() == UserRidingStatus.DENIED) {
             ride.setStatus(RideStatus.DENIED);
         } else if (changeStatusDTO.getRidingStatus() == UserRidingStatus.ACCEPTED) {
             if (ride.isNow()) {
-                System.out.println("Setting confirmed on " + ride.getId());
                 ride.setStatus(RideStatus.CONFIRMED);
             } else ride.setStatus(RideStatus.SCHEDULED);
+            Vehicle vehicle = this.vehicleService.getVehicleByDriver(driver);
+            ride.setVehicle(vehicle);
         }
         return ride;
     }
-    public String createRide(RideDTO rideDTO) {
+    public Long createRide(RideDTO rideDTO) {
         Ride ride = rideMapper.mapToEntity(rideDTO);
         List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
         ride = this.repository.save(ride);
         for (Destination destination : destinations) {
             destination.setRide(ride);
-            this.destinationRepository.save(destination);
+            this.destinationService.save(destination);
         }
         for (int i = 1; i < ride.getPassengers().size(); i++) {
             this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
         }
-        return "Ride successfully created.";
+        if (this.allAcceptedRide(ride)) {
+            this.lookForDriver(ride);
+        }
+        return ride.getId();
     }
 
     public UserDTO getRidingPal(String email) {
@@ -175,49 +191,72 @@ public class RideService {
         return null;
     }
 
-    public Vehicle lookForDriver(Long id) {
+    public boolean findAndNotifyDriver(Long id) {
         Optional<Ride> rideOpt = this.repository.findById(id);
-        if (rideOpt.isPresent()) {
-            Ride ride = rideOpt.get();
-            //dobavi sve vehicles koji imaju status active, trazeni type, kid frinedly, pet frinedly
-            // za ova vozila pogledaj vozace koji nisu blocked
-            List<Vehicle> vehicles = this.vehicleService.findAvailableDrivers(ride.getVehicleTypeRequested(), ride.isKidFriendly(), ride.isPetFriendly());
-            if (vehicles.size() == 0) {
-                return null;
-            }
-            //IZ VEHICLES FILTRIRAJ DRIVERE KOJI NEMAJU NIJEDNU VOZNJU
-            List<Vehicle> first = this.filterFirstPriorityDrivers(vehicles);
-            if (first.size() > 0) {
-                //nadji najblizi
+        if (rideOpt.isEmpty()) {
+            return false;
+        }
+        Ride ride = rideOpt.get();
+        Vehicle vehicle = this.lookForDriver(ride);
+        if (vehicle != null) {
+            this.notificationService.addDriverRideRequestNotification(vehicle.getDriver(), ride);
+            List<NotificationDTO> notifications = this.notificationService.getNotificationsForUser(vehicle.getDriver());
+            messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/queue/notifications", notifications);
+            return true;
+        }
+        return false;
+    }
+    public Vehicle lookForDriver(Ride ride) {
+        Destination startDestination = this.destinationService.getStartDestinationByRide(ride);
+        Vehicle closest = null;
+        List<Vehicle> vehicles = this.vehicleService.findAvailableDrivers(ride.getVehicleTypeRequested(), ride.isKidFriendly(), ride.isPetFriendly());
+        List<Vehicle> first = this.noCurrentNorFutureRide(vehicles);
+        if (first.size() > 0) {
+            closest = closestDriverWithoutCurrentRide(startDestination, first);
+        } else {
+            List<Vehicle> second = this.notCurrentButFuture(vehicles);
+            if (second.size() > 0) {
+                closest = closestDriverWithoutCurrentRide(startDestination, second);
             } else {
-                List<Vehicle> second = this.filterSecondPriorityDrivers(vehicles);
-                //FILTRIRAJ AKO NEMAJU TRENUTNU A IMAJU BUDUCU
-                if (second.size() > 0) {
-                    //nadji najblizi
-                } else {
-                    //AKO JE OVO PRAZNO FILTRIJAJ DRIVERE KOJI NEMAJU BUDUCU A IMAJU TRENUTNU
-                    List<Vehicle> third = this.filterThirdPriorityDrivers(vehicles);
-                    if (third.size() > 0) {
-                        //nadji najblizi
-                    }
+                List<VehicleLastDestination> third = this.haveCurrentButNoFuture(vehicles);
+                if (third.size() > 0) {
+                    closest = closestDriverWithCurrentRide(startDestination, third);
                 }
             }
-            //AKO PREOSTANE SAMO KOJI IMAJU I TRENUTNU I BUDUCU VRATI NULL
-            return null;
         }
-        return null;
+        return closest;
     }
-
-    private List<Vehicle> filterThirdPriorityDrivers(List<Vehicle> vehicles) {
-        List<Vehicle> availableVehicles = new ArrayList<Vehicle>();
+    public Vehicle closestDriverWithoutCurrentRide(Destination start, List<Vehicle> vehicles) {
+        double startLongitude = start.getLongitude();
+        double startLatitude = start.getLatitude();
+        Vehicle closest = null;
+        double min_distance = Double.POSITIVE_INFINITY;
         for (Vehicle vehicle : vehicles) {
-            if (availableForFuture(vehicle))
-                availableVehicles.add(vehicle);
+            double distance = Math.sqrt(Math.pow(startLatitude - vehicle.getLatitude(), 2) + Math.pow(startLongitude - vehicle.getLongitude(), 2));
+            if (distance < min_distance) {
+                min_distance = distance;
+                closest = vehicle;
+            }
         }
-        return availableVehicles;
+        return closest;
     }
 
-    private List<Vehicle> filterSecondPriorityDrivers(List<Vehicle> vehicles) {
+    public Vehicle closestDriverWithCurrentRide(Destination start, List<VehicleLastDestination> vehiclesDest) {
+        double startLongitude = start.getLongitude();
+        double startLatitude = start.getLatitude();
+        Vehicle closest = null;
+        double min_distance = Double.POSITIVE_INFINITY;
+        for (VehicleLastDestination vehicleDest : vehiclesDest) {
+            double distance = Math.sqrt(Math.pow(startLatitude - vehicleDest.getEndDestinationCurrentRide().getLatitude(), 2) + Math.pow(startLongitude - vehicleDest.getEndDestinationCurrentRide().getLongitude(), 2));
+            if (distance < min_distance) {
+                min_distance = distance;
+                closest = vehicleDest.getVehicle();
+            }
+        }
+        return closest;
+    }
+
+    private List<Vehicle> notCurrentButFuture(List<Vehicle> vehicles) {
         List<Vehicle> availableVehicles = new ArrayList<Vehicle>();
         for (Vehicle vehicle : vehicles) {
             if (currentlyAvailable(vehicle))
@@ -225,7 +264,18 @@ public class RideService {
         }
         return availableVehicles;
     }
-    private List<Vehicle> filterFirstPriorityDrivers(List<Vehicle> vehicles) {
+
+    private List<VehicleLastDestination> haveCurrentButNoFuture(List<Vehicle> vehicles) {
+        List<VehicleLastDestination> availableVehicles = new ArrayList<VehicleLastDestination>();
+        for (Vehicle vehicle : vehicles) {
+            Destination lastDest = availableForFuture(vehicle);
+            if (lastDest != null)  {
+                availableVehicles.add(new VehicleLastDestination(lastDest, vehicle));
+            }
+        }
+        return availableVehicles;
+    }
+    private List<Vehicle> noCurrentNorFutureRide(List<Vehicle> vehicles) {
         List<Vehicle> availableVehicles = new ArrayList<Vehicle>();
         for (Vehicle vehicle : vehicles) {
             if (fullyAvailable(vehicle))
@@ -234,17 +284,20 @@ public class RideService {
         return availableVehicles;
     }
     private boolean fullyAvailable(Vehicle vehicle) {
-        List<Ride> rides = this.repository.findByDriverAndActiveOrScheduled(vehicle.getDriver(), RideStatus.DENIED, RideStatus.ENDED);
+        List<Ride> rides = this.repository.findByDriverAndStatus(vehicle.getDriver(), RideStatus.DENIED, RideStatus.ENDED);
         return rides.size() == 0;
     }
 
     private boolean currentlyAvailable(Vehicle vehicle) {
-        List<Ride> rides = this.repository.findByDriverAndActiveOrScheduled(vehicle.getDriver(), RideStatus.DENIED, RideStatus.ENDED);
-        return rides.size() == 1 && rides.get(0).getStatus() != RideStatus.SCHEDULED;
-    }
-    private boolean availableForFuture(Vehicle vehicle) {
-        List<Ride> rides = this.repository.findByDriverAndActiveOrScheduled(vehicle.getDriver(), RideStatus.DENIED, RideStatus.ENDED);
+        List<Ride> rides = this.repository.findByDriverAndStatus(vehicle.getDriver(), RideStatus.DENIED, RideStatus.ENDED);
         return rides.size() == 1 && rides.get(0).getStatus() == RideStatus.SCHEDULED;
+    }
+    private Destination availableForFuture(Vehicle vehicle) {
+        List<Ride> rides = this.repository.findByDriverAndStatus(vehicle.getDriver(), RideStatus.DENIED, RideStatus.ENDED);
+        if (rides.size() == 1 && rides.get(0).getStatus() != RideStatus.SCHEDULED) {
+            return this.destinationService.getEndDestinationByRide(rides.get(0));
+        }
+        return null;
     }
 
     @Transactional
