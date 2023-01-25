@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {UserService} from "../../services/user/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-new-password',
@@ -8,15 +9,13 @@ import {UserService} from "../../services/user/user.service";
 })
 export class NewPasswordComponent implements OnInit {
   @Input('open') open!: boolean;
-  @Input('open') token: string;
+  @Input('token') token!: string;
   @Input('closeFunc') closeFunc!: () => void;
   password: string = "";
 
-  openErrorToast: boolean;
-  openSuccessToast: boolean;
 
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,private toastService:ToastrService) {
   }
 
   ngOnInit(): void {
@@ -30,11 +29,11 @@ export class NewPasswordComponent implements OnInit {
     if (this.isPasswordValid()) {
       this.userService.forgottenPasswordChangeConfirmation(data).then(result => {
         if (result === "Successful password update") {
-          this.toggleSuccessToast();
-        }else{
-          this.toggleErrorToast()
+          this.toastService.success(result);
+        } else {
+          this.toastService.error("Something went wrong")
         }
-        setTimeout((args) => {
+        setTimeout(() => {
           window.location.href = 'http://localhost:4200/';
         }, 5000);
       })
@@ -45,11 +44,4 @@ export class NewPasswordComponent implements OnInit {
     return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,20}$/.test(this.password)
   }
 
-  toggleErrorToast = () => {
-    this.openErrorToast = !this.openErrorToast;
-  };
-
-  toggleSuccessToast = () => {
-    this.openSuccessToast = !this.openSuccessToast;
-  };
 }
