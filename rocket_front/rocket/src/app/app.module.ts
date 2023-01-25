@@ -105,6 +105,7 @@ import { EmbeddedHtmlComponent } from './modals/notification/embeded-html/embedd
 import { AdminChatPageComponent } from './page/admin-chat-page/admin-chat-page.component';
 import { UserChatModalComponent } from './modals/user-chat-modal/user-chat-modal.component';
 import { NewPasswordComponent } from './modals/new-password/new-password.component';
+import { RegistrationVerificationComponent } from './page/registration-verification/registration-verification.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -191,6 +192,7 @@ import { NewPasswordComponent } from './modals/new-password/new-password.compone
     AdminChatPageComponent,
     UserChatModalComponent,
     NewPasswordComponent,
+    RegistrationVerificationComponent,
   ],
   imports: [
     HttpClientModule,

@@ -17,6 +17,7 @@ import { RouteComponent } from './page/ride-request-page/route/route.component';
 import { DataInfoComponent } from './page/ride-request-page/data-info/data-info.component';
 import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 import {AdminChatPageComponent} from "./page/admin-chat-page/admin-chat-page.component";
+import {RegistrationVerificationComponent} from "./page/registration-verification/registration-verification.component";
 
 const routes: Routes = [
   {path: '', component: HomepageComponent},
@@ -53,6 +54,7 @@ const routes: Routes = [
   },
   {path: "ride/current", component: CurrentRidePageComponent},
   {path: "admin/chat", component: AdminChatPageComponent},
+  {path: "registration/verification", component: RegistrationVerificationComponent},
 ];
 
 @NgModule({
