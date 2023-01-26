@@ -1,27 +1,30 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
-import { Notif } from 'src/app/interfaces/Notification';
+import {Notif} from 'src/app/interfaces/Notification';
 import {
   NotificationsAction,
   NotificationsActionType,
 } from 'src/app/shared/store/notifications-slice/notifications.actions';
-import { StoreType } from 'src/app/shared/store/types';
-import { Store } from '@ngrx/store';
-import { CurrentRide, UserRidingStatus } from 'src/app/interfaces/Ride';
+import {StoreType} from 'src/app/shared/store/types';
+import {Store} from '@ngrx/store';
+import {CurrentRide, UserRidingStatus} from 'src/app/interfaces/Ride';
 import {
   CurrentRideAction,
   CurrentRideActionType,
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import { http } from 'src/app/shared/api/axios-wrapper';
-import { RideService } from '../ride/ride.service';
-import { User } from 'src/app/interfaces/User';
+import {http} from 'src/app/shared/api/axios-wrapper';
+import {RideService} from '../ride/ride.service';
+import {User} from 'src/app/interfaces/User';
+import {MessageInfo} from "../../interfaces/MessageInfo";
+import {MessageAction, MessageActionType} from "../../shared/store/message-slice/message.actions";
 
 @Injectable()
 export class SocketService {
   isCustomSocketOpened: boolean = false;
   user: User | null = null;
+
   constructor(
     private httpService: HttpClient,
     private store: Store<StoreType>,
@@ -54,7 +57,8 @@ export class SocketService {
       .get(
         `http://localhost:8443/api/notification/send-ride-request-invitation/${email}`
       )
-      .subscribe((data: any) => {});
+      .subscribe((data: any) => {
+      });
   }
 
   sendResponseOnRideRequest(
@@ -67,7 +71,8 @@ export class SocketService {
         userId: userId,
         ridingStatus: status,
       })
-      .subscribe((data: any) => {});
+      .subscribe((data: any) => {
+      });
   }
 
   openSocket() {
@@ -87,6 +92,12 @@ export class SocketService {
           this.handleResultRide(message);
         }
       );
+      this.stompClient.subscribe(
+        '/user/queue/message',
+        (message: { body: object }) => {
+          this.handleMessage(message);
+        }
+      );
     }
   }
 
@@ -103,26 +114,37 @@ export class SocketService {
   async handleResultRide(message: any) {
     const id: number = JSON.parse(message.body);
     const currentRide = await this.rideService.getCurrentRide(id);
-    console.log('----------------');
-    console.log(currentRide);
-    alert(currentRide);
-
     if (currentRide) {
-      console.log('----------------');
-      console.log(currentRide);
-      alert(currentRide);
       if (
         this.user?.roles[0] === 'CLIENT' ||
         (this.user?.roles[0] === 'DRIVER' && currentRide.vehicle)
       ) {
-        console.log('----------------');
-        console.log(currentRide);
-        alert(currentRide);
         this.store.dispatch(
           new CurrentRideAction(CurrentRideActionType.SET, currentRide)
         );
       }
     }
     await this.rideService.onRideStatusChanged();
+  }
+
+  handleVehicleStatus(message: any) {
+    const notifications: Notif[] = JSON.parse(message.body);
+    this.store.dispatch(
+      new NotificationsAction(
+        NotificationsActionType.SET_NOTIFICATIONS,
+        notifications
+      )
+    );
+  }
+
+  handleMessage(message: any) {
+    const messages: MessageInfo[] = JSON.parse(message.body);
+    alert("alooooo")
+    this.store.dispatch(
+      new MessageAction(
+        MessageActionType.SET_MESSAGES,
+        messages
+      )
+    );
   }
 }

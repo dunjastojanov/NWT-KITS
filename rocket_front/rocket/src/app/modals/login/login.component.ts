@@ -21,6 +21,7 @@ import {
 import {ToastrService} from 'ngx-toastr';
 import {SocketService} from 'src/app/services/sockets/sockets.service';
 import {VehicleService} from 'src/app/services/vehicle/vehicle.service';
+import {ChatService} from "../../services/chat/chat.service";
 
 @Component({
   selector: 'login',
@@ -49,7 +50,9 @@ export class LoginComponent implements OnInit {
     private notificationService: NotificationService,
     private toastr: ToastrService,
     private vehicleService: VehicleService,
-    private userService: UserService
+    private userService: UserService,
+    private chatService: ChatService,
+
   ) {
     this.email = '';
     this.password = '';
@@ -96,7 +99,7 @@ export class LoginComponent implements OnInit {
   async login(user: User) {
     this.toastr.success('Login successful!');
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
-
+    await this.chatService.loadMessages();
     if (this.hasRole(user, 'DRIVER')) {
       this.vehicleService.changeStatus('ACTIVE').then(() => {
       });

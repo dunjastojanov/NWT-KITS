@@ -6,6 +6,9 @@ import {AdminService} from "../../services/admin/admin.service";
 import {UserService} from "../../services/user/user.service";
 import {ChatService} from "../../services/chat/chat.service";
 import {ToastrService} from "ngx-toastr";
+import {Store} from "@ngrx/store";
+import {StoreType} from "../../shared/store/types";
+import {MessageAction, MessageActionType} from "../../shared/store/message-slice/message.actions";
 
 
 @Component({
@@ -20,22 +23,64 @@ export class AdminChatPageComponent implements OnInit {
   message: string = "";
   talkingTo: string = "";
 
-  constructor(private adminService: AdminService, private userService: UserService, private chatService: ChatService, private toastService: ToastrService) {
-
-  }
-
-  ngOnInit(): void {
-    //TODO inicijalizuj socket
-    this.adminService.getAllAdminsChat().then(
-      result => {
-        this.users = result;
-      }
-    );
+  constructor(private adminService: AdminService,
+              private userService: UserService,
+              private chatService: ChatService,
+              private toastService: ToastrService,
+              private store: Store<StoreType>) {
     this.userService.getUser().then(
       result => {
         this.loggedAdmin = result;
       }
     );
+
+    this.adminService.getAllAdminsChat().then(
+      result => {
+        this.users = result;
+        if (this.users.length === 0) {
+          return;
+        }
+        this.store.select('messages').subscribe(
+          resData => {
+            this.talkingTo = this.users[0].email
+            console.log(resData.messages)
+            this.messages = resData.messages
+              .filter(message => {
+                return message.receiver === this.talkingTo || message.sender === this.talkingTo;
+              });
+          }
+        )
+      }
+    );
+
+  }
+
+  ngOnInit(): void {
+    // this.userService.getUser().then(
+    //   result => {
+    //     this.loggedAdmin = result;
+    //   }
+    // );
+    //
+    // this.adminService.getAllAdminsChat().then(
+    //   result => {
+    //     this.users = result;
+    //     if (this.users.length === 0) {
+    //       return;
+    //     }
+    //     this.store.select('messages').subscribe(
+    //       resData => {
+    //         this.talkingTo = this.users[0].email
+    //         console.log(resData.messages)
+    //         this.messages = resData.messages
+    //           .filter(message => {
+    //             return message.receiver === this.talkingTo || message.sender === this.talkingTo;
+    //           });
+    //       }
+    //     )
+    //   }
+    // );
+
   }
 
   sendMessage() {
@@ -43,7 +88,6 @@ export class AdminChatPageComponent implements OnInit {
       message: this.message,
       receiverEmail: this.talkingTo
     }
-    console.log(this.talkingTo)
     if (this.message === "") {
       this.toastService.error("Message mustn't be blank")
     } else if (this.talkingTo === "") {
@@ -51,17 +95,29 @@ export class AdminChatPageComponent implements OnInit {
     } else {
       this.chatService.sendMessage(dto).then(
         result => {
-          this.messages = result;
+          this.store.dispatch(
+            new MessageAction(
+              MessageActionType.SET_MESSAGES,
+              result
+            )
+          );
         }
       )
     }
+    this.message = "";
   }
 
   getMessagesWith(email: string) {
     this.talkingTo = email;
-    this.chatService.getMessagesWith(email).then(result => {
-      this.messages = result
-    })
+    this.store.select('messages').subscribe(
+      resData => {
+        console.log(resData.messages)
+        this.messages = resData.messages.filter(message => {
+          return message.receiver === email || message.sender === email;
+        });
+      }
+    )
+
   }
 
 }

@@ -25,6 +25,12 @@ function localStorageSyncReducer(
           decrypt: (state) => window.atob(state),
         },
       },
+      {
+        messages: {
+          encrypt: (state) => window.btoa(state),
+          decrypt: (state) => window.atob(state),
+        },
+      },
     ],
     rehydrate: true,
   })(reducer);

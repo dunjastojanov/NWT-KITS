@@ -113,6 +113,7 @@ import { StatusToggleComponent } from './navbar/status-toggle/status-toggle.comp
 import { ChangePasswordComponent } from './modals/change-password/change-password.component';
 import { BlockUserComponent } from './modals/block-user/block-user.component';
 import { CancelRideComponent } from './modals/cancel-ride/cancel-ride.component';
+import {MessagesReducer} from "./shared/store/message-slice/message.reducer";
 
 @NgModule({
   declarations: [
@@ -230,6 +231,7 @@ import { CancelRideComponent } from './modals/cancel-ride/cancel-ride.component'
         rideInfo: RideInfoReducer,
         currentRide: CurrentRideReducer,
         notifications: NotificationsReducer,
+        messages:MessagesReducer,
       },
       { metaReducers }
     ),
