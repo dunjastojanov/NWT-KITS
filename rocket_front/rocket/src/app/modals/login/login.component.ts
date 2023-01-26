@@ -1,26 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {
   FacebookLoginProvider,
   SocialAuthService,
   SocialUser,
 } from '@abacritt/angularx-social-login';
-import { Store } from '@ngrx/store';
-import { StoreType } from 'src/app/shared/store/types';
+import {Store} from '@ngrx/store';
+import {StoreType} from 'src/app/shared/store/types';
 import {
   LoggedUserAction,
   LoggedUserActionType,
 } from 'src/app/shared/store/logged-user-slice/logged-user.actions';
-import { User } from 'src/app/interfaces/User';
-import { UserService } from '../../services/user/user.service';
-import { NotificationService } from '../../services/notification/notification.service';
-import { multiSelectProp } from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
+import {User} from 'src/app/interfaces/User';
+import {UserService} from '../../services/user/user.service';
+import {NotificationService} from '../../services/notification/notification.service';
+import {multiSelectProp} from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
 import {
   CurrentRideAction,
   CurrentRideActionType,
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import { ToastrService } from 'ngx-toastr';
-import { SocketService } from 'src/app/services/sockets/sockets.service';
-import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
+import {ToastrService} from 'ngx-toastr';
+import {SocketService} from 'src/app/services/sockets/sockets.service';
+import {VehicleService} from 'src/app/services/vehicle/vehicle.service';
 
 @Component({
   selector: 'login',
@@ -48,7 +48,8 @@ export class LoginComponent implements OnInit {
     private socketService: SocketService,
     private notificationService: NotificationService,
     private toastr: ToastrService,
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private userService: UserService
   ) {
     this.email = '';
     this.password = '';
@@ -67,6 +68,10 @@ export class LoginComponent implements OnInit {
           roles: ['CLIENT'],
           profilePicture: socialUser.photoUrl,
         };
+        await this.userService.loginGoogleUser(user).then(result => {
+          //TODO ovde se dobije access token i treba da se namesti
+          console.log(result);
+        });
         await this.login(user);
       }
     );
@@ -93,7 +98,8 @@ export class LoginComponent implements OnInit {
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
 
     if (this.hasRole(user, 'DRIVER')) {
-      this.vehicleService.changeStatus('ACTIVE').then(() => {});
+      this.vehicleService.changeStatus('ACTIVE').then(() => {
+      });
     }
 
     await this.notificationService.loadNotifications();
