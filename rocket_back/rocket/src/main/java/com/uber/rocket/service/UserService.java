@@ -1,6 +1,7 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
+import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.tokens.ConformationTokenType;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.UserRepository;
@@ -8,12 +9,15 @@ import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,10 +79,46 @@ public class UserService {
         try {
             emailService.sendEmailWithTokenByEmailSubject(client, token, EmailSubject.REGISTRATION_EMAIL);
         } catch (IOException e) {
-            System.out.println("ovde puca 1");
             throw new RuntimeException("There was some error in sending email");
         }
         return "Successful registration. We have sent an email for registration verification";
+    }
+
+    public String googleRegister(GoogleUser googleUser, HttpServletRequest request, HttpServletResponse response) {
+        Optional<User> user = userRepository.findByEmail(googleUser.getEmail());
+        if (user.isPresent()) {
+            return loginInGoogleUser(user.get(), request, response);
+        }
+        User client = createUserFromGoogleUser(googleUser);
+        client.getRoles().add(roleService.getRoleByUserRole(RoleType.CLIENT));
+        userRepository.save(client);
+        return loginInGoogleUser(client, request, response);
+
+    }
+
+    private User createUserFromGoogleUser(GoogleUser googleUser) {
+        String hashedPassword = bCryptPasswordEncoder.encode(googleUser.getId());
+        User user = new User();
+        user.setCity("");
+        user.setPhoneNumber("");
+        user.setEmail(googleUser.getEmail());
+        user.setPassword(hashedPassword);
+        user.setBlocked(false);
+        user.setProfilePicture(googleUser.getPhotoUrl());
+        user.setFirstName(googleUser.getFirstName());
+        user.setLastName(googleUser.getLastName());
+        return user;
+    }
+
+    private String loginInGoogleUser(User googleUser, HttpServletRequest request, HttpServletResponse response) {
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(RoleType.CLIENT.name()));
+        org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(googleUser.getEmail(), googleUser.getPassword(), authorities);
+        String accessToken = authService.makeAccessToken(userDetails, request);
+        Cookie cookie = authService.makeCookie(accessToken);
+        response.addCookie(cookie);
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        return accessToken;
     }
 
     private User createUser(UserRegistrationDTO userRegistrationDTO) {
@@ -190,7 +230,7 @@ public class UserService {
     public Object getDriversByFilter(int size, int number, String filter) {
         String role = RoleType.DRIVER.name();
         List<UserDataDTO> dtos = userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter);
-        dtos =  dtos.stream().peek(dto-> {
+        dtos = dtos.stream().peek(dto -> {
             if (dto.getRoles().contains("DRIVER")) {
                 dto.setStatus(vehicleRepository.findFirstByDriverId(dto.getId()).getStatus().name());
             }
@@ -226,9 +266,9 @@ public class UserService {
 
     public UserDataDTO getRandomAdmin() {
         Role role = roleService.getRoleByUserRole(RoleType.ADMINISTRATOR);
-        ArrayList<User> admins= (ArrayList<User>) userRepository.findAll();
+        ArrayList<User> admins = (ArrayList<User>) userRepository.findAll();
         admins.removeIf(user -> !user.getRoles().contains(role));
-        if(admins.size()==0){
+        if (admins.size() == 0) {
             throw new RuntimeException("There is no admin");
         }
         if (admins.size() == 1) {
@@ -238,7 +278,36 @@ public class UserService {
         int randomIndex = random.nextInt(admins.size());
         return new UserDataDTO(admins.get(randomIndex));
     }
+
     public List<SimpleUser> getAllNonAdministratorUsers() {
         return userRepository.findAllNonAdministratorUsers();
+    }
+
+    public boolean checkPassengersTokens(Ride ride) {
+        if (ride.getSplitFare()) {
+            double splitCost = ride.getPrice() / (float) ride.getPassengers().size();
+            for (User passenger :
+                    ride.getUsers()) {
+                if (passenger.getTokens() < splitCost)
+                    return false;
+            }
+            return true;
+        }
+        User user = ride.getUsers().get(0);
+        return user.getTokens() >= ride.getPrice();
+    }
+
+    public void passengerTokensWithdraw(Ride ride) {
+        if (ride.getSplitFare()) {
+            for (User passenger :
+                    ride.getUsers()) {
+                double splitCost = ride.getPrice() / (float) ride.getPassengers().size();
+                passenger.setTokens(passenger.getTokens() - splitCost);
+                userRepository.save(passenger);
+            }
+        }
+        User user = ride.getUsers().get(0);
+        user.setTokens(user.getTokens() - ride.getPrice());
+        userRepository.save(user);
     }
 }
