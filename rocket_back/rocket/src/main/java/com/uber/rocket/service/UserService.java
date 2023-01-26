@@ -112,7 +112,9 @@ public class UserService {
 
     private String loginInGoogleUser(User googleUser, HttpServletRequest request, HttpServletResponse response) {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(RoleType.CLIENT.name()));
+        googleUser.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getRole()));
+        });
         org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(googleUser.getEmail(), googleUser.getPassword(), authorities);
         String accessToken = authService.makeAccessToken(userDetails, request);
         Cookie cookie = authService.makeCookie(accessToken);

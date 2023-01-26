@@ -3,10 +3,13 @@ package com.uber.rocket.controller;
 import com.uber.rocket.dto.DriverRegistrationDTO;
 import com.uber.rocket.dto.EvaluationDTO;
 import com.uber.rocket.dto.UpdateDriverDto;
+import com.uber.rocket.entity.user.User;
+import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +23,9 @@ public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
 
-    //TODO dodati pocetnu lokaciju
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     @PostMapping
     public ResponseEntity<?> registerDriver(@Valid @RequestBody DriverRegistrationDTO driverRegistrationDTO) {
         try {
@@ -58,7 +63,7 @@ public class VehicleController {
     }
 
     @PutMapping("/{status}")
-    public ResponseEntity<?> updateDriverStatus(HttpServletRequest request, @PathVariable String status){
+    public ResponseEntity<?> updateDriverStatus(HttpServletRequest request, @PathVariable String status) {
         try {
             return ResponseEntity.ok(vehicleService.updateDriverStatus(request, status));
         } catch (RuntimeException exception) {
@@ -93,4 +98,11 @@ public class VehicleController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
+
+    @GetMapping("/driver/status/{email}")
+    public void getVehicleStatus(@PathVariable("email") String email) {
+        Vehicle vehicle = vehicleService.getVehicleByDriver(vehicleService.getDriverByEmail(email));
+        messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/queue/driver/status", vehicle.getStatus());
+    }
+
 }

@@ -7,6 +7,7 @@ import com.uber.rocket.entity.user.Message;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,8 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
     @Autowired
     private UserService userService;
 
@@ -33,18 +36,14 @@ public class MessageService {
         data.setReceiver(receiver);
         data.setSender(sender);
         messageRepository.save(data);
-        return getMessagesBetweenReceiverAndSender(receiver, sender);
+        messagingTemplate.convertAndSendToUser(receiver.getEmail(), "/queue/message", getAllMessageForUser(receiver));
+        return getAllMessageForUser(sender);
     }
 
-    public Object getMessagesBetweenReceiverAndSender(User receiver, User sender) {
-        List<Message> messages = messageRepository.findAllByReceiverIsAndSenderIsOrderBySentAtAsc(receiver, sender);
-        return messages.stream().map(MessageDTO::new).collect(Collectors.toList());
-    }
 
-    public Object getMessagesForLoggedUser(HttpServletRequest request, String receiverEmail) {
+    public Object getMessagesForLoggedUser(HttpServletRequest request) {
         User sender = userService.getUserFromRequest(request);
-        User receiver = userService.getUserByEmail(receiverEmail);
-        return getMessagesBetweenReceiverAndSender(sender, receiver);
+        return getAllMessageForUser(sender);
     }
 
 
@@ -53,4 +52,7 @@ public class MessageService {
         return messageRepository.findAllDistinctSendersByReceiver(admin).stream().map(UserChatInfo::new).collect(Collectors.toList());
     }
 
+    public List<MessageDTO> getAllMessageForUser(User user) {
+        return messageRepository.findAllByReceiverIsOrSenderIs(user);
+    }
 }

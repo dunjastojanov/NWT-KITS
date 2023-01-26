@@ -70,9 +70,8 @@ public class SecurityConfiguration {
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/password").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/login").permitAll();
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/chat").hasAnyAuthority(RoleType.ADMINISTRATOR.name());
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/chat").hasAnyAuthority(RoleType.ADMINISTRATOR.name(),RoleType.CLIENT.name());
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/chat/message").hasAnyAuthority(RoleType.ADMINISTRATOR.name(),RoleType.CLIENT.name());
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/chat/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/chat/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(new CustomAuthorizationFilter(authService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
