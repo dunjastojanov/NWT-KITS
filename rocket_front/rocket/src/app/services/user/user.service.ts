@@ -21,7 +21,8 @@ interface NewDriver {
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private cookieService: CookieService) {}
+  constructor(private cookieService: CookieService) {
+  }
 
   async loginUser(data: any): Promise<boolean> {
     try {
@@ -161,9 +162,9 @@ export class UserService {
     return null;
   }
 
-  async blockUser(email: string) {
-    let result: AxiosResponse<any> = await http.delete<object>(
-      '/api/user/' + email
+  async blockUser(email: string, message: string) {
+    let result: AxiosResponse<any> = await http.post<object>(
+      '/api/user/block/' + email, message
     );
     return result.data;
   }
@@ -185,5 +186,38 @@ export class UserService {
         return `User ${email} already has scheduled ride.`;
       else return `There is no user with email ${email}`;
     }
+  }
+
+  async changePassword(dto: { oldPassword: string; newPassword: string }) {
+    let result: AxiosResponse<any> = await http.put<object>(
+      '/api/user/password',
+      dto
+    );
+    return result.data;
+  }
+
+  async cancelRide(rideId: string, message: string) {
+    let result: AxiosResponse<any> = await http.post<object>(
+      '/api/user/cancel/' + rideId, message
+    );
+    return result.data;
+  }
+
+  async sendRequestForPassword(email: string) {
+    await http.post<string>("/api/user/password", email,{
+      headers:{
+        "Content-Type":"text/plain"
+      }
+    });
+  }
+
+  async forgottenPasswordChangeConfirmation(data: { token: string, password: string }): Promise<string> {
+    let result: AxiosResponse<string> = await http.post<string, object>("/api/user/confirm", data);
+    return result.data;
+  }
+
+  async verifyRegistration(token: string): Promise<string> {
+    let result: AxiosResponse<string> = await http.get<string>("/api/user/confirm/" + token);
+    return result.data;
   }
 }

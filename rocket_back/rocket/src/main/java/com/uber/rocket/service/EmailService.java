@@ -89,10 +89,10 @@ public class EmailService {
     private static String modifyEmailContent(String injectedString, EmailSubject emailSubject, String content) {
         switch (emailSubject) {
             case REGISTRATION_EMAIL -> {
-                return content.replace(REPLACEMENT_STRING, "https://localhost:8443/api/user/confirm/" + injectedString);
+                return content.replace(REPLACEMENT_STRING, "http://localhost:4200/registration/verification?token=" + injectedString);
             }
             case FORGOTTEN_PASSWORD -> {
-                return content.replace(REPLACEMENT_STRING, "http://localhost:4200/reset/password/" + injectedString);
+                return content.replace(REPLACEMENT_STRING, "http://localhost:4200?token=" + injectedString);
             }
             case DRIVER_REGISTRATION_NOTIFICATION -> {
                 return content.replace(REPLACEMENT_STRING, injectedString);
@@ -106,7 +106,7 @@ public class EmailService {
     private static EmailDataDTO buildEmailDTO(User user, EmailSubject emailSubject) {
         EmailDataDTO emailDataDTO = new EmailDataDTO();
         emailDataDTO.setRecipient(user.getEmail());
-        emailDataDTO.setSubject(emailSubject.getPath());
+        emailDataDTO.setSubject(emailSubject.getLabel());
         return emailDataDTO;
     }
 

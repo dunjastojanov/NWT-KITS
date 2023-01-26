@@ -4,9 +4,8 @@
     <word-ceo></word-ceo>
     <statistics></statistics>
     <about></about>
-</div>
-<toast-error message="Payment was not successful" [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
-<toast-success message="Payment was successful!" [open]="openSuccessToast" [closeFunc]="toggleSuccessToast"></toast-success>
 
+</div>
+<app-new-password [open]="openNewPasswordModal" [closeFunc]="togglePasswordModal" [token]="token"></app-new-password>
 
 

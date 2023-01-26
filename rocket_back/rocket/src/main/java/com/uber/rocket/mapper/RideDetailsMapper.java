@@ -1,6 +1,7 @@
 package com.uber.rocket.mapper;
 
 import com.uber.rocket.dto.RideDetails;
+import com.uber.rocket.entity.ride.Passenger;
 import com.uber.rocket.entity.ride.Review;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.service.DestinationService;
@@ -34,6 +35,8 @@ public class RideDetailsMapper implements Mapper<Ride, RideDetails> {
                 .end(destinationService.getEndAddressByRide(ride))
                 .duration(String.valueOf(ride.getDuration()))
                 .price(String.valueOf(ride.getPrice()))
+                .routeLocation(ride.getRouteLocation())
+                .passengers(ride.getPassengers().stream().map(passenger -> passenger.getUser().getFullName()).toList())
                 .reviews(reviewService.getReviewByRide(ride).stream().map(reviewMapper::mapToDto).collect(Collectors.toList()))
                 .rating(reviewService.getReviewByRide(ride).stream().map(Review::getRating).reduce((double) 0, Double::sum))
                 .build();

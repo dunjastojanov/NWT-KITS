@@ -1,7 +1,8 @@
 export interface RideDetails {
   id: string;
   driver: string;
-  passenger: string;
+  passengers: string[];
+  routeLocation: string;
   driverProfileImage: string;
   start: string;
   end: string;

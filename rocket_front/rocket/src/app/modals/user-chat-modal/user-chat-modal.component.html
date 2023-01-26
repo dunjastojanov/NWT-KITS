@@ -1,0 +1,38 @@
+<div *ngIf="isChatAvailable()" class="fixed bottom-0 right-0 m-10 z-50 ">
+  <div *ngIf="show" class="p-4 bg-primary-dark rounded-full justify-center" (click)="changeView()">
+    <button class="align-middle">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
+           class="w-10 h-10">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/>
+      </svg>
+    </button>
+  </div>
+  <div *ngIf="!show" class="rounded-lg bg-white " style="width: 22rem;height: 30rem">
+    <div class="flex flex-col">
+
+      <div class="flex flex-row items-center gap-x-4 bg-secondary-dark p-3 rounded-t-lg" (click)="changeView()">
+        <img [src]="admin?.profilePicture||'assets/profile-placeholder.png'"
+             alt="profile picture"
+             class="rounded-full h-8 w-8 ">
+        <p class="text-white">{{admin?.firstName + " " + admin?.lastName}}</p>
+      </div>
+      <div
+        class="overflow-y-scroll overflow-x-hidden flex flex-col mx-2 my-1 relative" style="height: 355px">
+        <div *ngFor="let message of messages"
+             [ngClass]="message.sender===admin?.email?'receiver_chat_bubble':'sender_chat_bubble'">
+          <p
+            style="overflow-wrap: break-word;white-space: pre-wrap;text-overflow: ellipsis;">{{message.message}}</p>
+          <p class="text-xs text-right">{{message.sentAt}}</p>
+        </div>
+      </div>
+      <hr>
+      <div
+        class="bg-white absolute bottom-0 my-1 py-2 mx-2 flex flex-row min-w-fit ">
+        <input type="text" [(ngModel)]="message"
+               class=" w-64 block text-sm bg-transparent border-0 border-b-2 border-tertiary-medium appearance-none focus:outline-none focus:ring-0 focus:border-secondary-light peer">
+        <button class="mx-4" (click)="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,4 +10,8 @@ import java.util.*;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findAllByUser(User user);
+
+    List<Notification> findByUserIsNull();
+
+    Optional<Notification> findNotificationByEntityId(Long entityId);
 }

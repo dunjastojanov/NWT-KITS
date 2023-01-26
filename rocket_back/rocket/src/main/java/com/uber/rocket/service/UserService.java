@@ -6,6 +6,7 @@ import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -29,6 +32,9 @@ public class UserService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -69,6 +75,7 @@ public class UserService {
         try {
             emailService.sendEmailWithTokenByEmailSubject(client, token, EmailSubject.REGISTRATION_EMAIL);
         } catch (IOException e) {
+            System.out.println("ovde puca 1");
             throw new RuntimeException("There was some error in sending email");
         }
         return "Successful registration. We have sent an email for registration verification";
@@ -81,11 +88,11 @@ public class UserService {
         return user;
     }
 
-    public ResponseObjectDTO validateRegistrationToken(String token) {
+    public String validateRegistrationToken(String token) {
         User user = confirmationTokenService.validateToken(token);
         user.setBlocked(false);
         userRepository.save(user);
-        return new ResponseObjectDTO(null, "Successful registration verification");
+        return "Successful registration verification";
     }
 
     public UserDataDTO getLoggedUser(HttpServletRequest request) {
@@ -156,13 +163,14 @@ public class UserService {
         return "We have sent an email for changing password";
     }
 
-    public Object blockUser(String email) throws IOException {
+    public Object blockUser(String email, String reason) throws IOException {
         User user = getUserByEmail(email);
         if (user.isBlocked())
             throw new RuntimeException("User is already blocked");
         user.setBlocked(true);
         userRepository.save(user);
         emailService.sendEmailByEmailSubject(user, EmailSubject.BLOCKED_NOTIFICATION);
+        notificationService.addBlockedUserNotification(reason, user);
         return "User is successfully blocked";
     }
 
@@ -181,13 +189,19 @@ public class UserService {
 
     public Object getDriversByFilter(int size, int number, String filter) {
         String role = RoleType.DRIVER.name();
-        return userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter, PageRequest.of(number, size));
+        List<UserDataDTO> dtos = userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter);
+        dtos =  dtos.stream().peek(dto-> {
+            if (dto.getRoles().contains("DRIVER")) {
+                dto.setStatus(vehicleRepository.findFirstByDriverId(dto.getId()).getStatus().name());
+            }
+        }).collect(Collectors.toList());
+        return new PageImpl<>(dtos, PageRequest.of(number, size), dtos.size());
+
     }
 
     public Object getClientByFilter(int size, int number, String filter) {
         String role = RoleType.CLIENT.name();
         return userRepository.searchAllFirstNameStartingWithOrLastNameStartingWith(role, filter, PageRequest.of(number, size));
-
     }
 
     public User getById(Long userId) {
@@ -210,4 +224,21 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserDataDTO getRandomAdmin() {
+        Role role = roleService.getRoleByUserRole(RoleType.ADMINISTRATOR);
+        ArrayList<User> admins= (ArrayList<User>) userRepository.findAll();
+        admins.removeIf(user -> !user.getRoles().contains(role));
+        if(admins.size()==0){
+            throw new RuntimeException("There is no admin");
+        }
+        if (admins.size() == 1) {
+            return new UserDataDTO(admins.get(0));
+        }
+        Random random = new Random();
+        int randomIndex = random.nextInt(admins.size());
+        return new UserDataDTO(admins.get(randomIndex));
+    }
+    public List<SimpleUser> getAllNonAdministratorUsers() {
+        return userRepository.findAllNonAdministratorUsers();
+    }
 }

@@ -113,6 +113,15 @@ public class RideController {
         }
     }
 
+    @GetMapping("/{size}/{page}/{email}")
+    public ResponseEntity<?> getRideHistoryForUser(@PathVariable int page, @PathVariable int size, @PathVariable String email) {
+        try {
+            return ResponseEntity.ok(rideService.getRideHistoryForUser(page, size, email));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
     @GetMapping("/all/{size}/{page}")
     public ResponseEntity<?> getAllRideHistory(@PathVariable int page, @PathVariable int size) {
         try {
@@ -135,6 +144,16 @@ public class RideController {
     public ResponseEntity<?> getReportForAll(@PathVariable String type, @RequestBody DatePeriod datePeriod) {
         try {
             return ResponseEntity.ok(rideService.getReportForAll(type, datePeriod));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @PostMapping("/cancel/{id}")
+    public ResponseEntity<?> cancelRide(@PathVariable Long id, @RequestBody String reason) {
+        try {
+            rideService.cancelRide(id, reason);
+            return ResponseEntity.ok("Ride successfully canceled.");
         } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }

@@ -13,6 +13,7 @@ public class ImageService {
 
     private final static String STATIC_PATH = "src/main/resources/static/";
     private final static String STATIC_PATH_TARGET = "target/classes/static/";
+    private final static String BACKEND_URL = "http://localhost:8443";
 
     private final static String IMAGES_PATH = "/images/";
 
@@ -36,7 +37,7 @@ public class ImageService {
             assert fileName != null;
             Path filePath = path.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-            return IMAGES_PATH + userId + "/" + fileName;
+            return BACKEND_URL + IMAGES_PATH + userId + "/" + fileName;
         } catch (DirectoryNotEmptyException exception) {
             throw new IOException("Directory Not Empty Exception: " + file.getOriginalFilename(), exception);
         } catch (IOException exception) {

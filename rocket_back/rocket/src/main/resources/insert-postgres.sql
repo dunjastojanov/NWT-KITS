@@ -82,6 +82,18 @@ INSERT INTO public.app_user_roles(
     user_id, roles_id)
 VALUES ('10', '1');
 
+INSERT INTO public.vehicle(
+    id, latitude, longitude, kid_friendly, pet_friendly, status, vehicle_type, driver_id)
+VALUES ('1','0' , '0', 'true', 'true', 'INACTIVE', 'CARAVAN', '2');
+
+INSERT INTO public.vehicle(
+    id, latitude, longitude, kid_friendly, pet_friendly, status, vehicle_type, driver_id)
+VALUES ('2', '0', '0', 'false', 'false', 'INACTIVE', 'CONVERTIBLE', '3');
+
+INSERT INTO public.vehicle(
+    id, latitude, longitude, kid_friendly, pet_friendly, status, vehicle_type, driver_id)
+VALUES ('3', '0', '0',  'true', 'false', 'INACTIVE', 'LIMOUSINE', '4');
+
 
 INSERT INTO public.vehicle(
     id, latitude, longitude, kid_friendly, pet_friendly, status, vehicle_type, driver_id)

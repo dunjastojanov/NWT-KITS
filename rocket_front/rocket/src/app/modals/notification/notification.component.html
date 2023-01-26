@@ -20,12 +20,14 @@
       <embedded-html [html]="notification.html"></embedded-html>
 
       <div *ngIf="!isBasic(notification.type)" class="flex items-center justify-center mt-2 gap-2">
-        <secondary-button (click)="onDeny()" text="DENY"></secondary-button>
-        <primary-button (click)="onAccept()" text="ACCEPT"></primary-button>
+        <secondary-button (click)="onDeny()" [text]="notification.type === 'RIDE_REVIEW' ? 'CANCEL' : 'DENY'"></secondary-button>
+        <primary-button (click)="onAccept()" [text]="notification.type === 'RIDE_REVIEW' ? 'LEAVE A REVIEW' : 'ACCEPT'"></primary-button>
       </div>
 
     </div>
   </div>
 </div>
+
+<review *ngIf="notification.type == 'RIDE_REVIEW'" [rideId]="notification.entityId" [open]="showReviewModal" [closeFunc]="toggleReviewModal"></review>
 
 <div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>

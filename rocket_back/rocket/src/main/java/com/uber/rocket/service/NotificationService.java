@@ -3,7 +3,6 @@ package com.uber.rocket.service;
 import com.uber.rocket.dto.NotificationDTO;
 import com.uber.rocket.entity.notification.Notification;
 import com.uber.rocket.entity.notification.NotificationType;
-import com.uber.rocket.entity.ride.Destination;
 import com.uber.rocket.entity.ride.Passenger;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.ride.RideCancellation;
@@ -12,9 +11,9 @@ import com.uber.rocket.entity.user.UpdateDriverPictureRequest;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.mapper.NotificationMapper;
 import com.uber.rocket.repository.NotificationRepository;
+import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.utils.TemplateProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,22 +33,18 @@ public class NotificationService {
     @Autowired
     NotificationMapper notificationMapper;
     @Autowired
-    UserService userService;
+    UserRepository userRepository;
+
+    @Autowired
+    AuthService authService;
 
     @Autowired
     DestinationService destinationService;
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
-    public List<NotificationDTO> getNotificationsForUser(HttpServletRequest request) {
-        User user = userService.getUserFromRequest(request);
-        return getNotificationsForUser(user);
-    }
-
     public List<NotificationDTO> getNotificationsForUser(User user) {
         if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("ADMINISTRATOR"))) {
-            return notificationRepository.findAllByUser(null).stream().map(notificationMapper::mapToDto).toList();
+            List<Notification> byUserIsNull = notificationRepository.findByUserIsNull();
+            return byUserIsNull.stream().map(notificationMapper::mapToDto).toList();
         }
         return notificationRepository.findAllByUser(user).stream().map(notificationMapper::mapToDto).toList();
     }
@@ -67,8 +62,6 @@ public class NotificationService {
         notification.setRead(false);
         notification.setSent(LocalDateTime.now());
         notification = notificationRepository.save(notification);
-        System.out.println(notification.getUser().getEmail());
-        //messagingTemplate.convertAndSendToUser(notification.getUser().getEmail(), "/queue/notifications", notification.getType());
         return notification;
     }
 
@@ -77,12 +70,12 @@ public class NotificationService {
         notification.setTitle("Update request");
         notification.setTemplateVariables(templateProcessor.getVariableString(getUpdateDriverPictureRequestVariables(request)));
         notification.setEntityId(request.getId());
-        notification.setType(NotificationType.UPDATE_DRIVE_PICTURE_REQUEST);
+        notification.setType(NotificationType.UPDATE_DRIVER_PICTURE_REQUEST);
         save(notification);
     }
 
     private Map<String, String> getUpdateDriverPictureRequestVariables(UpdateDriverPictureRequest request) {
-        User driver = userService.getById(request.getDriverId());
+        User driver = getDriver(request.getDriverId());
         Map<String, String> variables = new HashMap<>();
         variables.put("driver", driver.getFullName());
         variables.put("email", driver.getEmail());
@@ -91,7 +84,7 @@ public class NotificationService {
     }
 
     private Map<String, String> getUpdateDriverDataRequestVariables(UpdateDriverDataRequest request) {
-        User driver = userService.getById(request.getDriverId());
+        User driver = getDriver(request.getDriverId());
         Map<String, String> variables = new HashMap<>();
         variables.put("firstName", request.getFirstName());
         variables.put("lastName", request.getLastName());
@@ -100,8 +93,28 @@ public class NotificationService {
         variables.put("phoneNumber", request.getPhoneNumber());
         variables.put("city", request.getCity());
         variables.put("path", getProfilePicture(driver));
-
+        variables.put("features", getAdditionalFeatures(request));
+        variables.put("type", request.getType().getName());
         return variables;
+    }
+
+    private static String getAdditionalFeatures(UpdateDriverDataRequest request) {
+        List<String> features = new ArrayList<>();
+        if (request.isKidFriendly()) {
+            features.add("Kid friendly");
+        }
+        if( request.isPetFriendly()) {
+            features.add("Pet friendly");
+        }
+        return String.join(" && ", features);
+    }
+
+    private User getDriver(Long request) {
+        Optional<User> optional = userRepository.findById(request);
+        if (optional.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        return optional.get();
     }
 
     private static String getProfilePicture(User user) {
@@ -118,10 +131,10 @@ public class NotificationService {
         return save(notification);
     }
 
-    public Notification addPassengerRequestNotification(User user, Ride ride) {
+    public void addPassengerRequestNotification(User user, Ride ride) {
         Notification notification = createRideRequestNotification(user, ride);
         notification.setType(NotificationType.PASSENGER_RIDE_REQUEST);
-        return save(notification);
+        save(notification);
     }
 
     public void addRideCanceledNotifications(RideCancellation rideCancellation) {
@@ -133,6 +146,36 @@ public class NotificationService {
             notification.setTemplateVariables(templateProcessor.getVariableString(getRideCancellationVariables(rideCancellation)));
             save(notification);
         }
+    }
+
+    public void addRideReviewNotification(User user, Ride ride) {
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setType(NotificationType.RIDE_REVIEW);
+        notification.setTitle("Ride review");
+        notification.setTemplateVariables(templateProcessor.getVariableString(getRideVariables(ride, this.destinationService.getStartAddressByRide(ride), this.destinationService.getEndAddressByRide(ride))));
+        notification.setEntityId(ride.getId());
+        save(notification);
+    }
+
+    public void addBlockedUserNotification(String reason, User user) {
+        Notification notification = createBlockedUserNotification(reason, user);
+        notification.setType(NotificationType.USER_BLOCKED);
+        save(notification);
+    }
+
+    private Notification createBlockedUserNotification(String reason, User user) {
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setTitle("Blocked");
+        notification.setTemplateVariables(templateProcessor.getVariableString(getBlockedUserVariables(reason)));
+        return notification;
+    }
+
+    private Map<String, String> getBlockedUserVariables(String reason) {
+        Map<String, String> variables = new HashMap<>();
+        variables.put("description", reason);
+        return variables;
     }
 
     public void addRideStatusChangeNotification(Ride ride, User user) {
@@ -152,29 +195,33 @@ public class NotificationService {
             }
             case SCHEDULED -> {
                 notification.setTitle("Ride scheduled");
-                notification.setType(NotificationType.RIDE_CANCELED);
+                notification.setType(NotificationType.RIDE_SCHEDULED);
                 Map<String, String> variables = getScheduledRideVariables(ride);
                 variables.put("status", "Your drive has been scheduled.");
                 notification.setTemplateVariables(templateProcessor.getVariableString(variables));
             }
         }
-
         save(notification);
     }
-
-
-
 
     private Map<String, String> getScheduledRideVariables(Ride ride) {
         Map<String, String> variables = new HashMap<>();
         String startAddress = this.destinationService.getStartAddressByRide(ride);
         String endAddress = this.destinationService.getEndAddressByRide(ride);
-        variables.put("numberOfPassengers", String.valueOf(ride.getPassengers().size()));
+        variables.put("passengers", getPassengers(ride));
         variables.put("price", String.valueOf(ride.getPrice()));
         variables.put("time", String.valueOf(ride.getPrice()));
         variables.put("start", startAddress);
         variables.put("end", endAddress);
         return variables;
+    }
+
+    private static String getPassengers(Ride ride) {
+        List<String> passengers = new ArrayList<>();
+        for (User passenger: ride.getUsers()) {
+            passengers.add(passenger.getFullName());
+        }
+        return String.join(" && ", passengers);
     }
 
     private Map<String, String> getRideCancellationVariables(RideCancellation rideCancellation) {
@@ -200,14 +247,17 @@ public class NotificationService {
 
     private static Map<String, String> getRideVariables(Ride ride, String startAddress, String endAddress) {
         Map<String, String> variables = new HashMap<>();
-        variables.put("numberOfPassengers", String.valueOf(ride.getPassengers().size()));
-        //variables.put("path", getProfilePicture(ride.getDriver()));
-        //variables.put("driver", ride.getDriver().getFullName());
-        //variables.put("email", ride.getDriver().getEmail());
+        variables.put("passengers", getPassengers(ride));
         variables.put("price", String.valueOf(ride.getPrice()));
         variables.put("time", String.valueOf(ride.getPrice()));
         variables.put("start", startAddress);
         variables.put("end", endAddress);
+
+        if (ride.getDriver() != null) {
+            variables.put("driver", ride.getDriver().getFullName());
+            variables.put("email", ride.getDriver().getEmail());
+            variables.put("path", getProfilePicture(ride.getDriver()));
+        }
         return variables;
     }
 
@@ -220,5 +270,15 @@ public class NotificationService {
             return notificationRepository.save(notification);
         }
         return null;
+    }
+
+    public void deleteNotification(Long entityId) {
+        Optional<Notification> notification = notificationRepository.findNotificationByEntityId(entityId);
+        notification.ifPresent(value -> notificationRepository.delete(value));
+    }
+
+    public void deleteNotificationById(Long id) {
+        Optional<Notification> notification = notificationRepository.findById(id);
+        notification.ifPresent(value -> notificationRepository.delete(value));
     }
 }

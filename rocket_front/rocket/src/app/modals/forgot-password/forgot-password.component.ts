@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {UserService} from "../../services/user/user.service";
 
 @Component({
   selector: 'forgot-password',
@@ -8,11 +9,22 @@ import {Component, Input, OnInit} from '@angular/core';
 export class ForgotPasswordComponent implements OnInit {
   @Input('open') open!: boolean;
   @Input('closeFunc') closeFunc!: () => void;
+  email: string = "";
 
-  constructor() {
+
+  constructor(private userService: UserService) {
   }
 
   ngOnInit(): void {
   }
 
+  sendRequestForForgottenPassword() {
+    if (this.isInputValid()) {
+      this.userService.sendRequestForPassword(this.email);
+    }
+  }
+
+  isInputValid() {
+    return /^.+[@].+[.].+$/.test(this.email)
+  }
 }
