@@ -166,7 +166,6 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
             passenger.setUserRidingStatus(statusUserDTO.getStatus());
             passengers.add(passenger);
         }
-        passengerRepository.saveAll(passengers);
         ride.setPassengers(passengers);
         ride.setVehicleTypeRequested(rideDTO.getVehicle().getType());
         for (String feature : rideDTO.getFeatures()) {

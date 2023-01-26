@@ -115,6 +115,13 @@ export class ConfirmRideComponent implements OnInit {
       const rideId: number = await this.rideService.saveCurrentRide(
         currentRide
       );
+      /*if (rideId === -1) {
+        this.toastr.error("Passengers do not have enough funds in their account.")
+        this.store.dispatch(
+          new CurrentRideAction(CurrentRideActionType.REMOVE)
+        );
+        return;
+      }*/
       currentRide.rideId = rideId;
       this.store.dispatch(
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)

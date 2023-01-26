@@ -159,6 +159,13 @@ public class RideService {
     }
     public Long createRide(RideDTO rideDTO) {
         Ride ride = rideMapper.mapToEntity(rideDTO);
+        /*booelan passengersHaveFund = this.userService.checkPassengersTokens(ride);
+        if (passengersHaveFund) {
+            passengerRepository.saveAll(ride.getPassengers());
+        } else {
+            return -1;
+        }
+        */
         List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
         ride = this.repository.save(ride);
         for (Destination destination : destinations) {
