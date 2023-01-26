@@ -42,6 +42,7 @@ export class NavbarComponent implements OnInit {
       this.user = resData.user;
     });
     this.store.select('notifications').subscribe((res) => {
+      console.log(res.notifications);
       this.notifications = res.notifications;
     });
   }
@@ -65,9 +66,9 @@ export class NavbarComponent implements OnInit {
   };
 
   logout = (): void => {
-    this.router.navigate(['/']).then(()=> {
+    this.router.navigate(['/']).then(() => {
       if (this.hasRole('DRIVER')) {
-        this.vehicleService.changeStatus("INACTIVE").then(()=>{})
+        this.vehicleService.changeStatus('INACTIVE').then(() => {});
       }
     });
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGOUT));

@@ -113,7 +113,6 @@ public class NotificationService {
     }
 
     public Notification addDriverRideRequestNotification(User user, Ride ride) {
-        System.out.println("Ovo se pozove");
         Notification notification = createRideRequestNotification(user, ride);
         notification.setType(NotificationType.DRIVER_RIDE_REQUEST);
         return save(notification);
@@ -195,6 +194,7 @@ public class NotificationService {
         notification.setTitle("Ride request");
         notification.setTemplateVariables(templateProcessor.getVariableString(getRideVariables(ride, startAddress, endAddress)));
         notification.setEntityId(ride.getId());
+        notification.setSent(LocalDateTime.now());
         return notification;
     }
 

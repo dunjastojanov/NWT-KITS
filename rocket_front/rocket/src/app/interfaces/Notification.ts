@@ -12,5 +12,5 @@ export interface Notif {
     | 'RIDE_SCHEDULED';
   read: boolean;
   entityId: string;
-  sent: string[];
+  sent: string[] | Date;
 }

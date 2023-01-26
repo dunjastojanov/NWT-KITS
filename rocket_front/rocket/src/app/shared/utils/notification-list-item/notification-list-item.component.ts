@@ -40,16 +40,26 @@ export class NotificationListItemComponent implements OnInit {
   }
 
   getDate(): string {
-    return `${this.notification.sent[2]
-      .toString()
-      .padStart(2, '0')}.${this.notification.sent[1]
-      .toString()
-      .padStart(2, '0')}.${
-      this.notification.sent[0]
-    }. ${this.notification.sent[3]
-      .toString()
-      .padStart(2, '0')}:${this.notification.sent[4]
-      .toString()
-      .padStart(2, '0')}`;
+    console.log('------------------');
+    console.log(this.notification);
+    if (this.notification.sent instanceof Date) {
+      console.log(typeof this.notification.sent);
+      const convertedDate = this.notification.sent as Date;
+      return `${convertedDate.getFullYear()}-${
+        convertedDate.getMonth() + 1
+      }-${convertedDate.getDate()} ${convertedDate.getHours()}:${convertedDate.getMinutes()}`;
+    } else {
+      return `${this.notification.sent[2]
+        .toString()
+        .padStart(2, '0')}.${this.notification.sent[1]
+        .toString()
+        .padStart(2, '0')}.${
+        this.notification.sent[0]
+      }. ${this.notification.sent[3]
+        .toString()
+        .padStart(2, '0')}:${this.notification.sent[4]
+        .toString()
+        .padStart(2, '0')}`;
+    }
   }
 }

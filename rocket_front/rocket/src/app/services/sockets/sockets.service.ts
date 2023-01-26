@@ -103,11 +103,21 @@ export class SocketService {
   async handleResultRide(message: any) {
     const id: number = JSON.parse(message.body);
     const currentRide = await this.rideService.getCurrentRide(id);
+    console.log('----------------');
+    console.log(currentRide);
+    alert(currentRide);
+
     if (currentRide) {
+      console.log('----------------');
+      console.log(currentRide);
+      alert(currentRide);
       if (
         this.user?.roles[0] === 'CLIENT' ||
         (this.user?.roles[0] === 'DRIVER' && currentRide.vehicle)
       ) {
+        console.log('----------------');
+        console.log(currentRide);
+        alert(currentRide);
         this.store.dispatch(
           new CurrentRideAction(CurrentRideActionType.SET, currentRide)
         );

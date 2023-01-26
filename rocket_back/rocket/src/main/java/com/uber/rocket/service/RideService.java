@@ -80,22 +80,28 @@ public class RideService {
     public void changeRidePalDriverStatus(String rideId, ChangeStatusDTO changeStatusDTO) {
         Optional<Ride> rideOpt = this.repository.findById(Long.parseLong(rideId));
         User user = this.userService.getById(Long.parseLong(changeStatusDTO.getUserId()));
+        boolean driverAccepted = false;
         if (rideOpt.isPresent()) {
             Ride ride = rideOpt.get();
             if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("DRIVER")) {
                 ride = setDriverStatus(ride, changeStatusDTO, user);
+                driverAccepted = true;
             }
             if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("CLIENT")) {
                 ride = setClientStatus(ride, changeStatusDTO);
             }
             System.out.println(ride);
+            if (!driverAccepted && this.allAcceptedRide(ride)) {
+                boolean foundDriver = this.findAndNotifyDriver(ride);
+                if (!foundDriver) {
+                    ride.setStatus(RideStatus.DENIED);
+                }
+                System.out.println(ride);
+            }
+            System.out.println(ride);
             ride = this.repository.save(ride);
             this.updateStatusOverSocket(ride);
             System.out.println(ride);
-            if (this.allAcceptedRide(ride)) {
-                this.lookForDriver(ride);
-                System.out.println(ride);
-            }
         } else {
             throw new RuntimeException("Ride not found");
         }
@@ -163,7 +169,7 @@ public class RideService {
             this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
         }
         if (this.allAcceptedRide(ride)) {
-            this.lookForDriver(ride);
+            this.findAndNotifyDriver(ride);
         }
         return ride.getId();
     }
@@ -191,12 +197,7 @@ public class RideService {
         return null;
     }
 
-    public boolean findAndNotifyDriver(Long id) {
-        Optional<Ride> rideOpt = this.repository.findById(id);
-        if (rideOpt.isEmpty()) {
-            return false;
-        }
-        Ride ride = rideOpt.get();
+    public boolean findAndNotifyDriver(Ride ride) {
         Vehicle vehicle = this.lookForDriver(ride);
         if (vehicle != null) {
             this.notificationService.addDriverRideRequestNotification(vehicle.getDriver(), ride);
