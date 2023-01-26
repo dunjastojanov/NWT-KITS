@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input } from '@angular/core';
 import * as L from 'leaflet';
 import { Destination } from 'src/app/interfaces/Destination';
 import { decode } from '@googlemaps/polyline-codec';
+import { Vehicle } from 'src/app/interfaces/Vehicle';
 
 @Component({
   selector: 'show-on-map',
@@ -13,6 +14,7 @@ export class ShowOnMapComponent implements AfterViewInit {
   @Input('destinations') destinations!: Destination[];
   @Input('route') route!: string | null;
   @Input('id') id!: string;
+  @Input('vehicle') vehicle?: Vehicle;
   private mapShow: any;
   bounds: L.LatLngBounds | null = null;
   constructor() {}
@@ -44,7 +46,11 @@ export class ShowOnMapComponent implements AfterViewInit {
       this.drawPolyline();
       this.drawMarkers();
     }
+    if (this.vehicle) {
+      this.drawVehicle();
+    }
   }
+
   private drawPolyline() {
     const routes = this.route!.split(' ').slice(0, -1);
     for (let i = 0; i < routes.length; i++) {
@@ -69,6 +75,21 @@ export class ShowOnMapComponent implements AfterViewInit {
         elem.address
       );
     });
+  }
+
+  private drawVehicle() {
+    const latLng = new L.LatLng(
+      this.vehicle!.latitude!,
+      this.vehicle!.longitude!
+    );
+    console.log(this.vehicle);
+
+    L.marker(latLng, {
+      icon: L.icon({
+        iconUrl: 'http://localhost:4200/assets/icons/car-pin.png',
+        iconSize: [32, 32],
+      }),
+    }).addTo(this.mapShow);
   }
 
   private createMarker(outermost: boolean, latLng: L.LatLng, name: string) {

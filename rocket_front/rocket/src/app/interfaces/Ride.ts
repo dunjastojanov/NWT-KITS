@@ -53,3 +53,8 @@ export enum RideStatus {
   STARTED = 'STARTED', //Ride started
   SCHEDULED = 'SCHEDULED', //Driver confirmed ride for future
 }
+
+export interface LongitudeLatitude {
+  longitude: number;
+  latitude: number;
+}

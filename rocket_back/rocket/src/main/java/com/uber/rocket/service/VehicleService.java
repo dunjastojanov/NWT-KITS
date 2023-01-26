@@ -5,6 +5,7 @@ import com.uber.rocket.entity.user.*;
 import com.uber.rocket.mapper.UpdateUserDataMapper;
 import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VehicleService {
@@ -37,6 +39,9 @@ public class VehicleService {
 
     @Autowired
     private UpdateUserDataMapper updateUserDataMapper;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     public Object registerDriver(DriverRegistrationDTO driverRegistrationDTO) throws IOException {
         User driver = userService.registerDriver(driverRegistrationDTO);
@@ -129,5 +134,24 @@ public class VehicleService {
     public Object getVehicleByDriver(HttpServletRequest request) {
         User user = userService.getUserFromRequest(request);
         return new VehicleDTO(getVehicleByDriver(user));
+    }
+    public List<VehicleSimulationDTO> getAllVehicles() {
+        List<Vehicle> vehicles = this.vehicleRepository.findAll();
+        List<VehicleSimulationDTO> vehicleDTOS = new ArrayList<>();
+        for (Vehicle vehicle : vehicles) {
+            VehicleSimulationDTO dto = new VehicleSimulationDTO();
+            dto.setLatitude(vehicle.getLatitude());
+            dto.setLongitude(vehicle.getLongitude());
+            dto.setId(vehicle.getId());
+            vehicleDTOS.add(dto);
+        }
+        return vehicleDTOS;
+    }
+
+    public Optional<Vehicle> getVehicleById(Long id) {
+        return this.vehicleRepository.findById(id);
+    }
+    public void save(Vehicle vehicle) {
+        this.vehicleRepository.save(vehicle);
     }
 }

@@ -158,4 +158,13 @@ public class RideController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
+
+    @PutMapping(path = "update-location/{id}")
+    public void updateVehicleLocation(@PathVariable("id") Long id, @RequestBody LocationDTO locationDTO) {
+        LocationDTO location = this.rideService.updateVehicleLocation(id, locationDTO.getLongitude(), locationDTO.getLatitude());
+    }
+    @GetMapping("/simulation-ride/{id}")
+    public RideSimulationDTO getRideSimulation(@PathVariable Long id) {
+        return this.rideService.getRideForSimulation(id);
+    }
 }

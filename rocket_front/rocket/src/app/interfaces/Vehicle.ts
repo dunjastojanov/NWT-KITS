@@ -1,6 +1,7 @@
 import { VehicleType } from './VehicleType';
 
 export interface Vehicle {
-  currrentLocation?: string;
+  longitude?: number;
+  latitude?: number;
   type: VehicleType;
 }

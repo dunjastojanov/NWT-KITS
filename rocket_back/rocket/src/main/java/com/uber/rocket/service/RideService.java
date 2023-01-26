@@ -487,4 +487,50 @@ public class RideService {
         notificationService.addRideCanceledNotifications(rideCancellation);
         rideCancellationRepository.save(rideCancellation);
     }
+
+    public RideSimulationDTO getRideForSimulation(Long vehicleId) {
+        Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(vehicleId);
+        if (vehicleOpt.isPresent()) {
+            Vehicle vehicle = vehicleOpt.get();
+            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle, RideStatus.CONFIRMED, RideStatus.STARTED);
+            RideSimulationDTO rsDTO = new RideSimulationDTO();
+            rsDTO.setVehicleStatus(vehicle.getStatus());
+            if (ride != null) {
+                RideInfoSimulationDTO risDTO = new RideInfoSimulationDTO();
+                risDTO.setStatus(ride.getStatus());
+                risDTO.setRouteCoordinates(risDTO.getRouteCoordinates());
+                Destination dest = this.destinationService.getStartDestinationByRide(ride);
+                List<Double> longLat = new ArrayList<>();
+                longLat.add(dest.getLongitude());
+                longLat.add(dest.getLatitude());
+                risDTO.setDestination(longLat);
+            }
+            return rsDTO;
+        }
+        return null;
+    }
+
+    public LocationDTO updateVehicleLocation(Long id, Double longitude, Double latitude) {
+        Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(id);
+        if (vehicleOpt.isPresent()) {
+            Vehicle vehicle = vehicleOpt.get();
+            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle, RideStatus.CONFIRMED, RideStatus.STARTED);
+            vehicle.setLongitude(longitude);
+            vehicle.setLatitude(latitude);
+            this.vehicleService.save(vehicle);
+            LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setLatitude(vehicle.getLatitude());
+            locationDTO.setLongitude(vehicle.getLongitude());
+            this.updateLocationToPassengers(ride.getPassengers().stream().toList(),locationDTO);
+            return locationDTO;
+        }
+        return null;
+    }
+
+    private void updateLocationToPassengers(List<Passenger> passengers, LocationDTO locationDTO) {
+        for (Passenger passenger : passengers) {
+            this.messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(),"/queue/map", locationDTO);
+        }
+    }
+
 }
