@@ -1,13 +1,5 @@
-import { Component, Injectable, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import {
-  HttpClient,
-  HttpEvent,
-  HttpHandler,
-  HttpHeaders,
-  HttpInterceptor,
-  HttpRequest,
-} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { Notif } from 'src/app/interfaces/Notification';
@@ -17,15 +9,28 @@ import {
 } from 'src/app/shared/store/notifications-slice/notifications.actions';
 import { StoreType } from 'src/app/shared/store/types';
 import { Store } from '@ngrx/store';
+import { CurrentRide, UserRidingStatus } from 'src/app/interfaces/Ride';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import { http } from 'src/app/shared/api/axios-wrapper';
+import { RideService } from '../ride/ride.service';
+import { User } from 'src/app/interfaces/User';
 
 @Injectable()
 export class SocketService {
   isCustomSocketOpened: boolean = false;
-
+  user: User | null = null;
   constructor(
     private httpService: HttpClient,
-    private store: Store<StoreType>
-  ) {}
+    private store: Store<StoreType>,
+    private rideService: RideService
+  ) {
+    this.store.select('loggedUser').subscribe((res) => {
+      this.user = res.user;
+    });
+  }
 
   serverUrl = 'http://localhost:8443/ws';
   stompClient: any;
@@ -44,15 +49,25 @@ export class SocketService {
   }
 
   sendRideRequestToPalUsingSocket(email: string) {
-    console.log(email);
     // this.stompClient.send("/socket-subscriber/send/message", {}, JSON.stringify(message));
     this.httpService
       .get(
         `http://localhost:8443/api/notification/send-ride-request-invitation/${email}`
       )
-      .subscribe((data: any) => {
-        console.log(data);
-      });
+      .subscribe((data: any) => {});
+  }
+
+  sendResponseOnRideRequest(
+    rideId: string,
+    userId: string,
+    status: UserRidingStatus
+  ) {
+    this.httpService
+      .post(`http://localhost:8443/api/ride/status/${rideId}`, {
+        userId: userId,
+        ridingStatus: status,
+      })
+      .subscribe((data: any) => {});
   }
 
   openSocket() {
@@ -63,14 +78,19 @@ export class SocketService {
       this.stompClient.subscribe(
         '/user/queue/notifications',
         (message: { body: string }) => {
-          this.handleResult(message);
+          this.handleResultNotification(message);
+        }
+      );
+      this.stompClient.subscribe(
+        '/user/queue/rides',
+        (message: { body: string }) => {
+          this.handleResultRide(message);
         }
       );
     }
   }
-  // Funkcija koja se poziva kada server posalje poruku na topic na koji se klijent pretplatio
-  handleResult(message: any) {
-    console.log(message);
+
+  handleResultNotification(message: any) {
     const notifications: Notif[] = JSON.parse(message.body);
     this.store.dispatch(
       new NotificationsAction(
@@ -78,5 +98,31 @@ export class SocketService {
         notifications
       )
     );
+  }
+
+  async handleResultRide(message: any) {
+    const id: number = JSON.parse(message.body);
+    const currentRide = await this.rideService.getCurrentRide(id);
+    console.log('----------------');
+    console.log(currentRide);
+    alert(currentRide);
+
+    if (currentRide) {
+      console.log('----------------');
+      console.log(currentRide);
+      alert(currentRide);
+      if (
+        this.user?.roles[0] === 'CLIENT' ||
+        (this.user?.roles[0] === 'DRIVER' && currentRide.vehicle)
+      ) {
+        console.log('----------------');
+        console.log(currentRide);
+        alert(currentRide);
+        this.store.dispatch(
+          new CurrentRideAction(CurrentRideActionType.SET, currentRide)
+        );
+      }
+    }
+    await this.rideService.onRideStatusChanged();
   }
 }

@@ -16,10 +16,13 @@ import com.uber.rocket.utils.TemplateProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Transactional
 public class NotificationService {
 
     @Autowired
@@ -238,6 +241,7 @@ public class NotificationService {
         notification.setTitle("Ride request");
         notification.setTemplateVariables(templateProcessor.getVariableString(getRideVariables(ride, startAddress, endAddress)));
         notification.setEntityId(ride.getId());
+        notification.setSent(LocalDateTime.now());
         return notification;
     }
 

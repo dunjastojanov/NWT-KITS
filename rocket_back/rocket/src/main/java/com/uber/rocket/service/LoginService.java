@@ -34,7 +34,7 @@ public class LoginService {
 
         String accessToken = authService.makeAccessToken(user, request);
 
-        Integer tokenExpirationSeconds = 3600;
+        Integer tokenExpirationSeconds = 3600 * 24 * 30;
 
         Cookie cookie = new Cookie("access_token", accessToken);
         cookie.setHttpOnly(false);

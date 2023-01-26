@@ -1,6 +1,7 @@
 package com.uber.rocket.dto;
 
 import com.uber.rocket.entity.ride.Destination;
+import com.uber.rocket.entity.ride.RideStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,7 @@ public class RideDTO {
     String time;
     @Size(min = 0)
     List<String> features;
+    RideStatus rideStatus;
     public void setIsNow(Boolean isNow) {
         this.isNow = isNow;
     }

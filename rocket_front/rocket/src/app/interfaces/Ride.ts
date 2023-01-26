@@ -19,6 +19,7 @@ export class CurrentRide {
   public isNow: boolean;
   public time?: string;
   public features: string[];
+  public rideStatus: RideStatus;
 
   constructor() {
     this.client = {
@@ -34,6 +35,7 @@ export class CurrentRide {
     this.estimatedTime = 0;
     this.isNow = false;
     this.features = [];
+    this.rideStatus = RideStatus.REQUESTED;
   }
 }
 
@@ -41,4 +43,13 @@ export enum UserRidingStatus {
   WAITING = 'WAITING',
   ACCEPTED = 'ACCEPTED',
   DENIED = 'DENIED',
+}
+
+export enum RideStatus {
+  DENIED = 'DENIED', // Driver denied ride
+  REQUESTED = 'REQUESTED', //Client waiting for driver to confirm
+  CONFIRMED = 'CONFIRMED', //Driver confirmed ride for now
+  ENDED = 'ENDED', //Ride ended
+  STARTED = 'STARTED', //Ride started
+  SCHEDULED = 'SCHEDULED', //Driver confirmed ride for future
 }

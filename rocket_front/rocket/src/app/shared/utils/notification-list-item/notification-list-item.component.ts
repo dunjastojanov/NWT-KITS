@@ -1,6 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Notif } from '../../../interfaces/Notification';
 import { NotificationService } from '../../../services/notification/notification.service';
+import {
+  NotificationsAction,
+  NotificationsActionType,
+} from '../../store/notifications-slice/notifications.actions';
+import { StoreType } from '../../store/types';
 
 @Component({
   selector: 'notification-list-item',
@@ -10,7 +16,10 @@ import { NotificationService } from '../../../services/notification/notification
 export class NotificationListItemComponent implements OnInit {
   @Input('notification') notification!: Notif;
   showModal = false;
-  constructor(private notificationService: NotificationService) {}
+  constructor(
+    private notificationService: NotificationService,
+    private store: Store<StoreType>
+  ) {}
 
   ngOnInit(): void {}
 
@@ -19,23 +28,38 @@ export class NotificationListItemComponent implements OnInit {
 
     if (this.showModal) {
       this.notificationService.setRead(this.notification.id).then((result) => {
-        console.log(result);
-        this.notification.read = true;
+        //this.notification.read = true;
+        /*this.store.dispatch(
+          new NotificationsAction(
+            NotificationsActionType.SET_NOTIFICATION_TRUE,
+            this.notification
+          )
+        );*/
       });
     }
   }
 
   getDate(): string {
-    return `${this.notification.sent[2]
-      .toString()
-      .padStart(2, '0')}.${this.notification.sent[1]
-      .toString()
-      .padStart(2, '0')}.${
-      this.notification.sent[0]
-    }. ${this.notification.sent[3]
-      .toString()
-      .padStart(2, '0')}:${this.notification.sent[4]
-      .toString()
-      .padStart(2, '0')}`;
+    console.log('------------------');
+    console.log(this.notification);
+    if (this.notification.sent instanceof Date) {
+      console.log(typeof this.notification.sent);
+      const convertedDate = this.notification.sent as Date;
+      return `${convertedDate.getFullYear()}-${
+        convertedDate.getMonth() + 1
+      }-${convertedDate.getDate()} ${convertedDate.getHours()}:${convertedDate.getMinutes()}`;
+    } else {
+      return `${this.notification.sent[2]
+        .toString()
+        .padStart(2, '0')}.${this.notification.sent[1]
+        .toString()
+        .padStart(2, '0')}.${
+        this.notification.sent[0]
+      }. ${this.notification.sent[3]
+        .toString()
+        .padStart(2, '0')}:${this.notification.sent[4]
+        .toString()
+        .padStart(2, '0')}`;
+    }
   }
 }

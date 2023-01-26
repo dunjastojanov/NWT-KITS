@@ -49,11 +49,9 @@ public class NotificationController {
     }
 
     @GetMapping("/send-ride-request-invitation/{email}")
-    public String getNotification(@PathVariable("email") String email) {
-        System.out.println("Greet se pozove");
+    public void getNotification(@PathVariable("email") String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent())
             messagingTemplate.convertAndSendToUser(user.get().getEmail(), "/queue/notifications", notificationService.getNotificationsForUser(user.get()));
-        return "Notification here yay";
     }
 }
