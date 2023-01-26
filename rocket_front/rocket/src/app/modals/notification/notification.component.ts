@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SocketService } from 'src/app/services/sockets/sockets.service';
 import { Notif } from '../../interfaces/Notification';
 import { UserRidingStatus } from 'src/app/interfaces/Ride';
-import {VehicleService} from "../../services/vehicle/vehicle.service";
-import {ToastrService} from "ngx-toastr";
+import { VehicleService } from '../../services/vehicle/vehicle.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'notification',
@@ -16,18 +16,26 @@ export class NotificationComponent implements OnInit {
   @Input('notification') notification!: Notif;
 
   showReviewModal = false;
-  constructor(private socketService: SocketService) {}
 
   toggleReviewModal() {
-    this.showReviewModal =!this.showReviewModal;
+    this.showReviewModal = !this.showReviewModal;
   }
 
-  constructor(private vehicleService: VehicleService, private toastr: ToastrService) { }
+  constructor(
+    private vehicleService: VehicleService,
+    private toastr: ToastrService,
+    private socketService: SocketService
+  ) {}
 
   ngOnInit(): void {}
 
   isBasic(type: string) {
-    return type === "RIDE_CANCELED" || type === "RIDE_CONFIRMED" || type === "RIDE_SCHEDULED" || type === "USER_BLOCKED";
+    return (
+      type === 'RIDE_CANCELED' ||
+      type === 'RIDE_CONFIRMED' ||
+      type === 'RIDE_SCHEDULED' ||
+      type === 'USER_BLOCKED'
+    );
   }
 
   onAccept() {
@@ -46,17 +54,21 @@ export class NotificationComponent implements OnInit {
       );
     }
     if (this.notification.type === 'UPDATE_DRIVER_DATA_REQUEST') {
-      this.vehicleService.respondDriverDataUpdateRequest(this.notification.entityId, true).then((res)=>{
-        this.toastr.success(res);
-      });
+      this.vehicleService
+        .respondDriverDataUpdateRequest(this.notification.entityId, true)
+        .then((res) => {
+          this.toastr.success(res);
+        });
     }
     if (this.notification.type === 'UPDATE_DRIVER_PICTURE_REQUEST') {
-      this.vehicleService.respondDriverImageUpdateRequest(this.notification.entityId, true).then ((res)=> {
-        this.toastr.success(res);
-      })
+      this.vehicleService
+        .respondDriverImageUpdateRequest(this.notification.entityId, true)
+        .then((res) => {
+          this.toastr.success(res);
+        });
     }
     if (this.notification.type === 'RIDE_REVIEW') {
-      this.toggleReviewModal()
+      this.toggleReviewModal();
     }
   }
 
@@ -76,14 +88,18 @@ export class NotificationComponent implements OnInit {
       );
     }
     if (this.notification.type === 'UPDATE_DRIVER_DATA_REQUEST') {
-      this.vehicleService.respondDriverDataUpdateRequest(this.notification.entityId, false).then((res)=>{
-        this.toastr.success(res);
-      });
+      this.vehicleService
+        .respondDriverDataUpdateRequest(this.notification.entityId, false)
+        .then((res) => {
+          this.toastr.success(res);
+        });
     }
-    if (this.notification.type === "UPDATE_DRIVER_PICTURE_REQUEST") {
-      this.vehicleService.respondDriverImageUpdateRequest(this.notification.entityId, false).then ((res)=> {
-        this.toastr.success(res);
-      })
+    if (this.notification.type === 'UPDATE_DRIVER_PICTURE_REQUEST') {
+      this.vehicleService
+        .respondDriverImageUpdateRequest(this.notification.entityId, false)
+        .then((res) => {
+          this.toastr.success(res);
+        });
     }
     this.closeFunc();
   }

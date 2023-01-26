@@ -9,10 +9,7 @@ import com.uber.rocket.mapper.FavouriteRouteMapper;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
 import com.uber.rocket.mapper.RideMapper;
-import com.uber.rocket.repository.DestinationRepository;
-import com.uber.rocket.repository.FavouriteRouteRepository;
-import com.uber.rocket.repository.PassengerRepository;
-import com.uber.rocket.repository.RideRepository;
+import com.uber.rocket.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,8 +64,6 @@ public class RideService {
 
     @Autowired
     private PassengerRepository passengerRepository;
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private RideMapper rideMapper;
 
