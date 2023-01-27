@@ -53,4 +53,14 @@ export class AdminService {
   }
 
 
+
+  async getStatisticsForEmail(dto: { endDate: string; startDate: string }, type: string, email: string) {
+    if (this.getToken()) {
+      let result: AxiosResponse<any> = await http.put<object>(
+        '/api/ride/report/' + type + "/" + email, dto
+      );
+      return <any>result.data;
+    }
+    return null;
+  }
 }

@@ -15,6 +15,7 @@ import {
 } from '../shared/store/current-ride-slice/current-ride.actions';
 import { Router } from '@angular/router';
 import { VehicleService } from '../services/vehicle/vehicle.service';
+import {SocketService} from "../services/sockets/sockets.service";
 
 @Component({
   selector: 'navbar',
@@ -35,8 +36,11 @@ export class NavbarComponent implements OnInit {
     private store: Store<StoreType>,
     private notificationService: NotificationService,
     private router: Router,
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private socketService: SocketService
   ) {
+
+    socketService.openSocket();
     let loggedUserSlice = store.select('loggedUser');
     loggedUserSlice.subscribe((resData) => {
       this.user = resData.user;

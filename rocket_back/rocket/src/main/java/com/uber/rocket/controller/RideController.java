@@ -32,6 +32,16 @@ public class RideController {
         }
     }
 
+    @PostMapping("currentRide/{rideId}")
+    public ResponseEntity<?> createRideFromExisting(@PathVariable long rideId, HttpServletRequest request) {
+        try {
+            return ResponseEntity.ok(this.rideService.createRideFromExisting(rideId, request));
+        }
+        catch (Exception exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping(path = "/currentRide/{email}")
     public ResponseEntity<?> getUsersCurrentRide(@PathVariable("email") String email) {
         RideDTO rideDTO = this.rideService.getUserCurrentRideByEmail(email);
@@ -136,6 +146,15 @@ public class RideController {
     public ResponseEntity<?> getReportForUser(HttpServletRequest request, @PathVariable String type, @RequestBody DatePeriod datePeriod) {
         try {
             return ResponseEntity.ok(rideService.getReportForUser(request, type, datePeriod));
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @PutMapping("/report/{type}/{email}")
+    public ResponseEntity<?> getReportForUser(@PathVariable String type, @RequestBody DatePeriod datePeriod, @PathVariable String email) {
+        try {
+            return ResponseEntity.ok(rideService.getReportForUser(email, type, datePeriod));
         } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }

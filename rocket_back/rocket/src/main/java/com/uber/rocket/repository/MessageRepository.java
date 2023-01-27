@@ -1,5 +1,6 @@
 package com.uber.rocket.repository;
 
+import com.uber.rocket.dto.MessageDTO;
 import com.uber.rocket.entity.user.Message;
 import com.uber.rocket.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query("SELECT DISTINCT message.sender FROM Message message WHERE message.receiver = :receiver")
     List<User> findAllDistinctSendersByReceiver(@Param("receiver") User receiver);
 
+    Message findFirstBySenderIsOrderBySentAtDesc(User sender);
+    @Query("SELECT message FROM Message message WHERE message.receiver = :user or message.sender = :user")
+    List<MessageDTO> findAllByReceiverIsOrSenderIs(@Param("user") User user);
 
 }

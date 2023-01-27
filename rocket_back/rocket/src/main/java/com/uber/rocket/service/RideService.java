@@ -70,6 +70,11 @@ public class RideService {
     private RideMapper rideMapper;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private DestinationRepository destinationRepository;
+
 
     @Data
     @AllArgsConstructor
@@ -92,18 +97,17 @@ public class RideService {
             if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("CLIENT")) {
                 ride = setClientStatus(ride, changeStatusDTO);
             }
-            System.out.println(ride);
             if (!driverAccepted && this.allAcceptedRide(ride)) {
                 boolean foundDriver = this.findAndNotifyDriver(ride);
                 if (!foundDriver) {
                     ride.setStatus(RideStatus.DENIED);
                 }
-                System.out.println(ride);
             }
-            System.out.println(ride);
             ride = this.repository.save(ride);
+
+            notificationService.setNotificationAsRead(user, ride);
+
             this.updateStatusOverSocket(ride);
-            System.out.println(ride);
         } else {
             throw new RuntimeException("Ride not found");
         }
@@ -158,6 +162,27 @@ public class RideService {
             ride.setVehicle(vehicle);
         }
         return ride;
+    }
+
+    public Object createRideFromExisting(long rideId, HttpServletRequest request) {
+        Ride existing = getRide(rideId);
+        User user = userService.getUserFromRequest(request);
+
+        Ride ride = new Ride();
+        ride.setPassengers(List.of(new Passenger(user, UserRidingStatus.ACCEPTED)));
+        ride.setVehicleTypeRequested(existing.getVehicleTypeRequested());
+        ride.setRouteLocation(existing.getRouteLocation());
+        ride.setStartTime(LocalDateTime.now());
+        ride.setStatus(RideStatus.REQUESTED);
+        ride.setSplitFare(false);
+        ride.setPrice(existing.getPrice());
+        ride.setDuration(existing.getDuration());
+        ride.setLength(existing.getLength());
+        ride.setNow(true);
+        ride = this.repository.save(ride);
+
+        this.findAndNotifyDriver(ride);
+        return ride.getId();
     }
     public Long createRide(RideDTO rideDTO) {
         Ride ride = rideMapper.mapToEntity(rideDTO);
@@ -366,6 +391,15 @@ public class RideService {
 
     public Report getReportForUser(HttpServletRequest request, String type, DatePeriod datePeriod) {
         User user = userService.getUserFromRequest(request);
+        return getReportForUser(type, datePeriod, user);
+    }
+
+    public Report getReportForUser(String email, String type, DatePeriod datePeriod) {
+        User user = userService.getUserByEmail(email);
+        return getReportForUser(type, datePeriod, user);
+    }
+
+    private Report getReportForUser(String type, DatePeriod datePeriod, User user) {
         LocalDateTime start = LocalDateTime.parse(datePeriod.getStartDate(), formatter);
         LocalDateTime end = LocalDateTime.parse(datePeriod.getEndDate(), formatter);
 
@@ -485,8 +519,14 @@ public class RideService {
         return null;
     }
 
-    public void cancelRide(Long id, String reason) {
+    public RideCancellation cancelRide(Long id, String reason) {
+        if (Objects.equals(reason, "")) {
+            throw new NullPointerException("Reason cannot be empty.");
+        }
         Ride ride = getRide(id);
+        if (ride.getStatus() != RideStatus.CONFIRMED) {
+            throw new RuntimeException("Ride status must be confirmed to be able to cancel.");
+        }
         RideCancellation rideCancellation = new RideCancellation();
         rideCancellation.setDriver(ride.getDriver());
         rideCancellation.setRide(ride);
@@ -495,6 +535,7 @@ public class RideService {
         repository.save(ride);
         notificationService.addRideCanceledNotifications(rideCancellation);
         rideCancellationRepository.save(rideCancellation);
+        return rideCancellation;
     }
 
     public RideSimulationDTO getRideForSimulation(Long vehicleId) {

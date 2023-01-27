@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,5 +51,13 @@ public class AuthService {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
         return authorities;
+    }
+
+    public Cookie makeCookie(String accessToken) {
+        Cookie cookie = new Cookie("access_token", accessToken);
+        cookie.setHttpOnly(false);
+        cookie.setPath("/");
+        cookie.setMaxAge(3600);
+        return cookie;
     }
 }

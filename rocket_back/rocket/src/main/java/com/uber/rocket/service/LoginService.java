@@ -34,15 +34,9 @@ public class LoginService {
 
         String accessToken = authService.makeAccessToken(user, request);
 
-        Integer tokenExpirationSeconds = 3600 * 24 * 30;
-
-        Cookie cookie = new Cookie("access_token", accessToken);
-        cookie.setHttpOnly(false);
-        cookie.setPath("/");
-        cookie.setMaxAge(3600);
+        Cookie cookie = authService.makeCookie(accessToken);
         response.addCookie(cookie);
         response.setHeader("Access-Control-Allow-Credentials", "true");
-
         return accessToken;
     }
 }

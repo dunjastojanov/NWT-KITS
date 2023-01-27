@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
@@ -21,7 +22,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Component
 public class TemplateProcessor {
     private final ResourceLoader resourceLoader;
-    private final SpringTemplateEngine templateEngine;
+    private final ITemplateEngine templateEngine;
 
     @Autowired
     public TemplateProcessor(ResourceLoader resourceLoader) {
@@ -29,7 +30,7 @@ public class TemplateProcessor {
         this.resourceLoader = resourceLoader;
     }
 
-    public String process(Map<String, String> variables, String templateName) {
+    private String process(Map<String, String> variables, String templateName) {
         String template = getTemplate(templateName);
         return templateEngine.process(template, getContext(variables));
     }
@@ -50,7 +51,7 @@ public class TemplateProcessor {
             String[] entry = entryString.split(",");
             if (entry.length > 1) {
                 variablesMap.put(entry[0], entry[1]);
-            }
+            } else throw new IllegalArgumentException("Variable string is not in correct format.");
         }
         return variablesMap;
     }
@@ -89,8 +90,11 @@ public class TemplateProcessor {
 
     private String getTemplateName(Notification notification) {
         switch (notification.getType()) {
-            case DRIVER_RIDE_REQUEST, PASSENGER_RIDE_REQUEST -> {
-                return "ride_request";
+            case DRIVER_RIDE_REQUEST, PASSENGER_RIDE_REQUEST, RIDE_SCHEDULED -> {
+                return "ride_without_driver";
+            }
+            case RIDE_CONFIRMED, DRIVER_ARRIVED, RIDE_REVIEW -> {
+                return "ride_with_driver";
             }
             case UPDATE_DRIVER_PICTURE_REQUEST -> {
                 return "update_driver_picture";
@@ -98,20 +102,11 @@ public class TemplateProcessor {
             case UPDATE_DRIVER_DATA_REQUEST -> {
                 return "update_driver_data";
             }
-            case RIDE_CONFIRMED -> {
-                return "ride_confirmed";
-            }
-            case RIDE_SCHEDULED -> {
-                return "ride_scheduled";
-            }
             case RIDE_CANCELED -> {
                 return "ride_canceled";
             }
             case USER_BLOCKED -> {
                 return "user_blocked";
-            }
-            case RIDE_REVIEW -> {
-                return "ride_review";
             }
         }
         return null;

@@ -17,7 +17,6 @@ public class User {
     @Id
     @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_sequence")
-    @Setter(AccessLevel.NONE)
     private Long id;
 
     @ManyToMany(fetch = FetchType.EAGER)

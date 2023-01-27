@@ -2,6 +2,10 @@ import {Component, Input, OnInit} from '@angular/core';
 import {RideService} from "../../services/ride/ride.service";
 import {RideDetails} from "../../interfaces/RideDetails";
 import {ToastrService} from "ngx-toastr";
+import {CurrentRideAction, CurrentRideActionType} from "../../shared/store/current-ride-slice/current-ride.actions";
+import {Router} from "@angular/router";
+import {StoreType} from "../../shared/store/types";
+import {Store} from "@ngrx/store";
 
 @Component({
   selector: 'detailed-route',
@@ -21,6 +25,7 @@ export class DetailedRouteComponent implements OnInit {
   @Input() id!: string;
   ride: RideDetails = {
     id: "",
+    date: "",
     driver: "",
     driverProfileImage: "",
     duration: 0,
@@ -35,7 +40,9 @@ export class DetailedRouteComponent implements OnInit {
   private rideService!: RideService;
   numbers: number[];
 
-  constructor(rideService: RideService, private toastr: ToastrService) {
+  constructor(rideService: RideService, private toastr: ToastrService,
+              private store: Store<StoreType>, private router: Router
+  ) {
     this.rideService = rideService;
     this.numbers = [1, 2, 3, 4, 5];
   }
@@ -60,7 +67,22 @@ export class DetailedRouteComponent implements OnInit {
     )
   }
 
-  book() {
-    //TODO add call for booking this ride
+  isAbleToAddReview(): boolean {
+    return Math.abs(new Date(this.ride.date).getDate() - new Date().getDate()) / (1000 * 60 * 60 * 24) <= 3;
+  }
+
+  book(id: string) {
+    this.rideService.bookExisting(id).then(id => {
+      if (id) {
+        this.rideService.getCurrentRide(id).then(currentRide => {
+          if (currentRide) {
+            this.store.dispatch(new CurrentRideAction(CurrentRideActionType.SET, currentRide))
+            this.router.navigateByUrl("/ride/current").then(r =>
+              this.toastr.success("You have booked a ride with you favourite route parameters.")
+            );
+          }
+        })
+      }
+    })
   }
 }
