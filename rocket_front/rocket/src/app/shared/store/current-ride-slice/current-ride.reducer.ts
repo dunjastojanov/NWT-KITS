@@ -27,9 +27,6 @@ export const CurrentRideReducer = (
       };
     case CurrentRideActionType.UPDATE_VEHICLE_LOCATION:
       const longLat = <LongitudeLatitude>action.payload!;
-      console.log('store');
-
-      console.log(state);
       return {
         ...state,
         currentRide: {

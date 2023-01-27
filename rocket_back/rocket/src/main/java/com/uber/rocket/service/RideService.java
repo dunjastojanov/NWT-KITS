@@ -2,6 +2,7 @@ package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.ride.*;
+import com.uber.rocket.entity.user.Role;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.entity.user.VehicleType;
@@ -244,12 +245,20 @@ public class RideService {
         return null;
     }
 
+    public RideDTO changeRideStatus(Long id, RideStatus status) {
+        Optional<Ride> rideOpt = this.repository.findById(id);
+        if (rideOpt.isPresent()) {
+            Ride ride = rideOpt.get();
+            ride.setStatus(status);
+            ride = this.repository.save(ride);
+            updateStatusOverSocket(ride);
+        }
+        return null;
+    }
     public boolean findAndNotifyDriver(Ride ride) {
         Vehicle vehicle = this.lookForDriver(ride);
-        System.out.println(vehicle);
         if (vehicle != null) {
             try{
-                System.out.println(vehicle);
                 User driver = vehicle.getDriver();
                 this.notificationService.addDriverRideRequestNotification(driver, ride);
                 List<NotificationDTO> notifications = this.notificationService.getNotificationsForUser(driver);
@@ -357,7 +366,12 @@ public class RideService {
 
     @Transactional
     public RideDTO getUserCurrentRide(User user) {
-        List<Ride> rides = repository.findByPassengers(user.getId());
+        List<Ride> rides = new ArrayList<>();
+        if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("CLIENT")) {
+            rides = repository.findByPassengers(user.getId());
+        } else if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("DRIVER")) {
+            rides = repository.findByDriver(user);
+        }
         if (rides.size() > 0)
             return this.rideMapper.mapToDto(rides.get(0));
         return null;
@@ -555,7 +569,14 @@ public class RideService {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(vehicleId);
         if (vehicleOpt.isPresent()) {
             Vehicle vehicle = vehicleOpt.get();
-            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle);
+            this.vehicleService.save(vehicle);
+            List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
+            Ride ride = null;
+            for (Ride r : rides) {
+                if (Objects.equals(r.getId(), vehicle.getId())) {
+                    ride = r;
+                }
+            }
             RideSimulationDTO rsDTO = new RideSimulationDTO();
             rsDTO.setVehicleStatus(vehicle.getStatus());
             if (ride != null) {
@@ -576,33 +597,33 @@ public class RideService {
 
     public LocationDTO updateVehicleLocation(Long id, Double longitude, Double latitude) {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(id);
-        System.out.println(id);
-        System.out.println(longitude);
-        System.out.println(latitude);
         if (vehicleOpt.isPresent()) {
             Vehicle vehicle = vehicleOpt.get();
-            System.out.println(vehicle);
             vehicle.setLongitude(longitude);
             vehicle.setLatitude(latitude);
             this.vehicleService.save(vehicle);
-            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle);
-            System.out.println(ride);
+            List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
+            Ride ride = null;
+            for (Ride r : rides) {
+                if (Objects.equals(r.getId(), vehicle.getId())) {
+                    ride = r;
+                }
+            }
             if (ride != null) {
                 LocationDTO locationDTO = new LocationDTO();
                 locationDTO.setLatitude(vehicle.getLatitude());
                 locationDTO.setLongitude(vehicle.getLongitude());
-                this.updateLocationToPassengers(ride.getPassengers().stream().toList(),locationDTO);
+                this.updateLocationToPassengers(ride.getVehicle().getDriver(), ride.getPassengers().stream().toList(),locationDTO);
             }
         }
         return null;
     }
 
-    private void updateLocationToPassengers(List<Passenger> passengers, LocationDTO locationDTO) {
+    private void updateLocationToPassengers(User driver, List<Passenger> passengers, LocationDTO locationDTO) {
         for (Passenger passenger : passengers) {
-            System.out.println(passenger.getUser().getEmail());
-            System.out.println(locationDTO);
             messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(),"/queue/update-vehicle", locationDTO);
         }
+        messagingTemplate.convertAndSendToUser(driver.getEmail(),"/queue/update-vehicle", locationDTO);
     }
 
 }

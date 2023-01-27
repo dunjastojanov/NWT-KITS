@@ -57,7 +57,7 @@ public class Config {
             addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride1);
             addDestination(45.2478236, 19.804034, "Futoski put 18 Novi Sad", ride1);
 
-            Ride ride2 = addRide(vehicle2, List.of(client1, client3, client4), 180.0, 1538.2, "2023-01-24 21:20", "2023-01-25 00:20", 520, "smdsGwz~wBxAEA{EoFHkAf@_Al@`@gO@iES}NYyCgA_F`BeAz@_AdB{Dj@eBxGjGfBgF");
+            Ride ride2 = addRide(vehicle2, List.of(client3, client4), 180.0, 1538.2, "2023-01-24 21:20", "2023-01-25 00:20", 520, "smdsGwz~wBxAEA{EoFHkAf@_Al@`@gO@iES}NYyCgA_F`BeAz@_AdB{Dj@eBxGjGfBgF");
             addDestination(45.2477844, 19.8241151, "Brace Krkljus 7 Novi Sad", ride2);
             addDestination(45.2462784, 19.8346671, "Gogoljeva 18 Novi Sad", ride2);
 
@@ -124,7 +124,7 @@ public class Config {
     private Ride addRide(Vehicle vehicle, List<User> users, Double duration, double length, String startTime, String endTime, int price, String routeLocation) {
         Ride ride = new Ride();
 
-        ride.setStatus(RideStatus.ENDED);
+        ride.setStatus(RideStatus.CONFIRMED);
         ride.setKidFriendly(true);
         ride.setPetFriendly(true);
         ride.setDuration(duration);

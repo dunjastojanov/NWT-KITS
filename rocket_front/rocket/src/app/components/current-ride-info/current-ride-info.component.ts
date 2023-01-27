@@ -24,10 +24,6 @@ export class CurrentRideInfoComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  setNull() {
-    this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
-  }
-
   public convertTime(): string {
     if (this.currentRide!.time) {
       if (typeof this.currentRide!.time === 'string') {

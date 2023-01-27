@@ -7,19 +7,21 @@ import {
   NotificationsAction,
   NotificationsActionType,
 } from 'src/app/shared/store/notifications-slice/notifications.actions';
-import {StoreType} from 'src/app/shared/store/types';
-import {Store} from '@ngrx/store';
-import {UserRidingStatus} from 'src/app/interfaces/Ride';
-import {CurrentRideAction, CurrentRideActionType,} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import {RideService} from '../ride/ride.service';
-import {User} from 'src/app/interfaces/User';
-import {MessageInfo} from "../../interfaces/MessageInfo";
-import {MessageAction, MessageActionType} from "../../shared/store/message-slice/message.actions";
+import { StoreType } from 'src/app/shared/store/types';
+import { Store } from '@ngrx/store';
+import { UserRidingStatus } from 'src/app/interfaces/Ride';
 import {
-  CurrentRide,
-  LongitudeLatitude,
-} from 'src/app/interfaces/Ride';
-
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import { RideService } from '../ride/ride.service';
+import { User } from 'src/app/interfaces/User';
+import { MessageInfo } from '../../interfaces/MessageInfo';
+import {
+  MessageAction,
+  MessageActionType,
+} from '../../shared/store/message-slice/message.actions';
+import { CurrentRide, LongitudeLatitude } from 'src/app/interfaces/Ride';
 
 @Injectable()
 export class SocketService {
@@ -156,10 +158,7 @@ export class SocketService {
   handleMessage(message: any) {
     const messages: MessageInfo[] = JSON.parse(message.body);
     this.store.dispatch(
-      new MessageAction(
-        MessageActionType.SET_MESSAGES,
-        messages
-      )
+      new MessageAction(MessageActionType.SET_MESSAGES, messages)
     );
   }
 }

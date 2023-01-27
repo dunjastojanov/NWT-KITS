@@ -99,8 +99,6 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
       this.vehicle!.latitude!,
       this.vehicle!.longitude!
     );
-    console.log(this.vehicle);
-
     L.marker(latLng, {
       icon: L.icon({
         iconUrl: 'http://localhost:4200/assets/icons/car-pin.png',

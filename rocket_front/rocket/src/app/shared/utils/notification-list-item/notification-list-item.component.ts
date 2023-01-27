@@ -40,10 +40,7 @@ export class NotificationListItemComponent implements OnInit {
   }
 
   getDate(): string {
-    console.log('------------------');
-    console.log(this.notification);
     if (this.notification.sent instanceof Date) {
-      console.log(typeof this.notification.sent);
       const convertedDate = this.notification.sent as Date;
       return `${convertedDate.getFullYear()}-${
         convertedDate.getMonth() + 1
