@@ -12,8 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.sql.Driver;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
@@ -47,8 +49,6 @@ public class VehicleService {
     private final static double GARAGE_LONGITUDE = 19.8335;
     private final static double GARAGE_LATITUDE = 45.2671;
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
 
     public Object registerDriver(DriverRegistrationDTO driverRegistrationDTO) throws IOException {
         User driver = userService.registerDriver(driverRegistrationDTO);
