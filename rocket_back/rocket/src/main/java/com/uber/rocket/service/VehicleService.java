@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Driver;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class VehicleService {
@@ -47,6 +46,9 @@ public class VehicleService {
 
     private final static double GARAGE_LONGITUDE = 19.8335;
     private final static double GARAGE_LATITUDE = 45.2671;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     public Object registerDriver(DriverRegistrationDTO driverRegistrationDTO) throws IOException {
         User driver = userService.registerDriver(driverRegistrationDTO);
@@ -165,5 +167,24 @@ public class VehicleService {
 
     public User getDriverByEmail(String email) {
         return userService.getUserByEmail(email);
+    }
+    public List<VehicleSimulationDTO> getAllVehicles() {
+        List<Vehicle> vehicles = this.vehicleRepository.findAll();
+        List<VehicleSimulationDTO> vehicleDTOS = new ArrayList<>();
+        for (Vehicle vehicle : vehicles) {
+            VehicleSimulationDTO dto = new VehicleSimulationDTO();
+            dto.setLatitude(vehicle.getLatitude());
+            dto.setLongitude(vehicle.getLongitude());
+            dto.setId(vehicle.getId());
+            vehicleDTOS.add(dto);
+        }
+        return vehicleDTOS;
+    }
+
+    public Optional<Vehicle> getVehicleById(Long id) {
+        return this.vehicleRepository.findById(id);
+    }
+    public void save(Vehicle vehicle) {
+        this.vehicleRepository.save(vehicle);
     }
 }

@@ -1,10 +1,9 @@
 package com.uber.rocket.controller;
 
-import com.uber.rocket.dto.DriverRegistrationDTO;
-import com.uber.rocket.dto.EvaluationDTO;
-import com.uber.rocket.dto.UpdateDriverDto;
-import com.uber.rocket.entity.user.User;
+import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.user.Vehicle;
+import com.uber.rocket.entity.user.User;
+
 import com.uber.rocket.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicle")
@@ -105,4 +105,12 @@ public class VehicleController {
         messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/queue/driver/status", vehicle.getStatus());
     }
 
+
+    @GetMapping(value = "get-all", produces = "application/json")
+    public List<VehicleSimulationDTO> getAllVehicles() {
+        System.out.println("aloo");
+        List<VehicleSimulationDTO> dtos = this.vehicleService.getAllVehicles();
+        dtos.forEach(System.out::println);
+        return dtos;
+    }
 }

@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
-import {Notif} from 'src/app/interfaces/Notification';
+import { Notif } from 'src/app/interfaces/Notification';
 import {
   NotificationsAction,
   NotificationsActionType,
@@ -15,13 +15,16 @@ import {RideService} from '../ride/ride.service';
 import {User} from 'src/app/interfaces/User';
 import {MessageInfo} from "../../interfaces/MessageInfo";
 import {MessageAction, MessageActionType} from "../../shared/store/message-slice/message.actions";
-import {loggedUserToken} from "../../shared/consts";
+import {
+  CurrentRide,
+  LongitudeLatitude,
+} from 'src/app/interfaces/Ride';
+
 
 @Injectable()
 export class SocketService {
   isCustomSocketOpened: boolean = false;
   user: User | null = null;
-
   constructor(
     private httpService: HttpClient,
     private store: Store<StoreType>,
@@ -54,8 +57,7 @@ export class SocketService {
       .get(
         `http://localhost:8443/api/notification/send-ride-request-invitation/${email}`
       )
-      .subscribe((data: any) => {
-      });
+      .subscribe((data: any) => {});
   }
 
   sendResponseOnRideRequest(
@@ -68,19 +70,20 @@ export class SocketService {
         userId: userId,
         ridingStatus: status,
       })
-      .subscribe((data: any) => {
-      });
-  }
-
-  private getToken() {
-    let token: string | null = window.localStorage.getItem(loggedUserToken);
-    return token;
+      .subscribe((data: any) => {});
   }
 
   openSocket() {
     if (this.isLoaded) {
       console.log('Opening socket...');
+
       this.isCustomSocketOpened = true;
+      this.stompClient.subscribe(
+        '/user/queue/update-vehicle',
+        (message: any) => {
+          this.handleVehicleLocationUpdate(message);
+        }
+      );
       this.stompClient.subscribe(
         '/user/queue/notifications',
         (message: { body: string }) => {
@@ -100,6 +103,18 @@ export class SocketService {
         }
       );
     }
+  }
+
+  handleVehicleLocationUpdate(message: any) {
+    const longLat: LongitudeLatitude = JSON.parse(message.body);
+    console.log(message);
+    console.log(longLat);
+    this.store.dispatch(
+      new CurrentRideAction(
+        CurrentRideActionType.UPDATE_VEHICLE_LOCATION,
+        longLat
+      )
+    );
   }
 
   handleResultNotification(message: any) {

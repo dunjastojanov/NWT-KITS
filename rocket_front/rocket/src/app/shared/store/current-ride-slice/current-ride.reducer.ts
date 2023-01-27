@@ -1,4 +1,4 @@
-import { CurrentRide } from 'src/app/interfaces/Ride';
+import { CurrentRide, LongitudeLatitude } from 'src/app/interfaces/Ride';
 import { CurrentRideStateType } from '../types';
 import {
   CurrentRideAction,
@@ -17,13 +17,29 @@ export const CurrentRideReducer = (
     case CurrentRideActionType.SET:
       return {
         ...state,
-        currentRide: action.payload!,
+        currentRide: <CurrentRide>action.payload!,
       };
 
     case CurrentRideActionType.REMOVE:
       return {
         ...state,
         currentRide: null,
+      };
+    case CurrentRideActionType.UPDATE_VEHICLE_LOCATION:
+      const longLat = <LongitudeLatitude>action.payload!;
+      console.log('store');
+
+      console.log(state);
+      return {
+        ...state,
+        currentRide: {
+          ...state.currentRide!,
+          vehicle: {
+            type: state.currentRide!.vehicle!.type,
+            longitude: <number>longLat.longitude,
+            latitude: <number>longLat.latitude,
+          },
+        },
       };
     default: {
       return state;

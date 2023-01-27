@@ -11,6 +11,7 @@ export const baseUrl = 'http://router.project-osrm.org/route/v1/car/';
 export const options = {
   alternatives: 'true',
   geometries: 'geojson',
+  overview: 'full',
 };
 export const url = (start: Destination, end: Destination) => {
   return `${baseUrl}${start.longitude},${start.latitude};${end.longitude},${
