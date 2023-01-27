@@ -28,7 +28,7 @@
           <icon-button-secondary class="mr-2" (click)="addFavorite(ride.id)"
                                  [path]="'assets/icons/favorite.png'"></icon-button-secondary>
           <icon-button-secondary class="mr-2"
-                                 [path]="'assets/icons/book.png'" (click)="book()"></icon-button-secondary>
+                                 [path]="'assets/icons/book.png'" (click)="book(ride.id)"></icon-button-secondary>
         </div>
         <div class="flex flex-column items-center">
           <h5 class="mb-4 font-small text-gray-900 text-center w-full">Passengers</h5>
@@ -71,8 +71,7 @@
                 </div>
               </div>
             </div>
-            <icon-button-secondary (click)="toggleOpenReview()"
-                                   [path]="'assets/icons/plus.png'"></icon-button-secondary>
+            <icon-button-secondary *ngIf="isAbleToAddReview()" (click)="toggleOpenReview()" [path]="'assets/icons/plus.png'"></icon-button-secondary>
 
             <review [open]="openReview" [rideId]="ride.id" [closeFunc]="toggleOpenReview"></review>
           </div>

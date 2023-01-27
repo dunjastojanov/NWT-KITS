@@ -9,16 +9,13 @@ import {
 } from 'src/app/shared/store/notifications-slice/notifications.actions';
 import {StoreType} from 'src/app/shared/store/types';
 import {Store} from '@ngrx/store';
-import {CurrentRide, UserRidingStatus} from 'src/app/interfaces/Ride';
-import {
-  CurrentRideAction,
-  CurrentRideActionType,
-} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import {http} from 'src/app/shared/api/axios-wrapper';
+import {UserRidingStatus} from 'src/app/interfaces/Ride';
+import {CurrentRideAction, CurrentRideActionType,} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import {RideService} from '../ride/ride.service';
 import {User} from 'src/app/interfaces/User';
 import {MessageInfo} from "../../interfaces/MessageInfo";
 import {MessageAction, MessageActionType} from "../../shared/store/message-slice/message.actions";
+import {loggedUserToken} from "../../shared/consts";
 
 @Injectable()
 export class SocketService {
@@ -75,10 +72,14 @@ export class SocketService {
       });
   }
 
+  private getToken() {
+    let token: string | null = window.localStorage.getItem(loggedUserToken);
+    return token;
+  }
+
   openSocket() {
     if (this.isLoaded) {
       console.log('Opening socket...');
-
       this.isCustomSocketOpened = true;
       this.stompClient.subscribe(
         '/user/queue/notifications',
@@ -139,7 +140,6 @@ export class SocketService {
 
   handleMessage(message: any) {
     const messages: MessageInfo[] = JSON.parse(message.body);
-    alert("alooooo")
     this.store.dispatch(
       new MessageAction(
         MessageActionType.SET_MESSAGES,

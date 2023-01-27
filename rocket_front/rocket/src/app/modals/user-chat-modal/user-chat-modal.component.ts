@@ -46,7 +46,6 @@ export class UserChatModalComponent implements OnInit {
             result => {
               this.admin = result;
               if (this.admin != null) {
-                alert(this.admin.email)
                 this.store.select('messages').subscribe(
                   resData => {
                     this.messages = resData.messages.filter(message => {
