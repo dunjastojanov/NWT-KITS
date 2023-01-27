@@ -168,6 +168,7 @@ public class RideService {
             return -1;
         }
         */
+        passengerRepository.saveAll(ride.getPassengers());
         List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
         ride = this.repository.save(ride);
         for (Destination destination : destinations) {
@@ -208,11 +209,17 @@ public class RideService {
 
     public boolean findAndNotifyDriver(Ride ride) {
         Vehicle vehicle = this.lookForDriver(ride);
+        System.out.println(vehicle);
         if (vehicle != null) {
-            this.notificationService.addDriverRideRequestNotification(vehicle.getDriver(), ride);
-            List<NotificationDTO> notifications = this.notificationService.getNotificationsForUser(vehicle.getDriver());
-            messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/queue/notifications", notifications);
-            return true;
+            try{
+                User driver = vehicle.getDriver();
+                this.notificationService.addDriverRideRequestNotification(driver, ride);
+                List<NotificationDTO> notifications = this.notificationService.getNotificationsForUser(driver);
+                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/queue/notifications", notifications);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }

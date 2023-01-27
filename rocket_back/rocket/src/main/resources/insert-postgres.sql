@@ -98,22 +98,22 @@ VALUES ('3', '45.248130', '19.849070',  'true', 'true', 'ACTIVE', 'CARAVAN', '4'
 
 INSERT INTO public.ride(
     id, duration, end_time, kid_friendly, length, now, pet_friendly, price, route_location, split_fare, start_time, status, vehicle_type_requested, vehicle_id)
-VALUES ('13', '180', null, 'true', '1538.2', 'true', 'true', '520', 'smdsGwz~wBxAEA{EoFHkAf@_Al@`@gO@iES}NYyCgA_F`BeAz@_AdB{Dj@eBxGjGfBgF', 'false', '2023-01-24 21:20:44.000000', 'REQUESTED', 'CARAVAN', null);
+VALUES ('3', '180', null, 'true', '1538.2', 'true', 'true', '520', 'smdsGwz~wBxAEA{EoFHkAf@_Al@`@gO@iES}NYyCgA_F`BeAz@_AdB{Dj@eBxGjGfBgF', 'false', '2023-01-24 21:20:44.000000', 'REQUESTED', 'CARAVAN', null);
 
 INSERT INTO public.passenger(id, user_riding_status, user_id, ride_id)
-VALUES ('27', 'ACCEPTED', '7', '13' );
+VALUES ('27', 'ACCEPTED', '7', '3' );
 
 INSERT INTO public.passenger(id, user_riding_status, user_id, ride_id)
-VALUES ('28', 'ACCEPTED', '8', '13' );
+VALUES ('28', 'ACCEPTED', '8', '3' );
 
 INSERT INTO public.passenger(id, user_riding_status, user_id, ride_id)
-VALUES ('29', 'ACCEPTED', '10', '13' );
+VALUES ('29', 'ACCEPTED', '10', '3' );
 
 INSERT INTO public.destination(id, address, latitude, longitude, ride_id)
-VALUES ('25', 'Brace Krkljus 7 Novi Sad', '45.2477844', '19.8241151', '13');
+VALUES ('25', 'Brace Krkljus 7 Novi Sad', '45.2477844', '19.8241151', '3');
 
 INSERT INTO public.destination(id, address, latitude, longitude, ride_id)
-VALUES ('26', 'Gogoljeva 18 Novi Sad', '45.2462784', '19.8346671', '13');
+VALUES ('26', 'Gogoljeva 18 Novi Sad', '45.2462784', '19.8346671', '3');
 
 INSERT INTO public.ride(
     id, duration, end_time, kid_friendly, length, now, pet_friendly, price, route_location, split_fare, start_time, status, vehicle_type_requested, vehicle_id)
