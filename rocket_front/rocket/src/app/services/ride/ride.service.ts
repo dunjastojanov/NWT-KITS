@@ -112,6 +112,9 @@ export class RideService {
     return result.data;
   }
 
+  async createNotifsLookForDriver(id: number) {
+    await http.get(`/api/ride/post-create-ride/${id}`);
+  }
   async onRideStatusChanged() {
     if (!this.currentRide) return;
     if (this.currentRide.rideStatus === RideStatus.DENIED) {

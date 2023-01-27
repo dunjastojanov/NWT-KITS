@@ -253,10 +253,12 @@ public class NotificationService {
         variables.put("start", startAddress);
         variables.put("end", endAddress);
 
-        if (ride.getDriver() != null) {
-            variables.put("driver", ride.getDriver().getFullName());
-            variables.put("email", ride.getDriver().getEmail());
-            variables.put("path", getProfilePicture(ride.getDriver()));
+        if (ride.getVehicle() != null) {
+            if (ride.getDriver() != null) {
+                variables.put("driver", ride.getDriver().getFullName());
+                variables.put("email", ride.getDriver().getEmail());
+                variables.put("path", getProfilePicture(ride.getDriver()));
+            }
         }
         return variables;
     }

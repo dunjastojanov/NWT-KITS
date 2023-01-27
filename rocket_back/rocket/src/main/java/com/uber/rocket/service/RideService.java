@@ -175,15 +175,27 @@ public class RideService {
             destination.setRide(ride);
             this.destinationService.save(destination);
         }
-        for (int i = 1; i < ride.getPassengers().size(); i++) {
+        /*for (int i = 1; i < ride.getPassengers().size(); i++) {
             this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
         }
         if (this.allAcceptedRide(ride)) {
             this.findAndNotifyDriver(ride);
-        }
+        }*/
         return ride.getId();
     }
 
+    public void createPalsNotifsAndLookForDriver(Long id) {
+        Optional<Ride> rideOpt = this.repository.findById(id);
+        if (rideOpt.isPresent()) {
+            Ride ride = rideOpt.get();
+            for (int i = 1; i < ride.getPassengers().size(); i++) {
+                this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
+            }
+            if (this.allAcceptedRide(ride)) {
+                this.findAndNotifyDriver(ride);
+            }
+        }
+    }
     public UserDTO getRidingPal(String email) {
         User user = this.userService.getUserByEmail(email);
         if (!user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("CLIENT")) throw new RuntimeException("User not found");
@@ -212,6 +224,7 @@ public class RideService {
         System.out.println(vehicle);
         if (vehicle != null) {
             try{
+                System.out.println(vehicle);
                 User driver = vehicle.getDriver();
                 this.notificationService.addDriverRideRequestNotification(driver, ride);
                 List<NotificationDTO> notifications = this.notificationService.getNotificationsForUser(driver);
