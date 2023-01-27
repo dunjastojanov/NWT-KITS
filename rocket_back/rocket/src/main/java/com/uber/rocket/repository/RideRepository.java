@@ -30,6 +30,8 @@ public interface RideRepository extends PagingAndSortingRepository<Ride, Long> {
     List<Ride> findByDriverAndStatus(@Param("driver") User driver, @Param("denied") RideStatus denied, @Param("ended") RideStatus ended);
     @Query("FROM Ride ride WHERE :vehicle = ride.vehicle")
     Page<Ride> findByVehicleDriver(Pageable pageable, Vehicle vehicle);
+    @Query("FROM Ride ride WHERE ride.vehicle = :vehicle AND ride.status = com.uber.rocket.entity.ride.RideStatus.CONFIRMED OR ride.status = com.uber.rocket.entity.ride.RideStatus.STARTED")
+    Ride findRideByVehicleAndStatus(@Param("vehicle") Vehicle vehicle);
     @Query(value = "select * FROM ride r JOIN passenger p on p.ride_id = r.id where p.user_id = ?1 and r.status != 'DENIED' and r.status != 'ENDED'", nativeQuery = true)
     List<Ride> findByPassengers(Long id);
 }

@@ -9,7 +9,11 @@ import {
 } from 'src/app/shared/store/notifications-slice/notifications.actions';
 import { StoreType } from 'src/app/shared/store/types';
 import { Store } from '@ngrx/store';
-import { CurrentRide, UserRidingStatus } from 'src/app/interfaces/Ride';
+import {
+  CurrentRide,
+  LongitudeLatitude,
+  UserRidingStatus,
+} from 'src/app/interfaces/Ride';
 import {
   CurrentRideAction,
   CurrentRideActionType,
@@ -76,6 +80,12 @@ export class SocketService {
 
       this.isCustomSocketOpened = true;
       this.stompClient.subscribe(
+        '/user/queue/update-vehicle',
+        (message: any) => {
+          this.handleVehicleLocationUpdate(message);
+        }
+      );
+      this.stompClient.subscribe(
         '/user/queue/notifications',
         (message: { body: string }) => {
           this.handleResultNotification(message);
@@ -88,6 +98,18 @@ export class SocketService {
         }
       );
     }
+  }
+
+  handleVehicleLocationUpdate(message: any) {
+    const longLat: LongitudeLatitude = JSON.parse(message.body);
+    console.log(message);
+    console.log(longLat);
+    this.store.dispatch(
+      new CurrentRideAction(
+        CurrentRideActionType.UPDATE_VEHICLE_LOCATION,
+        longLat
+      )
+    );
   }
 
   handleResultNotification(message: any) {
@@ -103,21 +125,11 @@ export class SocketService {
   async handleResultRide(message: any) {
     const id: number = JSON.parse(message.body);
     const currentRide = await this.rideService.getCurrentRide(id);
-    console.log('----------------');
-    console.log(currentRide);
-    alert(currentRide);
-
     if (currentRide) {
-      console.log('----------------');
-      console.log(currentRide);
-      alert(currentRide);
       if (
         this.user?.roles[0] === 'CLIENT' ||
         (this.user?.roles[0] === 'DRIVER' && currentRide.vehicle)
       ) {
-        console.log('----------------');
-        console.log(currentRide);
-        alert(currentRide);
         this.store.dispatch(
           new CurrentRideAction(CurrentRideActionType.SET, currentRide)
         );

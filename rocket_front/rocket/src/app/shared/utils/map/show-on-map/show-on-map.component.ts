@@ -1,20 +1,23 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges } from '@angular/core';
 import * as L from 'leaflet';
 import { Destination } from 'src/app/interfaces/Destination';
 import { decode } from '@googlemaps/polyline-codec';
+import { Vehicle } from 'src/app/interfaces/Vehicle';
 
 @Component({
   selector: 'show-on-map',
   templateUrl: './show-on-map.component.html',
   styleUrls: ['./show-on-map.component.css'],
 })
-export class ShowOnMapComponent implements AfterViewInit {
+export class ShowOnMapComponent implements AfterViewInit, OnChanges {
   @Input('dimensions') dimensions!: string;
   @Input('destinations') destinations!: Destination[];
   @Input('route') route!: string | null;
   @Input('id') id!: string;
+  @Input('vehicle') vehicle?: Vehicle;
   private mapShow: any;
-  bounds: L.LatLngBounds | null = null;
+  layerPolylines: L.LayerGroup | null = null;
+  layerVehicle: L.LayerGroup | null = null;
   constructor() {}
 
   ngAfterViewInit(): void {
@@ -22,10 +25,17 @@ export class ShowOnMapComponent implements AfterViewInit {
     this.showOnMap();
   }
 
+  ngOnChanges(): void {
+    if (this.layerPolylines || this.layerVehicle) {
+      this.clearMap();
+      this.showOnMap();
+    }
+  }
+
   private initMap(): void {
     this.mapShow = L.map(this.id, {
       center: [45.2671, 19.8335],
-      zoom: 8,
+      zoom: 11,
     });
 
     const tiles = L.tileLayer(
@@ -37,6 +47,8 @@ export class ShowOnMapComponent implements AfterViewInit {
     );
 
     tiles.addTo(this.mapShow);
+    this.layerPolylines = L.layerGroup().addTo(this.mapShow);
+    this.layerVehicle = L.layerGroup().addTo(this.mapShow);
   }
 
   private showOnMap() {
@@ -44,20 +56,31 @@ export class ShowOnMapComponent implements AfterViewInit {
       this.drawPolyline();
       this.drawMarkers();
     }
-  }
-  private drawPolyline() {
-    const routes = this.route!.split(' ').slice(0, -1);
-    for (let i = 0; i < routes.length; i++) {
-      const coordinates = decode(routes[i]);
-      const mainRoutePolyline = L.polyline(coordinates, {
-        color: '#E1A901',
-        weight: 4,
-      });
-      if (i === 0) this.bounds = mainRoutePolyline.getBounds();
-      else this.bounds!.extend(mainRoutePolyline.getBounds());
-      mainRoutePolyline.addTo(this.mapShow);
+    if (this.vehicle) {
+      this.drawVehicle();
     }
-    this.mapShow.fitBounds(this.bounds);
+  }
+
+  private clearMap() {
+    this.layerPolylines?.clearLayers();
+    this.layerVehicle?.clearLayers();
+  }
+
+  private drawPolyline() {
+    //const routes = this.route!.split(' ').slice(0, -1);
+    // for (let i = 0; i < routes.length; i++) {
+    //   const coordinates = decode(routes[i]);
+    const coordinates = decode(this.route!);
+    const mainRoutePolyline = L.polyline(coordinates, {
+      color: '#E1A901',
+      weight: 4,
+    });
+    // if (i === 0) this.bounds = mainRoutePolyline.getBounds();
+    // else this.bounds!.extend(mainRoutePolyline.getBounds());
+
+    mainRoutePolyline.addTo(this.layerPolylines!);
+
+    // this.mapShow.fitBounds(mainRoutePolyline.getBounds());
   }
 
   private drawMarkers() {
@@ -71,6 +94,21 @@ export class ShowOnMapComponent implements AfterViewInit {
     });
   }
 
+  private drawVehicle() {
+    const latLng = new L.LatLng(
+      this.vehicle!.latitude!,
+      this.vehicle!.longitude!
+    );
+    console.log(this.vehicle);
+
+    L.marker(latLng, {
+      icon: L.icon({
+        iconUrl: 'http://localhost:4200/assets/icons/car-pin.png',
+        iconSize: [32, 32],
+      }),
+    }).addTo(this.layerVehicle!);
+  }
+
   private createMarker(outermost: boolean, latLng: L.LatLng, name: string) {
     if (outermost) {
       L.marker(latLng, {
@@ -79,7 +117,7 @@ export class ShowOnMapComponent implements AfterViewInit {
           iconSize: [32, 32],
         }),
         title: name,
-      }).addTo(this.mapShow);
+      }).addTo(this.layerPolylines!);
     } else {
       L.marker(latLng, {
         icon: L.icon({

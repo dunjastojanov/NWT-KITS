@@ -52,6 +52,9 @@ export class LoginComponent implements OnInit {
   ) {
     this.email = '';
     this.password = '';
+    this.store.select('loggedUser').subscribe((res) => {
+      this.socketService.initializeWebSocketConnection();
+    });
   }
 
   ngOnInit() {
@@ -103,7 +106,6 @@ export class LoginComponent implements OnInit {
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)
       );
     }
-    this.socketService.initializeWebSocketConnection();
     this.closeFunc();
   }
 

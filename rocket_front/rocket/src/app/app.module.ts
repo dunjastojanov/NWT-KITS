@@ -105,7 +105,7 @@ import { UserChatModalComponent } from './modals/user-chat-modal/user-chat-modal
 import { NewPasswordComponent } from './modals/new-password/new-password.component';
 import { RegistrationVerificationComponent } from './page/registration-verification/registration-verification.component';
 import { SortPipe } from './shared/utils/history-table/sort.pipe';
-import {ConfirmRideComponent} from "./page/ride-request-page/confirm-ride/confirm-ride.component";
+import { ConfirmRideComponent } from './page/ride-request-page/confirm-ride/confirm-ride.component';
 import { CurrentRideReducer } from './shared/store/current-ride-slice/current-ride.reducer';
 import { NotificationsReducer } from './shared/store/notifications-slice/notifications.reducer';
 import { LobyComponent } from './page/ride-request-page/loby/loby.component';
