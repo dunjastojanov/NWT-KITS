@@ -17,7 +17,7 @@ export const CurrentRideReducer = (
     case CurrentRideActionType.SET:
       return {
         ...state,
-        currentRide: action.payload!,
+        currentRide: <CurrentRide>action.payload!,
       };
 
     case CurrentRideActionType.REMOVE:
@@ -27,14 +27,17 @@ export const CurrentRideReducer = (
       };
     case CurrentRideActionType.UPDATE_VEHICLE_LOCATION:
       const longLat = <LongitudeLatitude>action.payload!;
+      console.log('store');
+
+      console.log(state);
       return {
         ...state,
         currentRide: {
-          ...state.currentRide,
+          ...state.currentRide!,
           vehicle: {
-            ...state.currentRide?.vehicle,
-            longitude: longLat.longitude,
-            latitude: longLat.latitude,
+            type: state.currentRide!.vehicle!.type,
+            longitude: <number>longLat.longitude,
+            latitude: <number>longLat.latitude,
           },
         },
       };

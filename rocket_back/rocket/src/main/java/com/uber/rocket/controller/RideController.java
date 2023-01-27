@@ -25,6 +25,7 @@ public class RideController {
     @PostMapping("currentRide")
     public ResponseEntity<?> createRide(@RequestBody @Valid RideDTO ride) {
         try{
+            System.out.println(ride.getRoute());
             return ResponseEntity.ok(this.rideService.createRide(ride));
         } catch (Exception exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -159,11 +160,11 @@ public class RideController {
         }
     }
 
-    @PutMapping(path = "update-location/{id}")
+    @PutMapping(path = "update-location/{id}", produces = "application/json")
     public void updateVehicleLocation(@PathVariable("id") Long id, @RequestBody LocationDTO locationDTO) {
         LocationDTO location = this.rideService.updateVehicleLocation(id, locationDTO.getLongitude(), locationDTO.getLatitude());
     }
-    @GetMapping("/simulation-ride/{id}")
+    @GetMapping(path = "/simulation-ride/{id}", produces = "application/json")
     public RideSimulationDTO getRideSimulation(@PathVariable Long id) {
         return this.rideService.getRideForSimulation(id);
     }

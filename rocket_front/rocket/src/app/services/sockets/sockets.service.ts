@@ -80,6 +80,12 @@ export class SocketService {
 
       this.isCustomSocketOpened = true;
       this.stompClient.subscribe(
+        '/user/queue/update-vehicle',
+        (message: any) => {
+          this.handleVehicleLocationUpdate(message);
+        }
+      );
+      this.stompClient.subscribe(
         '/user/queue/notifications',
         (message: { body: string }) => {
           this.handleResultNotification(message);
@@ -91,17 +97,13 @@ export class SocketService {
           this.handleResultRide(message);
         }
       );
-      this.stompClient.subscribe(
-        '/user/queue/map',
-        (message: { body: string }) => {
-          this.handleVehicleLocationUpdate(message);
-        }
-      );
     }
   }
 
   handleVehicleLocationUpdate(message: any) {
-    const longLat: LongitudeLatitude = message.body;
+    const longLat: LongitudeLatitude = JSON.parse(message.body);
+    console.log(message);
+    console.log(longLat);
     this.store.dispatch(
       new CurrentRideAction(
         CurrentRideActionType.UPDATE_VEHICLE_LOCATION,

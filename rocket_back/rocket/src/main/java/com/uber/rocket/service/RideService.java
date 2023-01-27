@@ -24,6 +24,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -492,18 +494,19 @@ public class RideService {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(vehicleId);
         if (vehicleOpt.isPresent()) {
             Vehicle vehicle = vehicleOpt.get();
-            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle, RideStatus.CONFIRMED, RideStatus.STARTED);
+            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle);
             RideSimulationDTO rsDTO = new RideSimulationDTO();
             rsDTO.setVehicleStatus(vehicle.getStatus());
             if (ride != null) {
                 RideInfoSimulationDTO risDTO = new RideInfoSimulationDTO();
                 risDTO.setStatus(ride.getStatus());
-                risDTO.setRouteCoordinates(risDTO.getRouteCoordinates());
+                risDTO.setRouteCoordinates(URLEncoder.encode(ride.getRouteLocation(), StandardCharsets.UTF_8));
                 Destination dest = this.destinationService.getStartDestinationByRide(ride);
                 List<Double> longLat = new ArrayList<>();
                 longLat.add(dest.getLongitude());
                 longLat.add(dest.getLatitude());
                 risDTO.setDestination(longLat);
+                rsDTO.setRide(risDTO);
             }
             return rsDTO;
         }
@@ -512,24 +515,32 @@ public class RideService {
 
     public LocationDTO updateVehicleLocation(Long id, Double longitude, Double latitude) {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(id);
+        System.out.println(id);
+        System.out.println(longitude);
+        System.out.println(latitude);
         if (vehicleOpt.isPresent()) {
             Vehicle vehicle = vehicleOpt.get();
-            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle, RideStatus.CONFIRMED, RideStatus.STARTED);
+            System.out.println(vehicle);
             vehicle.setLongitude(longitude);
             vehicle.setLatitude(latitude);
             this.vehicleService.save(vehicle);
-            LocationDTO locationDTO = new LocationDTO();
-            locationDTO.setLatitude(vehicle.getLatitude());
-            locationDTO.setLongitude(vehicle.getLongitude());
-            this.updateLocationToPassengers(ride.getPassengers().stream().toList(),locationDTO);
-            return locationDTO;
+            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle);
+            System.out.println(ride);
+            if (ride != null) {
+                LocationDTO locationDTO = new LocationDTO();
+                locationDTO.setLatitude(vehicle.getLatitude());
+                locationDTO.setLongitude(vehicle.getLongitude());
+                this.updateLocationToPassengers(ride.getPassengers().stream().toList(),locationDTO);
+            }
         }
         return null;
     }
 
     private void updateLocationToPassengers(List<Passenger> passengers, LocationDTO locationDTO) {
         for (Passenger passenger : passengers) {
-            this.messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(),"/queue/map", locationDTO);
+            System.out.println(passenger.getUser().getEmail());
+            System.out.println(locationDTO);
+            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(),"/queue/update-vehicle", locationDTO);
         }
     }
 

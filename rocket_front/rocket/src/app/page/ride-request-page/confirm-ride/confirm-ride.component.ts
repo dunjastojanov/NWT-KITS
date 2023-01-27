@@ -52,9 +52,11 @@ export class ConfirmRideComponent implements OnInit {
         if (one && one.selected) return one;
         return two!;
       });
+      const list = [];
       for (const route of this.routes) {
-        this.selectedRoute += encode(route.geometry.coordinates) + ' ';
+        for (const coord of route.geometry.coordinates) list.push(coord);
       }
+      this.selectedRoute = encode(list);
     });
     this.store.select('rideInfo').subscribe((resData) => {
       this.rideInfo = resData.ride;

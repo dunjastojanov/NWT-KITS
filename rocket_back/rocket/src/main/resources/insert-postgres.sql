@@ -2,6 +2,7 @@ INSERT INTO public.role(id, role) VALUES (1, 'CLIENT');
 INSERT INTO public.role(id, role) VALUES (2, 'DRIVER');
 INSERT INTO public.role(id, role) VALUES (3, 'ADMINISTRATOR');
 
+
 INSERT INTO public.app_user(
     id, blocked, city, email, first_name, last_name, password, phone_number, profile_picture, tokens)
 VALUES ('1','false', 'Novi Sad','biljana@gmail.com', 'Biljana', 'Radulov', '$2a$12$6wFZb50rAgDaEO3g6sP2eeIlhd/LceYci9zvYHGspI/UqUsPdkS3m', '0611111111', '', '2'); --Biljana123
@@ -82,18 +83,6 @@ INSERT INTO public.app_user_roles(
     user_id, roles_id)
 VALUES ('10', '1');
 
-INSERT INTO public.vehicle(
-    id, latitude, longitude, kid_friendly, pet_friendly, status, vehicle_type, driver_id)
-VALUES ('1','0' , '0', 'true', 'true', 'INACTIVE', 'CARAVAN', '2');
-
-INSERT INTO public.vehicle(
-    id, latitude, longitude, kid_friendly, pet_friendly, status, vehicle_type, driver_id)
-VALUES ('2', '0', '0', 'false', 'false', 'INACTIVE', 'CONVERTIBLE', '3');
-
-INSERT INTO public.vehicle(
-    id, latitude, longitude, kid_friendly, pet_friendly, status, vehicle_type, driver_id)
-VALUES ('3', '0', '0',  'true', 'false', 'INACTIVE', 'LIMOUSINE', '4');
-
 
 INSERT INTO public.vehicle(
     id, latitude, longitude, kid_friendly, pet_friendly, status, vehicle_type, driver_id)
@@ -128,7 +117,7 @@ VALUES ('26', 'Gogoljeva 18 Novi Sad', '45.2462784', '19.8346671', '13');
 
 INSERT INTO public.ride(
     id, duration, end_time, kid_friendly, length, now, pet_friendly, price, route_location, split_fare, start_time, status, vehicle_type_requested, vehicle_id)
-VALUES ('1', '276', null, 'true', '2252.9', 'true', 'true', '676', '_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@ ', 'false', '2023-01-25 14:15:09.000000', 'CONFIRMED', 'CARAVAN', '2');
+VALUES ('1', '276', null, 'true', '2252.9', 'true', 'true', '676', '_hfsGeg}wB??z@pDd@nB@D?BHZLh@@BBJrApFRv@FRJd@BHBJHXH^JINIDCfOaJDEXONKTOFCxIkFFEnFgDd@[hBkAFCDCTOD^BLNhAb@xCl@dET~CVdHLhD@V^hMF|B@H?N@P@T?F@`@?J^hLJxCKBK@]DI@G@MDFRDX', 'false', '2023-01-25 14:15:09.000000', 'CONFIRMED', 'CARAVAN', '2');
 
 INSERT INTO public.passenger(id, user_riding_status, user_id, ride_id)
 VALUES ('1', 'ACCEPTED', '6', '1' );
@@ -141,7 +130,7 @@ VALUES ('2', 'Futoski put 18 Novi Sad', '45.2478236', '19.804034', '1');
 
 INSERT INTO public.ride(
     id, duration, end_time, kid_friendly, length, now, pet_friendly, price, route_location, split_fare, start_time, status, vehicle_type_requested, vehicle_id)
-VALUES ('2', '360', null, 'true', '3039.4', 'false', 'true', '760', 'kkcsGyubxBhAg@z\jjB{OvFym@bA@zEmDHJ`P ', 'false', '2023-01-25 20:03:43.000000', 'SCHEDULED', 'CARAVAN', '3');
+VALUES ('2', '360', null, 'true', '3039.4', 'false', 'true', '760', 'kkcsGyubxBhAg@z\jjB{OvFym@bA@zEmDHJ`P', 'false', '2023-01-25 20:03:43.000000', 'SCHEDULED', 'CARAVAN', '3');
 
 INSERT INTO public.passenger(id, user_riding_status, user_id, ride_id)
 VALUES ('2', 'ACCEPTED', '9', '2' );

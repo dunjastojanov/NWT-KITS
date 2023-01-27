@@ -24,7 +24,7 @@ public class RocketApplication {
 		SpringApplication.run(RocketApplication.class, args);
 	}
 
-	@PostConstruct
+	/*@PostConstruct
 	private void startScript() throws IOException {
 		List<Vehicle> vehicles = this.vehicleRepository.findAll();
 		String[] cmd = {
@@ -32,5 +32,5 @@ public class RocketApplication {
 				"D:\\siit\\4. god\\NWT\\NWT-KITS\\rocket_back\\rocket\\script.py -u " + vehicles.size() + " -r 1 --run-time 30m"
 		};
 		Runtime.getRuntime().exec(cmd);
-	}
+	}*/
 }
