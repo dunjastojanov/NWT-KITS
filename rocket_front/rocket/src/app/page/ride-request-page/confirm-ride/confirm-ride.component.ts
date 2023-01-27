@@ -125,6 +125,7 @@ export class ConfirmRideComponent implements OnInit {
         return;
       }*/
       currentRide.rideId = rideId;
+      await this.rideService.createNotifsLookForDriver(rideId);
       this.store.dispatch(
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)
       );

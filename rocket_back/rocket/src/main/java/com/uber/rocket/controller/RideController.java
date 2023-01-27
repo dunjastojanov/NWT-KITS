@@ -53,6 +53,12 @@ public class RideController {
         RideDTO rideDTO = this.rideService.getUserCurrentRideById(id);
         return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
     }
+
+    @GetMapping(path = "/post-create-ride/{id}")
+    public void createPalsNotifsAndLookForDriver(@PathVariable("id") Long id) {
+        this.rideService.createPalsNotifsAndLookForDriver(id);
+    }
+
     @GetMapping(path = "/pal/{email}")
     public ResponseEntity<?> getRidingPal(@PathVariable("email") String email) {
         try {
