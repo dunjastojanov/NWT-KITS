@@ -21,7 +21,7 @@
         <app-info [title]="'End'" [info]="route.end" [size]="'small'"></app-info>
       </div>
       <div class="favourite-route-button-div">
-        <secondary-button text="BOOK NOW"></secondary-button>
+        <secondary-button text="BOOK NOW" (click)="bookNow(route.id)" ></secondary-button>
       </div>
     </div>
   </div>

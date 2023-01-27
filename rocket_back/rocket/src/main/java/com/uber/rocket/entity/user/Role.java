@@ -20,4 +20,6 @@ public class Role {
     @NotNull
     private String role;
 
+    public Role(String user) {
+    }
 }

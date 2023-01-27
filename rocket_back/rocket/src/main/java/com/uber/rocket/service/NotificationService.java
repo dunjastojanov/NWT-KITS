@@ -14,11 +14,12 @@ import com.uber.rocket.repository.NotificationRepository;
 import com.uber.rocket.repository.UserRepository;
 import com.uber.rocket.utils.TemplateProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -37,16 +38,22 @@ public class NotificationService {
 
     @Autowired
     AuthService authService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     DestinationService destinationService;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. hh:mm");
 
     public List<NotificationDTO> getNotificationsForUser(User user) {
         if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("ADMINISTRATOR"))) {
             List<Notification> byUserIsNull = notificationRepository.findByUserIsNull();
             return byUserIsNull.stream().map(notificationMapper::mapToDto).toList();
         }
-        return notificationRepository.findAllByUser(user).stream().map(notificationMapper::mapToDto).toList();
+        return notificationRepository.findAllByUser(user).stream()
+                .map(notificationMapper::mapToDto)
+                .filter(notificationDTO-> !notificationDTO.isRead()).toList();
     }
 
     public void addUpdateDriverDataRequestNotification(UpdateDriverDataRequest request) {
@@ -56,6 +63,11 @@ public class NotificationService {
         notification.setEntityId(request.getId());
         notification.setType(NotificationType.UPDATE_DRIVER_DATA_REQUEST);
         save(notification);
+    }
+
+    public void addScheduledRideNotification(Ride ride, int numberOfMinutes) {
+        Notification notification = new Notification();
+        notification.setTitle("You have a ride scheduled in " + numberOfMinutes + " minutes.");
     }
 
     private Notification save(Notification notification) {
@@ -137,15 +149,19 @@ public class NotificationService {
         save(notification);
     }
 
-    public void addRideCanceledNotifications(RideCancellation rideCancellation) {
+    public List<Notification> addRideCanceledNotifications(RideCancellation rideCancellation) {
+        List<Notification> notifications = new ArrayList<>();
         for (Passenger passenger: rideCancellation.getRide().getPassengers()) {
             Notification notification = new Notification();
             notification.setUser(passenger.getUser());
             notification.setType(NotificationType.RIDE_CANCELED);
             notification.setTitle("Ride has been canceled");
+            notification.setSent(LocalDateTime.now());
             notification.setTemplateVariables(templateProcessor.getVariableString(getRideCancellationVariables(rideCancellation)));
+            notifications.add(notification);
             save(notification);
         }
+        return notifications;
     }
 
     public void addRideReviewNotification(User user, Ride ride) {
@@ -153,7 +169,9 @@ public class NotificationService {
         notification.setUser(user);
         notification.setType(NotificationType.RIDE_REVIEW);
         notification.setTitle("Ride review");
-        notification.setTemplateVariables(templateProcessor.getVariableString(getRideVariables(ride, this.destinationService.getStartAddressByRide(ride), this.destinationService.getEndAddressByRide(ride))));
+        Map<String, String> variables = getRideVariables(ride, this.destinationService.getStartAddressByRide(ride), this.destinationService.getEndAddressByRide(ride));
+        variables.put("status", "Your ride has ended. Leave a review for your driver and for their vehicle.");
+        notification.setTemplateVariables(templateProcessor.getVariableString(variables));
         notification.setEntityId(ride.getId());
         save(notification);
     }
@@ -178,6 +196,19 @@ public class NotificationService {
         return variables;
     }
 
+    public void addDriverArrivedNotification(Ride ride, User user) {
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setEntityId(ride.getId());
+        String startAddress = this.destinationService.getStartAddressByRide(ride);
+        String endAddress = this.destinationService.getEndAddressByRide(ride);
+        notification.setTitle("Vehicle arrived");
+        notification.setType(NotificationType.RIDE_CONFIRMED);
+        Map<String, String> variables = getRideVariables(ride, startAddress, endAddress);
+        variables.put("status", "Vehicle has arrived.");
+        notification.setTemplateVariables(templateProcessor.getVariableString(variables));
+    }
+
     public void addRideStatusChangeNotification(Ride ride, User user) {
         Notification notification = new Notification();
         notification.setUser(user);
@@ -194,10 +225,9 @@ public class NotificationService {
                 notification.setTemplateVariables(templateProcessor.getVariableString(variables));
             }
             case SCHEDULED -> {
-                notification.setTitle("Ride scheduled");
+                notification.setTitle("Ride scheduled for: "+ ride.getStartTime().format(formatter));
                 notification.setType(NotificationType.RIDE_SCHEDULED);
                 Map<String, String> variables = getScheduledRideVariables(ride);
-                variables.put("status", "Your drive has been scheduled.");
                 notification.setTemplateVariables(templateProcessor.getVariableString(variables));
             }
         }
@@ -282,5 +312,18 @@ public class NotificationService {
     public void deleteNotificationById(Long id) {
         Optional<Notification> notification = notificationRepository.findById(id);
         notification.ifPresent(value -> notificationRepository.delete(value));
+    }
+
+    public Notification getNotificationsForUserAndRide(User user, Ride ride) {
+        Optional<Notification> optional = notificationRepository.findByUserAndEntityId(user, ride.getId());
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        else throw new RuntimeException("There are no notifications for given user and ride.");
+    }
+
+    public void setNotificationAsRead(User user, Ride ride) {
+        setNotificationAsRead(getNotificationsForUserAndRide(user, ride).getId());
+        messagingTemplate.convertAndSendToUser(user.getEmail(), "/queue/notifications", getNotificationsForUser(user));
     }
 }

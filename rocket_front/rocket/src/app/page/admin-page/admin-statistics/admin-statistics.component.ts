@@ -14,6 +14,11 @@ export class AdminStatisticsComponent implements OnInit {
   startDate: string = new Date().toISOString().slice(0, 10).replace("2023", "2020");
   endDate: string = new Date().toISOString().slice(0, 10).replace("2023", "2027");
   type: string = "kilometers";
+  _type: string = "kilometers";
+  email: string = "";
+
+  unit: string = "";
+
 
   constructor(private service: AdminService) {
   }
@@ -29,18 +34,31 @@ export class AdminStatisticsComponent implements OnInit {
   }
 
   onShow() {
-    this.service.getStatistics({
-      startDate: this.startDate + " 00:00",
-      endDate: this.endDate + " 23:59"
-    }, this.type).then(result => {
-      this.reportData = result;
-    });
+    this.unit = this.type === 'kilometers' ? 'KM': this.type === 'money' ? 'din': '';
+    this._type = this.type;
+    if (this.email == "") {
+      this.service.getStatistics({
+        startDate: this.startDate + " 00:00",
+        endDate: this.endDate + " 23:59"
+      }, this.type).then(result => {
+        this.reportData = result;
+      });
+    }
+    else {
+      this.service.getStatisticsForEmail({
+        startDate: this.startDate + " 00:00",
+        endDate: this.endDate + " 23:59",
+      }, this.type, this.email).then(result=> {
+        this.reportData = result;
+      })
+    }
   }
 
   users: any = [
     {value: "client", text: "Client"},
     {value: "driver", text: "Driver"},
   ]
+
 
 
 }

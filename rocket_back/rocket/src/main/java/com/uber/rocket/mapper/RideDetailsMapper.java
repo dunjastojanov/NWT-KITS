@@ -1,7 +1,6 @@
 package com.uber.rocket.mapper;
 
 import com.uber.rocket.dto.RideDetails;
-import com.uber.rocket.entity.ride.Passenger;
 import com.uber.rocket.entity.ride.Review;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.service.DestinationService;
@@ -9,6 +8,7 @@ import com.uber.rocket.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 @Component
@@ -16,6 +16,8 @@ public class RideDetailsMapper implements Mapper<Ride, RideDetails> {
     private final ReviewMapper reviewMapper;
     private final ReviewService reviewService;
     private final DestinationService destinationService;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     @Autowired
     public RideDetailsMapper(ReviewMapper reviewMapper, ReviewService reviewService, DestinationService destinationService) {
         this.reviewMapper = reviewMapper;
@@ -23,12 +25,14 @@ public class RideDetailsMapper implements Mapper<Ride, RideDetails> {
         this.destinationService = destinationService;
     }
 
+
     @Override
     public RideDetails mapToDto(Ride ride) {
 
         return RideDetails
                 .builder()
                 .id(ride.getId())
+                .date(ride.getStartTime().format(formatter))
                 .driver(ride.getDriver().getFullName())
                 .driverProfileImage(ride.getDriver().getProfilePicture())
                 .start(destinationService.getStartAddressByRide(ride))

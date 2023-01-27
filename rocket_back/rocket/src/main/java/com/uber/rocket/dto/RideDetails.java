@@ -20,5 +20,6 @@ public class RideDetails {
     String price;
     String duration;
     double rating;
+    String date;
     List<ReviewDTO> reviews;
 }

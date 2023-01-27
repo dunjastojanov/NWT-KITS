@@ -147,4 +147,11 @@ export class RideService {
       // sacuvaj u bazu da je ride ended i promeni end time i current ride = null
     }
   }
+
+  async bookExisting(rideId: string) {
+    let result: AxiosResponse<number | null> = await http.post(
+      `/api/ride/currentRide/${rideId}`
+    );
+    return result.data;
+  }
 }

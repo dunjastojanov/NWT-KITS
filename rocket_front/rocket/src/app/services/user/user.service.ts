@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { AxiosResponse } from 'axios';
-import { sideUser, User } from 'src/app/interfaces/User';
-import { http } from 'src/app/shared/api/axios-wrapper';
-import { loggedUserToken } from 'src/app/shared/consts';
-import { CookieService } from 'ngx-cookie-service';
-import { CurrentRide } from 'src/app/interfaces/Ride';
+import {Injectable} from '@angular/core';
+import {AxiosResponse} from 'axios';
+import {sideUser, User} from 'src/app/interfaces/User';
+import {http} from 'src/app/shared/api/axios-wrapper';
+import {loggedUserToken} from 'src/app/shared/consts';
+import {CookieService} from 'ngx-cookie-service';
+import {CurrentRide} from 'src/app/interfaces/Ride';
+import {GoogleUser} from "../../interfaces/GoogleUser";
 
 interface NewDriver {
   firstName: string;
@@ -204,9 +205,9 @@ export class UserService {
   }
 
   async sendRequestForPassword(email: string) {
-    await http.post<string>("/api/user/password", email,{
-      headers:{
-        "Content-Type":"text/plain"
+    await http.post<string>("/api/user/password", email, {
+      headers: {
+        "Content-Type": "text/plain"
       }
     });
   }
@@ -218,6 +219,18 @@ export class UserService {
 
   async verifyRegistration(token: string): Promise<string> {
     let result: AxiosResponse<string> = await http.get<string>("/api/user/confirm/" + token);
+    return result.data;
+  }
+
+  async loginGoogleUser(user: User): Promise<string> {
+    const googleDto: GoogleUser = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profilePicture: user.profilePicture,
+    }
+    let result: AxiosResponse<string> = await http.post<string>("/api/user/google", googleDto);
     return result.data;
   }
 }

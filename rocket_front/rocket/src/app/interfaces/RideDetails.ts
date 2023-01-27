@@ -9,6 +9,8 @@ export interface RideDetails {
   price: number;
   duration: number;
   rating: number;
+
+  date: string;
   reviews: {
     reviewer: string;
     rating: number;

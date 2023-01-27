@@ -20,7 +20,6 @@ public class Notification {
     @Id
     @SequenceGenerator(name = "notification_sequence", sequenceName = "notification_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "notification_sequence")
-    @Setter(AccessLevel.NONE)
     private Long id;
     @Nullable
     @ManyToOne
@@ -38,5 +37,4 @@ public class Notification {
     Long entityId;
     @Nullable
     LocalDateTime sent;
-
 }

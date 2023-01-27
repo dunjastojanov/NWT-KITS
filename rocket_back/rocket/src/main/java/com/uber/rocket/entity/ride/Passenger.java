@@ -24,4 +24,9 @@ public class Passenger {
 
     @Enumerated(EnumType.STRING)
     UserRidingStatus userRidingStatus;
+
+    public Passenger(User user, UserRidingStatus userRidingStatus) {
+        this.user = user;
+        this.userRidingStatus = userRidingStatus;
+    }
 }

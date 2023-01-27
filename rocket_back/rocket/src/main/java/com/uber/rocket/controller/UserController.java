@@ -135,7 +135,6 @@ public class UserController {
         }
     }
 
-
     @PostMapping(path = "/password")
     public ResponseEntity<?> forgottenPassword(@RequestBody String email) {
         try {
@@ -149,6 +148,15 @@ public class UserController {
     public ResponseEntity<?> getRandomAdmin() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(userService.getRandomAdmin());
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @PostMapping(path = "/google")
+    public ResponseEntity<?> registerGoogleUser(@RequestBody GoogleUser googleUser, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.googleRegister(googleUser, request, response));
         } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }

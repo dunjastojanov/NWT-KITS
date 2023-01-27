@@ -7,20 +7,19 @@ import {
   NotificationsAction,
   NotificationsActionType,
 } from 'src/app/shared/store/notifications-slice/notifications.actions';
-import { StoreType } from 'src/app/shared/store/types';
-import { Store } from '@ngrx/store';
+import {StoreType} from 'src/app/shared/store/types';
+import {Store} from '@ngrx/store';
+import {UserRidingStatus} from 'src/app/interfaces/Ride';
+import {CurrentRideAction, CurrentRideActionType,} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import {RideService} from '../ride/ride.service';
+import {User} from 'src/app/interfaces/User';
+import {MessageInfo} from "../../interfaces/MessageInfo";
+import {MessageAction, MessageActionType} from "../../shared/store/message-slice/message.actions";
 import {
   CurrentRide,
   LongitudeLatitude,
-  UserRidingStatus,
 } from 'src/app/interfaces/Ride';
-import {
-  CurrentRideAction,
-  CurrentRideActionType,
-} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import { http } from 'src/app/shared/api/axios-wrapper';
-import { RideService } from '../ride/ride.service';
-import { User } from 'src/app/interfaces/User';
+
 
 @Injectable()
 export class SocketService {
@@ -97,6 +96,12 @@ export class SocketService {
           this.handleResultRide(message);
         }
       );
+      this.stompClient.subscribe(
+        '/user/queue/message',
+        (message: { body: object }) => {
+          this.handleMessage(message);
+        }
+      );
     }
   }
 
@@ -136,5 +141,25 @@ export class SocketService {
       }
     }
     await this.rideService.onRideStatusChanged();
+  }
+
+  handleVehicleStatus(message: any) {
+    const notifications: Notif[] = JSON.parse(message.body);
+    this.store.dispatch(
+      new NotificationsAction(
+        NotificationsActionType.SET_NOTIFICATIONS,
+        notifications
+      )
+    );
+  }
+
+  handleMessage(message: any) {
+    const messages: MessageInfo[] = JSON.parse(message.body);
+    this.store.dispatch(
+      new MessageAction(
+        MessageActionType.SET_MESSAGES,
+        messages
+      )
+    );
   }
 }
