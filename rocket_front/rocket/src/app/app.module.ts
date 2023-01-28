@@ -114,6 +114,7 @@ import { ChangePasswordComponent } from './modals/change-password/change-passwor
 import { BlockUserComponent } from './modals/block-user/block-user.component';
 import { CancelRideComponent } from './modals/cancel-ride/cancel-ride.component';
 import {MessagesReducer} from "./shared/store/message-slice/message.reducer";
+import { MapPageComponent } from './page/map-page/map-page.component';
 
 @NgModule({
   declarations: [
@@ -208,6 +209,7 @@ import {MessagesReducer} from "./shared/store/message-slice/message.reducer";
     UserChatModalComponent,
     NewPasswordComponent,
     RegistrationVerificationComponent,
+    MapPageComponent,
   ],
   imports: [
     HttpClientModule,

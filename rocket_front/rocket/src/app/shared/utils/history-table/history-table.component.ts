@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {RideHistory} from "../../../interfaces/RideHistory";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'history-table',
@@ -8,7 +9,7 @@ import {RideHistory} from "../../../interfaces/RideHistory";
 })
 export class HistoryTableComponent implements OnInit {
 
-  constructor() {
+  constructor(private router: Router) {
     this._currentPage = this.page;
   }
 
@@ -17,6 +18,7 @@ export class HistoryTableComponent implements OnInit {
   ]
 
   @Input('rideHistory') rideHistory!: RideHistory[];
+
 
   sortBy: 'start'| 'end'| 'driver'| 'duration'| 'price' | 'date' = 'date';
   @Input() page!: string;
@@ -41,5 +43,13 @@ export class HistoryTableComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  showMap(id: string): void {
+    this.router.navigate(
+      ['/map'],
+      { queryParams: { id: id } }
+    );
+  }
+
 
 }

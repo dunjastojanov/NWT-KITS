@@ -4,6 +4,7 @@ import {UserService} from "../../../services/user/user.service";
 import {ToastrService} from "ngx-toastr";
 import {Store} from "@ngrx/store";
 import {StoreType} from "../../../shared/store/types";
+import {LoggedUserAction, LoggedUserActionType} from "../../../shared/store/logged-user-slice/logged-user.actions";
 
 @Component({
   selector: 'app-profile-picture',
@@ -34,8 +35,10 @@ export class ProfilePictureComponent implements OnInit {
     if (this.selectedImage) {
       this.service.editProfileImage(this.selectedImage).then(result => {
           if (result.object) {
-            this.toastr.success(result.message)
+            this.toastr.success(result.message);
+            this.service.refreshUser();
           }
+
         }
       ).catch(
         () => {

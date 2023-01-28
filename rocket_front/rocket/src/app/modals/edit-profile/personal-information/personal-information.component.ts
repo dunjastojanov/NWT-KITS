@@ -59,8 +59,7 @@ export class PersonalInformationComponent implements OnInit {
 
 
   constructor(private store: Store<StoreType>, private toastr: ToastrService, private service: UserService, private vehicleService: VehicleService) {
-    let loggedUserSlice = store.select('loggedUser');
-    loggedUserSlice.subscribe(
+    store.select('loggedUser').subscribe(
       resData => {
         if (resData.user) {
           this.data = {...resData.user}
@@ -122,6 +121,7 @@ export class PersonalInformationComponent implements OnInit {
         }
         this.service.editDriver(dto).then(() => {
           this.toastr.success("You have successfully sent the request for changing your data.")
+          this.service.refreshUser();
         }).catch(() => {
           this.toastr.error("Error with updating profile")
         })
@@ -129,6 +129,8 @@ export class PersonalInformationComponent implements OnInit {
       else {
         this.service.editUser(dto).then(result => {
           this.toastr.success(result.message)
+          this.service.refreshUser();
+
         }).catch(() => {
           this.toastr.error("Error with updating profile")
         })

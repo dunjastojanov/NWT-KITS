@@ -8,9 +8,11 @@
   <div class="flex ">
     <div *ngFor="let route of favouriteRoutes" (click)="setFocus(route.id)" class="favourite-route-card"
          [ngClass]="{'favourite-route-card-tertiary': route.id!==focusId, 'favourite-route-card-primary': route.id==focusId}">
-      <div class="flex justify-end w-full">
+      <div class="flex justify-end w-full gap-2">
+        <icon-button-secondary path="assets/icons/plp-dropped.png" (click)="showMap(route.id)"></icon-button-secondary>
         <icon-button-secondary (click)="deleteFavourite(route.id)" class="mr-2"
                                [path]="'assets/icons/cancel.png'"></icon-button-secondary>
+
       </div>
       <div class="favourite-route-info"
            [ngClass]="{'favourite-route-info-tertiary': route.id!==focusId, 'favourite-route-info-primary': route.id==focusId}">

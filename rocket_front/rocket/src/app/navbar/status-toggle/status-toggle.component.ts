@@ -28,7 +28,7 @@ export class StatusToggleComponent implements OnInit {
       status = "ACTIVE";
     }
     this.vehicleService.changeStatus(status).then(result => {
-      this.status = result;
+      this.status = result === 'ACTIVE';
       this.toastr.success("Status updated");
       if (this.user) {
         this.user.status = status;

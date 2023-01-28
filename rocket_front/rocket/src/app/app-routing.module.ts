@@ -19,6 +19,7 @@ import {ConfirmRideComponent} from './page/ride-request-page/confirm-ride/confir
 import {LobyComponent} from './page/ride-request-page/loby/loby.component';
 import {AdminChatPageComponent} from "./page/admin-chat-page/admin-chat-page.component";
 import {RegistrationVerificationComponent} from "./page/registration-verification/registration-verification.component";
+import {MapPageComponent} from "./page/map-page/map-page.component";
 
 const routes: Routes = [
   {path: '', component: HomepageComponent},
@@ -57,6 +58,7 @@ const routes: Routes = [
   {path: 'ride/current', component: CurrentRidePageComponent},
   {path: 'admin/chat', component: AdminChatPageComponent},
   {path: 'registration/verification', component: RegistrationVerificationComponent},
+  {path: 'map', component: MapPageComponent},
 ];
 
 @NgModule({

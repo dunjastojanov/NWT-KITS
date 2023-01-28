@@ -1,26 +1,37 @@
-import { AfterViewInit, Component, Input, OnChanges } from '@angular/core';
-import * as L from 'leaflet';
-import { Destination } from 'src/app/interfaces/Destination';
-import { decode } from '@googlemaps/polyline-codec';
-import { Vehicle } from 'src/app/interfaces/Vehicle';
+import {AfterViewInit, Component, OnChanges, OnInit} from '@angular/core';
+import {Destination} from "../../interfaces/Destination";
+import * as L from "leaflet";
+import {decode} from "@googlemaps/polyline-codec";
+import {ActivatedRoute} from "@angular/router";
+import {RideService} from "../../services/ride/ride.service";
 
 @Component({
-  selector: 'show-on-map',
-  templateUrl: './show-on-map.component.html',
-  styleUrls: ['./show-on-map.component.css'],
+  selector: 'map-page',
+  templateUrl: './map-page.component.html',
+  styleUrls: ['./map-page.component.css']
 })
-export class ShowOnMapComponent implements AfterViewInit, OnChanges {
-  @Input('dimensions') dimensions!: string;
-  @Input('destinations') destinations!: Destination[];
-  @Input('route') route!: string | null;
-  @Input('id') id!: string;
-  @Input('vehicle') vehicle?: Vehicle;
+export class MapPageComponent implements OnChanges, OnInit, AfterViewInit {
+  destinations: Destination[] = [];
+  route: string | null = null;
+
   private mapShow: any;
   layerPolylines: L.LayerGroup | null = null;
   layerVehicle: L.LayerGroup | null = null;
-  constructor() {
 
-    console.log(this.route)
+  constructor(private activatedRoute: ActivatedRoute, private service:RideService) {
+  }
+
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      let id = params["id"]
+      this.service.getMap(id).then(map => {
+        this.destinations = map.destinations;
+        this.route = map.route;
+        console.log(this.destinations)
+        console.log(this.route)
+        this.showOnMap();
+      })
+    });
   }
 
   ngAfterViewInit(): void {
@@ -36,7 +47,7 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
   }
 
   private initMap(): void {
-    this.mapShow = L.map(this.id, {
+    this.mapShow = L.map("routeId", {
       center: [45.2671, 19.8335],
       zoom: 11,
     });
@@ -59,9 +70,7 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
       this.drawPolyline();
       this.drawMarkers();
     }
-    if (this.vehicle) {
-      this.drawVehicle();
-    }
+
   }
 
   private clearMap() {
@@ -96,22 +105,6 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
       );
     });
   }
-
-  private drawVehicle() {
-    const latLng = new L.LatLng(
-      this.vehicle!.latitude!,
-      this.vehicle!.longitude!
-    );
-    console.log(this.vehicle);
-
-    L.marker(latLng, {
-      icon: L.icon({
-        iconUrl: 'http://localhost:4200/assets/icons/car-pin.png',
-        iconSize: [32, 32],
-      }),
-    }).addTo(this.layerVehicle!);
-  }
-
   private createMarker(outermost: boolean, latLng: L.LatLng, name: string) {
     if (outermost) {
       L.marker(latLng, {
@@ -131,4 +124,5 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
       }).addTo(this.mapShow);
     }
   }
+
 }

@@ -12,30 +12,26 @@
 
     <div class="flex">
 
-      <div class="bg-secondary-dark w-1/4">
-        <!--TODO: Add route-->
-      </div>
-
-      <div class="py-6 px-6 lg:px-8 w-3/4">
+      <div class="py-6 px-6 lg:px-8 w-full">
         <h3 class="mb-4 text-xl font-medium text-gray-900 text-center w-full">Detailed view</h3>
 
         <div class="flex items-center">
           <img alt="profile-image" class="ml-3 w-20 h-20 rounded-full"
                [src]="ride.driverProfileImage || 'assets/profile-placeholder.png'"/>
           <app-info [title]="'Driver'" [info]="ride.driver"></app-info>
+
           <app-info class="ml-auto" [title]="'Price'" [info]="ride.price.toString() + ' din'"></app-info>
           <app-info [title]="'Duration'" [info]="ride.duration.toString()  + ' min'"></app-info>
-          <icon-button-secondary class="mr-2" (click)="addFavorite(ride.id)"
+          <icon-button-secondary *ngIf="hasRole('CLIENT')" class="mr-2" (click)="addFavorite(ride.id)"
                                  [path]="'assets/icons/favorite.png'"></icon-button-secondary>
-          <icon-button-secondary class="mr-2"
+          <icon-button-secondary *ngIf="hasRole('CLIENT')" class="mr-2"
                                  [path]="'assets/icons/book.png'" (click)="book(ride.id)"></icon-button-secondary>
         </div>
-        <div class="flex flex-column items-center">
-          <h5 class="mb-4 font-small text-gray-900 text-center w-full">Passengers</h5>
-          <p *ngFor="let passenger of ride.passengers">
-            {{passenger}}
-          </p>
+
+        <div class="flex gap-5" >
+          <app-info *ngFor="let passenger of ride.passengers" title="Passenger" [info]="passenger"></app-info>
         </div>
+
         <div class="flex items-center">
           <app-info [title]="'Start'" [info]="ride.start"></app-info>
           <app-info [title]="'End'" [info]="ride.end"></app-info>

@@ -33,8 +33,12 @@ export class ProfileStatisticsComponent implements OnInit {
       startDate: this.startDate + " 00:00",
       endDate: this.endDate + " 23:59"
     }, this.type).then(result => {
+      console.log(result);
       this.reportData = result;
     });
   }
 
+  onChange() {
+    this.reportData = {average: 0, data: {datasets: [], labels: []}, total: 0};
+  }
 }

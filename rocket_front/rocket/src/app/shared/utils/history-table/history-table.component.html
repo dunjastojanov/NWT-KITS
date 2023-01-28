@@ -7,6 +7,7 @@
           {{header.toString()[0].toUpperCase() + header.toString().slice(1)}}
         </th>
         <th scope="col" class="py-3 px-6"></th>
+        <th scope="col" class="py-3 px-6"></th>
       </tr>
       </thead>
       <tbody>
@@ -19,6 +20,9 @@
         <td class="data">{{item.price}}</td>
         <td>
           <view-more-button [id]="item.id"></view-more-button>
+        </td>
+        <td>
+          <icon-button-secondary class="m-2" path="assets/icons/plp-dropped.png" (click)="showMap(item.id)"></icon-button-secondary>
         </td>
       </tr>
       </tbody>

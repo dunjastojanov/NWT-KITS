@@ -72,7 +72,11 @@ export class NavbarComponent implements OnInit {
   logout = (): void => {
     this.router.navigate(['/']).then(() => {
       if (this.hasRole('DRIVER')) {
-        this.vehicleService.changeStatus('INACTIVE').then(() => {});
+        this.vehicleService.changeStatus('INACTIVE').then((res) => {
+
+          alert(res);
+
+        });
       }
     });
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGOUT));
