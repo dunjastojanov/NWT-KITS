@@ -17,7 +17,7 @@ import java.util.List;
 
 @Repository
 public interface RideRepository extends PagingAndSortingRepository<Ride, Long> {
-    @Query("FROM Ride ride WHERE :user MEMBER ride.passengers AND ride.startTime > :start AND ride.endTime < :end ORDER BY ride.startTime")
+    @Query("select ride FROM Ride ride JOIN Passenger p on p member of ride.passengers where p.user = :user AND ride.startTime > :start AND ride.endTime < :end ORDER BY ride.startTime")
     List<Ride> findByPassengerAndDatePeriod(@Param("user") User user, @Param("start") LocalDateTime start, @Param("end")LocalDateTime end);
     @Query("FROM Ride ride WHERE ride.startTime > :start AND ride.endTime < :end ORDER BY ride.startTime")
     List<Ride> findByDatePeriod(@Param("start")LocalDateTime start, @Param("end")LocalDateTime end);

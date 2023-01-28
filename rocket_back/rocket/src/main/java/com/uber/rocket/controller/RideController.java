@@ -42,10 +42,30 @@ public class RideController {
         }
     }
 
+    @PutMapping("currentRide/driver/{rideId}")
+    public ResponseEntity<?> findDriver(@PathVariable long rideId) {
+        try {
+            return ResponseEntity.ok(this.rideService.findAndNotifyDriver(rideId));
+        }
+        catch (Exception exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping(path = "/currentRide/{email}")
     public ResponseEntity<?> getUsersCurrentRide(@PathVariable("email") String email) {
         RideDTO rideDTO = this.rideService.getUserCurrentRideByEmail(email);
         return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
+    }
+
+    @GetMapping("map/{rideId}")
+    public ResponseEntity<?> getMap(@PathVariable long rideId) {
+        try {
+            return ResponseEntity.ok(this.rideService.getMap(rideId));
+        }
+        catch (Exception exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(path = "/currentRideId/{id}")

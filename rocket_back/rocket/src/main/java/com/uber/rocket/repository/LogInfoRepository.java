@@ -14,4 +14,6 @@ public interface LogInfoRepository extends JpaRepository<LogInfo,Long> {
     List<LogInfo> findAllLogsInSinceLast24Hours(@Param("driverId") Long driverId);
 
     LogInfo findFirstByUserIdIsOrderByBeggingDesc(Long driverId);
+
+    List<LogInfo> findLogInfoByUserId(Long userId);
 }
