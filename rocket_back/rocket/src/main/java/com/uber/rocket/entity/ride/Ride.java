@@ -36,7 +36,9 @@ public class Ride {
 
     @Enumerated(EnumType.STRING)
     private VehicleType vehicleTypeRequested;
+
     private boolean petFriendly;
+
     private boolean kidFriendly;
 
     @NotNull
@@ -44,7 +46,9 @@ public class Ride {
     private String routeLocation;
 
     private boolean now;
+
     private LocalDateTime startTime;
+
     @Nullable
     private LocalDateTime endTime;
 
