@@ -109,8 +109,6 @@ export class SocketService {
 
   handleVehicleLocationUpdate(message: any) {
     const longLat: LongitudeLatitude = JSON.parse(message.body);
-    console.log(message);
-    console.log(longLat);
     this.store.dispatch(
       new CurrentRideAction(
         CurrentRideActionType.UPDATE_VEHICLE_LOCATION,

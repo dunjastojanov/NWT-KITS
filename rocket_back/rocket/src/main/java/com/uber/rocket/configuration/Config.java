@@ -131,7 +131,7 @@ public class Config {
         ride.setLength(length);
         ride.setVehicleTypeRequested(VehicleType.CARAVAN);
         ride.setStartTime(LocalDateTime.parse(startTime, formatter));
-        ride.setEndTime(LocalDateTime.parse(endTime, formatter));
+        ride.setEndTime(null);
         ride.setPrice(price);
         ride.setRouteLocation(routeLocation);
         ride.setSplitFare(false);

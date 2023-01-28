@@ -142,12 +142,10 @@ export class RideService {
     }
     if (this.currentRide.rideStatus === RideStatus.STARTED) {
       this.toastr.success('Ride started.');
-      // sacuvaj u bazu da je ride started i promeni start time
     }
     if (this.currentRide.rideStatus === RideStatus.ENDED) {
       this.toastr.success('Ride ended.');
       this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
-      // sacuvaj u bazu da je ride ended i promeni end time i current ride = null
     }
   }
 
@@ -165,6 +163,7 @@ export class RideService {
     const result = await http.get(
       `/api/ride/change-status/${rideId}?status=${status}`
     );
+
     return <CurrentRide>result.data;
   }
 }

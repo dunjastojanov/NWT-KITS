@@ -1,5 +1,5 @@
 <div *ngIf="currentRide" class="flex">
-  <show-on-map id="currentridemap" [vehicle]="this.currentRide.vehicle" dimensions="w-[120vh] h-[91vh]" [destinations]="currentRide.destinations" [route]="currentRide.route!"></show-on-map>
+  <show-on-map id="currentridemap" [updateVehicleTime]="this.currentRide.rideStatus === 'CONFIRMED'" [vehicle]="this.currentRide.vehicle" dimensions="w-[120vh] h-[91vh]" [destinations]="currentRide.destinations" [route]="currentRide.route!"></show-on-map>
   <current-ride-info></current-ride-info>
 </div>
 

@@ -14,6 +14,7 @@ import com.uber.rocket.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.type.LocalDateType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -250,6 +251,10 @@ public class RideService {
         if (rideOpt.isPresent()) {
             Ride ride = rideOpt.get();
             ride.setStatus(status);
+            if (status == RideStatus.STARTED)
+                ride.setStartTime(LocalDateTime.now().withSecond(0).withNano(0));
+            if (status == RideStatus.ENDED)
+                ride.setEndTime(LocalDateTime.now().withSecond(0).withNano(0));
             ride = this.repository.save(ride);
             updateStatusOverSocket(ride);
         }
