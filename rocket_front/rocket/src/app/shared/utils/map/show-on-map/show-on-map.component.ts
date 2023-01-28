@@ -18,7 +18,10 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
   private mapShow: any;
   layerPolylines: L.LayerGroup | null = null;
   layerVehicle: L.LayerGroup | null = null;
-  constructor() {}
+  constructor() {
+
+    console.log(this.route)
+  }
 
   ngAfterViewInit(): void {
     this.initMap();

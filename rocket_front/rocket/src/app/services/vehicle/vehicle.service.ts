@@ -11,12 +11,12 @@ export class VehicleService {
   }
 
 
-  async changeStatus(status: 'ACTIVE' | 'INACTIVE' | 'DRIVING'): Promise<boolean> {
+  async changeStatus(status: 'ACTIVE' | 'INACTIVE' | 'DRIVING'): Promise<string> {
 
-    let result: AxiosResponse<boolean> = await http.put<boolean>(
+    let result: AxiosResponse<string> = await http.put<string>(
       '/api/vehicle/' + status,
     );
-    return <boolean>result.data;
+    return <string>result.data;
 
   }
 

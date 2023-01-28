@@ -6,6 +6,8 @@ import {CurrentRideAction, CurrentRideActionType} from "../../shared/store/curre
 import {Router} from "@angular/router";
 import {StoreType} from "../../shared/store/types";
 import {Store} from "@ngrx/store";
+import {CurrentRide} from "../../interfaces/Ride";
+import {User} from "../../interfaces/User";
 
 @Component({
   selector: 'detailed-route',
@@ -23,6 +25,7 @@ export class DetailedRouteComponent implements OnInit {
   @Input('open') open!: boolean;
   @Input('closeFunc') closeFunc!: () => void;
   @Input() id!: string;
+  user: User|null = null;
   ride: RideDetails = {
     id: "",
     date: "",
@@ -31,7 +34,6 @@ export class DetailedRouteComponent implements OnInit {
     duration: 0,
     end: "",
     passengers: [],
-    routeLocation: "",
     price: 0,
     rating: 0,
     reviews: [],
@@ -45,6 +47,10 @@ export class DetailedRouteComponent implements OnInit {
   ) {
     this.rideService = rideService;
     this.numbers = [1, 2, 3, 4, 5];
+
+    store.select('loggedUser').subscribe(
+      resData => {this.user = resData.user;}
+    )
   }
 
 
@@ -67,22 +73,32 @@ export class DetailedRouteComponent implements OnInit {
     )
   }
 
-  isAbleToAddReview(): boolean {
-    return Math.abs(new Date(this.ride.date).getDate() - new Date().getDate()) / (1000 * 60 * 60 * 24) <= 3;
+  hasRole(role: string): boolean {
+    return this.user !== null && this.user?.roles.indexOf(role) !== -1;
   }
 
-  book(id: string) {
-    this.rideService.bookExisting(id).then(id => {
-      if (id) {
-        this.rideService.getCurrentRide(id).then(currentRide => {
-          if (currentRide) {
-            this.store.dispatch(new CurrentRideAction(CurrentRideActionType.SET, currentRide))
-            this.router.navigateByUrl("/ride/current").then(r =>
-              this.toastr.success("You have booked a ride with you favourite route parameters.")
-            );
-          }
-        })
+  isAbleToAddReview(): boolean {
+    return this.hasRole("CLIENT") &&
+    Math.abs(new Date(this.ride.date).getDate() - new Date().getDate()) / (1000 * 60 * 60 * 24) <= 3;
+  }
+
+  async book(id: string) {
+    let rideId = await this.rideService.bookExisting(id);
+    let driverFound: boolean | null = false;
+    if (rideId) {
+      driverFound = await this.rideService.findDriver(rideId);
+    }
+
+    if (rideId && driverFound) {
+      const currentRide: CurrentRide | null = await this.rideService.getCurrentRide(rideId);
+
+      if (currentRide) {
+        this.store.dispatch(new CurrentRideAction(CurrentRideActionType.SET, currentRide))
+        this.router.navigateByUrl("/ride/current").then(r =>
+          this.toastr.success("You have booked a ride with you favourite route parameters.")
+        );
       }
-    })
+    }
+
   }
 }

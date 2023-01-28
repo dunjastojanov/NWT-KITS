@@ -13,7 +13,6 @@ public class RideDetails {
     Long id;
     String driver;
     List<String> passengers;
-    String routeLocation;
     String driverProfileImage;
     String start;
     String end;

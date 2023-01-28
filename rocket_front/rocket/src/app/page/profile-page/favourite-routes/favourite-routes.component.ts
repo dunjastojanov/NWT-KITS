@@ -65,4 +65,11 @@ export class FavouriteRoutesComponent implements OnInit {
       }
     })
   }
+
+  showMap(id: string): void {
+    this.router.navigate(
+      ['/map'],
+      { queryParams: { id: id } }
+    );
+  }
 }

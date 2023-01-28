@@ -137,7 +137,7 @@ public class VehicleService {
                 logInfoService.endWorkingHourCount(vehicle.getDriver().getId());
             }
             vehicle.setStatus(VehicleStatus.valueOf(status.toUpperCase()));
-            return vehicleRepository.save(vehicle).getStatus() != VehicleStatus.INACTIVE;
+            return vehicleRepository.save(vehicle).getStatus().name();
 
         } catch (IllegalArgumentException exception) {
             throw new RuntimeException("Status name does not exist");
@@ -150,13 +150,13 @@ public class VehicleService {
 
     public List<Vehicle> getActiveVehicleByRequirements(VehicleType type, boolean kidFriendly, boolean petFriendly) {
         List<Vehicle> vehicles = this.vehicleRepository.findByStatusAndTypeAndKidAndPetFriendly(VehicleStatus.ACTIVE, type, kidFriendly, petFriendly);
-        vehicles = vehicles.stream().filter(vehicle -> {
-            boolean exceeded = logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId());
-            if (exceeded) {
-                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
-            }
-            return exceeded;
-        }).collect(Collectors.toList());
+//        vehicles = vehicles.stream().filter(vehicle -> {
+//            boolean exceeded = logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId());
+//            if (exceeded) {
+//                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
+//            }
+//            return exceeded;
+//        }).collect(Collectors.toList());
         return vehicles;
     }
 

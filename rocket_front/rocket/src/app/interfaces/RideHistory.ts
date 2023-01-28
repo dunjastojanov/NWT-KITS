@@ -1,3 +1,5 @@
+import { Destination } from "./Destination";
+
 export interface RideHistory {
   'start': string,
   'end': string,
@@ -6,4 +8,6 @@ export interface RideHistory {
   'price': string,
   'id': string,
   'date':string,
+  rideLocation: string,
+  destinations: Destination[];
 }

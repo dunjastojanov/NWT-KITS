@@ -20,8 +20,7 @@ export class EditProfileComponent implements OnInit {
   user: User | null = null;
 
   constructor(private store: Store<StoreType>) {
-    let loggedUserSlice = store.select('loggedUser');
-    loggedUserSlice.subscribe(
+    store.select('loggedUser').subscribe(
       resData => {
         this.user = resData.user;
       }
