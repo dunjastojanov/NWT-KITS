@@ -1,4 +1,4 @@
 <div class="flex gap-2 items-center mt-4">
-  <img alt="driver-image" class="profile-image !w-20 !h-20 !m-0" src="./assets/fiona.jpg"/>
+  <img alt="driver-image" class="profile-image !w-20 !h-20 !m-0" [src]="client.profilePicture ? client.profilePicture : 'assets/profile-placeholder.png'"/>
   <field [title]="client.email!" [value]="client.firstName + ' ' + client.lastName"></field>
 </div>
