@@ -13,6 +13,7 @@ import { StoreType } from 'src/app/shared/store/types';
 import { Route, url } from './route.type';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { ActiveVehicle } from 'src/app/interfaces/Vehicle';
 
 @Component({
   selector: 'app-map',
@@ -21,16 +22,19 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MapComponent implements AfterViewInit {
   @Input('height') height!: string;
+  @Input('showVehicles') showVehicles?: boolean;
   private map: any;
   bounds: L.LatLngBounds | null = null;
   estimatedDistance: number = 0;
   estimatedTime: number = 0;
   destinations: Destination[] = [];
   layerPolylines: L.LayerGroup | null = null;
+  layerVehicles: L.LayerGroup | null = null;
   layerMarkers: L.LayerGroup | null = null;
   routes: [Route, Route?][] = [];
   openErrorToast = false;
   error: boolean = false;
+  activeVehicles: ActiveVehicle[] = [];
 
   private initMap(): void {
     lrm;
@@ -50,6 +54,7 @@ export class MapComponent implements AfterViewInit {
     tiles.addTo(this.map);
     this.layerPolylines = L.layerGroup().addTo(this.map);
     this.layerMarkers = L.layerGroup().addTo(this.map);
+    this.layerVehicles = L.layerGroup().addTo(this.map);
   }
 
   ngOnDestroy() {
@@ -63,6 +68,16 @@ export class MapComponent implements AfterViewInit {
     private store: Store<StoreType>,
     private toastr: ToastrService
   ) {
+    this.store.select('activeVehicles').subscribe((res) => {
+      this.activeVehicles = res.activeVehicles;
+      if (this.layerVehicles) {
+        this.layerVehicles.clearLayers();
+        if (this.showVehicles) {
+          this.showVehiclesOnMap();
+        }
+      }
+    });
+
     this.subscription = this.store
       .select('destinations')
       .subscribe((resData) => {
@@ -82,6 +97,7 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
+    //if (this.showVehicles) this.showVehiclesOnMap();
   }
 
   showDestinations() {
@@ -99,6 +115,32 @@ export class MapComponent implements AfterViewInit {
         await this.getLatLong(outermost, elem);
         if (index === array.length - 1) this.createRoutes();
       });
+    }
+  }
+
+  private showVehiclesOnMap() {
+    this.activeVehicles.map((activeVehicles) =>
+      this.drawVehicle(activeVehicles)
+    );
+  }
+
+  private async drawVehicle(vehicle: ActiveVehicle) {
+    const latLng = new L.LatLng(vehicle.latitude!, vehicle.longitude!);
+    console.log(vehicle);
+    if (vehicle.free) {
+      L.marker(latLng, {
+        icon: L.icon({
+          iconUrl: 'http://localhost:4200/assets/icons/car-pin-yellow.png',
+          iconSize: [32, 32],
+        }),
+      }).addTo(this.layerVehicles!);
+    } else {
+      L.marker(latLng, {
+        icon: L.icon({
+          iconUrl: 'http://localhost:4200/assets/icons/car-pin.png',
+          iconSize: [32, 32],
+        }),
+      }).addTo(this.layerVehicles!);
     }
   }
 
@@ -240,6 +282,7 @@ export class MapComponent implements AfterViewInit {
       return;
     }
     this.layerPolylines!.clearLayers();
+    this.layerVehicles!.clearLayers();
     if (clearMarkers && this.layerMarkers) this.layerMarkers!.clearLayers();
   }
 

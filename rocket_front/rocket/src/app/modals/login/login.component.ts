@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit {
     private service: UserService,
     private socialAuthService: SocialAuthService,
     private store: Store<StoreType>,
-    private socketService: SocketService,
     private notificationService: NotificationService,
     private toastr: ToastrService,
     private vehicleService: VehicleService,
@@ -55,9 +54,6 @@ export class LoginComponent implements OnInit {
   ) {
     this.email = '';
     this.password = '';
-    this.store.select('loggedUser').subscribe((res) => {
-      this.socketService.initializeWebSocketConnection();
-    });
   }
 
   ngOnInit() {

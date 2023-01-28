@@ -113,7 +113,8 @@ import { StatusToggleComponent } from './navbar/status-toggle/status-toggle.comp
 import { ChangePasswordComponent } from './modals/change-password/change-password.component';
 import { BlockUserComponent } from './modals/block-user/block-user.component';
 import { CancelRideComponent } from './modals/cancel-ride/cancel-ride.component';
-import {MessagesReducer} from "./shared/store/message-slice/message.reducer";
+import { MessagesReducer } from './shared/store/message-slice/message.reducer';
+import { ActiveVehiclesReducer } from './shared/store/active-vehicles-slice/active-vehicles.reduces';
 
 @NgModule({
   declarations: [
@@ -231,7 +232,8 @@ import {MessagesReducer} from "./shared/store/message-slice/message.reducer";
         rideInfo: RideInfoReducer,
         currentRide: CurrentRideReducer,
         notifications: NotificationsReducer,
-        messages:MessagesReducer,
+        messages: MessagesReducer,
+        activeVehicles: ActiveVehiclesReducer,
       },
       { metaReducers }
     ),

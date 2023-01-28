@@ -603,10 +603,16 @@ public class RideService {
     public LocationDTO updateVehicleLocation(Long id, Double longitude, Double latitude) {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(id);
         if (vehicleOpt.isPresent()) {
+            ActiveVehicleDTO activeVehicleDTO = new ActiveVehicleDTO();
             Vehicle vehicle = vehicleOpt.get();
             vehicle.setLongitude(longitude);
             vehicle.setLatitude(latitude);
             this.vehicleService.save(vehicle);
+
+            activeVehicleDTO.setId(vehicle.getId());
+            activeVehicleDTO.setLatitude(latitude);
+            activeVehicleDTO.setLongitude(longitude);
+
             List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
             Ride ride = null;
             for (Ride r : rides) {
@@ -614,16 +620,24 @@ public class RideService {
                     ride = r;
                 }
             }
+            LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setLatitude(vehicle.getLatitude());
+            locationDTO.setLongitude(vehicle.getLongitude());
             if (ride != null) {
-                LocationDTO locationDTO = new LocationDTO();
-                locationDTO.setLatitude(vehicle.getLatitude());
-                locationDTO.setLongitude(vehicle.getLongitude());
+                activeVehicleDTO.setFree(false);
                 this.updateLocationToPassengers(ride.getVehicle().getDriver(), ride.getPassengers().stream().toList(),locationDTO);
+                this.updateActiveVehicles(activeVehicleDTO);
+            } else {
+                activeVehicleDTO.setFree(true);
+                this.updateActiveVehicles(activeVehicleDTO);
             }
         }
         return null;
     }
 
+    private void updateActiveVehicles(ActiveVehicleDTO activeVehicleDTO) {
+        this.messagingTemplate.convertAndSend("/queue/active-vehicles", activeVehicleDTO);
+    }
     private void updateLocationToPassengers(User driver, List<Passenger> passengers, LocationDTO locationDTO) {
         for (Passenger passenger : passengers) {
             messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(),"/queue/update-vehicle", locationDTO);
