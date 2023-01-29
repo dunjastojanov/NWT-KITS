@@ -641,12 +641,16 @@ public class RideService {
             Vehicle vehicle = vehicleOpt.get();
             this.vehicleService.save(vehicle);
             List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
+            System.out.println(vehicleId);
+            System.out.println(rides);
             Ride ride = null;
             for (Ride r : rides) {
                 if (Objects.equals(r.getVehicle().getId(), vehicle.getId())) {
                     ride = r;
                 }
             }
+            System.out.println("-----");
+            System.out.println(ride);
             RideSimulationDTO rsDTO = new RideSimulationDTO();
             rsDTO.setVehicleStatus(vehicle.getStatus());
             if (ride != null) {
@@ -681,7 +685,7 @@ public class RideService {
             List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
             Ride ride = null;
             for (Ride r : rides) {
-                if (Objects.equals(r.getId(), vehicle.getId())) {
+                if (Objects.equals(r.getVehicle().getId(), vehicle.getId())) {
                     ride = r;
                 }
             }

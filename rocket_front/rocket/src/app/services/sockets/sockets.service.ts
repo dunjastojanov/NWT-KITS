@@ -1,15 +1,14 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
-import {Notif} from 'src/app/interfaces/Notification';
+import { Notif } from 'src/app/interfaces/Notification';
 import {
   NotificationsAction,
   NotificationsActionType,
 } from 'src/app/shared/store/notifications-slice/notifications.actions';
 import { StoreType } from 'src/app/shared/store/types';
 import { Store } from '@ngrx/store';
-import { UserRidingStatus } from 'src/app/interfaces/Ride';
 import {
   CurrentRideAction,
   CurrentRideActionType,
@@ -26,8 +25,11 @@ import {
   ActiveVehiclesAction,
   ActiveVehiclesActionType,
 } from 'src/app/shared/store/active-vehicles-slice/active-vehicles.actions';
-import {LongitudeLatitude, UserRidingStatus} from 'src/app/interfaces/Ride';
-import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-user-slice/logged-user.actions";
+import { LongitudeLatitude, UserRidingStatus } from 'src/app/interfaces/Ride';
+import {
+  LoggedUserAction,
+  LoggedUserActionType,
+} from '../../shared/store/logged-user-slice/logged-user.actions';
 
 @Injectable()
 export class SocketService {
@@ -79,8 +81,7 @@ export class SocketService {
       .get(
         `http://localhost:8443/api/notification/send-ride-request-invitation/${email}`
       )
-      .subscribe((data: any) => {
-      });
+      .subscribe((data: any) => {});
   }
 
   sendResponseOnRideRequest(
@@ -93,8 +94,7 @@ export class SocketService {
         userId: userId,
         ridingStatus: status,
       })
-      .subscribe((data: any) => {
-      });
+      .subscribe((data: any) => {});
   }
 
   openSocket() {
@@ -126,7 +126,7 @@ export class SocketService {
           this.handleMessage(message);
         }
       );
-      if (this.user?.roles.includes("DRIVER")) {
+      if (this.user?.roles.includes('DRIVER')) {
         this.stompClient.subscribe(
           '/user/queue/driver-status',
           (message: { body: string }) => {
@@ -196,7 +196,6 @@ export class SocketService {
     await this.rideService.onRideStatusChanged();
   }
 
-
   handleMessage(message: any) {
     const messages: MessageInfo[] = JSON.parse(message.body);
     this.store.dispatch(
@@ -207,13 +206,10 @@ export class SocketService {
   handleDriverStatus(message: any) {
     const status: string = JSON.parse(message.body);
     if (this.user) {
-      let user = {...this.user, status: status}
+      let user = { ...this.user, status: status };
       // this.user.status = status;
       this.store.dispatch(
-        new LoggedUserAction(
-          LoggedUserActionType.LOGIN,
-          user
-        )
+        new LoggedUserAction(LoggedUserActionType.LOGIN, user)
       );
     }
   }

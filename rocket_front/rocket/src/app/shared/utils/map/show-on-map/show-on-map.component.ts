@@ -90,7 +90,7 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
 
     mainRoutePolyline.addTo(this.layerPolylines!);
 
-    // this.mapShow.fitBounds(mainRoutePolyline.getBounds());
+    this.mapShow.fitBounds(mainRoutePolyline.getBounds());
   }
 
   private drawMarkers() {
