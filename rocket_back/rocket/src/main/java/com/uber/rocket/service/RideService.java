@@ -593,7 +593,7 @@ public class RideService {
             List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
             Ride ride = null;
             for (Ride r : rides) {
-                if (Objects.equals(r.getId(), vehicle.getId())) {
+                if (Objects.equals(r.getVehicle().getId(), vehicle.getId())) {
                     ride = r;
                 }
             }
