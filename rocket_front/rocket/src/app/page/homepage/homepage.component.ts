@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { SocketService } from 'src/app/services/sockets/sockets.service';
-import { PaypalService } from '../../services/paypal/paypal.service';
-import { ToastrService } from 'ngx-toastr';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Params} from '@angular/router';
+import {PaypalService} from '../../services/paypal/paypal.service';
+import {ToastrService} from 'ngx-toastr';
+import {Store} from "@ngrx/store";
+import {StoreType} from "../../shared/store/types";
+import {UserService} from "../../services/user/user.service";
+import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-user-slice/logged-user.actions";
 
 @Component({
   selector: 'homepage',
@@ -13,19 +16,27 @@ export class HomepageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private payPalService: PaypalService,
-    private toastService: ToastrService
-  ) {}
+    private toastService: ToastrService,
+    private store: Store<StoreType>,
+    private userService: UserService
+  ) {
+  }
+
   openNewPasswordModal: boolean = false;
 
   token: string = '';
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      this.payPalListener(params);
-      const forgottenPasswordToken = params['token'];
-      if (forgottenPasswordToken) {
-        this.token = forgottenPasswordToken;
-        this.togglePasswordModal();
+      console.log(params['paymentId'])
+      if (params['paymentId'] !== " ") {
+        this.payPalListener(params);
+      } else {
+        const forgottenPasswordToken = params['token'];
+        if (forgottenPasswordToken) {
+          this.token = forgottenPasswordToken;
+          this.togglePasswordModal();
+        }
       }
     });
   }
@@ -39,6 +50,10 @@ export class HomepageComponent implements OnInit {
         .then((result) => {
           if (result === 'Successful payment') {
             this.toastService.success('Successful payment');
+            this.userService.getUser().then(value => {
+              if (value)
+                this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, value));
+            });
           } else {
             this.toastService.error('Unsuccessful payment');
           }
