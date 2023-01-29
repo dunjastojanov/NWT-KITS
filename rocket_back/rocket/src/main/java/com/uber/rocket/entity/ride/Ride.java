@@ -42,7 +42,7 @@ public class Ride {
     private boolean kidFriendly;
 
     @NotNull
-    @Column(length = 512)
+    @Column(length = 1024)
     private String routeLocation;
 
     private boolean now;

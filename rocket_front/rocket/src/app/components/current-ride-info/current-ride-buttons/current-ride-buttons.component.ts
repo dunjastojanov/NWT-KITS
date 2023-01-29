@@ -1,9 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {RideService} from "../../../services/ride/ride.service";
-import {ToastrService} from "ngx-toastr";
+import { Store } from '@ngrx/store';
+import { RideStatus } from 'src/app/interfaces/Ride';
+import { RideService } from 'src/app/services/ride/ride.service';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import { StoreType } from 'src/app/shared/store/types';
 import {User} from "../../../interfaces/User";
-import {StoreType} from "../../../shared/store/types";
-import {Store} from "@ngrx/store";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'current-ride-buttons',
@@ -11,17 +16,16 @@ import {Store} from "@ngrx/store";
   styleUrls: ['./current-ride-buttons.component.css'],
 })
 export class CurrentRideButtonsComponent implements OnInit {
-  @Input('role') role!: string;
   @Input('isFavorite') isFavorite: boolean;
   @Input('driverName') driverName!: string | null;
-  @Input('rideId') rideId!: number | undefined;
+  @Input('rideId') rideId?: number;
+  @Input('rideStatus') rideStatus!: RideStatus;
 
   openReportModal = false;
 
   openCancelModal = false;
 
-  patchingRide = false;
-  dissablePatch = false;
+  role: string = '';
 
   user:User|null=null;
 
@@ -31,6 +35,9 @@ export class CurrentRideButtonsComponent implements OnInit {
     store.select("loggedUser").subscribe(result => {
       this.user = result.user;
     })
+    this.store.select('loggedUser').subscribe((res) => {
+      this.role = res.user!.roles[0];
+    });
   }
 
   ngOnInit(): void {}
@@ -44,15 +51,15 @@ export class CurrentRideButtonsComponent implements OnInit {
   }
 
   toggleCancelModal() {
-    this.openCancelModal =!this.openCancelModal;
+    this.openCancelModal = !this.openCancelModal;
   }
 
-  togglePatchingRide() {
-    if (!this.patchingRide) {
-      this.patchingRide = true;
-    } else {
-      this.dissablePatch = true;
-    }
+  async startRide() {
+    await this.rideService.changeRideStatus(this.rideId!, RideStatus.STARTED);
+  }
+
+  async endRide() {
+    await this.rideService.changeRideStatus(this.rideId!, RideStatus.ENDED);
   }
 
   markAsFavorite() {

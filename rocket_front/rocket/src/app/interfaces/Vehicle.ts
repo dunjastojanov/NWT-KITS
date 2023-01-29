@@ -5,3 +5,10 @@ export interface Vehicle {
   latitude?: number;
   type: VehicleType;
 }
+
+export interface ActiveVehicle {
+  id: number;
+  longitude: number;
+  latitude: number;
+  free: boolean;
+}

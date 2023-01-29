@@ -15,18 +15,15 @@ import { StoreType } from 'src/app/shared/store/types';
 })
 export class CurrentRideInfoComponent implements OnInit {
   currentRide: CurrentRide | null = null;
-
+  timeForVehicleToArive: number = 0;
   constructor(private store: Store<StoreType>) {
     this.store.select('currentRide').subscribe((resData) => {
       this.currentRide = resData.currentRide;
+      this.timeForVehicleToArive = resData.timeForVehicleToArive;
     });
   }
 
   ngOnInit(): void {}
-
-  setNull() {
-    this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
-  }
 
   public convertTime(): string {
     if (this.currentRide!.time) {
@@ -42,6 +39,14 @@ export class CurrentRideInfoComponent implements OnInit {
       }
     }
     return 'No time selected';
+  }
+
+  convertTimeForVehicleToArive(): string {
+    let minutes: number = Math.floor(this.timeForVehicleToArive / 60);
+    return `${minutes} min ${(
+      this.timeForVehicleToArive -
+      minutes * 60
+    ).toFixed(0)} s`;
   }
 
   convertDistance(): string {

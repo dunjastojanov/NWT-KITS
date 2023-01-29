@@ -10,10 +10,14 @@ import { StoreType } from 'src/app/shared/store/types';
 })
 export class CurrentRidePageComponent implements OnInit {
   currentRide: CurrentRide | null = null;
+  role: string = '';
 
   constructor(private store: Store<StoreType>) {
     this.store.select('currentRide').subscribe((resData) => {
       this.currentRide = resData.currentRide;
+    });
+    this.store.select('loggedUser').subscribe((res) => {
+      this.role = res.user!.roles[0];
     });
   }
 

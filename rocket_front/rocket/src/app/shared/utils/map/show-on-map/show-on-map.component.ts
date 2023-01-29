@@ -3,6 +3,15 @@ import * as L from 'leaflet';
 import { Destination } from 'src/app/interfaces/Destination';
 import { decode } from '@googlemaps/polyline-codec';
 import { Vehicle } from 'src/app/interfaces/Vehicle';
+import axios from 'axios';
+import { baseUrl } from '../map/route.type';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import { StoreType } from 'src/app/shared/store/types';
+import { Store } from '@ngrx/store';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'show-on-map',
@@ -15,23 +24,21 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
   @Input('route') route!: string | null;
   @Input('id') id!: string;
   @Input('vehicle') vehicle?: Vehicle;
+  @Input('updateVehicleTime') updateVehicleTime?: boolean;
   private mapShow: any;
   layerPolylines: L.LayerGroup | null = null;
   layerVehicle: L.LayerGroup | null = null;
-  constructor() {
+  constructor(private store: Store<StoreType>, private toastr: ToastrService) {}
 
-    console.log(this.route)
-  }
-
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
     this.initMap();
-    this.showOnMap();
+    await this.showOnMap();
   }
 
-  ngOnChanges(): void {
+  async ngOnChanges() {
     if (this.layerPolylines || this.layerVehicle) {
       this.clearMap();
-      this.showOnMap();
+      await this.showOnMap();
     }
   }
 
@@ -54,13 +61,13 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
     this.layerVehicle = L.layerGroup().addTo(this.mapShow);
   }
 
-  private showOnMap() {
+  private async showOnMap() {
     if (this.route && this.destinations) {
       this.drawPolyline();
       this.drawMarkers();
     }
     if (this.vehicle) {
-      this.drawVehicle();
+      await this.drawVehicle();
     }
   }
 
@@ -83,7 +90,7 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
 
     mainRoutePolyline.addTo(this.layerPolylines!);
 
-    // this.mapShow.fitBounds(mainRoutePolyline.getBounds());
+    this.mapShow.fitBounds(mainRoutePolyline.getBounds());
   }
 
   private drawMarkers() {
@@ -97,19 +104,85 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  private drawVehicle() {
+  private async drawVehicle() {
     const latLng = new L.LatLng(
       this.vehicle!.latitude!,
       this.vehicle!.longitude!
     );
-    console.log(this.vehicle);
-
     L.marker(latLng, {
       icon: L.icon({
         iconUrl: 'http://localhost:4200/assets/icons/car-pin.png',
         iconSize: [32, 32],
       }),
     }).addTo(this.layerVehicle!);
+
+    if (this.updateVehicleTime) await this.loadTimeToArrive();
+    this.checkArrivedToDestinations();
+  }
+
+  checkArrivedToDestinations() {
+    const distanceStart = this.haversineDistance(
+      this.vehicle!.latitude!,
+      this.vehicle!.longitude!,
+      this.destinations[0].latitude!,
+      this.destinations[0].longitude!,
+      6371 * 1000
+    );
+    if (distanceStart < 25)
+      this.toastr.success('Vehicle has arrived to first destination.');
+    else {
+      const distanceEnd = this.haversineDistance(
+        this.vehicle!.latitude!,
+        this.vehicle!.longitude!,
+        this.destinations[this.destinations.length - 1].latitude!,
+        this.destinations[this.destinations.length - 1].longitude!,
+        6371 * 1000
+      );
+      if (distanceEnd < 25)
+        this.toastr.success('Vehicle has arrived to final destination.');
+    }
+  }
+
+  haversineDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number,
+    radius: number = 6371
+  ) {
+    const dLat = this.toRadians(lat2 - lat1);
+    const dLon = this.toRadians(lon2 - lon1);
+    lat1 = this.toRadians(lat1);
+    lat2 = this.toRadians(lat2);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return radius * c;
+  }
+
+  toRadians(degrees: number) {
+    return degrees * (Math.PI / 180);
+  }
+
+  async loadTimeToArrive() {
+    await axios
+      .get(
+        `${baseUrl}${this.vehicle!.longitude!},${this.vehicle!.latitude!};${
+          this.destinations[0].longitude
+        },${this.destinations[0].latitude}`
+      )
+      .then((response) => {
+        const duration = response.data.routes[0].duration;
+        this.store.dispatch(
+          new CurrentRideAction(
+            CurrentRideActionType.SET_TIME_FOR_VEHICLE_TO_COME,
+            duration
+          )
+        );
+      });
   }
 
   private createMarker(outermost: boolean, latLng: L.LatLng, name: string) {

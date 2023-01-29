@@ -1,26 +1,40 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
-import {Notif} from 'src/app/interfaces/Notification';
+import { Notif } from 'src/app/interfaces/Notification';
 import {
   NotificationsAction,
   NotificationsActionType,
 } from 'src/app/shared/store/notifications-slice/notifications.actions';
-import {StoreType} from 'src/app/shared/store/types';
-import {Store} from '@ngrx/store';
-import {LongitudeLatitude, UserRidingStatus} from 'src/app/interfaces/Ride';
-import {CurrentRideAction, CurrentRideActionType,} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import {RideService} from '../ride/ride.service';
-import {User} from 'src/app/interfaces/User';
-import {MessageInfo} from "../../interfaces/MessageInfo";
-import {MessageAction, MessageActionType} from "../../shared/store/message-slice/message.actions";
-import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-user-slice/logged-user.actions";
-
+import { StoreType } from 'src/app/shared/store/types';
+import { Store } from '@ngrx/store';
+import {
+  CurrentRideAction,
+  CurrentRideActionType,
+} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import { RideService } from '../ride/ride.service';
+import { User } from 'src/app/interfaces/User';
+import { MessageInfo } from '../../interfaces/MessageInfo';
+import {
+  MessageAction,
+  MessageActionType,
+} from '../../shared/store/message-slice/message.actions';
+import { ActiveVehicle } from 'src/app/interfaces/Vehicle';
+import {
+  ActiveVehiclesAction,
+  ActiveVehiclesActionType,
+} from 'src/app/shared/store/active-vehicles-slice/active-vehicles.actions';
+import { LongitudeLatitude, UserRidingStatus } from 'src/app/interfaces/Ride';
+import {
+  LoggedUserAction,
+  LoggedUserActionType,
+} from '../../shared/store/logged-user-slice/logged-user.actions';
 
 @Injectable()
 export class SocketService {
   isCustomSocketOpened: boolean = false;
+  isCustomSocketOpenedNonUser: boolean = false;
   user: User | null = null;
 
   constructor(
@@ -35,7 +49,9 @@ export class SocketService {
 
   serverUrl = 'http://localhost:8443/ws';
   stompClient: any;
+  stompClientNonUser: any;
   isLoaded = false;
+  isLoadedNonUser = false;
 
   // Funkcija za otvaranje konekcije sa serverom
   initializeWebSocketConnection() {
@@ -49,14 +65,23 @@ export class SocketService {
     });
   }
 
+  initializeWebSocketConnectionNonUser() {
+    let ws = new SockJS(this.serverUrl);
+    this.stompClientNonUser = Stomp.over(ws);
+    let that = this;
+    this.stompClientNonUser.connect({}, function () {
+      that.isLoadedNonUser = true;
+      that.openSocketNonUser();
+    });
+  }
+
   sendRideRequestToPalUsingSocket(email: string) {
     // this.stompClient.send("/socket-subscriber/send/message", {}, JSON.stringify(message));
     this.httpService
       .get(
         `http://localhost:8443/api/notification/send-ride-request-invitation/${email}`
       )
-      .subscribe((data: any) => {
-      });
+      .subscribe((data: any) => {});
   }
 
   sendResponseOnRideRequest(
@@ -69,8 +94,7 @@ export class SocketService {
         userId: userId,
         ridingStatus: status,
       })
-      .subscribe((data: any) => {
-      });
+      .subscribe((data: any) => {});
   }
 
   openSocket() {
@@ -102,7 +126,7 @@ export class SocketService {
           this.handleMessage(message);
         }
       );
-      if (this.user?.roles.includes("DRIVER")) {
+      if (this.user?.roles.includes('DRIVER')) {
         this.stompClient.subscribe(
           '/user/queue/driver-status',
           (message: { body: string }) => {
@@ -113,10 +137,31 @@ export class SocketService {
     }
   }
 
+  openSocketNonUser() {
+    if (this.isLoadedNonUser) {
+      console.log('Opening socket for everyone...');
+      this.isCustomSocketOpenedNonUser = true;
+      this.stompClientNonUser.subscribe(
+        '/queue/active-vehicles',
+        (message: any) => {
+          this.handleActiveVehicles(message);
+        }
+      );
+    }
+  }
+
+  handleActiveVehicles(message: any) {
+    const activeVehicle: ActiveVehicle = JSON.parse(message.body);
+    this.store.dispatch(
+      new ActiveVehiclesAction(
+        ActiveVehiclesActionType.UPDATE_ACTIVE_VEHICLE,
+        activeVehicle
+      )
+    );
+  }
+
   handleVehicleLocationUpdate(message: any) {
     const longLat: LongitudeLatitude = JSON.parse(message.body);
-    console.log(message);
-    console.log(longLat);
     this.store.dispatch(
       new CurrentRideAction(
         CurrentRideActionType.UPDATE_VEHICLE_LOCATION,
@@ -151,27 +196,20 @@ export class SocketService {
     await this.rideService.onRideStatusChanged();
   }
 
-
   handleMessage(message: any) {
     const messages: MessageInfo[] = JSON.parse(message.body);
     this.store.dispatch(
-      new MessageAction(
-        MessageActionType.SET_MESSAGES,
-        messages
-      )
+      new MessageAction(MessageActionType.SET_MESSAGES, messages)
     );
   }
 
   handleDriverStatus(message: any) {
     const status: string = JSON.parse(message.body);
     if (this.user) {
-      let user = {...this.user, status: status}
+      let user = { ...this.user, status: status };
       // this.user.status = status;
       this.store.dispatch(
-        new LoggedUserAction(
-          LoggedUserActionType.LOGIN,
-          user
-        )
+        new LoggedUserAction(LoggedUserActionType.LOGIN, user)
       );
     }
   }
