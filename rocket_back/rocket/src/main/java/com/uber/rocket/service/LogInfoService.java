@@ -17,12 +17,9 @@ public class LogInfoService {
 
     public long getWorkingHoursInPrevious24Hours(Long driverId) {
         List<LogInfo> list = logInfoRepository.findLogInfoByUserId(driverId);
-
-
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime twentyFourHoursAgo = now.minusHours(24);
         Duration totalDuration = Duration.ZERO;
-
         for (LogInfo obj : list) {
             if (obj.getBegging().isAfter(twentyFourHoursAgo) && obj.getBegging().isBefore(now)) {
                 Duration duration;

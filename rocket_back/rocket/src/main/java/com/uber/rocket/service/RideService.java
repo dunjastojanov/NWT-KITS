@@ -4,7 +4,6 @@ import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
-import com.uber.rocket.entity.user.VehicleType;
 import com.uber.rocket.mapper.FavouriteRouteMapper;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
@@ -20,15 +19,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -219,13 +214,12 @@ public class RideService {
 
     public Long createRide(RideDTO rideDTO) {
         Ride ride = rideMapper.mapToEntity(rideDTO);
-        /*booelan passengersHaveFund = this.userService.checkPassengersTokens(ride);
+        boolean passengersHaveFund = this.userService.checkPassengersTokens(ride);
         if (passengersHaveFund) {
             passengerRepository.saveAll(ride.getPassengers());
         } else {
-            return -1;
+            return (long) -1;
         }
-        */
         passengerRepository.saveAll(ride.getPassengers());
         List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
         ride = this.repository.save(ride);
@@ -659,6 +653,26 @@ public class RideService {
             System.out.println(locationDTO);
             messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/update-vehicle", locationDTO);
         }
+    }
+
+    public List<Ride> getRidesByRideStatus(RideStatus rideStatus) {
+        return repository.findByRideStatus(rideStatus);
+    }
+
+    public void changeRideStatusToConfirm(Long rideId) {
+        Optional<Ride> optionalRide = repository.findById(rideId);
+        if (optionalRide.isEmpty()) {
+            throw new RuntimeException("There is not ride with this id");
+        }
+        Ride ride = optionalRide.get();
+        ride.setStatus(RideStatus.CONFIRMED);
+        repository.save(ride);
+        System.out.println(ride.getStatus());
+    }
+
+    public boolean checkIfDriverHasConfirmedOrStartedRide(Long driverId) {
+        List<Ride> rides = repository.findRidesByDriverIdWhereStatusIsConfirmedOrStarted(driverId);
+        return rides.isEmpty();
     }
 
 }
