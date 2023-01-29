@@ -1,6 +1,5 @@
 package com.uber.rocket.repository;
 
-import com.uber.rocket.entity.ride.Passenger;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.ride.RideStatus;
 import com.uber.rocket.entity.user.User;
@@ -45,4 +44,7 @@ public interface RideRepository extends PagingAndSortingRepository<Ride, Long> {
 
     @Query("FROM Ride ride WHERE :status = ride.status")
     List<Ride> findByRideStatus(@Param("status") RideStatus rideStatus);
+
+    @Query("FROM Ride ride WHERE ride.vehicle.driver.id=:driverId AND (ride.status = com.uber.rocket.entity.ride.RideStatus.CONFIRMED or ride.status = com.uber.rocket.entity.ride.RideStatus.STARTED)")
+    List<Ride> findRidesByDriverIdWhereStatusIsConfirmedOrStarted(@Param("driverId") Long driverId);
 }

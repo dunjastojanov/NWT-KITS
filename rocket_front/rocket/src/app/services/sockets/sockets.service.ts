@@ -1,30 +1,28 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
-import { Notif } from 'src/app/interfaces/Notification';
+import {Notif} from 'src/app/interfaces/Notification';
 import {
   NotificationsAction,
   NotificationsActionType,
 } from 'src/app/shared/store/notifications-slice/notifications.actions';
 import {StoreType} from 'src/app/shared/store/types';
 import {Store} from '@ngrx/store';
-import {UserRidingStatus} from 'src/app/interfaces/Ride';
+import {LongitudeLatitude, UserRidingStatus} from 'src/app/interfaces/Ride';
 import {CurrentRideAction, CurrentRideActionType,} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import {RideService} from '../ride/ride.service';
 import {User} from 'src/app/interfaces/User';
 import {MessageInfo} from "../../interfaces/MessageInfo";
 import {MessageAction, MessageActionType} from "../../shared/store/message-slice/message.actions";
-import {
-  CurrentRide,
-  LongitudeLatitude,
-} from 'src/app/interfaces/Ride';
+import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-user-slice/logged-user.actions";
 
 
 @Injectable()
 export class SocketService {
   isCustomSocketOpened: boolean = false;
   user: User | null = null;
+
   constructor(
     private httpService: HttpClient,
     private store: Store<StoreType>,
@@ -57,7 +55,8 @@ export class SocketService {
       .get(
         `http://localhost:8443/api/notification/send-ride-request-invitation/${email}`
       )
-      .subscribe((data: any) => {});
+      .subscribe((data: any) => {
+      });
   }
 
   sendResponseOnRideRequest(
@@ -70,7 +69,8 @@ export class SocketService {
         userId: userId,
         ridingStatus: status,
       })
-      .subscribe((data: any) => {});
+      .subscribe((data: any) => {
+      });
   }
 
   openSocket() {
@@ -102,6 +102,14 @@ export class SocketService {
           this.handleMessage(message);
         }
       );
+      if (this.user?.roles.includes("DRIVER")) {
+        this.stompClient.subscribe(
+          '/user/queue/driver-status',
+          (message: { body: string }) => {
+            this.handleDriverStatus(message);
+          }
+        );
+      }
     }
   }
 
@@ -143,15 +151,6 @@ export class SocketService {
     await this.rideService.onRideStatusChanged();
   }
 
-  handleVehicleStatus(message: any) {
-    const notifications: Notif[] = JSON.parse(message.body);
-    this.store.dispatch(
-      new NotificationsAction(
-        NotificationsActionType.SET_NOTIFICATIONS,
-        notifications
-      )
-    );
-  }
 
   handleMessage(message: any) {
     const messages: MessageInfo[] = JSON.parse(message.body);
@@ -161,5 +160,19 @@ export class SocketService {
         messages
       )
     );
+  }
+
+  handleDriverStatus(message: any) {
+    const status: string = JSON.parse(message.body);
+    if (this.user) {
+      let user = {...this.user, status: status}
+      // this.user.status = status;
+      this.store.dispatch(
+        new LoggedUserAction(
+          LoggedUserActionType.LOGIN,
+          user
+        )
+      );
+    }
   }
 }

@@ -212,7 +212,6 @@ public class RideService {
     }
 
 
-
     public Long createRide(RideDTO rideDTO) {
         Ride ride = rideMapper.mapToEntity(rideDTO);
         boolean passengersHaveFund = this.userService.checkPassengersTokens(ride);
@@ -667,7 +666,13 @@ public class RideService {
         }
         Ride ride = optionalRide.get();
         ride.setStatus(RideStatus.CONFIRMED);
+        repository.save(ride);
+        System.out.println(ride.getStatus());
     }
 
+    public boolean checkIfDriverHasConfirmedOrStartedRide(Long driverId) {
+        List<Ride> rides = repository.findRidesByDriverIdWhereStatusIsConfirmedOrStarted(driverId);
+        return rides.isEmpty();
+    }
 
 }

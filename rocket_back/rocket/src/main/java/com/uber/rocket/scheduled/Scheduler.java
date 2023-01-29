@@ -35,45 +35,58 @@ public class Scheduler {
     @Autowired
     private LogInfoService logInfoService;
 
+    private final static int ONE_MINUTE = 1000 * 60;
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = ONE_MINUTE, initialDelay = ONE_MINUTE * 10)
     public void checkIfDriveExceededWorkingTime() {
-        List<Vehicle> vehicles = vehicleService.getAllActiveVehicles(VehicleStatus.ACTIVE);
-        if (vehicles.isEmpty())
-            return;
-        for (Vehicle vehicle : vehicles) {
-            boolean exceeded = logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId());
-            if (exceeded) {
-                vehicle.setStatus(VehicleStatus.INACTIVE);
-                vehicleService.save(vehicle);
-                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
+        try {
+            List<Vehicle> vehicles = vehicleService.getAllActiveVehicles(VehicleStatus.ACTIVE);
+            if (vehicles.isEmpty()) {
+                return;
             }
+            for (Vehicle vehicle : vehicles) {
+                boolean exceeded = logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId());
+                if (exceeded && vehicle.getStatus().equals(VehicleStatus.DRIVING)) {
+                    vehicle.setStatus(VehicleStatus.INACTIVE);
+                    vehicleService.save(vehicle);
+                    logInfoService.endWorkingHourCount(vehicle.getDriver().getId());
+                    messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/queue/driver-status", vehicle.getStatus());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = ONE_MINUTE/20, initialDelay = ONE_MINUTE/20)
     public void sendRemindersForFutureRide() {
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        List<Ride> rides = rideService.getRidesByRideStatus(RideStatus.SCHEDULED);
-        if (rides.isEmpty())
-            return;
-        for (Ride ride : rides) {
-            LocalDateTime scheduledTime = ride.getStartTime().minusMinutes(15);
-            long initialDelay = ChronoUnit.MILLIS.between(LocalDateTime.now(), scheduledTime);
-            executor.scheduleAtFixedRate(new SendReminderTask(messagingTemplate, notificationService, ride), initialDelay, 1, TimeUnit.MINUTES);
+        try {
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+            List<Ride> rides = rideService.getRidesByRideStatus(RideStatus.SCHEDULED);
+            if (rides.isEmpty()) {
+                return;
+            }
+            for (Ride ride : rides) {
+                if (rideService.checkIfDriverHasConfirmedOrStartedRide(ride.getDriver().getId())) {
+                    LocalDateTime scheduledTime = ride.getStartTime().minusMinutes(15);
+                    long initialDelay = ChronoUnit.MILLIS.between(LocalDateTime.now(), scheduledTime);
+                    executor.scheduleAtFixedRate(new SendReminderTask(messagingTemplate, notificationService, ride), initialDelay, 1, TimeUnit.MINUTES);
 
-            scheduledTime = ride.getStartTime().plusMinutes(5);
-            initialDelay = ChronoUnit.MILLIS.between(LocalDateTime.now(), scheduledTime);
-            executor.scheduleAtFixedRate(new SendReminderTask(messagingTemplate, notificationService, ride), initialDelay, 1, TimeUnit.MINUTES);
+                    scheduledTime = ride.getStartTime().plusMinutes(5);
+                    initialDelay = ChronoUnit.MILLIS.between(LocalDateTime.now(), scheduledTime);
+                    executor.scheduleAtFixedRate(new SendReminderTask(messagingTemplate, notificationService, ride), initialDelay, 1, TimeUnit.MINUTES);
 
-            scheduledTime = ride.getStartTime().plusMinutes(5);
-            initialDelay = ChronoUnit.MILLIS.between(LocalDateTime.now(), scheduledTime);
-            executor.scheduleAtFixedRate(new SendReminderTask(messagingTemplate, notificationService, ride), initialDelay, 1, TimeUnit.MINUTES);
+                    scheduledTime = ride.getStartTime().plusMinutes(5);
+                    initialDelay = ChronoUnit.MILLIS.between(LocalDateTime.now(), scheduledTime);
+                    executor.scheduleAtFixedRate(new SendReminderTask(messagingTemplate, notificationService, ride), initialDelay, 1, TimeUnit.MINUTES);
 
-            scheduledTime = ride.getStartTime().plusMinutes(5);
-            initialDelay = ChronoUnit.MILLIS.between(LocalDateTime.now(), scheduledTime);
-            executor.scheduleAtFixedRate(new SetRideStatus(ride.getId(), rideService), initialDelay, 1, TimeUnit.DAYS);
+                    scheduledTime = ride.getStartTime().plusMinutes(5);
+                    initialDelay = ChronoUnit.MILLIS.between(LocalDateTime.now(), scheduledTime);
+                    executor.scheduleAtFixedRate(new SetRideStatus(ride.getId(), rideService), initialDelay, 1, TimeUnit.DAYS);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
-
 }

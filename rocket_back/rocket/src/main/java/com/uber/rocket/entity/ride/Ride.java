@@ -26,7 +26,7 @@ public class Ride {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "ride_id")
     private Collection<Passenger> passengers;

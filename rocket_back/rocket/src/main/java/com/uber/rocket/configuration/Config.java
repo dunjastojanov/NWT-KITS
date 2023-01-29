@@ -69,7 +69,9 @@ public class Config {
             addDestination(45.2423455, 19.8437972, "Dr Ivana Ribara 13 Novi Sad", ride3);
             addDestination(45.2482226, 19.8212104, "Rudjera Boskovica 22 Novi Sad", ride3);
 
-            Ride ride4 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-28 21:50", null, 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
+            Ride ride4 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-29 13:56", "2023-01-29 14:50", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
+            ride4.setStatus(RideStatus.SCHEDULED);
+            rideRepository.save(ride4);
             addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride4);
             addDestination(45.2478236, 19.804034, "Futoski put 18 Novi Sad", ride4);
 
@@ -86,7 +88,7 @@ public class Config {
     private LogInfo addLogInfo(User driver) {
         LogInfo logInfo = new LogInfo();
         logInfo.setUserId(driver.getId());
-        logInfo.setBegging(LocalDateTime.of(2023, 1, 1, 10, 0));
+        logInfo.setBegging(LocalDateTime.of(2023, 1, 28, 10, 0));
         logInfo.setEnding(null);
         return logInfoRepository.save(logInfo);
     }
@@ -132,7 +134,7 @@ public class Config {
         vehicle.setLongitude(19.849070);
         vehicle.setPetFriendly(true);
         vehicle.setKidFriendly(true);
-        vehicle.setStatus(VehicleStatus.INACTIVE);
+        vehicle.setStatus(VehicleStatus.ACTIVE);
         vehicle.setVehicleType(VehicleType.CARAVAN);
         vehicle.setDriver(driver);
 

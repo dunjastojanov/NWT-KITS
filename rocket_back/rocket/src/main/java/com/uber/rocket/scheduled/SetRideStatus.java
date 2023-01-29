@@ -16,6 +16,7 @@ public class SetRideStatus implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("uspeo");
         rideService.changeRideStatusToConfirm(rideId);
     }
 }
