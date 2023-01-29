@@ -11,7 +11,7 @@
 
     <div class="input-box">
       <app-select text="Type" [placeholder]="'Choose a type of report'" [items]="items" [value]="type"
-                  [(prop)]="type"></app-select>
+                  [(prop)]="type" (change)="onChange()"></app-select>
     </div>
 
 

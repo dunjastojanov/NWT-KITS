@@ -129,7 +129,10 @@ public class VehicleService {
         try {
             if (VehicleStatus.valueOf(status.toUpperCase()).equals(VehicleStatus.ACTIVE)) {
                 if (logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId())) {
-                    throw new RuntimeException("Driver exceeded driving limit");
+                    //TODO treba da se kroz socket posalje da li je aktivan ili ne
+                    vehicle.setStatus(VehicleStatus.INACTIVE);
+                    messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
+//                    throw new RuntimeException("Driver exceeded driving limit");
                 }
                 logInfoService.startCountingHours(vehicle.getDriver().getId());
             }
@@ -137,7 +140,7 @@ public class VehicleService {
                 logInfoService.endWorkingHourCount(vehicle.getDriver().getId());
             }
             vehicle.setStatus(VehicleStatus.valueOf(status.toUpperCase()));
-            return vehicleRepository.save(vehicle).getStatus() != VehicleStatus.INACTIVE;
+            return vehicleRepository.save(vehicle).getStatus().name();
 
         } catch (IllegalArgumentException exception) {
             throw new RuntimeException("Status name does not exist");
@@ -172,6 +175,7 @@ public class VehicleService {
     public User getDriverByEmail(String email) {
         return userService.getUserByEmail(email);
     }
+
     public List<VehicleSimulationDTO> getAllVehicles() {
         List<Vehicle> vehicles = this.vehicleRepository.findAll();
         List<VehicleSimulationDTO> vehicleDTOS = new ArrayList<>();
@@ -188,7 +192,12 @@ public class VehicleService {
     public Optional<Vehicle> getVehicleById(Long id) {
         return this.vehicleRepository.findById(id);
     }
+
     public void save(Vehicle vehicle) {
         this.vehicleRepository.save(vehicle);
+    }
+
+    public List<Vehicle> getAllActiveVehicles(VehicleStatus vehicleStatus) {
+        return vehicleRepository.findAllByStatusIs(vehicleStatus);
     }
 }

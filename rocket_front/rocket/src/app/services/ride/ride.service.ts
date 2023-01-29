@@ -165,4 +165,17 @@ export class RideService {
 
     return <CurrentRide>result.data;
   }
+
+  async findDriver(id: number) {
+    let result: AxiosResponse<boolean | null> = await http.put(
+      `/api/ride/currentRide/driver/${id}`
+    );
+    return result.data;
+  }
+
+  async getMap(id: string) {
+    let result:AxiosResponse = await http.get(
+      "/api/ride/map/" + id);
+    return result.data;
+  }
 }

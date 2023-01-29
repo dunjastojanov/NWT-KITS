@@ -27,7 +27,7 @@
     <div class="flex flex-col gap-3 w-full">
       <div class="flex justify-between gap-5 w-full">
         <div class="flex gap-3 w-1/2">
-          <img alt="driver-image" class="w-20 h-20 rounded-full object-cover" src="./assets/fiona.jpg"/>
+          <img alt="driver-image" class="w-20 h-20 rounded-full object-cover" [src]="currentRide!.driver?.profilePicture ? currentRide!.driver?.profilePicture : 'assets/profile-placeholder.png'"/>
           <field title="Driver" [status]="setStatus()" [subValue]="currentRide!.driver ? currentRide!.driver.email : ''" [value]="currentRide!.driver ? currentRide!.driver!.firstName + ' ' + currentRide!.driver!.lastName : 'Waiting for driver...'" icon="./assets/icons/driver.png"></field>
         </div>
         <div class="flex flex-col w-1/2 items-start gap-3">

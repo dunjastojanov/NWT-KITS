@@ -16,23 +16,33 @@ public class LogInfoService {
     private LogInfoRepository logInfoRepository;
 
     public long getWorkingHoursInPrevious24Hours(Long driverId) {
-        List<LogInfo> list = logInfoRepository.findAllLogsInSinceLast24Hours(driverId);
+        List<LogInfo> list = logInfoRepository.findLogInfoByUserId(driverId);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime twentyFourHoursAgo = now.minusHours(24);
         Duration totalDuration = Duration.ZERO;
-        for (LogInfo loginfo :
-                list) {
-            Duration duration;
-            if (loginfo.getEnding() != null) {
-                duration = Duration.between(loginfo.getBegging(), loginfo.getEnding());
-            } else {
-                duration = Duration.between(loginfo.getBegging(), LocalDateTime.now());
+        for (LogInfo obj : list) {
+            if (obj.getBegging().isAfter(twentyFourHoursAgo) && obj.getBegging().isBefore(now)) {
+                Duration duration;
+                if (obj.getEnding() != null) {
+                    duration = Duration.between(obj.getBegging(), obj.getEnding());
+                }
+                else {
+                    duration = Duration.between(obj.getBegging(), LocalDateTime.now());
+                }
+
+                totalDuration = totalDuration.plus(duration);
             }
-            totalDuration = totalDuration.plus(duration);
         }
-        return totalDuration.get(ChronoUnit.HOURS);
+
+        if (totalDuration.isZero()) {
+            return 0;
+        }
+        return totalDuration.toHours();
     }
 
     public boolean hasDriverExceededWorkingHours(Long driverId) {
-        return getWorkingHoursInPrevious24Hours(driverId) >= 8;
+        long hours = getWorkingHoursInPrevious24Hours(driverId);
+        return hours >= 8;
     }
 
     public void startCountingHours(Long driverId) {

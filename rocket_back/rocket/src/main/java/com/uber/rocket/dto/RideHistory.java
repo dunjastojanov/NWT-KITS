@@ -1,6 +1,9 @@
 package com.uber.rocket.dto;
 
 import lombok.*;
+
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,5 +17,8 @@ public class RideHistory {
     private String end;
 
     private String date;
+
+    List<DestinationDTO> destinations;
+    String routeLocation;
     private Long id;
 }

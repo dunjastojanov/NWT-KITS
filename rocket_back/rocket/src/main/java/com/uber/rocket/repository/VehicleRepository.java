@@ -24,4 +24,5 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     @Query("SELECT v FROM Vehicle v WHERE v.status = com.uber.rocket.entity.user.VehicleStatus.ACTIVE")
     List<Vehicle> findByActiveStatus();
+    List<Vehicle> findAllByStatusIs(VehicleStatus vehicleStatus);
 }

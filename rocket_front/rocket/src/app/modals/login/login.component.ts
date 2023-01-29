@@ -105,10 +105,6 @@ export class LoginComponent implements OnInit {
     this.toastr.success('Login successful!');
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
     await this.chatService.loadMessages();
-    if (this.hasRole(user, 'DRIVER')) {
-      this.vehicleService.changeStatus('ACTIVE').then(() => {});
-    }
-
     await this.notificationService.loadNotifications();
     const currentRide = await this.service.getCurrentRide(user.email);
     if (currentRide) {
@@ -132,6 +128,14 @@ export class LoginComponent implements OnInit {
       );
       if (success) {
         this.user = await this.service.getUser();
+
+        if (this.hasRole(this.user, 'DRIVER')) {
+          await this.vehicleService.changeStatus('ACTIVE').then(status=> {
+            if (status === 'ACTIVE' && this.user) {
+              this.user.status = 'ACTIVE';
+            }
+          });
+        }
         if (this.user && this.user.roles.length === 1) {
           await this.login(this.user);
         } else if (this.user && this.user.roles.length > 1) {

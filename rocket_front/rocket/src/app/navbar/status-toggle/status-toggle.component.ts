@@ -3,6 +3,9 @@ import {User} from "../../interfaces/User";
 import {VehicleService} from "../../services/vehicle/vehicle.service";
 import {ToastrService} from "ngx-toastr";
 import {UserService} from "../../services/user/user.service";
+import {Store} from "@ngrx/store";
+import {StoreType} from "../../shared/store/types";
+import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-user-slice/logged-user.actions";
 
 @Component({
   selector: 'status-toggle',
@@ -27,24 +30,29 @@ export class StatusToggleComponent implements OnInit {
     } else {
       status = "ACTIVE";
     }
+
     this.vehicleService.changeStatus(status).then(result => {
-      this.status = result;
+      this.status = result === 'ACTIVE';
       this.toastr.success("Status updated");
       if (this.user) {
-        this.user.status = status;
+        this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, this.user));
       }
     })
   }
 
-  constructor(private userService: UserService, private vehicleService: VehicleService, private toastr: ToastrService) {
-    userService.getUser().then(user => {
-      if (user) {
-        if (this.hasRole(user, "DRIVER")) {
-          this.status = user?.status !== "INACTIVE";
-          this.user = user;
+  constructor(private store: Store<StoreType>, private vehicleService: VehicleService, private toastr: ToastrService) {
+    this.store.select("loggedUser").subscribe(value => {
+      if (value.user) {
+        if (this.hasRole(value.user, "DRIVER")) {
+
+          this.status = value.user?.status !== "INACTIVE";
+
+          console.log(this.status)
+          this.user = value.user;
+          console.log(this.user)
         }
       }
-    })
+    });
   }
 
   hasRole(user: User | null, role: string): boolean {
