@@ -124,14 +124,14 @@ public class Config {
     private Ride addRide(Vehicle vehicle, List<User> users, Double duration, double length, String startTime, String endTime, int price, String routeLocation) {
         Ride ride = new Ride();
 
-        ride.setStatus(RideStatus.CONFIRMED);
+        ride.setStatus(RideStatus.ENDED);
         ride.setKidFriendly(true);
         ride.setPetFriendly(true);
         ride.setDuration(duration);
         ride.setLength(length);
         ride.setVehicleTypeRequested(VehicleType.CARAVAN);
         ride.setStartTime(LocalDateTime.parse(startTime, formatter));
-        ride.setEndTime(null);
+        ride.setEndTime(LocalDateTime.parse(endTime, formatter));
         ride.setPrice(price);
         ride.setRouteLocation(routeLocation);
         ride.setSplitFare(false);

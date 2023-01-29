@@ -118,9 +118,8 @@ export class RideService {
   async onRideStatusChanged() {
     if (!this.currentRide) return;
     if (this.currentRide.rideStatus === RideStatus.DENIED) {
-      //ovo ne ide driveru
       this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
-      this.toastr.error('Ride is denied. You can try to book ride again.');
+      this.toastr.error('Ride is denied.');
     }
     if (this.currentRide.rideStatus === RideStatus.CONFIRMED) {
       //pokreni simulaciju

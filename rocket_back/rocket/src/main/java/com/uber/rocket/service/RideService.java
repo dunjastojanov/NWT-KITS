@@ -1,6 +1,7 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
+import com.uber.rocket.entity.notification.NotificationType;
 import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.Role;
 import com.uber.rocket.entity.user.User;
@@ -107,7 +108,10 @@ public class RideService {
             }
             ride = this.repository.save(ride);
 
-            notificationService.setNotificationAsRead(user, ride);
+            if (driverAccepted)
+                notificationService.setNotificationAsRead(user, ride, NotificationType.DRIVER_RIDE_REQUEST);
+            else
+                notificationService.setNotificationAsRead(user, ride, NotificationType.PASSENGER_RIDE_REQUEST);
 
             this.updateStatusOverSocket(ride);
         } else {
@@ -253,8 +257,13 @@ public class RideService {
             ride.setStatus(status);
             if (status == RideStatus.STARTED)
                 ride.setStartTime(LocalDateTime.now().withSecond(0).withNano(0));
-            if (status == RideStatus.ENDED)
+            if (status == RideStatus.ENDED) {
                 ride.setEndTime(LocalDateTime.now().withSecond(0).withNano(0));
+                for (User passenger : ride.getUsers()) {
+                    this.notificationService.addRideReviewNotification(passenger, ride);
+                    messagingTemplate.convertAndSendToUser(passenger.getEmail(), "/queue/notifications", notificationService.getNotificationsForUser(passenger));
+                }
+            }
             ride = this.repository.save(ride);
             updateStatusOverSocket(ride);
         }
@@ -567,6 +576,12 @@ public class RideService {
         repository.save(ride);
         notificationService.addRideCanceledNotifications(rideCancellation);
         rideCancellationRepository.save(rideCancellation);
+
+        for (Passenger passenger : ride.getPassengers()) {
+            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/rides", ride.getId());
+            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/notifications", notificationService.getNotificationsForUser(passenger.getUser()));
+        }
+        messagingTemplate.convertAndSendToUser(ride.getDriver().getEmail(), "/queue/rides", ride.getId());
         return rideCancellation;
     }
 

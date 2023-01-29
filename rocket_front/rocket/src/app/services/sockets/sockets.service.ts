@@ -39,8 +39,6 @@ export class SocketService {
     private rideService: RideService
   ) {
     this.store.select('loggedUser').subscribe((res) => {
-      if (res.user != null) this.initializeWebSocketConnection();
-      if (res.user == null) this.initializeWebSocketConnectionNonUser();
       this.user = res.user;
     });
   }
@@ -67,7 +65,6 @@ export class SocketService {
     let ws = new SockJS(this.serverUrl);
     this.stompClientNonUser = Stomp.over(ws);
     let that = this;
-
     this.stompClientNonUser.connect({}, function () {
       that.isLoadedNonUser = true;
       that.openSocketNonUser();

@@ -50,10 +50,17 @@ export class LoginComponent implements OnInit {
     private toastr: ToastrService,
     private vehicleService: VehicleService,
     private userService: UserService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private socketService: SocketService
   ) {
     this.email = '';
     this.password = '';
+    this.store.select('loggedUser').subscribe((res) => {
+      if (res.user != null) {
+        this.socketService.initializeWebSocketConnection();
+      }
+      this.socketService.initializeWebSocketConnectionNonUser();
+    });
   }
 
   ngOnInit() {

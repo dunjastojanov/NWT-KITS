@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
-import {SocketService} from 'src/app/services/sockets/sockets.service';
-import {PaypalService} from "../../services/paypal/paypal.service";
-import {ToastrService} from "ngx-toastr";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { SocketService } from 'src/app/services/sockets/sockets.service';
+import { PaypalService } from '../../services/paypal/paypal.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'homepage',
@@ -11,21 +11,13 @@ import {ToastrService} from "ngx-toastr";
 })
 export class HomepageComponent implements OnInit {
   constructor(
-    private socketService: SocketService,
     private route: ActivatedRoute,
     private payPalService: PaypalService,
-    private toastService:ToastrService
-  ) {
-  }
-
-  initSockets() {
-    this.socketService.initializeWebSocketConnection();
-  }
-
-
+    private toastService: ToastrService
+  ) {}
   openNewPasswordModal: boolean = false;
 
-  token: string = "";
+  token: string = '';
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -42,23 +34,22 @@ export class HomepageComponent implements OnInit {
     const paymentId = params['paymentId'];
     let payerId = params['PayerID'];
     if (paymentId && payerId) {
-      this.payPalService.triggerPaymentExecution(paymentId, payerId).then(
-        result => {
+      this.payPalService
+        .triggerPaymentExecution(paymentId, payerId)
+        .then((result) => {
           if (result === 'Successful payment') {
-            this.toastService.success("Successful payment");
+            this.toastService.success('Successful payment');
           } else {
-            this.toastService.error("Unsuccessful payment");
+            this.toastService.error('Unsuccessful payment');
           }
-        }
-      );
+        });
       setTimeout(() => {
         window.location.href = 'http://localhost:4200/';
       }, 5000);
     }
   }
 
-
   togglePasswordModal = () => {
     this.openNewPasswordModal = !this.openNewPasswordModal;
-  }
+  };
 }

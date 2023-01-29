@@ -65,11 +65,6 @@ public class NotificationService {
         save(notification);
     }
 
-    public void addScheduledRideNotification(Ride ride, int numberOfMinutes) {
-        Notification notification = new Notification();
-        notification.setTitle("You have a ride scheduled in " + numberOfMinutes + " minutes.");
-    }
-
     private Notification save(Notification notification) {
         notification.setRead(false);
         notification.setSent(LocalDateTime.now());
@@ -314,16 +309,20 @@ public class NotificationService {
         notification.ifPresent(value -> notificationRepository.delete(value));
     }
 
-    public Notification getNotificationsForUserAndRide(User user, Ride ride) {
-        Optional<Notification> optional = notificationRepository.findByUserAndEntityId(user, ride.getId());
-        if (optional.isPresent()) {
-            return optional.get();
+    public List<Notification> getNotificationsForUserAndRide(User user, Ride ride) {
+        List<Notification> notifications = notificationRepository.findByUserAndEntityId(user, ride.getId());
+        if (notifications.size() > 0) {
+            return notifications;
         }
         else throw new RuntimeException("There are no notifications for given user and ride.");
     }
 
-    public void setNotificationAsRead(User user, Ride ride) {
-        setNotificationAsRead(getNotificationsForUserAndRide(user, ride).getId());
+    public void setNotificationAsRead(User user, Ride ride, NotificationType type) {
+        List<Notification> notifs = getNotificationsForUserAndRide(user, ride);
+        for (Notification notification: notifs) {
+            if (notification.getType() == type)
+                setNotificationAsRead(notification.getId());
+        }
         messagingTemplate.convertAndSendToUser(user.getEmail(), "/queue/notifications", getNotificationsForUser(user));
     }
 }

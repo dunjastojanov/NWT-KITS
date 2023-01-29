@@ -25,6 +25,7 @@ public class Notification {
     @ManyToOne
     User user;
     @NotNull
+    @Column(length = 1024)
     String templateVariables;
     @NotNull
     String title;
