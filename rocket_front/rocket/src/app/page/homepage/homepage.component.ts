@@ -1,8 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
-import {SocketService} from 'src/app/services/sockets/sockets.service';
-import {PaypalService} from "../../services/paypal/paypal.service";
-import {ToastrService} from "ngx-toastr";
+import {PaypalService} from '../../services/paypal/paypal.service';
+import {ToastrService} from 'ngx-toastr';
+import {Store} from "@ngrx/store";
+import {StoreType} from "../../shared/store/types";
+import {UserService} from "../../services/user/user.service";
+import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-user-slice/logged-user.actions";
 
 @Component({
   selector: 'homepage',
@@ -11,29 +14,29 @@ import {ToastrService} from "ngx-toastr";
 })
 export class HomepageComponent implements OnInit {
   constructor(
-    private socketService: SocketService,
     private route: ActivatedRoute,
     private payPalService: PaypalService,
-    private toastService:ToastrService
+    private toastService: ToastrService,
+    private store: Store<StoreType>,
+    private userService: UserService
   ) {
   }
 
-  initSockets() {
-    this.socketService.initializeWebSocketConnection();
-  }
-
-
   openNewPasswordModal: boolean = false;
 
-  token: string = "";
+  token: string = '';
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      this.payPalListener(params);
-      const forgottenPasswordToken = params['token'];
-      if (forgottenPasswordToken) {
-        this.token = forgottenPasswordToken;
-        this.togglePasswordModal();
+      console.log(params['paymentId'])
+      if (params['paymentId'] !== " ") {
+        this.payPalListener(params);
+      } else {
+        const forgottenPasswordToken = params['token'];
+        if (forgottenPasswordToken) {
+          this.token = forgottenPasswordToken;
+          this.togglePasswordModal();
+        }
       }
     });
   }
@@ -42,23 +45,26 @@ export class HomepageComponent implements OnInit {
     const paymentId = params['paymentId'];
     let payerId = params['PayerID'];
     if (paymentId && payerId) {
-      this.payPalService.triggerPaymentExecution(paymentId, payerId).then(
-        result => {
+      this.payPalService
+        .triggerPaymentExecution(paymentId, payerId)
+        .then((result) => {
           if (result === 'Successful payment') {
-            this.toastService.success("Successful payment");
+            this.toastService.success('Successful payment');
+            this.userService.getUser().then(value => {
+              if (value)
+                this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, value));
+            });
           } else {
-            this.toastService.error("Unsuccessful payment");
+            this.toastService.error('Unsuccessful payment');
           }
-        }
-      );
+        });
       setTimeout(() => {
         window.location.href = 'http://localhost:4200/';
       }, 5000);
     }
   }
 
-
   togglePasswordModal = () => {
     this.openNewPasswordModal = !this.openNewPasswordModal;
-  }
+  };
 }

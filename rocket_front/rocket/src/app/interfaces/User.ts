@@ -9,6 +9,7 @@ export interface User {
   phoneNumber: string;
   profilePicture: string;
   status?: string;
+  tokens?: number;
   roles: string[];
 }
 

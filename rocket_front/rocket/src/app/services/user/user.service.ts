@@ -1,14 +1,17 @@
-import {Injectable} from '@angular/core';
-import {AxiosResponse} from 'axios';
-import {sideUser, User} from 'src/app/interfaces/User';
-import {http} from 'src/app/shared/api/axios-wrapper';
-import {loggedUserToken} from 'src/app/shared/consts';
-import {CookieService} from 'ngx-cookie-service';
-import {CurrentRide} from 'src/app/interfaces/Ride';
-import {GoogleUser} from "../../interfaces/GoogleUser";
-import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-user-slice/logged-user.actions";
-import {StoreType} from "../../shared/store/types";
-import {Store} from "@ngrx/store";
+import { Injectable } from '@angular/core';
+import { AxiosResponse } from 'axios';
+import { sideUser, User } from 'src/app/interfaces/User';
+import { http } from 'src/app/shared/api/axios-wrapper';
+import { loggedUserToken } from 'src/app/shared/consts';
+import { CookieService } from 'ngx-cookie-service';
+import { CurrentRide } from 'src/app/interfaces/Ride';
+import { GoogleUser } from '../../interfaces/GoogleUser';
+import { Store } from '@ngrx/store';
+import { StoreType } from '../../shared/store/types';
+import {
+  LoggedUserAction,
+  LoggedUserActionType,
+} from '../../shared/store/logged-user-slice/logged-user.actions';
 
 interface NewDriver {
   firstName: string;
@@ -25,8 +28,10 @@ interface NewDriver {
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private cookieService: CookieService, private store: Store<StoreType>) {
-  }
+  constructor(
+    private cookieService: CookieService,
+    private store: Store<StoreType>
+  ) {}
 
   async loginUser(data: any): Promise<boolean> {
     try {
@@ -168,7 +173,8 @@ export class UserService {
 
   async blockUser(email: string, message: string) {
     let result: AxiosResponse<any> = await http.post<object>(
-      '/api/user/block/' + email, message
+      '/api/user/block/' + email,
+      message
     );
     return result.data;
   }
@@ -202,26 +208,35 @@ export class UserService {
 
   async cancelRide(rideId: string, message: string) {
     let result: AxiosResponse<any> = await http.post<object>(
-      '/api/user/cancel/' + rideId, message
+      '/api/ride/cancel/' + rideId,
+      message
     );
     return result.data;
   }
 
   async sendRequestForPassword(email: string) {
-    await http.post<string>("/api/user/password", email, {
+    await http.post<string>('/api/user/password', email, {
       headers: {
-        "Content-Type": "text/plain"
-      }
+        'Content-Type': 'text/plain',
+      },
     });
   }
 
-  async forgottenPasswordChangeConfirmation(data: { token: string, password: string }): Promise<string> {
-    let result: AxiosResponse<string> = await http.post<string, object>("/api/user/confirm", data);
+  async forgottenPasswordChangeConfirmation(data: {
+    token: string;
+    password: string;
+  }): Promise<string> {
+    let result: AxiosResponse<string> = await http.post<string, object>(
+      '/api/user/confirm',
+      data
+    );
     return result.data;
   }
 
   async verifyRegistration(token: string): Promise<string> {
-    let result: AxiosResponse<string> = await http.get<string>("/api/user/confirm/" + token);
+    let result: AxiosResponse<string> = await http.get<string>(
+      '/api/user/confirm/' + token
+    );
     return result.data;
   }
 
@@ -232,16 +247,21 @@ export class UserService {
       firstName: user.firstName,
       lastName: user.lastName,
       profilePicture: user.profilePicture,
-    }
-    let result: AxiosResponse<string> = await http.post<string>("/api/user/google", googleDto);
+    };
+    let result: AxiosResponse<string> = await http.post<string>(
+      '/api/user/google',
+      googleDto
+    );
     return result.data;
   }
 
   refreshUser() {
-    this.getUser().then(user => {
+    this.getUser().then((user) => {
       if (user) {
-        this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
+        this.store.dispatch(
+          new LoggedUserAction(LoggedUserActionType.LOGIN, user)
+        );
       }
-    })
+    });
   }
 }

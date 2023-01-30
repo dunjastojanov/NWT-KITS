@@ -133,7 +133,8 @@ public class VehicleService {
         try {
             if (VehicleStatus.valueOf(status.toUpperCase()).equals(VehicleStatus.ACTIVE)) {
                 if (logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId())) {
-                    throw new RuntimeException("Driver exceeded driving limit");
+                    vehicle.setStatus(VehicleStatus.INACTIVE);
+                    messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
                 }
                 logInfoService.startCountingHours(vehicle.getDriver().getId());
             }
@@ -154,14 +155,18 @@ public class VehicleService {
 
     public List<Vehicle> getActiveVehicleByRequirements(VehicleType type, boolean kidFriendly, boolean petFriendly) {
         List<Vehicle> vehicles = this.vehicleRepository.findByStatusAndTypeAndKidAndPetFriendly(VehicleStatus.ACTIVE, type, kidFriendly, petFriendly);
-//        vehicles = vehicles.stream().filter(vehicle -> {
-//            boolean exceeded = logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId());
-//            if (exceeded) {
-//                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
-//            }
-//            return exceeded;
-//        }).collect(Collectors.toList());
+        /*vehicles = vehicles.stream().filter(vehicle -> {
+            boolean exceeded = logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId());
+            if (exceeded) {
+                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
+            }
+            return exceeded;
+        }).collect(Collectors.toList());*/
         return vehicles;
+    }
+
+    public List<Vehicle> getActiveVehicles() {
+        return this.vehicleRepository.findByActiveStatus();
     }
 
     public Object getVehicleByDriver(HttpServletRequest request) {
@@ -172,6 +177,7 @@ public class VehicleService {
     public User getDriverByEmail(String email) {
         return userService.getUserByEmail(email);
     }
+
     public List<VehicleSimulationDTO> getAllVehicles() {
         List<Vehicle> vehicles = this.vehicleRepository.findAll();
         List<VehicleSimulationDTO> vehicleDTOS = new ArrayList<>();
@@ -188,8 +194,13 @@ public class VehicleService {
     public Optional<Vehicle> getVehicleById(Long id) {
         return this.vehicleRepository.findById(id);
     }
+
     public void save(Vehicle vehicle) {
         this.vehicleRepository.save(vehicle);
+    }
+
+    public List<Vehicle> getAllActiveVehicles(VehicleStatus vehicleStatus) {
+        return vehicleRepository.findAllByStatusIs(vehicleStatus);
     }
 
     public void reportDriver(HttpServletRequest request, Long driverId) {

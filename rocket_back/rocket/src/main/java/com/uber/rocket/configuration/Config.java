@@ -3,6 +3,7 @@ package com.uber.rocket.configuration;
 import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.*;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +29,9 @@ public class Config {
     @Autowired
     DestinationRepository destinationRepository;
 
+    @Autowired
+    LogInfoRepository logInfoRepository;
+
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Bean
@@ -38,7 +42,6 @@ public class Config {
             Role adminRole = addRole("ADMINISTRATOR");
 
             addUser(adminRole, "Biljana", "Radulov", "0611111111");
-
             User driver1 = addUser(driverRole, "Dragan", "Dragic", "0611111111");
             Vehicle vehicle1 = addVehicle(driver1);
             User driver2 = addUser(driverRole, "Ivana", "Berkovic", "0611111111");
@@ -57,14 +60,22 @@ public class Config {
             addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride1);
             addDestination(45.2478236, 19.804034, "Futoski put 18 Novi Sad", ride1);
 
-            Ride ride2 = addRide(vehicle2, List.of(client1, client3, client4), 180.0, 1538.2, "2023-01-24 21:20", "2023-01-25 00:20", 520, "smdsGwz~wBxAEA{EoFHkAf@_Al@`@gO@iES}NYyCgA_F`BeAz@_AdB{Dj@eBxGjGfBgF");
+            Ride ride2 = addRide(vehicle2, List.of(client3, client4), 180.0, 1538.2, "2023-01-24 21:20", "2023-01-25 00:20", 520, "smdsGwz~wBxAEA{EoFHkAf@_Al@`@gO@iES}NYyCgA_F`BeAz@_AdB{Dj@eBxGjGfBgF");
             addDestination(45.2477844, 19.8241151, "Brace Krkljus 7 Novi Sad", ride2);
             addDestination(45.2462784, 19.8346671, "Gogoljeva 18 Novi Sad", ride2);
 
 
             Ride ride3 = addRide(vehicle3, List.of(client5, client6), 360.0, 3039.4, "2023-01-25 20:03", "2023-01-25 21:03", 760, "kkcsGyubxBhAg@z\\jjB{OvFym@bA@zEmDHJ`P");
-            addDestination(45.2423455,19.8437972,"Dr Ivana Ribara 13 Novi Sad",ride3);
-            addDestination(45.2482226,19.8212104,"Rudjera Boskovica 22 Novi Sad",ride3);
+            addDestination(45.2423455, 19.8437972, "Dr Ivana Ribara 13 Novi Sad", ride3);
+            addDestination(45.2482226, 19.8212104, "Rudjera Boskovica 22 Novi Sad", ride3);
+
+            Ride ride4 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-29 13:56", "2023-01-29 14:50", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
+            ride4.setStatus(RideStatus.SCHEDULED);
+            rideRepository.save(ride4);
+            addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride4);
+            addDestination(45.2478236, 19.804034, "Futoski put 18 Novi Sad", ride4);
+
+            LogInfo logInfo1 = addLogInfo(driver1);
         };
     }
 
@@ -72,6 +83,14 @@ public class Config {
         Role role = new Role();
         role.setRole(name);
         return roleRepository.save(role);
+    }
+
+    private LogInfo addLogInfo(User driver) {
+        LogInfo logInfo = new LogInfo();
+        logInfo.setUserId(driver.getId());
+        logInfo.setBegging(LocalDateTime.of(2023, 1, 28, 10, 0));
+        logInfo.setEnding(null);
+        return logInfoRepository.save(logInfo);
     }
 
     private User addUser(Role role, String first_name, String last_name, String phoneNumber) {
@@ -115,7 +134,7 @@ public class Config {
         vehicle.setLongitude(19.849070);
         vehicle.setPetFriendly(true);
         vehicle.setKidFriendly(true);
-        vehicle.setStatus(VehicleStatus.INACTIVE);
+        vehicle.setStatus(VehicleStatus.ACTIVE);
         vehicle.setVehicleType(VehicleType.CARAVAN);
         vehicle.setDriver(driver);
 

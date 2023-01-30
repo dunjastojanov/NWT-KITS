@@ -1,6 +1,7 @@
 package com.uber.rocket.controller;
 
 import com.uber.rocket.dto.*;
+import com.uber.rocket.entity.ride.RideStatus;
 import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,12 @@ public class RideController {
     @GetMapping(path = "/currentRideId/{id}")
     public ResponseEntity<?> getUsersCurrentRide(@PathVariable("id") Long id) {
         RideDTO rideDTO = this.rideService.getUserCurrentRideById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
+    }
+
+    @GetMapping(path = "/change-status/{id}")
+    public ResponseEntity<?> changeRideStatus(@PathVariable("id") Long id, @RequestParam("status") RideStatus status) {
+        RideDTO rideDTO = this.rideService.changeRideStatus(id, status);
         return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
     }
 

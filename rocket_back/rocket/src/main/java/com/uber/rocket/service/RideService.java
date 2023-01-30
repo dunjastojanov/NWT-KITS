@@ -1,10 +1,11 @@
 package com.uber.rocket.service;
 
 import com.uber.rocket.dto.*;
+import com.uber.rocket.entity.notification.NotificationType;
 import com.uber.rocket.entity.ride.*;
+import com.uber.rocket.entity.user.Role;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
-import com.uber.rocket.entity.user.VehicleType;
 import com.uber.rocket.mapper.FavouriteRouteMapper;
 import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
@@ -13,6 +14,7 @@ import com.uber.rocket.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.type.LocalDateType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,15 +22,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -116,7 +114,10 @@ public class RideService {
             }
             ride = this.repository.save(ride);
 
-            notificationService.setNotificationAsRead(user, ride);
+            if (driverAccepted)
+                notificationService.setNotificationAsRead(user, ride, NotificationType.DRIVER_RIDE_REQUEST);
+            else
+                notificationService.setNotificationAsRead(user, ride, NotificationType.PASSENGER_RIDE_REQUEST);
 
             this.updateStatusOverSocket(ride);
         } else {
@@ -219,13 +220,12 @@ public class RideService {
 
     public Long createRide(RideDTO rideDTO) {
         Ride ride = rideMapper.mapToEntity(rideDTO);
-        /*booelan passengersHaveFund = this.userService.checkPassengersTokens(ride);
+        boolean passengersHaveFund = this.userService.checkPassengersTokens(ride);
         if (passengersHaveFund) {
             passengerRepository.saveAll(ride.getPassengers());
         } else {
-            return -1;
+            return (long) -1;
         }
-        */
         passengerRepository.saveAll(ride.getPassengers());
         List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
         ride = this.repository.save(ride);
@@ -282,6 +282,25 @@ public class RideService {
         return null;
     }
 
+    public RideDTO changeRideStatus(Long id, RideStatus status) {
+        Optional<Ride> rideOpt = this.repository.findById(id);
+        if (rideOpt.isPresent()) {
+            Ride ride = rideOpt.get();
+            ride.setStatus(status);
+            if (status == RideStatus.STARTED)
+                ride.setStartTime(LocalDateTime.now().withSecond(0).withNano(0));
+            if (status == RideStatus.ENDED) {
+                ride.setEndTime(LocalDateTime.now().withSecond(0).withNano(0));
+                for (User passenger : ride.getUsers()) {
+                    this.notificationService.addRideReviewNotification(passenger, ride);
+                    messagingTemplate.convertAndSendToUser(passenger.getEmail(), "/queue/notifications", notificationService.getNotificationsForUser(passenger));
+                }
+            }
+            ride = this.repository.save(ride);
+            updateStatusOverSocket(ride);
+        }
+        return null;
+    }
     public boolean findAndNotifyDriver(long rideId) {
 
         try {
@@ -296,10 +315,8 @@ public class RideService {
 
     public boolean findAndNotifyDriver(Ride ride) {
         Vehicle vehicle = this.lookForDriver(ride);
-        System.out.println(vehicle);
         if (vehicle != null) {
-            try {
-                System.out.println(vehicle);
+            try{
                 User driver = vehicle.getDriver();
                 this.notificationService.addDriverRideRequestNotification(driver, ride);
                 List<NotificationDTO> notifications = this.notificationService.getNotificationsForUser(driver);
@@ -412,7 +429,12 @@ public class RideService {
 
     @Transactional
     public RideDTO getUserCurrentRide(User user) {
-        List<Ride> rides = repository.findByPassengers(user.getId());
+        List<Ride> rides = new ArrayList<>();
+        if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("CLIENT")) {
+            rides = repository.findByPassengers(user.getId());
+        } else if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("DRIVER")) {
+            rides = repository.findByDriver(user);
+        }
         if (rides.size() > 0)
             return this.rideMapper.mapToDto(rides.get(0));
         return null;
@@ -604,6 +626,12 @@ public class RideService {
         repository.save(ride);
         notificationService.addRideCanceledNotifications(rideCancellation);
         rideCancellationRepository.save(rideCancellation);
+
+        for (Passenger passenger : ride.getPassengers()) {
+            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/rides", ride.getId());
+            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/notifications", notificationService.getNotificationsForUser(passenger.getUser()));
+        }
+        messagingTemplate.convertAndSendToUser(ride.getDriver().getEmail(), "/queue/rides", ride.getId());
         return rideCancellation;
     }
 
@@ -611,7 +639,18 @@ public class RideService {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(vehicleId);
         if (vehicleOpt.isPresent()) {
             Vehicle vehicle = vehicleOpt.get();
-            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle);
+            this.vehicleService.save(vehicle);
+            List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
+            System.out.println(vehicleId);
+            System.out.println(rides);
+            Ride ride = null;
+            for (Ride r : rides) {
+                if (Objects.equals(r.getVehicle().getId(), vehicle.getId())) {
+                    ride = r;
+                }
+            }
+            System.out.println("-----");
+            System.out.println(ride);
             RideSimulationDTO rsDTO = new RideSimulationDTO();
             rsDTO.setVehicleStatus(vehicle.getStatus());
             if (ride != null) {
@@ -632,33 +671,67 @@ public class RideService {
 
     public LocationDTO updateVehicleLocation(Long id, Double longitude, Double latitude) {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(id);
-        System.out.println(id);
-        System.out.println(longitude);
-        System.out.println(latitude);
         if (vehicleOpt.isPresent()) {
+            ActiveVehicleDTO activeVehicleDTO = new ActiveVehicleDTO();
             Vehicle vehicle = vehicleOpt.get();
-            System.out.println(vehicle);
             vehicle.setLongitude(longitude);
             vehicle.setLatitude(latitude);
             this.vehicleService.save(vehicle);
-            Ride ride = this.repository.findRideByVehicleAndStatus(vehicle);
-            System.out.println(ride);
+
+            activeVehicleDTO.setId(vehicle.getId());
+            activeVehicleDTO.setLatitude(latitude);
+            activeVehicleDTO.setLongitude(longitude);
+
+            List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
+            Ride ride = null;
+            for (Ride r : rides) {
+                if (Objects.equals(r.getVehicle().getId(), vehicle.getId())) {
+                    ride = r;
+                }
+            }
+            LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setLatitude(vehicle.getLatitude());
+            locationDTO.setLongitude(vehicle.getLongitude());
             if (ride != null) {
-                LocationDTO locationDTO = new LocationDTO();
-                locationDTO.setLatitude(vehicle.getLatitude());
-                locationDTO.setLongitude(vehicle.getLongitude());
-                this.updateLocationToPassengers(ride.getPassengers().stream().toList(), locationDTO);
+                activeVehicleDTO.setFree(false);
+                this.updateLocationToPassengers(ride.getVehicle().getDriver(), ride.getPassengers().stream().toList(),locationDTO);
+                this.updateActiveVehicles(activeVehicleDTO);
+            } else {
+                activeVehicleDTO.setFree(true);
+                this.updateActiveVehicles(activeVehicleDTO);
             }
         }
         return null;
     }
 
-    private void updateLocationToPassengers(List<Passenger> passengers, LocationDTO locationDTO) {
+    private void updateActiveVehicles(ActiveVehicleDTO activeVehicleDTO) {
+        this.messagingTemplate.convertAndSend("/queue/active-vehicles", activeVehicleDTO);
+    }
+    private void updateLocationToPassengers(User driver, List<Passenger> passengers, LocationDTO locationDTO) {
         for (Passenger passenger : passengers) {
-            System.out.println(passenger.getUser().getEmail());
-            System.out.println(locationDTO);
-            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/update-vehicle", locationDTO);
+            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(),"/queue/update-vehicle", locationDTO);
         }
+        messagingTemplate.convertAndSendToUser(driver.getEmail(),"/queue/update-vehicle", locationDTO);
+    }
+
+    public List<Ride> getRidesByRideStatus(RideStatus rideStatus) {
+        return repository.findByRideStatus(rideStatus);
+    }
+
+    public void changeRideStatusToConfirm(Long rideId) {
+        Optional<Ride> optionalRide = repository.findById(rideId);
+        if (optionalRide.isEmpty()) {
+            throw new RuntimeException("There is not ride with this id");
+        }
+        Ride ride = optionalRide.get();
+        ride.setStatus(RideStatus.CONFIRMED);
+        repository.save(ride);
+        System.out.println(ride.getStatus());
+    }
+
+    public boolean checkIfDriverHasConfirmedOrStartedRide(Long driverId) {
+        List<Ride> rides = repository.findRidesByDriverIdWhereStatusIsConfirmedOrStarted(driverId);
+        return rides.isEmpty();
     }
 
 }

@@ -115,6 +115,7 @@ import { BlockUserComponent } from './modals/block-user/block-user.component';
 import { CancelRideComponent } from './modals/cancel-ride/cancel-ride.component';
 import {MessagesReducer} from "./shared/store/message-slice/message.reducer";
 import { MapPageComponent } from './page/map-page/map-page.component';
+import { ActiveVehiclesReducer } from './shared/store/active-vehicles-slice/active-vehicles.reduces';
 
 @NgModule({
   declarations: [
@@ -233,7 +234,8 @@ import { MapPageComponent } from './page/map-page/map-page.component';
         rideInfo: RideInfoReducer,
         currentRide: CurrentRideReducer,
         notifications: NotificationsReducer,
-        messages:MessagesReducer,
+        messages: MessagesReducer,
+        activeVehicles: ActiveVehiclesReducer,
       },
       { metaReducers }
     ),

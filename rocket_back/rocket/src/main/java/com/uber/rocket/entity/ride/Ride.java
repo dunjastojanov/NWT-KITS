@@ -26,7 +26,7 @@ public class Ride {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "ride_id")
     private Collection<Passenger> passengers;
@@ -36,15 +36,19 @@ public class Ride {
 
     @Enumerated(EnumType.STRING)
     private VehicleType vehicleTypeRequested;
+
     private boolean petFriendly;
+
     private boolean kidFriendly;
 
     @NotNull
-    @Column(length = 512)
+    @Column(length = 1024)
     private String routeLocation;
 
     private boolean now;
+
     private LocalDateTime startTime;
+
     @Nullable
     private LocalDateTime endTime;
 

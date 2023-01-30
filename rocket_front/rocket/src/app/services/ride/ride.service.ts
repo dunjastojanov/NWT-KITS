@@ -118,9 +118,8 @@ export class RideService {
   async onRideStatusChanged() {
     if (!this.currentRide) return;
     if (this.currentRide.rideStatus === RideStatus.DENIED) {
-      //ovo ne ide driveru
       this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
-      this.toastr.error('Ride is denied. You can try to book ride again.');
+      this.toastr.error('Ride is denied.');
     }
     if (this.currentRide.rideStatus === RideStatus.CONFIRMED) {
       //pokreni simulaciju
@@ -141,10 +140,11 @@ export class RideService {
       }
     }
     if (this.currentRide.rideStatus === RideStatus.STARTED) {
-      // sacuvaj u bazu da je ride started i promeni start time
+      this.toastr.success('Ride started.');
     }
     if (this.currentRide.rideStatus === RideStatus.ENDED) {
-      // sacuvaj u bazu da je ride ended i promeni end time i current ride = null
+      this.toastr.success('Ride ended.');
+      this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
     }
   }
 
@@ -153,6 +153,17 @@ export class RideService {
       `/api/ride/currentRide/${rideId}`
     );
     return result.data;
+  }
+
+  async changeRideStatus(
+    rideId: number,
+    status: RideStatus
+  ): Promise<CurrentRide> {
+    const result = await http.get(
+      `/api/ride/change-status/${rideId}?status=${status}`
+    );
+
+    return <CurrentRide>result.data;
   }
 
   async findDriver(id: number) {

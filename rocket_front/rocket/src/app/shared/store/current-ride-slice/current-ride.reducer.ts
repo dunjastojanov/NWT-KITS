@@ -7,6 +7,7 @@ import {
 
 const initialState: CurrentRideStateType = {
   currentRide: null,
+  timeForVehicleToArive: 0,
 };
 
 export const CurrentRideReducer = (
@@ -25,11 +26,13 @@ export const CurrentRideReducer = (
         ...state,
         currentRide: null,
       };
+    case CurrentRideActionType.SET_TIME_FOR_VEHICLE_TO_COME:
+      return {
+        ...state,
+        timeForVehicleToArive: <number>action.payload!,
+      };
     case CurrentRideActionType.UPDATE_VEHICLE_LOCATION:
       const longLat = <LongitudeLatitude>action.payload!;
-      console.log('store');
-
-      console.log(state);
       return {
         ...state,
         currentRide: {

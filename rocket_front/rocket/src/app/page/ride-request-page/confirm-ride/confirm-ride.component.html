@@ -1,6 +1,6 @@
 
 <div class="flex w-full h-[80vh] gap-3">
-    <show-on-map id="confirmridemap" dimensions="w-[50vw]! h-[40vh]! y-10" [destinations]="this.destinations" [route]="this.selectedRoute"></show-on-map>
+    <show-on-map id="confirmridemap" dimensions="!w-[50vw] !h-[40vh] y-10" [destinations]="this.destinations" [route]="this.selectedRoute"></show-on-map>
     <div class="flex flex-col gap-8 px-16 py-12 items-start text-lg w-1/2 overflow-auto ">
         <div *ngIf="this.haveDestinations()" class="flex flex-col gap-3 w-full">
             <p class="font-light">Destinations:</p>
