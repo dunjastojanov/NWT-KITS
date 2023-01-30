@@ -174,6 +174,7 @@ public class RideService {
                 ride.setStatus(RideStatus.CONFIRMED);
             } else ride.setStatus(RideStatus.SCHEDULED);
             Vehicle vehicle = this.vehicleService.getVehicleByDriver(driver);
+            this.userService.passengerTokensWithdraw(ride);
             ride.setVehicle(vehicle);
         }
         return ride;

@@ -306,9 +306,10 @@ public class UserService {
                 passenger.setTokens(passenger.getTokens() - splitCost);
                 userRepository.save(passenger);
             }
+        } else {
+            User user = ride.getUsers().get(0);
+            user.setTokens(user.getTokens() - ride.getPrice());
+            userRepository.save(user);
         }
-        User user = ride.getUsers().get(0);
-        user.setTokens(user.getTokens() - ride.getPrice());
-        userRepository.save(user);
     }
 }

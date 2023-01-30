@@ -103,4 +103,9 @@ export class NotificationComponent implements OnInit {
     }
     this.closeFunc();
   }
+
+  onClose() {
+    this.closeFunc();
+    this.open = false;
+  }
 }
