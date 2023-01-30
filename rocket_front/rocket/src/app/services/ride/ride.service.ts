@@ -1,34 +1,38 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AxiosResponse } from 'axios';
-import { ToastrService } from 'ngx-toastr';
-import { Destination } from 'src/app/interfaces/Destination';
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AxiosResponse} from 'axios';
+import {ToastrService} from 'ngx-toastr';
+import {Destination} from 'src/app/interfaces/Destination';
 import {
   CurrentRide,
   RideStatus,
   UserRidingStatus,
 } from 'src/app/interfaces/Ride';
-import { User } from 'src/app/interfaces/User';
-import { RideInfo } from 'src/app/page/ride-request-page/data-info/ride-info.type';
+import {User} from 'src/app/interfaces/User';
+import {RideInfo} from 'src/app/page/ride-request-page/data-info/ride-info.type';
 import {
   CurrentRideAction,
   CurrentRideActionType,
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import { StoreType } from 'src/app/shared/store/types';
-import { http } from '../../shared/api/axios-wrapper';
+import {StoreType} from 'src/app/shared/store/types';
+import {http} from '../../shared/api/axios-wrapper';
+import {UserService} from "../user/user.service";
+import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-user-slice/logged-user.actions";
 
 @Injectable({
   providedIn: 'root',
 })
 export class RideService {
   currentRide: CurrentRide | null = null;
-  constructor(private store: Store<StoreType>, private toastr: ToastrService) {
+
+  constructor(private store: Store<StoreType>, private toastr: ToastrService, private userService: UserService) {
     this.store.select('currentRide').subscribe((data) => {
       this.currentRide = data.currentRide;
     });
   }
 
-  async validateRide(ride: CurrentRide) {}
+  async validateRide(ride: CurrentRide) {
+  }
 
   createCurrentRide(
     rideInfo: RideInfo,
@@ -54,15 +58,16 @@ export class RideService {
     ride.estimatedDistance = distance;
     ride.estimatedTime = duration;
     ride.isRouteFavorite = false;
-    ride.vehicle = { type: rideInfo.vehicle! };
+    ride.vehicle = {type: rideInfo.vehicle!};
     ride.ridingPals = rideInfo.friends.map((fr) => {
-      return { ...fr, status: UserRidingStatus.WAITING };
+      return {...fr, status: UserRidingStatus.WAITING};
     });
     ride.isNow = rideInfo.isNow;
     ride.time = rideInfo.time;
     ride.features = rideInfo.features;
     return ride;
   }
+
   async getRide(id: string): Promise<any | null> {
     let result: AxiosResponse = await http.get('/api/ride/' + id);
     return result.data;
@@ -115,6 +120,7 @@ export class RideService {
   async createNotifsLookForDriver(id: number) {
     await http.get(`/api/ride/post-create-ride/${id}`);
   }
+
   async onRideStatusChanged() {
     if (!this.currentRide) return;
     if (this.currentRide.rideStatus === RideStatus.DENIED) {
@@ -122,9 +128,10 @@ export class RideService {
       this.toastr.error('Ride is denied.');
     }
     if (this.currentRide.rideStatus === RideStatus.CONFIRMED) {
-      //pokreni simulaciju
-      //skini novac
-      //posalji notifikaciju korisnicima
+      this.userService.getUser().then(user => {
+        if (user)
+          this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
+      })
     }
     if (
       this.currentRide.ridingPals &&
@@ -174,7 +181,7 @@ export class RideService {
   }
 
   async getMap(id: string) {
-    let result:AxiosResponse = await http.get(
+    let result: AxiosResponse = await http.get(
       "/api/ride/map/" + id);
     return result.data;
   }

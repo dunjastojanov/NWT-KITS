@@ -46,6 +46,8 @@ export class UserService {
     }
   }
 
+
+
   setToken(token: string) {
     window.localStorage.setItem(loggedUserToken, token);
     this.cookieService.set('access_token', token);

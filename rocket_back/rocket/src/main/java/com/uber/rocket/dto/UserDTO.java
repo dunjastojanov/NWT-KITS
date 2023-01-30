@@ -14,8 +14,8 @@ public class UserDTO {
     @NotBlank
     String lastName;
     @Email
+    @NotBlank
     String email;
-    //staviti Not Blank
     String profilePicture;
     @NotBlank
     String role;
