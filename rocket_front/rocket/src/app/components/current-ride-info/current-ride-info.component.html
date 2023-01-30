@@ -6,7 +6,7 @@
 
   <div class="relative w-full h-16 flex items-center justify-between">
     <p *ngIf="this.currentRide!.rideStatus == 'CONFIRMED'" class="font-light text-base">Vehicle arives in <b>{{convertTimeForVehicleToArive()}}</b></p>
-    <current-ride-buttons [driverId]="currentRide!.driver!.id" [rideId]="currentRide!.rideId" [isFavorite]="currentRide!.isRouteFavorite!" [rideStatus]="currentRide!.rideStatus"
+    <current-ride-buttons [driverId]="currentRide!.driver ? currentRide!.driver.id : ''" [rideId]="currentRide!.rideId" [isFavorite]="currentRide!.isRouteFavorite!" [rideStatus]="currentRide!.rideStatus"
     [driverName]="currentRide!.driver ? currentRide!.driver.firstName + ' ' + currentRide!.driver.lastName : null"></current-ride-buttons>
   </div>
 

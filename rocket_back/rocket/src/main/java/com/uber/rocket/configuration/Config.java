@@ -104,7 +104,7 @@ public class Config {
         user.setBlocked(false);
         user.setCity("Novi Sad");
         user.setProfilePicture(null);
-        user.setTokens((double) 0);
+        user.setTokens((double) 1000);
         user = userRepository.save(user);
         user.setProfilePicture("http://localhost:8443/images/" + user.getId() + "/" + user.getFirstName() + ".jpg");
         return userRepository.save(user);
@@ -134,7 +134,7 @@ public class Config {
         vehicle.setLongitude(19.849070);
         vehicle.setPetFriendly(true);
         vehicle.setKidFriendly(true);
-        vehicle.setStatus(VehicleStatus.ACTIVE);
+        vehicle.setStatus(VehicleStatus.INACTIVE);
         vehicle.setVehicleType(VehicleType.CARAVAN);
         vehicle.setDriver(driver);
 
@@ -145,7 +145,7 @@ public class Config {
     private Ride addRide(Vehicle vehicle, List<User> users, Double duration, double length, String startTime, String endTime, int price, String routeLocation) {
         Ride ride = new Ride();
 
-        ride.setStatus(RideStatus.STARTED);
+        ride.setStatus(RideStatus.ENDED);
         ride.setKidFriendly(true);
         ride.setPetFriendly(true);
         ride.setDuration(duration);
