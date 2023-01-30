@@ -178,7 +178,6 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
             }
         }
         ride.setRouteLocation(rideDTO.getRoute());
-        //TODO ako je getTime null ili "" onda iskoci DateTimeParseException
         ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), formatter));
         ride.setStatus(rideDTO.getRideStatus());
         ride.setSplitFare(rideDTO.getIsSplitFair());

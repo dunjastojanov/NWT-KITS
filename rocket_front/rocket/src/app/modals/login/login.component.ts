@@ -1,27 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
-import {
-  FacebookLoginProvider,
-  SocialAuthService,
-  SocialUser,
-} from '@abacritt/angularx-social-login';
-import { Store } from '@ngrx/store';
-import { StoreType } from 'src/app/shared/store/types';
-import {
-  LoggedUserAction,
-  LoggedUserActionType,
-} from 'src/app/shared/store/logged-user-slice/logged-user.actions';
-import { User } from 'src/app/interfaces/User';
-import { UserService } from '../../services/user/user.service';
-import { NotificationService } from '../../services/notification/notification.service';
-import { multiSelectProp } from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
-import {
-  CurrentRideAction,
-  CurrentRideActionType,
-} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import { ToastrService } from 'ngx-toastr';
-import { SocketService } from 'src/app/services/sockets/sockets.service';
-import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
-import { ChatService } from '../../services/chat/chat.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {FacebookLoginProvider, SocialAuthService, SocialUser,} from '@abacritt/angularx-social-login';
+import {Store} from '@ngrx/store';
+import {StoreType} from 'src/app/shared/store/types';
+import {LoggedUserAction, LoggedUserActionType,} from 'src/app/shared/store/logged-user-slice/logged-user.actions';
+import {User} from 'src/app/interfaces/User';
+import {UserService} from '../../services/user/user.service';
+import {NotificationService} from '../../services/notification/notification.service';
+import {multiSelectProp} from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
+import {CurrentRideAction, CurrentRideActionType,} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
+import {ToastrService} from 'ngx-toastr';
+import {SocketService} from 'src/app/services/sockets/sockets.service';
+import {VehicleService} from 'src/app/services/vehicle/vehicle.service';
+import {ChatService} from '../../services/chat/chat.service';
 
 @Component({
   selector: 'login',
@@ -76,11 +66,13 @@ export class LoginComponent implements OnInit {
           roles: ['CLIENT'],
           profilePicture: socialUser.photoUrl,
         };
-        await this.userService.loginGoogleUser(user).then((result) => {
-          //TODO ovde se dobije access token i treba da se namesti
-          console.log(result);
+        await this.userService.loginGoogleUser(user).then(async (token) => {
+          this.userService.setToken(token);
+          let user: User | null = await this.service.getUser();
+          if(user) {
+            await this.login(user);
+          }
         });
-        await this.login(user);
       }
     );
   }
@@ -130,7 +122,7 @@ export class LoginComponent implements OnInit {
         this.user = await this.service.getUser();
 
         if (this.hasRole(this.user, 'DRIVER')) {
-          await this.vehicleService.changeStatus('ACTIVE').then(status=> {
+          await this.vehicleService.changeStatus('ACTIVE').then(status => {
             if (status === 'ACTIVE' && this.user) {
               this.user.status = 'ACTIVE';
             }

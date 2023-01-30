@@ -2,7 +2,6 @@ package com.uber.rocket.ride_booking.unit;
 
 import com.uber.rocket.dto.RideDTO;
 import com.uber.rocket.entity.ride.Destination;
-import com.uber.rocket.entity.ride.Passenger;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.mapper.RideMapper;
 import com.uber.rocket.repository.PassengerRepository;
