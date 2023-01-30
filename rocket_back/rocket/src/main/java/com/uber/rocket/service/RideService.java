@@ -226,19 +226,12 @@ public class RideService {
         } else {
             return (long) -1;
         }
-        passengerRepository.saveAll(ride.getPassengers());
         List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
         ride = this.repository.save(ride);
         for (Destination destination : destinations) {
             destination.setRide(ride);
             this.destinationService.save(destination);
         }
-        /*for (int i = 1; i < ride.getPassengers().size(); i++) {
-            this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
-        }
-        if (this.allAcceptedRide(ride)) {
-            this.findAndNotifyDriver(ride);
-        }*/
         return ride.getId();
     }
 

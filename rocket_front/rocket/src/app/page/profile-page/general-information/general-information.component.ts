@@ -41,6 +41,10 @@ export class GeneralInformationComponent implements OnInit {
       {
         title: "Phone number",
         info: this.user?.phoneNumber
+      },
+      {
+        title: "Rocket tokens",
+        info: this.user?.tokens
       }
     ]
   }
