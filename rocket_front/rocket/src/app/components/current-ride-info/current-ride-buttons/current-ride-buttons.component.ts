@@ -1,14 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import {ToastrService} from "ngx-toastr";
+import {User} from "../../../interfaces/User";
+import {StoreType} from "../../../shared/store/types";
+import {Store} from "@ngrx/store";
 import { RideStatus } from 'src/app/interfaces/Ride';
 import { RideService } from 'src/app/services/ride/ride.service';
 import {
   CurrentRideAction,
   CurrentRideActionType,
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import { StoreType } from 'src/app/shared/store/types';
-import {User} from "../../../interfaces/User";
-import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'current-ride-buttons',
@@ -20,6 +20,7 @@ export class CurrentRideButtonsComponent implements OnInit {
   @Input('driverName') driverName!: string | null;
   @Input('rideId') rideId?: number;
   @Input('rideStatus') rideStatus!: RideStatus;
+  @Input('driverId') driverId!: string | undefined;
 
   openReportModal = false;
 
@@ -31,7 +32,6 @@ export class CurrentRideButtonsComponent implements OnInit {
 
   constructor(private rideService: RideService, private toastr: ToastrService, private store: Store<StoreType>) {
     this.isFavorite = false;
-
     store.select("loggedUser").subscribe(result => {
       this.user = result.user;
     })

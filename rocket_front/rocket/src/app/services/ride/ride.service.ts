@@ -178,4 +178,10 @@ export class RideService {
       "/api/ride/map/" + id);
     return result.data;
   }
+
+  async report(driverId: string) {
+    let result:AxiosResponse = await http.post(
+      "/api/vehicle/report/driver/" + driverId);
+    return result.data;
+  }
 }
