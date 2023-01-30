@@ -7,7 +7,7 @@ import com.uber.rocket.mapper.RideMapper;
 import com.uber.rocket.repository.PassengerRepository;
 import com.uber.rocket.repository.RideRepository;
 import com.uber.rocket.ride_booking.utils.destination.DestinationCreation;
-import com.uber.rocket.ride_booking.utils.destination.RideCreationService;
+import com.uber.rocket.ride_booking.utils.ride.RideCreationService;
 import com.uber.rocket.service.DestinationService;
 import com.uber.rocket.service.RideService;
 import com.uber.rocket.service.UserService;
@@ -16,8 +16,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;

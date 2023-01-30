@@ -3,6 +3,7 @@ package com.uber.rocket.ride_booking.utils.destination;
 import com.uber.rocket.dto.DestinationDTO;
 import com.uber.rocket.entity.ride.Destination;
 import com.uber.rocket.entity.ride.Ride;
+import org.springframework.core.style.DefaultToStringStyler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,20 @@ public class DestinationCreation {
         List<Destination> destinations = new ArrayList<>();
         destinations.add(getDestination());
         return destinations;
+    }
+
+    public static Destination getDestinationForMapping() {
+        Destination destination = new Destination();
+        destination.setLatitude(45.2423455);
+        destination.setLongitude(19.8437972);
+        destination.setAddress("Dr Ivana Ribara 13 Novi Sad");
+        return destination;
+    }
+
+    public static List<Destination> getDestinationListForMapping(){
+        List<Destination> list=new ArrayList<>();
+        list.add(getDestinationForMapping());
+        return list;
     }
 
 
