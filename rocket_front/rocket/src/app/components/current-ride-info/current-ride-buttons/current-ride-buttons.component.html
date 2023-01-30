@@ -3,10 +3,11 @@
                [text]="'Mark route as favorite'"></button-icon>
   <button-icon *ngIf="driverName" icon="./assets/icons/exclamation-mark.png" text="Report driver"
                (click)="toggleReportModal()"></button-icon>
-  
+  <button-icon *ngIf="hasRole('DRIVER')" (click)="toggleCancelModal()" icon="./assets/icons/cancel.png" text="Cancel ride"></button-icon>
 
-               
-  <report-driver [open]="openReportModal" [closeFunc]="toggleReportModal" [driver]="driverName!"></report-driver>
+  <cancel-ride [open]="openCancelModal" [closeFunc]="toggleCancelModal" [rideId]="rideId"></cancel-ride>
+
+  <report-driver [open]="openReportModal" [closeFunc]="toggleReportModal" [driver]="driverName!" [driverId]="driverId!"></report-driver>
 </div>
 <div *ngIf="role==='DRIVER'" class="absolute right-3 top-3 flex gap-3">
   <secondary-button *ngIf="rideStatus === 'CONFIRMED'" [text]="'Start ride'" (click)="startRide()"></secondary-button>

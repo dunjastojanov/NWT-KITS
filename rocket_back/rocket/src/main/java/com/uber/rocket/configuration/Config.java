@@ -145,7 +145,7 @@ public class Config {
     private Ride addRide(Vehicle vehicle, List<User> users, Double duration, double length, String startTime, String endTime, int price, String routeLocation) {
         Ride ride = new Ride();
 
-        ride.setStatus(RideStatus.ENDED);
+        ride.setStatus(RideStatus.STARTED);
         ride.setKidFriendly(true);
         ride.setPetFriendly(true);
         ride.setDuration(duration);

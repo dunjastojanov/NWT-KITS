@@ -115,4 +115,13 @@ public class VehicleController {
         return dtos;
     }
 
+    @PostMapping("/report/driver/{driverId}")
+    public ResponseEntity<?> reportDriver(@PathVariable Long driverId, HttpServletRequest request){
+        try {
+            vehicleService.reportDriver(request, driverId);
+            return ResponseEntity.ok("Successfully reported the driver.");
+        } catch (RuntimeException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
 }
