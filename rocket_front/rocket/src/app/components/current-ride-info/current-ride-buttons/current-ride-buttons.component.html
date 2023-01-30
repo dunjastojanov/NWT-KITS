@@ -7,7 +7,7 @@
 
   <cancel-ride [open]="openCancelModal" [closeFunc]="toggleCancelModal" [rideId]="rideId"></cancel-ride>
 
-  <report-driver [open]="openReportModal" [closeFunc]="toggleReportModal" [driver]="driverName!"></report-driver>
+  <report-driver [open]="openReportModal" [closeFunc]="toggleReportModal" [driver]="driverName!" [driverId]="driverId!"></report-driver>
 </div>
 <div *ngIf="role==='DRIVER'" class="absolute right-3 top-3 flex gap-3">
   <secondary-button [disabled]="dissablePatch" [text]="patchingRide ? 'End ride' : 'Start ride'"

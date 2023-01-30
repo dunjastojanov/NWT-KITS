@@ -3,6 +3,7 @@ package com.uber.rocket.service;
 import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.mapper.UpdateUserDataMapper;
+import com.uber.rocket.repository.DriverReportRepository;
 import com.uber.rocket.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -45,6 +46,9 @@ public class VehicleService {
     private LogInfoService logInfoService;
     @Autowired
     private UpdateUserDataMapper updateUserDataMapper;
+
+    @Autowired
+    private DriverReportRepository driverReportRepository;
 
     private final static double GARAGE_LONGITUDE = 19.8335;
     private final static double GARAGE_LATITUDE = 45.2671;
@@ -186,5 +190,12 @@ public class VehicleService {
     }
     public void save(Vehicle vehicle) {
         this.vehicleRepository.save(vehicle);
+    }
+
+    public void reportDriver(HttpServletRequest request, Long driverId) {
+        DriverReport driverReport = new DriverReport();
+        driverReport.setPassenger(userService.getUserFromRequest(request));
+        driverReport.setDriver(userService.getById(driverId));
+        driverReportRepository.save(driverReport);
     }
 }

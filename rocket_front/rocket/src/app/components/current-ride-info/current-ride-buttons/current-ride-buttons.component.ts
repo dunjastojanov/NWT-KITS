@@ -14,6 +14,7 @@ export class CurrentRideButtonsComponent implements OnInit {
   @Input('role') role!: string;
   @Input('isFavorite') isFavorite: boolean;
   @Input('driverName') driverName!: string | null;
+  @Input('driverId') driverId!: string | undefined;
   @Input('rideId') rideId!: number | undefined;
 
   openReportModal = false;
@@ -27,13 +28,13 @@ export class CurrentRideButtonsComponent implements OnInit {
 
   constructor(private rideService: RideService, private toastr: ToastrService, private store: Store<StoreType>) {
     this.isFavorite = false;
-
     store.select("loggedUser").subscribe(result => {
       this.user = result.user;
     })
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   hasRole(role: string): boolean {
     return this.user !== null && this.user?.roles.indexOf(role) !== -1;
