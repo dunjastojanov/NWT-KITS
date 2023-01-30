@@ -58,7 +58,7 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(fixedDelay = ONE_MINUTE/20, initialDelay = ONE_MINUTE/20)
+    @Scheduled(fixedDelay = ONE_MINUTE, initialDelay = ONE_MINUTE)
     public void sendRemindersForFutureRide() {
         try {
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);

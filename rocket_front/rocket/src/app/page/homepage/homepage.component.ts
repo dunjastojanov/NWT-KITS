@@ -28,8 +28,7 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      console.log(params['paymentId'])
-      if (params['paymentId'] !== " ") {
+      if (params['paymentId'] !== undefined) {
         this.payPalListener(params);
       } else {
         const forgottenPasswordToken = params['token'];
