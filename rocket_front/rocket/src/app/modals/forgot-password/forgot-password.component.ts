@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {UserService} from "../../services/user/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'forgot-password',
@@ -12,7 +13,7 @@ export class ForgotPasswordComponent implements OnInit {
   email: string = "";
 
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,private toastService:ToastrService) {
   }
 
   ngOnInit(): void {
@@ -21,6 +22,7 @@ export class ForgotPasswordComponent implements OnInit {
   sendRequestForForgottenPassword() {
     if (this.isInputValid()) {
       this.userService.sendRequestForPassword(this.email);
+      this.toastService.success("You have successfully sent an email");
     }
   }
 

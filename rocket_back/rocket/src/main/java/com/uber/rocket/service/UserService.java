@@ -104,7 +104,7 @@ public class UserService {
         user.setEmail(googleUser.getEmail());
         user.setPassword(hashedPassword);
         user.setBlocked(false);
-        user.setProfilePicture(googleUser.getPhotoUrl());
+        user.setProfilePicture(googleUser.getPictureProfile());
         user.setFirstName(googleUser.getFirstName());
         user.setLastName(googleUser.getLastName());
         return user;
