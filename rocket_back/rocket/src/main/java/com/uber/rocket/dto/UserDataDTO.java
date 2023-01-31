@@ -20,6 +20,7 @@ public class UserDataDTO {
     private String city;
     private ArrayList<String> roles;
     private String status = "";
+    private double tokens = 0;
 
     public UserDataDTO(User user) {
         this.id = user.getId();
@@ -30,6 +31,7 @@ public class UserDataDTO {
         this.phoneNumber = user.getPhoneNumber();
         this.city = user.getCity();
         this.roles = new ArrayList<>();
+        this.tokens += user.getTokens();
         user.getRoles().forEach(role -> this.roles.add(role.getRole()));
     }
 }

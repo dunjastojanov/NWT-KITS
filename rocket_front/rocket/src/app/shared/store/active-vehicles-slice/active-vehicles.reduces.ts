@@ -22,14 +22,18 @@ export const ActiveVehiclesReducer = (
     case ActiveVehiclesActionType.UPDATE_ACTIVE_VEHICLE:
       let newActiveVehicles = [...state.activeVehicles];
       let act: ActiveVehicle = <ActiveVehicle>action.payload!;
-      let vehicleExists = newActiveVehicles.filter((v) => v.id === act.id);
       let finalActiveVehicles;
-      if (vehicleExists.length === 0) {
-        finalActiveVehicles = [...newActiveVehicles, act];
+      if (act.longitude < 2 || act.latitude < 2) {
+        finalActiveVehicles = newActiveVehicles.filter((v) => v.id !== act.id);
       } else {
-        finalActiveVehicles = newActiveVehicles.map((vehicle) =>
-          vehicle.id === act.id ? { ...vehicle, ...act } : vehicle
-        );
+        let vehicleExists = newActiveVehicles.filter((v) => v.id === act.id);
+        if (vehicleExists.length === 0) {
+          finalActiveVehicles = [...newActiveVehicles, act];
+        } else {
+          finalActiveVehicles = newActiveVehicles.map((vehicle) =>
+            vehicle.id === act.id ? { ...vehicle, ...act } : vehicle
+          );
+        }
       }
       return {
         ...state,

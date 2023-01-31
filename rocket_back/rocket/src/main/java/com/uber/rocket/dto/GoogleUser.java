@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class GoogleUser {
     private String id;
     private String email;
-    private String photoUrl;
+    private String pictureProfile;
     private String firstName;
     private String lastName;
 }

@@ -104,7 +104,7 @@ public class Config {
         user.setBlocked(false);
         user.setCity("Novi Sad");
         user.setProfilePicture(null);
-        user.setTokens((double) 0);
+        user.setTokens((double) 1000);
         user = userRepository.save(user);
         user.setProfilePicture("http://localhost:8443/images/" + user.getId() + "/" + user.getFirstName() + ".jpg");
         return userRepository.save(user);
@@ -134,7 +134,7 @@ public class Config {
         vehicle.setLongitude(19.849070);
         vehicle.setPetFriendly(true);
         vehicle.setKidFriendly(true);
-        vehicle.setStatus(VehicleStatus.ACTIVE);
+        vehicle.setStatus(VehicleStatus.INACTIVE);
         vehicle.setVehicleType(VehicleType.CARAVAN);
         vehicle.setDriver(driver);
 

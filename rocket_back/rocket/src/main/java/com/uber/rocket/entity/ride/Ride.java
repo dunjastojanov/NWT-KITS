@@ -23,7 +23,6 @@ public class Ride {
     @Id
     @SequenceGenerator(name = "ride_sequence", sequenceName = "ride_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "ride_sequence")
-    @Setter(AccessLevel.NONE)
     private Long id;
 
     @OneToMany(fetch = FetchType.LAZY)

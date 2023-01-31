@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -65,7 +66,7 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
             UserRidingStatus status;
             if (ride.getStatus() == RideStatus.REQUESTED) {
                 status = UserRidingStatus.WAITING;
-            }  else if (ride.getStatus() == RideStatus.DENIED) {
+            } else if (ride.getStatus() == RideStatus.DENIED) {
                 status = UserRidingStatus.DENIED;
             } else {
                 status = UserRidingStatus.ACCEPTED;
@@ -101,7 +102,7 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
         rideDTO.setIsNow(ride.isNow());
 
         List<Destination> destinations = this.destinationService.getDestinationsByRide(ride);
-        for (int i = 0; i< destinations.size();i++) {
+        for (int i = 0; i < destinations.size(); i++) {
             rideDTO.addDestination(this.mapToDestinationDTO(destinations.get(i), i));
         }
 
@@ -176,21 +177,13 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
                 ride.setPetFriendly(true);
             }
         }
-
         ride.setRouteLocation(rideDTO.getRoute());
-
         ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), formatter));
-
         ride.setStatus(rideDTO.getRideStatus());
-
         ride.setSplitFare(rideDTO.getIsSplitFair());
-
         ride.setPrice(rideDTO.getPrice());
-
         ride.setDuration(rideDTO.getEstimatedTime());
-
         ride.setLength(rideDTO.getEstimatedDistance());
-
         ride.setNow(rideDTO.getIsNow());
         return ride;
     }

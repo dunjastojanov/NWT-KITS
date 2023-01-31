@@ -174,6 +174,7 @@ public class RideService {
                 ride.setStatus(RideStatus.CONFIRMED);
             } else ride.setStatus(RideStatus.SCHEDULED);
             Vehicle vehicle = this.vehicleService.getVehicleByDriver(driver);
+            this.userService.passengerTokensWithdraw(ride);
             ride.setVehicle(vehicle);
         }
         return ride;
@@ -226,33 +227,32 @@ public class RideService {
         } else {
             return (long) -1;
         }
-        passengerRepository.saveAll(ride.getPassengers());
         List<Destination> destinations = rideMapper.mapToDestination(rideDTO.getDestinations());
         ride = this.repository.save(ride);
         for (Destination destination : destinations) {
             destination.setRide(ride);
             this.destinationService.save(destination);
         }
-        /*for (int i = 1; i < ride.getPassengers().size(); i++) {
-            this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
-        }
-        if (this.allAcceptedRide(ride)) {
-            this.findAndNotifyDriver(ride);
-        }*/
         return ride.getId();
     }
 
-    public void createPalsNotifsAndLookForDriver(Long id) {
+    public boolean createPalsNotifsAndLookForDriver(Long id) {
         Optional<Ride> rideOpt = this.repository.findById(id);
         if (rideOpt.isPresent()) {
             Ride ride = rideOpt.get();
+            if (this.allAcceptedRide(ride)) {
+                boolean foundDriver = this.findAndNotifyDriver(ride);
+                if (!foundDriver) {
+                    ride.setStatus(RideStatus.DENIED);
+                    this.repository.save(ride);
+                    return false;
+                }
+            }
             for (int i = 1; i < ride.getPassengers().size(); i++) {
                 this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
             }
-            if (this.allAcceptedRide(ride)) {
-                this.findAndNotifyDriver(ride);
-            }
         }
+        return true;
     }
 
     public UserDTO getRidingPal(String email) {
@@ -641,16 +641,12 @@ public class RideService {
             Vehicle vehicle = vehicleOpt.get();
             this.vehicleService.save(vehicle);
             List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
-            System.out.println(vehicleId);
-            System.out.println(rides);
             Ride ride = null;
             for (Ride r : rides) {
                 if (Objects.equals(r.getVehicle().getId(), vehicle.getId())) {
                     ride = r;
                 }
             }
-            System.out.println("-----");
-            System.out.println(ride);
             RideSimulationDTO rsDTO = new RideSimulationDTO();
             rsDTO.setVehicleStatus(vehicle.getStatus());
             if (ride != null) {
@@ -677,7 +673,6 @@ public class RideService {
             vehicle.setLongitude(longitude);
             vehicle.setLatitude(latitude);
             this.vehicleService.save(vehicle);
-
             activeVehicleDTO.setId(vehicle.getId());
             activeVehicleDTO.setLatitude(latitude);
             activeVehicleDTO.setLongitude(longitude);
@@ -704,6 +699,14 @@ public class RideService {
         return null;
     }
 
+    public void removeInactiveVehicle(Long vehicleId) {
+        Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(vehicleId);
+        if (vehicleOpt.isPresent()) {
+            ActiveVehicleDTO inactive = new ActiveVehicleDTO();
+            inactive.setId(vehicleOpt.get().getId());
+            this.updateActiveVehicles(inactive);
+        }
+    }
     private void updateActiveVehicles(ActiveVehicleDTO activeVehicleDTO) {
         this.messagingTemplate.convertAndSend("/queue/active-vehicles", activeVehicleDTO);
     }

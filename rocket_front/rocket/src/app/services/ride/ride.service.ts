@@ -16,13 +16,23 @@ import {
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 import { StoreType } from 'src/app/shared/store/types';
 import { http } from '../../shared/api/axios-wrapper';
+import { UserService } from '../user/user.service';
+import {
+  LoggedUserAction,
+  LoggedUserActionType,
+} from '../../shared/store/logged-user-slice/logged-user.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RideService {
   currentRide: CurrentRide | null = null;
-  constructor(private store: Store<StoreType>, private toastr: ToastrService) {
+
+  constructor(
+    private store: Store<StoreType>,
+    private toastr: ToastrService,
+    private userService: UserService
+  ) {
     this.store.select('currentRide').subscribe((data) => {
       this.currentRide = data.currentRide;
     });
@@ -63,6 +73,7 @@ export class RideService {
     ride.features = rideInfo.features;
     return ride;
   }
+
   async getRide(id: string): Promise<any | null> {
     let result: AxiosResponse = await http.get('/api/ride/' + id);
     return result.data;
@@ -112,9 +123,11 @@ export class RideService {
     return result.data;
   }
 
-  async createNotifsLookForDriver(id: number) {
-    await http.get(`/api/ride/post-create-ride/${id}`);
+  async createNotifsLookForDriver(id: number): Promise<boolean> {
+    const result = await http.get(`/api/ride/post-create-ride/${id}`);
+    return result.data;
   }
+
   async onRideStatusChanged() {
     if (!this.currentRide) return;
     if (this.currentRide.rideStatus === RideStatus.DENIED) {
@@ -122,9 +135,12 @@ export class RideService {
       this.toastr.error('Ride is denied.');
     }
     if (this.currentRide.rideStatus === RideStatus.CONFIRMED) {
-      //pokreni simulaciju
-      //skini novac
-      //posalji notifikaciju korisnicima
+      this.userService.getUser().then((user) => {
+        if (user)
+          this.store.dispatch(
+            new LoggedUserAction(LoggedUserActionType.LOGIN, user)
+          );
+      });
     }
     if (
       this.currentRide.ridingPals &&
@@ -174,8 +190,14 @@ export class RideService {
   }
 
   async getMap(id: string) {
-    let result:AxiosResponse = await http.get(
-      "/api/ride/map/" + id);
+    let result: AxiosResponse = await http.get('/api/ride/map/' + id);
+    return result.data;
+  }
+
+  async report(driverId: string) {
+    let result: AxiosResponse = await http.post(
+      '/api/vehicle/report/driver/' + driverId
+    );
     return result.data;
   }
 }

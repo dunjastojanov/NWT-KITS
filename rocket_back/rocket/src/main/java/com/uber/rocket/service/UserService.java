@@ -104,7 +104,7 @@ public class UserService {
         user.setEmail(googleUser.getEmail());
         user.setPassword(hashedPassword);
         user.setBlocked(false);
-        user.setProfilePicture(googleUser.getPhotoUrl());
+        user.setProfilePicture(googleUser.getPictureProfile());
         user.setFirstName(googleUser.getFirstName());
         user.setLastName(googleUser.getLastName());
         return user;
@@ -301,15 +301,15 @@ public class UserService {
 
     public void passengerTokensWithdraw(Ride ride) {
         if (ride.getSplitFare()) {
-            for (User passenger :
-                    ride.getUsers()) {
+            for (User passenger : ride.getUsers()) {
                 double splitCost = ride.getPrice() / (float) ride.getPassengers().size();
                 passenger.setTokens(passenger.getTokens() - splitCost);
                 userRepository.save(passenger);
             }
+        } else {
+            User user = ride.getUsers().get(0);
+            user.setTokens(user.getTokens() - ride.getPrice());
+            userRepository.save(user);
         }
-        User user = ride.getUsers().get(0);
-        user.setTokens(user.getTokens() - ride.getPrice());
-        userRepository.save(user);
     }
 }
