@@ -82,8 +82,8 @@ public class RideController {
     }
 
     @GetMapping(path = "/post-create-ride/{id}")
-    public void createPalsNotifsAndLookForDriver(@PathVariable("id") Long id) {
-        this.rideService.createPalsNotifsAndLookForDriver(id);
+    public boolean createPalsNotifsAndLookForDriver(@PathVariable("id") Long id) {
+        return this.rideService.createPalsNotifsAndLookForDriver(id);
     }
 
     @GetMapping(path = "/pal/{email}")
@@ -219,5 +219,9 @@ public class RideController {
     @GetMapping(path = "/simulation-ride/{id}", produces = "application/json")
     public RideSimulationDTO getRideSimulation(@PathVariable Long id) {
         return this.rideService.getRideForSimulation(id);
+    }
+    @GetMapping(path = "/remove-inactive-vehicle/{id}")
+    public void removeInactiveVehicle(@PathVariable Long id) {
+        this.rideService.removeInactiveVehicle(id);
     }
 }

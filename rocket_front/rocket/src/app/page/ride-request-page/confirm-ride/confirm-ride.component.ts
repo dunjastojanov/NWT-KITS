@@ -127,7 +127,15 @@ export class ConfirmRideComponent implements OnInit {
         return;
       }
       currentRide.rideId = rideId;
-      await this.rideService.createNotifsLookForDriver(rideId);
+      const foundDriver: boolean =
+        await this.rideService.createNotifsLookForDriver(rideId);
+      if (!foundDriver) {
+        this.toastr.error('There is no driver available.');
+        this.store.dispatch(
+          new CurrentRideAction(CurrentRideActionType.REMOVE)
+        );
+        return;
+      }
       this.store.dispatch(
         new CurrentRideAction(CurrentRideActionType.SET, currentRide)
       );

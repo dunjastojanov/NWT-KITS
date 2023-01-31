@@ -1,23 +1,26 @@
-import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AxiosResponse} from 'axios';
-import {ToastrService} from 'ngx-toastr';
-import {Destination} from 'src/app/interfaces/Destination';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AxiosResponse } from 'axios';
+import { ToastrService } from 'ngx-toastr';
+import { Destination } from 'src/app/interfaces/Destination';
 import {
   CurrentRide,
   RideStatus,
   UserRidingStatus,
 } from 'src/app/interfaces/Ride';
-import {User} from 'src/app/interfaces/User';
-import {RideInfo} from 'src/app/page/ride-request-page/data-info/ride-info.type';
+import { User } from 'src/app/interfaces/User';
+import { RideInfo } from 'src/app/page/ride-request-page/data-info/ride-info.type';
 import {
   CurrentRideAction,
   CurrentRideActionType,
 } from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import {StoreType} from 'src/app/shared/store/types';
-import {http} from '../../shared/api/axios-wrapper';
-import {UserService} from "../user/user.service";
-import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-user-slice/logged-user.actions";
+import { StoreType } from 'src/app/shared/store/types';
+import { http } from '../../shared/api/axios-wrapper';
+import { UserService } from '../user/user.service';
+import {
+  LoggedUserAction,
+  LoggedUserActionType,
+} from '../../shared/store/logged-user-slice/logged-user.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -25,14 +28,17 @@ import {LoggedUserAction, LoggedUserActionType} from "../../shared/store/logged-
 export class RideService {
   currentRide: CurrentRide | null = null;
 
-  constructor(private store: Store<StoreType>, private toastr: ToastrService, private userService: UserService) {
+  constructor(
+    private store: Store<StoreType>,
+    private toastr: ToastrService,
+    private userService: UserService
+  ) {
     this.store.select('currentRide').subscribe((data) => {
       this.currentRide = data.currentRide;
     });
   }
 
-  async validateRide(ride: CurrentRide) {
-  }
+  async validateRide(ride: CurrentRide) {}
 
   createCurrentRide(
     rideInfo: RideInfo,
@@ -58,9 +64,9 @@ export class RideService {
     ride.estimatedDistance = distance;
     ride.estimatedTime = duration;
     ride.isRouteFavorite = false;
-    ride.vehicle = {type: rideInfo.vehicle!};
+    ride.vehicle = { type: rideInfo.vehicle! };
     ride.ridingPals = rideInfo.friends.map((fr) => {
-      return {...fr, status: UserRidingStatus.WAITING};
+      return { ...fr, status: UserRidingStatus.WAITING };
     });
     ride.isNow = rideInfo.isNow;
     ride.time = rideInfo.time;
@@ -117,8 +123,9 @@ export class RideService {
     return result.data;
   }
 
-  async createNotifsLookForDriver(id: number) {
-    await http.get(`/api/ride/post-create-ride/${id}`);
+  async createNotifsLookForDriver(id: number): Promise<boolean> {
+    const result = await http.get(`/api/ride/post-create-ride/${id}`);
+    return result.data;
   }
 
   async onRideStatusChanged() {
@@ -128,10 +135,12 @@ export class RideService {
       this.toastr.error('Ride is denied.');
     }
     if (this.currentRide.rideStatus === RideStatus.CONFIRMED) {
-      this.userService.getUser().then(user => {
+      this.userService.getUser().then((user) => {
         if (user)
-          this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
-      })
+          this.store.dispatch(
+            new LoggedUserAction(LoggedUserActionType.LOGIN, user)
+          );
+      });
     }
     if (
       this.currentRide.ridingPals &&
@@ -181,14 +190,14 @@ export class RideService {
   }
 
   async getMap(id: string) {
-    let result: AxiosResponse = await http.get(
-      "/api/ride/map/" + id);
+    let result: AxiosResponse = await http.get('/api/ride/map/' + id);
     return result.data;
   }
 
   async report(driverId: string) {
-    let result:AxiosResponse = await http.post(
-      "/api/vehicle/report/driver/" + driverId);
+    let result: AxiosResponse = await http.post(
+      '/api/vehicle/report/driver/' + driverId
+    );
     return result.data;
   }
 }

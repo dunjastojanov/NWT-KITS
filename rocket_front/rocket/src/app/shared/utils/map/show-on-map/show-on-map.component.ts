@@ -37,8 +37,14 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
 
   async ngOnChanges() {
     if (this.layerPolylines || this.layerVehicle) {
-      this.clearMap();
-      await this.showOnMap();
+      this.layerVehicle?.clearLayers();
+      console.log('SHOW ON MAP');
+      console.log(this.vehicle);
+      console.log('**************************************');
+      if (this.vehicle) {
+        await this.drawVehicle();
+      }
+      // await this.showOnMap();
     }
   }
 
@@ -66,6 +72,9 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
       this.drawPolyline();
       this.drawMarkers();
     }
+    console.log('SHOW ON MAP');
+    console.log(this.vehicle);
+    console.log('**************************************');
     if (this.vehicle) {
       await this.drawVehicle();
     }
@@ -77,19 +86,12 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
   }
 
   private drawPolyline() {
-    //const routes = this.route!.split(' ').slice(0, -1);
-    // for (let i = 0; i < routes.length; i++) {
-    //   const coordinates = decode(routes[i]);
     const coordinates = decode(this.route!);
     const mainRoutePolyline = L.polyline(coordinates, {
       color: '#E1A901',
       weight: 4,
     });
-    // if (i === 0) this.bounds = mainRoutePolyline.getBounds();
-    // else this.bounds!.extend(mainRoutePolyline.getBounds());
-
     mainRoutePolyline.addTo(this.layerPolylines!);
-
     this.mapShow.fitBounds(mainRoutePolyline.getBounds());
   }
 
