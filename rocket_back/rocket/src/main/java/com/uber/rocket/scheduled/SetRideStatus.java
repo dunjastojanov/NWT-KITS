@@ -1,12 +1,11 @@
 package com.uber.rocket.scheduled;
 
 import com.uber.rocket.service.RideService;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 public class SetRideStatus implements Runnable {
 
     private RideService rideService;
-
-
     private Long rideId;
 
     public SetRideStatus(Long rideId, RideService rideService) {
@@ -16,7 +15,7 @@ public class SetRideStatus implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("uspeo");
         rideService.changeRideStatusToConfirm(rideId);
+        rideService.updateStatusOverSocket(rideService.getRide(rideId), rideId);
     }
 }

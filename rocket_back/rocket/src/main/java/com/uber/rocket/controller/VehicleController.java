@@ -109,9 +109,7 @@ public class VehicleController {
 
     @GetMapping(value = "get-all", produces = "application/json")
     public List<VehicleSimulationDTO> getAllVehicles() {
-        System.out.println("aloo");
         List<VehicleSimulationDTO> dtos = this.vehicleService.getAllVehicles();
-        dtos.forEach(System.out::println);
         return dtos;
     }
 
