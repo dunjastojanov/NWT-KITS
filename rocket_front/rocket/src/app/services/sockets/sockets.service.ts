@@ -25,25 +25,36 @@ import {
   ActiveVehiclesAction,
   ActiveVehiclesActionType,
 } from 'src/app/shared/store/active-vehicles-slice/active-vehicles.actions';
-import { LongitudeLatitude, UserRidingStatus } from 'src/app/interfaces/Ride';
+import {
+  CurrentRide,
+  LongitudeLatitude,
+  RideStatus,
+  UserRidingStatus,
+} from 'src/app/interfaces/Ride';
 import {
   LoggedUserAction,
   LoggedUserActionType,
 } from '../../shared/store/logged-user-slice/logged-user.actions';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class SocketService {
   isCustomSocketOpened: boolean = false;
   isCustomSocketOpenedNonUser: boolean = false;
   user: User | null = null;
+  currentRide: CurrentRide | null = null;
 
   constructor(
     private httpService: HttpClient,
     private store: Store<StoreType>,
-    private rideService: RideService
+    private rideService: RideService,
+    private toastr: ToastrService
   ) {
     this.store.select('loggedUser').subscribe((res) => {
       this.user = res.user;
+    });
+    this.store.select('currentRide').subscribe((res) => {
+      this.currentRide = res.currentRide;
     });
   }
 
@@ -182,15 +193,29 @@ export class SocketService {
 
   async handleResultRide(message: any) {
     const id: number = JSON.parse(message.body);
+    if (id === -1) {
+      this.toastr.error('There is no available driver');
+      this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
+    }
     const currentRide = await this.rideService.getCurrentRide(id);
     if (currentRide) {
-      if (
-        this.user?.roles[0] === 'CLIENT' ||
-        (this.user?.roles[0] === 'DRIVER' && currentRide.vehicle)
-      ) {
+      if (this.user?.roles[0] === 'CLIENT') {
         this.store.dispatch(
           new CurrentRideAction(CurrentRideActionType.SET, currentRide)
         );
+      } else if (this.user?.roles[0] === 'DRIVER' && currentRide.vehicle) {
+        if (currentRide.rideStatus != RideStatus.SCHEDULED) {
+          this.store.dispatch(
+            new CurrentRideAction(CurrentRideActionType.SET, currentRide)
+          );
+        } else if (
+          currentRide.rideStatus == RideStatus.SCHEDULED &&
+          !this.currentRide
+        ) {
+          this.store.dispatch(
+            new CurrentRideAction(CurrentRideActionType.SET, currentRide)
+          );
+        }
       }
     }
     await this.rideService.onRideStatusChanged();

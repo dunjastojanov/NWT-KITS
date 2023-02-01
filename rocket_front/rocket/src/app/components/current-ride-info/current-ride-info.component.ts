@@ -22,7 +22,6 @@ export class CurrentRideInfoComponent implements OnInit {
       this.timeForVehicleToArive = resData.timeForVehicleToArive;
     });
   }
-
   ngOnInit(): void {}
 
   public convertTime(): string {
