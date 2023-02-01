@@ -150,23 +150,14 @@ public class VehicleService {
     }
 
     public List<Vehicle> findAvailableDrivers(VehicleType type, boolean kidFriendly, boolean petFriendly) {
-        return this.getActiveVehicleByRequirements(type, kidFriendly, petFriendly);
-    }
-
-    public List<Vehicle> getActiveVehicleByRequirements(VehicleType type, boolean kidFriendly, boolean petFriendly) {
-        List<Vehicle> vehicles = this.vehicleRepository.findByStatusAndTypeAndKidAndPetFriendly(VehicleStatus.ACTIVE, type, kidFriendly, petFriendly);
-        /*vehicles = vehicles.stream().filter(vehicle -> {
-            boolean exceeded = logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId());
-            if (exceeded) {
-                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
-            }
-            return exceeded;
-        }).collect(Collectors.toList());*/
-        return vehicles;
-    }
-
-    public List<Vehicle> getActiveVehicles() {
-        return this.vehicleRepository.findByActiveStatus();
+        if (kidFriendly && petFriendly) {
+            return this.vehicleRepository.findByStatusAndTypeAndKidAndPetFriendly(VehicleStatus.ACTIVE, type, kidFriendly, petFriendly);
+        } else if (kidFriendly) {
+            return this.vehicleRepository.findByStatusAndTypeAndKidFriendly(VehicleStatus.ACTIVE, type, kidFriendly);
+        } else if (petFriendly) {
+            return this.vehicleRepository.findByStatusAndTypeAndPetFriendly(VehicleStatus.ACTIVE, type, petFriendly);
+        }
+        return this.vehicleRepository.findByStatusAndType(VehicleStatus.ACTIVE, type);
     }
 
     public Object getVehicleByDriver(HttpServletRequest request) {

@@ -22,6 +22,15 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Query("SELECT v FROM Vehicle v WHERE v.status = :status AND v.vehicleType = :vehicleType AND v.petFriendly = :petFriendly AND v.kidFriendly = :kidFriendly AND v.driver.blocked = false")
     List<Vehicle> findByStatusAndTypeAndKidAndPetFriendly(@Param("status") VehicleStatus status, @Param("vehicleType") VehicleType vehicleType , @Param("kidFriendly") boolean kidFriendly, @Param("petFriendly") boolean petFriendly);
 
+    @Query("SELECT v FROM Vehicle v WHERE v.status = :status AND v.vehicleType = :vehicleType AND v.kidFriendly = :kidFriendly AND v.driver.blocked = false")
+    List<Vehicle> findByStatusAndTypeAndKidFriendly(@Param("status") VehicleStatus status, @Param("vehicleType") VehicleType vehicleType , @Param("kidFriendly") boolean kidFriendly);
+
+    @Query("SELECT v FROM Vehicle v WHERE v.status = :status AND v.vehicleType = :vehicleType AND v.petFriendly = :petFriendly AND v.driver.blocked = false")
+    List<Vehicle> findByStatusAndTypeAndPetFriendly(@Param("status") VehicleStatus status, @Param("vehicleType") VehicleType vehicleType , @Param("petFriendly") boolean petFriendly);
+
+    @Query("SELECT v FROM Vehicle v WHERE v.status = :status AND v.vehicleType = :vehicleType AND v.driver.blocked = false")
+    List<Vehicle> findByStatusAndType(@Param("status") VehicleStatus status, @Param("vehicleType") VehicleType vehicleType);
+
     @Query("SELECT v FROM Vehicle v WHERE v.status = com.uber.rocket.entity.user.VehicleStatus.ACTIVE")
     List<Vehicle> findByActiveStatus();
     List<Vehicle> findAllByStatusIs(VehicleStatus vehicleStatus);
