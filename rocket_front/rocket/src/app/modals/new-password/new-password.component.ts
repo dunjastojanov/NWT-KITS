@@ -44,4 +44,8 @@ export class NewPasswordComponent implements OnInit {
     return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,20}$/.test(this.password)
   }
 
+  onClose() {
+    this.closeFunc()
+    this.open = false;
+  }
 }

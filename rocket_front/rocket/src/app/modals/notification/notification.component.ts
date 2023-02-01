@@ -4,6 +4,7 @@ import { Notif } from '../../interfaces/Notification';
 import { UserRidingStatus } from 'src/app/interfaces/Ride';
 import { VehicleService } from '../../services/vehicle/vehicle.service';
 import { ToastrService } from 'ngx-toastr';
+import {NotificationService} from "../../services/notification/notification.service";
 
 @Component({
   selector: 'notification',
@@ -23,6 +24,7 @@ export class NotificationComponent implements OnInit {
 
   constructor(
     private vehicleService: VehicleService,
+    private notificationService: NotificationService,
     private toastr: ToastrService,
     private socketService: SocketService
   ) {}
@@ -36,6 +38,10 @@ export class NotificationComponent implements OnInit {
       type === 'RIDE_SCHEDULED' ||
       type === 'USER_BLOCKED'
     );
+  }
+
+  onOkay() {
+    this.notificationService.setRead(this.notification.id);
   }
 
   onAccept() {
@@ -70,6 +76,9 @@ export class NotificationComponent implements OnInit {
     if (this.notification.type === 'RIDE_REVIEW') {
       this.toggleReviewModal();
     }
+    if (this.notification.type !== 'RIDE_REVIEW') {
+      this.notificationService.setRead(this.notification.id);
+    }
   }
 
   onDeny() {
@@ -101,7 +110,7 @@ export class NotificationComponent implements OnInit {
           this.toastr.success(res);
         });
     }
-    this.closeFunc();
+    this.notificationService.setRead(this.notification.id);
   }
 
   onClose() {

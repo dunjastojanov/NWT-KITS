@@ -165,6 +165,10 @@ export class RideService {
   }
 
   async bookExisting(rideId: string) {
+    if (this.currentRide !== null) {
+      return null;
+    }
+
     let result: AxiosResponse<number | null> = await http.post(
       `/api/ride/currentRide/${rideId}`
     );
