@@ -668,7 +668,7 @@ public class RideService {
         return null;
     }
 
-    public LocationDTO updateVehicleLocation(Long id, Double longitude, Double latitude) {
+    public ActiveVehicleDTO updateVehicleLocation(Long id, Double longitude, Double latitude) {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(id);
         if (vehicleOpt.isPresent()) {
             ActiveVehicleDTO activeVehicleDTO = new ActiveVehicleDTO();
@@ -700,13 +700,18 @@ public class RideService {
                 activeVehicleDTO.setFree(true);
                 this.updateActiveVehicles(activeVehicleDTO);
             }
+            return activeVehicleDTO;
         }
         return null;
     }
 
-    private Ride getRide(List<Ride> goodRides) {
+    public Ride getRide(List<Ride> goodRides) {
         if (goodRides.size() == 0) return null;
-        if (goodRides.size() == 1) return goodRides.get(0);
+        if (goodRides.size() == 1) {
+            if (goodRides.get(0).getStatus() != RideStatus.DENIED && goodRides.get(0).getStatus() != RideStatus.ENDED)
+                return goodRides.get(0);
+            return null;
+        }
         else {
             for (Ride ride : goodRides) {
                 if (ride.getStatus() == RideStatus.STARTED || ride.getStatus() == RideStatus.CONFIRMED) {
@@ -732,7 +737,7 @@ public class RideService {
     private void updateActiveVehicles(ActiveVehicleDTO activeVehicleDTO) {
         this.messagingTemplate.convertAndSend("/queue/active-vehicles", activeVehicleDTO);
     }
-    private void updateLocationToPassengers(User driver, List<Passenger> passengers, LocationDTO locationDTO) {
+    public void updateLocationToPassengers(User driver, List<Passenger> passengers, LocationDTO locationDTO) {
         for (Passenger passenger : passengers) {
             messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(),"/queue/update-vehicle", locationDTO);
         }
