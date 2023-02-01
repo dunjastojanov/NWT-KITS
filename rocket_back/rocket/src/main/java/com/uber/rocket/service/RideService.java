@@ -113,19 +113,17 @@ public class RideService {
                 }
             }
             ride = this.repository.save(ride);
-
             if (driverAccepted)
                 notificationService.setNotificationAsRead(user, ride, NotificationType.DRIVER_RIDE_REQUEST);
             else
                 notificationService.setNotificationAsRead(user, ride, NotificationType.PASSENGER_RIDE_REQUEST);
-
             this.updateStatusOverSocket(ride);
         } else {
             throw new RuntimeException("Ride not found");
         }
     }
 
-    private boolean allAcceptedRide(Ride ride) {
+    public boolean allAcceptedRide(Ride ride) {
         if (ride.getStatus() == RideStatus.REQUESTED) {
             for (Passenger passenger : ride.getPassengers()) {
                 if (passenger.getUserRidingStatus() != UserRidingStatus.ACCEPTED) {
@@ -151,7 +149,7 @@ public class RideService {
         }
     }
 
-    private Ride setClientStatus(Ride ride, ChangeStatusDTO changeStatusDTO) {
+    public Ride setClientStatus(Ride ride, ChangeStatusDTO changeStatusDTO) {
         for (Passenger passenger : ride.getPassengers()) {
             if (Objects.equals(passenger.getUser().getId(), Long.parseLong(changeStatusDTO.getUserId()))) {
                 if (changeStatusDTO.getRidingStatus() == UserRidingStatus.DENIED) {
@@ -166,7 +164,7 @@ public class RideService {
         return ride;
     }
 
-    private Ride setDriverStatus(Ride ride, ChangeStatusDTO changeStatusDTO, User driver) {
+    public Ride setDriverStatus(Ride ride, ChangeStatusDTO changeStatusDTO, User driver) {
         if (changeStatusDTO.getRidingStatus() == UserRidingStatus.DENIED) {
             ride.setStatus(RideStatus.DENIED);
         } else if (changeStatusDTO.getRidingStatus() == UserRidingStatus.ACCEPTED) {
@@ -260,7 +258,7 @@ public class RideService {
         return this.createRidingPal(user);
     }
 
-    private UserDTO createRidingPal(User user) {
+    public UserDTO createRidingPal(User user) {
         return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getProfilePicture(), user.getRoles().iterator().next().getRole());
     }
 

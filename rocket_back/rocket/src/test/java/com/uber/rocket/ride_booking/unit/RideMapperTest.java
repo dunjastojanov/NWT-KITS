@@ -33,15 +33,17 @@ class RideMapperTest {
     private RideMapper rideMapper;
     private AutoCloseable closeable;
 
+    private RideCreationService rideCreationService;
     @BeforeEach
     void initMocks() {
         closeable = openMocks(this);
+        rideCreationService=new RideCreationService();
     }
 
     @Test
     @DisplayName("Negative test for mapping RideDTO to entity user not found")
     void mapToEntityTest1() {
-        RideDTO rideDTO = RideCreationService.getRideDTOWithNonexistentUser();
+        RideDTO rideDTO = rideCreationService.getRideDTOWithNonexistentUser();
         when(this.userServiceMock.getUserByEmail(anyString())).thenThrow(new RuntimeException("User not found"));
         assertThrows(RuntimeException.class, () -> rideMapper.mapToEntity(rideDTO));
         verify(userServiceMock, times(1)).getUserByEmail(anyString());
@@ -50,8 +52,8 @@ class RideMapperTest {
     @Test
     @DisplayName("Negative test for mapping RideDTO to entity no ridding pals")
     void mapToEntityTest2() {
-        RideDTO rideDTO = RideCreationService.getRideDTOWithNoRidingPals();
-        when(this.userServiceMock.getUserByEmail(anyString())).thenReturn(RideCreationService.getGoodUser());
+        RideDTO rideDTO = rideCreationService.getRideDTOWithNoRidingPals();
+        when(this.userServiceMock.getUserByEmail(anyString())).thenReturn(rideCreationService.getGoodUser());
         assertThrows(NullPointerException.class, () -> rideMapper.mapToEntity(rideDTO));
         verify(userServiceMock, times(1)).getUserByEmail(anyString());
     }
@@ -59,8 +61,8 @@ class RideMapperTest {
     @Test
     @DisplayName("Negative test for mapping RideDTO to entity no vehicle")
     void mapToEntityTest3() {
-        RideDTO rideDTO = RideCreationService.getRideDTOWithNoVehicle();
-        when(this.userServiceMock.getUserByEmail(anyString())).thenReturn(RideCreationService.getGoodUser());
+        RideDTO rideDTO = rideCreationService.getRideDTOWithNoVehicle();
+        when(this.userServiceMock.getUserByEmail(anyString())).thenReturn(rideCreationService.getGoodUser());
         assertThrows(NullPointerException.class, () -> rideMapper.mapToEntity(rideDTO));
         verify(userServiceMock, times(1)).getUserByEmail(anyString());
     }
@@ -68,8 +70,8 @@ class RideMapperTest {
     @Test
     @DisplayName("Negative test for mapping RideDTO to entity no vehicle features null element")
     void mapToEntityTest4() {
-        RideDTO rideDTO = RideCreationService.getRideDTOWithNoVehicleFeatures();
-        when(this.userServiceMock.getUserByEmail(anyString())).thenReturn(RideCreationService.getGoodUser());
+        RideDTO rideDTO = rideCreationService.getRideDTOWithNoVehicleFeatures();
+        when(this.userServiceMock.getUserByEmail(anyString())).thenReturn(rideCreationService.getGoodUser());
         assertThrows(NullPointerException.class, () -> rideMapper.mapToEntity(rideDTO));
         verify(userServiceMock, times(1)).getUserByEmail(anyString());
     }
@@ -77,21 +79,12 @@ class RideMapperTest {
     @Test
     @DisplayName("Negative test mapping ride because of invalid time string")
     void mapToEntityTest5() {
-        RideDTO rideDTO = RideCreationService.getRideDTOWithBadTimeString();
-        when(this.userServiceMock.getUserByEmail(anyString())).thenReturn(RideCreationService.getGoodUser());
+        RideDTO rideDTO = rideCreationService.getRideDTOWithBadTimeString();
+        when(this.userServiceMock.getUserByEmail(anyString())).thenReturn(rideCreationService.getGoodUser());
         assertThrows(DateTimeParseException.class, () -> rideMapper.mapToEntity(rideDTO));
         verify(userServiceMock, times(1)).getUserByEmail(anyString());
     }
 
-    @Test
-    @DisplayName("Positive test map rideDTO to ride")
-    void mapToEntityTest6() {
-        RideDTO rideDTO = RideCreationService.getGoodRideDTO();
-        Ride ride = RideCreationService.getGoodRideFromRideDTO();
-        when(this.userServiceMock.getUserByEmail(anyString())).thenReturn(RideCreationService.getGoodUser());
-        assertEquals(ride.toString(), rideMapper.mapToEntity(rideDTO).toString());
-        verify(userServiceMock, times(1)).getUserByEmail(anyString());
-    }
 
     @Test
     @DisplayName("Positive test map rideDTO to ride")

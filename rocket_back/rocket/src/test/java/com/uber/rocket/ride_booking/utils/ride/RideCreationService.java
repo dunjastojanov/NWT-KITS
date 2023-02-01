@@ -1,5 +1,6 @@
 package com.uber.rocket.ride_booking.utils.ride;
 
+import com.uber.rocket.dto.ChangeStatusDTO;
 import com.uber.rocket.dto.RideDTO;
 import com.uber.rocket.dto.UserDTO;
 import com.uber.rocket.dto.VehicleDTO;
@@ -8,6 +9,7 @@ import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.ride.RideStatus;
 import com.uber.rocket.entity.ride.UserRidingStatus;
 import com.uber.rocket.entity.user.User;
+import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.entity.user.VehicleType;
 import com.uber.rocket.ride_booking.utils.destination.DestinationCreation;
 
@@ -16,18 +18,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.uber.rocket.ride_booking.utils.user.UserCreationService.getPassengerWithMoney;
-import static com.uber.rocket.ride_booking.utils.user.UserCreationService.getPassengerWithNoMoney;
+import  com.uber.rocket.ride_booking.utils.user.UserCreationService.*;
+
+import static com.uber.rocket.ride_booking.utils.user.UserCreationService.*;
 
 public class RideCreationService {
-    public static RideDTO getRideDTO() {
+    public  RideDTO getRideDTO() {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setRideId(1L);
         rideDTO.setDestinations(DestinationCreation.getDestinationDTOList());
         return rideDTO;
     }
 
-    public static ArrayList<Passenger> getPassengers() {
+    public  ArrayList<Passenger> getPassengers() {
         ArrayList<Passenger> list = new ArrayList<>();
         list.add(new Passenger(getGoodUser(), UserRidingStatus.ACCEPTED));
         list.add(new Passenger(getGoodUser(), UserRidingStatus.ACCEPTED));
@@ -35,48 +38,48 @@ public class RideCreationService {
         return list;
     }
 
-    public static User getGoodUser() {
+    public  User getGoodUser() {
         User user = new User();
         user.setId(1L);
         user.setEmail("jelena@gmail.com");
         return user;
     }
 
-    public static UserDTO getUserDTOWithBlankEmail() {
+    public  UserDTO getUserDTOWithBlankEmail() {
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail("");
         return userDTO;
     }
 
-    public static UserDTO getGoodUserDTO() {
+    public  UserDTO getGoodUserDTO() {
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail("jelena@gmail.com");
         return userDTO;
     }
 
 
-    public static Ride getRideEntityWithPassengers() {
+    public  Ride getRideEntityWithPassengers() {
         Ride ride = new Ride();
         ride.setPassengers(getPassengers());
         ride.setId(1L);
         return ride;
     }
 
-    public static RideDTO getRideDTOWithNonexistentUser() {
+    public  RideDTO getRideDTOWithNonexistentUser() {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setRideId(1L);
         rideDTO.setClient(getUserDTOWithBlankEmail());
         return rideDTO;
     }
 
-    public static RideDTO getRideDTOWithNoRidingPals() {
+    public  RideDTO getRideDTOWithNoRidingPals() {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setRideId(1L);
         rideDTO.setClient(getGoodUserDTO());
         return rideDTO;
     }
 
-    public static RideDTO getRideDTOWithNoVehicle() {
+    public  RideDTO getRideDTOWithNoVehicle() {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setRideId(1L);
         rideDTO.setClient(getGoodUserDTO());
@@ -84,7 +87,7 @@ public class RideCreationService {
         return rideDTO;
     }
 
-    public static VehicleDTO getGoodVehicleDto() {
+    public  VehicleDTO getGoodVehicleDto() {
         VehicleDTO vehicleDTO = new VehicleDTO();
         vehicleDTO.setType(VehicleType.COUPE);
         vehicleDTO.setPetFriendly(false);
@@ -92,7 +95,7 @@ public class RideCreationService {
         return vehicleDTO;
     }
 
-    public static RideDTO getRideDTOWithNoVehicleFeatures() {
+    public  RideDTO getRideDTOWithNoVehicleFeatures() {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setRideId(1L);
         rideDTO.setClient(getGoodUserDTO());
@@ -102,7 +105,7 @@ public class RideCreationService {
 
     }
 
-    public static RideDTO getRideDTOWithBadTimeString() {
+    public  RideDTO getRideDTOWithBadTimeString() {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setRideId(1L);
         rideDTO.setClient(getGoodUserDTO());
@@ -115,7 +118,7 @@ public class RideCreationService {
 
     }
 
-    public static RideDTO getGoodRideDTO() {
+    public  RideDTO getGoodRideDTO() {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setRideId(1L);
         rideDTO.setClient(getGoodUserDTO());
@@ -133,10 +136,13 @@ public class RideCreationService {
         return rideDTO;
     }
 
-    public static Ride getGoodRideFromRideDTO() {
+    public  Ride getGoodRideFromRideDTO() {
         RideDTO rideDTO = getGoodRideDTO();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         Ride ride = new Ride();
+        Vehicle vehicle = new Vehicle();
+        vehicle.setDriver(getDriver());
+        ride.setVehicle(vehicle);
         List<Passenger> passengers = new ArrayList<Passenger>();
         List<UserRidingStatus> passengersStatus = new ArrayList<UserRidingStatus>();
         User user = getGoodUser();
@@ -154,10 +160,158 @@ public class RideCreationService {
         ride.setDuration(rideDTO.getEstimatedTime());
         ride.setLength(rideDTO.getEstimatedDistance());
         ride.setNow(rideDTO.getIsNow());
+        ride.setId(1L);
+        ride.setStatus(RideStatus.REQUESTED);
         return ride;
     }
 
-    public static Ride getRideSplitFareFalseClientHasNoMoney() {
+
+    public  Ride getRideIsRequestedPassengersDenied() {
+        RideDTO rideDTO = getGoodRideDTO();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        Ride ride = new Ride();
+        Vehicle vehicle = new Vehicle();
+        vehicle.setDriver(getDriver());
+        ride.setVehicle(vehicle);
+        List<Passenger> passengers = new ArrayList<Passenger>();
+        List<UserRidingStatus> passengersStatus = new ArrayList<UserRidingStatus>();
+        User user = getGoodUser();
+        Passenger passenger = new Passenger();
+        passenger.setUser(user);
+        passenger.setUserRidingStatus(UserRidingStatus.DENIED);
+        passengers.add(passenger);
+        ride.setPassengers(passengers);
+        ride.setVehicleTypeRequested(rideDTO.getVehicle().getType());
+        ride.setRouteLocation(rideDTO.getRoute());
+        ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), formatter));
+        ride.setStatus(rideDTO.getRideStatus());
+        ride.setSplitFare(rideDTO.getIsSplitFair());
+        ride.setPrice(rideDTO.getPrice());
+        ride.setDuration(rideDTO.getEstimatedTime());
+        ride.setLength(rideDTO.getEstimatedDistance());
+        ride.setNow(rideDTO.getIsNow());
+        ride.setId(1L);
+        ride.setStatus(RideStatus.REQUESTED);
+        return ride;
+    }
+
+    public  Ride getRideNoPassengers() {
+        RideDTO rideDTO = getGoodRideDTO();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        Ride ride = new Ride();
+        Vehicle vehicle = new Vehicle();
+        vehicle.setDriver(getDriver());
+        ride.setVehicle(vehicle);
+        List<Passenger> passengers = new ArrayList<Passenger>();
+        ride.setPassengers(passengers);
+        ride.setVehicleTypeRequested(rideDTO.getVehicle().getType());
+        ride.setRouteLocation(rideDTO.getRoute());
+        ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), formatter));
+        ride.setStatus(rideDTO.getRideStatus());
+        ride.setSplitFare(rideDTO.getIsSplitFair());
+        ride.setPrice(rideDTO.getPrice());
+        ride.setDuration(rideDTO.getEstimatedTime());
+        ride.setLength(rideDTO.getEstimatedDistance());
+        ride.setNow(rideDTO.getIsNow());
+        ride.setId(1L);
+        ride.setStatus(RideStatus.REQUESTED);
+        return ride;
+    }
+
+
+    public  Ride getRideIsRequestedPassengersAccepted() {
+        RideDTO rideDTO = getGoodRideDTO();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        Ride ride = new Ride();
+        Vehicle vehicle = new Vehicle();
+        vehicle.setDriver(getDriver());
+        ride.setVehicle(vehicle);
+        List<Passenger> passengers = new ArrayList<Passenger>();
+        List<UserRidingStatus> passengersStatus = new ArrayList<UserRidingStatus>();
+        User user = getGoodUser();
+        Passenger passenger = new Passenger();
+        passenger.setUser(user);
+        passenger.setUserRidingStatus(UserRidingStatus.ACCEPTED);
+        passengers.add(passenger);
+        ride.setPassengers(passengers);
+        ride.setVehicleTypeRequested(VehicleType.CONVERTIBLE);
+        ride.setVehicleTypeRequested(rideDTO.getVehicle().getType());
+        ride.setRouteLocation(rideDTO.getRoute());
+        ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), formatter));
+        ride.setStatus(rideDTO.getRideStatus());
+        ride.setSplitFare(rideDTO.getIsSplitFair());
+        ride.setPrice(rideDTO.getPrice());
+        ride.setDuration(rideDTO.getEstimatedTime());
+        ride.setLength(rideDTO.getEstimatedDistance());
+        ride.setNow(rideDTO.getIsNow());
+        ride.setId(1L);
+        ride.setStatus(RideStatus.REQUESTED);
+        return ride;
+    }
+
+    public Ride getRideMorePassengerYesMoney() {
+        RideDTO rideDTO = getGoodRideDTO();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        Ride ride = new Ride();
+        Vehicle vehicle = new Vehicle();
+        vehicle.setDriver(getDriver());
+        ride.setVehicle(vehicle);
+        List<Passenger> passengers = new ArrayList<Passenger>();
+        List<UserRidingStatus> passengersStatus = new ArrayList<UserRidingStatus>();
+        User user1 = getGoodUser();
+        user1.setTokens((double) 10000);
+        Passenger passenger1 = new Passenger();
+        passenger1.setUser(user1);
+        passenger1.setUserRidingStatus(UserRidingStatus.ACCEPTED);
+        passengers.add(passenger1);
+        ride.setPassengers(passengers);
+        ride.setVehicleTypeRequested(VehicleType.CONVERTIBLE);
+        ride.setVehicleTypeRequested(rideDTO.getVehicle().getType());
+        ride.setRouteLocation(rideDTO.getRoute());
+        ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), formatter));
+        ride.setStatus(rideDTO.getRideStatus());
+        ride.setSplitFare(rideDTO.getIsSplitFair());
+        ride.setPrice(rideDTO.getPrice());
+        ride.setDuration(rideDTO.getEstimatedTime());
+        ride.setLength(rideDTO.getEstimatedDistance());
+        ride.setNow(rideDTO.getIsNow());
+        ride.setId(1L);
+        ride.setStatus(RideStatus.REQUESTED);
+        return ride;
+    }
+
+    public  Ride getRideOnePassengerHasMoney() {
+        RideDTO rideDTO = getGoodRideDTO();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        Ride ride = new Ride();
+        Vehicle vehicle = new Vehicle();
+        vehicle.setDriver(getDriver());
+        ride.setVehicle(vehicle);
+        List<Passenger> passengers = new ArrayList<Passenger>();
+        List<UserRidingStatus> passengersStatus = new ArrayList<UserRidingStatus>();
+        User user = getGoodUser();
+        user.setTokens((double) 10000);
+        Passenger passenger = new Passenger();
+        passenger.setUser(user);
+        passenger.setUserRidingStatus(UserRidingStatus.ACCEPTED);
+        passengers.add(passenger);
+        ride.setPassengers(passengers);
+        ride.setVehicleTypeRequested(VehicleType.CONVERTIBLE);
+        ride.setVehicleTypeRequested(rideDTO.getVehicle().getType());
+        ride.setRouteLocation(rideDTO.getRoute());
+        ride.setStartTime(LocalDateTime.parse(rideDTO.getTime(), formatter));
+        ride.setStatus(rideDTO.getRideStatus());
+        ride.setSplitFare(rideDTO.getIsSplitFair());
+        ride.setPrice(rideDTO.getPrice());
+        ride.setDuration(rideDTO.getEstimatedTime());
+        ride.setLength(rideDTO.getEstimatedDistance());
+        ride.setNow(rideDTO.getIsNow());
+        ride.setId(1L);
+        ride.setStatus(RideStatus.REQUESTED);
+        return ride;
+    }
+
+    public  Ride getRideSplitFareFalseClientHasNoMoney() {
         Ride ride = new Ride();
         ride.setSplitFare(false);
         ride.setPrice(200);
@@ -166,7 +320,7 @@ public class RideCreationService {
         return ride;
     }
 
-    public static Ride getRideSplitFareFalseClientHasMoney() {
+    public  Ride getRideSplitFareFalseClientHasMoney() {
         Ride ride = new Ride();
         ride.setSplitFare(false);
         ride.setPrice(200);
@@ -177,7 +331,7 @@ public class RideCreationService {
         return ride;
     }
 
-    public static Ride getRideSplitFareTrueClientsHasNoMoney() {
+    public  Ride getRideSplitFareTrueClientsHasNoMoney() {
         Ride ride = new Ride();
         ride.setSplitFare(true);
         ride.setPrice(200);
@@ -186,7 +340,8 @@ public class RideCreationService {
         ride.getPassengers().add(getPassengerWithNoMoney());
         return ride;
     }
-    public static Ride getRideSplitFareTrueClientsHasMoney() {
+
+    public  Ride getRideSplitFareTrueClientsHasMoney() {
         Ride ride = new Ride();
         ride.setSplitFare(true);
         ride.setPrice(200);
@@ -196,5 +351,32 @@ public class RideCreationService {
         return ride;
     }
 
+
+    public  List<Ride> getRides() {
+        List<Ride> list = new ArrayList<>();
+        list.add(getGoodRideFromRideDTO());
+        return list;
+    }
+
+    public  ChangeStatusDTO getDeniedChangeStatus() {
+        ChangeStatusDTO changeStatusDTO = new ChangeStatusDTO();
+        changeStatusDTO.setRidingStatus(UserRidingStatus.DENIED);
+        changeStatusDTO.setUserId("1");
+        return changeStatusDTO;
+    }
+
+    public  ChangeStatusDTO getWaitingChangeStatus() {
+        ChangeStatusDTO changeStatusDTO = new ChangeStatusDTO();
+        changeStatusDTO.setRidingStatus(UserRidingStatus.WAITING);
+        changeStatusDTO.setUserId("1");
+        return changeStatusDTO;
+    }
+
+    public  ChangeStatusDTO getAcceptedChangeStatus() {
+        ChangeStatusDTO changeStatusDTO = new ChangeStatusDTO();
+        changeStatusDTO.setRidingStatus(UserRidingStatus.ACCEPTED);
+        changeStatusDTO.setUserId("1");
+        return changeStatusDTO;
+    }
 
 }
