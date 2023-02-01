@@ -48,4 +48,8 @@ export class EditProfileComponent implements OnInit {
     this.showProfilePicture = true;
   }
 
+  onClose() {
+    this.closeFunc()
+    this.open = false;
+  }
 }

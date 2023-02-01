@@ -116,6 +116,7 @@ import { CancelRideComponent } from './modals/cancel-ride/cancel-ride.component'
 import {MessagesReducer} from "./shared/store/message-slice/message.reducer";
 import { MapPageComponent } from './page/map-page/map-page.component';
 import { ActiveVehiclesReducer } from './shared/store/active-vehicles-slice/active-vehicles.reduces';
+import { DateInputComponent } from './shared/utils/input/date-input/date-input.component';
 
 @NgModule({
   declarations: [
@@ -211,6 +212,7 @@ import { ActiveVehiclesReducer } from './shared/store/active-vehicles-slice/acti
     NewPasswordComponent,
     RegistrationVerificationComponent,
     MapPageComponent,
+    DateInputComponent,
   ],
   imports: [
     HttpClientModule,

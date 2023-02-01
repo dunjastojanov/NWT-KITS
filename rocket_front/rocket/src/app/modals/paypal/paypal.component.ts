@@ -30,4 +30,9 @@ export class PaypalComponent implements OnInit {
       return false;
     }
   }
+
+  onClose() {
+    this.closeFunc()
+    this.open = false;
+  }
 }

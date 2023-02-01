@@ -114,11 +114,6 @@ public class RideService {
             }
             ride = this.repository.save(ride);
 
-            if (driverAccepted)
-                notificationService.setNotificationAsRead(user, ride, NotificationType.DRIVER_RIDE_REQUEST);
-            else
-                notificationService.setNotificationAsRead(user, ride, NotificationType.PASSENGER_RIDE_REQUEST);
-
             this.updateStatusOverSocket(ride);
         } else {
             throw new RuntimeException("Ride not found");
