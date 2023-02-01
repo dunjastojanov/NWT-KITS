@@ -593,6 +593,58 @@ class RideServiceTest {
     }
 
     @Test
+    public void getRide_RideNull() {
+        List<Ride> goodRides = new ArrayList<>();
+        Ride result = rideService.getRide(goodRides);
+        assertNull(result);
+    }
+
+    @Test
+    public void getRide_RideConfirmed() {
+        List<Ride> goodRides = new ArrayList<>();
+        goodRides.add(ride);
+        Ride result = rideService.getRide(goodRides);
+        assertNotNull(result);
+        assertEquals(RideStatus.CONFIRMED, result.getStatus());
+    }
+
+    @ParameterizedTest()
+    @MethodSource(value = "getRideStatus")
+    public void getRide_RideDeniedOrEnded(RideStatus status) {
+        List<Ride> goodRides = new ArrayList<>();
+        ride.setStatus(status);
+        goodRides.add(ride);
+        Ride result = rideService.getRide(goodRides);
+        assertNull(result);
+    }
+
+    @Test
+    public void getRide_RidesScheduledAndStarted() {
+        List<Ride> goodRides = new ArrayList<>();
+        ride.setStatus(RideStatus.STARTED);
+        goodRides.add(ride);
+        Ride scheduledRide = new Ride();
+        scheduledRide.setVehicle(vehicle);
+        scheduledRide.setStatus(RideStatus.SCHEDULED);
+        goodRides.add(scheduledRide);
+        Ride result = rideService.getRide(goodRides);
+        assertNotNull(result);
+        assertEquals(RideStatus.STARTED, result.getStatus());
+    }
+
+    @Test
+    public void getRide_RidesDeniedAndEnded() {
+        List<Ride> goodRides = new ArrayList<>();
+        ride.setStatus(RideStatus.ENDED);
+        goodRides.add(ride);
+        Ride deniedRide = new Ride();
+        deniedRide.setVehicle(vehicle);
+        deniedRide.setStatus(RideStatus.DENIED);
+        goodRides.add(deniedRide);
+        Ride result = rideService.getRide(goodRides);
+        assertNull(result);
+    }
+    @Test
     void cancelRide() {
         when(rideRepository.findById(anyLong())).thenReturn(Optional.of(ride));
         RideCancellation rideCancellation = rideService.cancelRide(1L, "I have some health issues");
