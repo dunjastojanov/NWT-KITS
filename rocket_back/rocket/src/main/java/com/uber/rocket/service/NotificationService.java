@@ -53,7 +53,7 @@ public class NotificationService {
         }
         return notificationRepository.findAllByUser(user).stream()
                 .map(notificationMapper::mapToDto)
-                .filter(notificationDTO-> !notificationDTO.isRead()).toList();
+                .filter(notificationDTO -> !notificationDTO.isRead()).toList();
     }
 
     public void addUpdateDriverDataRequestNotification(UpdateDriverDataRequest request) {
@@ -65,7 +65,7 @@ public class NotificationService {
         save(notification);
     }
 
-    private Notification save(Notification notification) {
+    public Notification save(Notification notification) {
         notification.setRead(false);
         notification.setSent(LocalDateTime.now());
         notification = notificationRepository.save(notification);
@@ -110,7 +110,7 @@ public class NotificationService {
         if (request.isKidFriendly()) {
             features.add("Kid friendly");
         }
-        if( request.isPetFriendly()) {
+        if (request.isPetFriendly()) {
             features.add("Pet friendly");
         }
         return String.join(" && ", features);
@@ -127,7 +127,7 @@ public class NotificationService {
     private static String getProfilePicture(User user) {
         String profilePicture = "assets/profile-placeholder.png";
         if (user.getProfilePicture() != null) {
-            profilePicture =  user.getProfilePicture();
+            profilePicture = user.getProfilePicture();
         }
         return profilePicture;
     }
@@ -146,7 +146,7 @@ public class NotificationService {
 
     public List<Notification> addRideCanceledNotifications(RideCancellation rideCancellation) {
         List<Notification> notifications = new ArrayList<>();
-        for (Passenger passenger: rideCancellation.getRide().getPassengers()) {
+        for (Passenger passenger : rideCancellation.getRide().getPassengers()) {
             Notification notification = new Notification();
             notification.setUser(passenger.getUser());
             notification.setType(NotificationType.RIDE_CANCELED);
@@ -220,7 +220,7 @@ public class NotificationService {
                 notification.setTemplateVariables(templateProcessor.getVariableString(variables));
             }
             case SCHEDULED -> {
-                notification.setTitle("Ride scheduled for: "+ ride.getStartTime().format(formatter));
+                notification.setTitle("Ride scheduled for: " + ride.getStartTime().format(formatter));
                 notification.setType(NotificationType.RIDE_SCHEDULED);
                 Map<String, String> variables = getScheduledRideVariables(ride);
                 notification.setTemplateVariables(templateProcessor.getVariableString(variables));
@@ -243,7 +243,7 @@ public class NotificationService {
 
     private static String getPassengers(Ride ride) {
         List<String> passengers = new ArrayList<>();
-        for (User passenger: ride.getUsers()) {
+        for (User passenger : ride.getUsers()) {
             passengers.add(passenger.getFullName());
         }
         return String.join(" && ", passengers);
@@ -264,7 +264,8 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setUser(user);
         notification.setTitle("Ride request");
-        notification.setTemplateVariables(templateProcessor.getVariableString(getRideVariables(ride, startAddress, endAddress)));
+        HashMap<String, String> variables = (HashMap<String, String>) getRideVariables(ride, startAddress, endAddress);
+        notification.setTemplateVariables(templateProcessor.getVariableString(variables));
         notification.setEntityId(ride.getId());
         notification.setSent(LocalDateTime.now());
         return notification;
@@ -313,13 +314,12 @@ public class NotificationService {
         List<Notification> notifications = notificationRepository.findByUserAndEntityId(user, ride.getId());
         if (notifications.size() > 0) {
             return notifications;
-        }
-        else throw new RuntimeException("There are no notifications for given user and ride.");
+        } else throw new RuntimeException("There are no notifications for given user and ride.");
     }
 
     public void setNotificationAsRead(User user, Ride ride, NotificationType type) {
         List<Notification> notifs = getNotificationsForUserAndRide(user, ride);
-        for (Notification notification: notifs) {
+        for (Notification notification : notifs) {
             if (notification.getType() == type)
                 setNotificationAsRead(notification.getId());
         }

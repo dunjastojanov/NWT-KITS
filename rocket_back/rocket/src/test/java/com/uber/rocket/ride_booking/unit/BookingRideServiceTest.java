@@ -1,7 +1,6 @@
 package com.uber.rocket.ride_booking.unit;
 
 import com.uber.rocket.dto.ChangeStatusDTO;
-import com.uber.rocket.dto.NotificationDTO;
 import com.uber.rocket.dto.RideDTO;
 import com.uber.rocket.entity.notification.NotificationType;
 import com.uber.rocket.entity.ride.Destination;
@@ -25,7 +24,6 @@ import org.mockito.Mock;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static com.uber.rocket.ride_booking.utils.destination.DestinationCreation.getDestination;
@@ -363,13 +361,6 @@ class BookingRideServiceTest {
         verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
     }
 
-//    @Test
-//    @DisplayName("Passed parameters are null")
-//    void setDriverStatusTest1() {
-//        assertThrows(NullPointerException.class, () -> rideService.setDriverStatus(new Ride() ,getChangeStatus(), new User()));
-//    }
-
-
     @Test
     @DisplayName("User riding status isn't DENIED, riding status is WAITING ")
     void setDriverStatusTest3() {
@@ -493,7 +484,7 @@ class BookingRideServiceTest {
     void allAcceptedRideTest2() {
         Ride ride = rideCreationService.getRideNoPassengers();
         ride.setStatus(RideStatus.SCHEDULED);
-        assertEquals(true, this.rideService.allAcceptedRide(ride));
+        assertTrue(this.rideService.allAcceptedRide(ride));
     }
 
     @Test
