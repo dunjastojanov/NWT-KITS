@@ -93,7 +93,7 @@ public class RideService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void changeRidePalDriverStatus(String rideId, ChangeStatusDTO changeStatusDTO) {
+    public Ride changeRidePalDriverStatus(String rideId, ChangeStatusDTO changeStatusDTO) {
         Optional<Ride> rideOpt = this.repository.findById(Long.parseLong(rideId));
         User user = this.userService.getById(Long.parseLong(changeStatusDTO.getUserId()));
         boolean driverAccepted = false;
@@ -123,12 +123,14 @@ public class RideService {
             if (!noDriver)
                 this.updateStatusOverSocket(ride, ride.getId());
             else this.updateStatusOverSocket(ride, (long)-1);
+            return ride;
         } else {
             throw new RuntimeException("Ride not found");
         }
     }
 
     private boolean allAcceptedRide(Ride ride) {
+        if (ride.getStatus() == RideStatus.DENIED) return false;
         if (ride.getStatus() == RideStatus.REQUESTED) {
             for (Passenger passenger : ride.getPassengers()) {
                 if (passenger.getUserRidingStatus() != UserRidingStatus.ACCEPTED) {
