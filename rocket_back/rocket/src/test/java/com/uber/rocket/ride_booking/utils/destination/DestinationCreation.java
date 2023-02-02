@@ -44,7 +44,7 @@ public class DestinationCreation {
         destinationDTO.setLatitude(45.2423455);
         destinationDTO.setLongitude(19.8437972);
         destinationDTO.setAddress("Dr Ivana Ribara 13 Novi Sad");
-        destinationDTO.setIndex(0);
+        destinationDTO.setIndex(1);
         return destinationDTO;
     }
 

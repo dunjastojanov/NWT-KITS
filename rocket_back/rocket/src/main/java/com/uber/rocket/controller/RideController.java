@@ -61,7 +61,6 @@ public class RideController {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping(path = "/currentRideId/{id}")
     public ResponseEntity<?> getUsersCurrentRide(@PathVariable("id") Long id) {
         RideDTO rideDTO = this.rideService.getUserCurrentRideById(id);
@@ -73,19 +72,18 @@ public class RideController {
         RideDTO rideDTO = this.rideService.changeRideStatus(id, status);
         return ResponseEntity.status(HttpStatus.OK).body(rideDTO);
     }
-
     @GetMapping(path = "/post-create-ride/{id}")
-    public boolean createPalsNotifsAndLookForDriver(@PathVariable("id") Long id) {
+        public boolean createPalsNotifsAndLookForDriver(@PathVariable("id") Long id) {
         return this.rideService.createPalsNotifsAndLookForDriver(id);
     }
-
     @GetMapping(path = "/pal/{email}")
     public ResponseEntity<?> getRidingPal(@PathVariable("email") String email) {
         try {
             UserDTO user = rideService.getRidingPal(email);
             if (user != null)
                 return ResponseEntity.status(HttpStatus.OK).body(user);
-            else return new ResponseEntity<>("User already has scheduled ride.", HttpStatus.FORBIDDEN);
+            else
+                return new ResponseEntity<>("User already has scheduled ride.", HttpStatus.FORBIDDEN);
         } catch (RuntimeException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }

@@ -258,7 +258,7 @@ public class NotificationService {
         return variables;
     }
 
-    private Notification createRideRequestNotification(User user, Ride ride) {
+    public Notification createRideRequestNotification(User user, Ride ride) {
         String startAddress = this.destinationService.getStartAddressByRide(ride);
         String endAddress = this.destinationService.getEndAddressByRide(ride);
         Notification notification = new Notification();

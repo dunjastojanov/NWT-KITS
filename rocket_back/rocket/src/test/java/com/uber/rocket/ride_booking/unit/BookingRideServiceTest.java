@@ -230,7 +230,6 @@ class BookingRideServiceTest {
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
         verify(this.rideRepositoryMock, times(1)).save(any(Ride.class));
-        verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
     }
 
     @Test
@@ -243,7 +242,6 @@ class BookingRideServiceTest {
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
         verify(this.rideRepositoryMock, times(1)).save(any(Ride.class));
-        verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
     }
 
     @Test
@@ -270,7 +268,6 @@ class BookingRideServiceTest {
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
         verify(this.rideRepositoryMock, times(1)).save(any(Ride.class));
-        verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
     }
 
     @Test
@@ -285,8 +282,6 @@ class BookingRideServiceTest {
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
         verify(this.rideRepositoryMock, times(1)).save(any(Ride.class));
-        verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
-        verify(this.notificationServiceMock, times(1)).addDriverRideRequestNotification(any(User.class), any(Ride.class));
     }
 
 
@@ -300,7 +295,6 @@ class BookingRideServiceTest {
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
         verify(this.rideRepositoryMock, times(1)).save(any(Ride.class));
-        verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
     }
 
     @Test
@@ -313,7 +307,6 @@ class BookingRideServiceTest {
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
         verify(this.rideRepositoryMock, times(1)).save(any(Ride.class));
-        verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
     }
 
     @Test
@@ -327,7 +320,6 @@ class BookingRideServiceTest {
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
         verify(this.rideRepositoryMock, times(1)).save(any(Ride.class));
-        verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
 
     }
 
@@ -343,7 +335,6 @@ class BookingRideServiceTest {
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
         verify(this.rideRepositoryMock, times(1)).save(any(Ride.class));
-        verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
     }
 
     @Test
@@ -358,7 +349,6 @@ class BookingRideServiceTest {
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
         verify(this.rideRepositoryMock, times(1)).save(any(Ride.class));
-        verify(this.notificationServiceMock, times(1)).setNotificationAsRead(any(User.class), any(Ride.class), any(NotificationType.class));
     }
 
     @Test

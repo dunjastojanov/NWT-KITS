@@ -64,8 +64,7 @@ public class RideService {
     private RideMapper rideMapper;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    @Autowired
-    private NotificationRepository notificationRepository;
+
     @Autowired
     private DestinationRepository destinationRepository;
 
@@ -102,7 +101,6 @@ public class RideService {
                 }
             }
             ride = this.repository.save(ride);
-
             this.updateStatusOverSocket(ride, ride.getId());
             if (!noDriver)
                 this.updateStatusOverSocket(ride, ride.getId());
@@ -134,6 +132,7 @@ public class RideService {
                 messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/rides", rideId);
             }
         } catch (Exception e) {
+
         }
     }
 

@@ -7,40 +7,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @TestConfiguration
+@Profile("test")
 public class TestConfig {
     @Autowired
-    
+
     RoleRepository roleRepository;
     @Autowired
-    
+
     UserRepository userRepository;
     @Autowired
-    
+
     VehicleRepository vehicleRepository;
     @Autowired
-    
+
     RideRepository rideRepository;
     @Autowired
-    
+
     PassengerRepository passengerRepository;
     @Autowired
-    
+
     DestinationRepository destinationRepository;
 
     @Autowired
-    
+
     LogInfoRepository logInfoRepository;
 
-     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
 
     @Bean
-    public  CommandLineRunner configureTestData() {
+    public CommandLineRunner configureTestData() {
         return args -> {
             System.out.println("aaaaaaaaaaaaaaaaaaaa");
             Role clientRole = addRole("CLIENT");
@@ -61,6 +64,10 @@ public class TestConfig {
             User client4 = addUser(clientRole, "Dalibor", "Dobrilovic", "0611111111");
             User client5 = addUser(clientRole, "Eleonora", "Desnica", "0611111111");
             User client6 = addUser(clientRole, "Jelena", "Stojanov", "0611111111");
+            User client7 = addUser(clientRole, "Marko", "Desnica", "0611111111");
+            User client8 = addUser(clientRole, "Helena", "Stojanov", "0611111111");
+            User client9 = addUser(clientRole, "Jovica", "Vujic", "0611111111");
+
 
             Ride ride1 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-25 14:15", "2023-01-25 17:15", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
             addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad aloo breee", ride1);
@@ -75,23 +82,60 @@ public class TestConfig {
             addDestination(45.2423455, 19.8437972, "Dr Ivana Ribara 13 Novi Sad", ride3);
             addDestination(45.2482226, 19.8212104, "Rudjera Boskovica 22 Novi Sad", ride3);
 
-            Ride ride4 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-29 13:56", "2023-01-29 14:50", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
-            ride4.setStatus(RideStatus.SCHEDULED);
+            Ride ride4 = addRide(vehicle3, List.of(client5), 876.0, 7331.1, "2023-02-02 18:49", null, 1276, "imfsGiguwB`BnFL{@d@aCvB`AfLfEv@XbA\\HBLDzLrEb@wC^qCJy@b@iDHq@f@qD\\_C@K\\yB\\aCD[ZqBHm@F[@K`@gCLw@^cC@Gf@{CBKVeBHa@T}AXeBd@yDDa@d@mDBS@I@GH?HEFGBI@I@IAKCI?c@@MD_@VsBX}BLgABQHu@F{@@w@@a@Eg@GWGSCOIYkAiFI[_AiE_@{AAIACGYI]QJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}RWaAAEAEGWEQESAEw@}CqDgOkAyEk@_CKa@g@uBOm@WcAGUCMEQEQi@yBq@qCu@wCSy@]yAcB_Hq@uCmA_Fi@yBAKAM?W@Q?W@E?G?IAIAGCGCGCEEEAAQMMMEECGEIGSGOKc@u@yCg@oBAEAEGUGSAG{BmIACAEIUIQCESe@[q@q@wAkDiHqAkCiAcCCEACM[LQBCr@{@~@gA`AkATYDE@AV]@EAIAISc@ACSc@s@yAO]Ue@[u@Qg@ACAEEQESAEGUOiAIcAAiA?e@?[DcBHmD@g@?O?E@E@c@@W?G@a@LiFFkDDiC?sB?WEmAKyAOuBSeC?GACI}@Ge@Ss@GQWw@sAkEHGBCJEr@[lCmA`@Q~@c@Nx@`@Sh@nCFEzEyB");
+            ride4.setStatus(RideStatus.CONFIRMED);
             rideRepository.save(ride4);
-            addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride4);
-            addDestination(45.2478236, 19.804034, "Futoski put 18 Novi Sad", ride4);
+
+            addDestination(19.7747737, 45.2579691, "Avrama Miletica bb", ride4);
+            addDestination(19.2615881, 45.2615881, "Bulevar oslobodjenja 25", ride4);
+
+            Ride ride5 = addRide(vehicle2, List.of(client5), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            ride5.setStatus(RideStatus.STARTED);
+            rideRepository.save(ride5);
+
+            addDestination(19.8327891, 45.2388761, "Narodnog Fronta 111", ride5);
+            addDestination(19.7938139, 45.2550643, "Bulevar Vojvode Stepe", ride5);
+
+            Ride ride6 = addRide(vehicle2, List.of(client4, client2), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            ride6.setStatus(RideStatus.REQUESTED);
+
+            rideRepository.save(ride6);
+            addDestination(19.8327891, 45.2388761, "Narodnog Fronta 111", ride6);
+            addDestination(19.7938139, 45.2550643, "Bulevar Vojvode Stepe", ride6);
+
+
+            Ride ride7 = addRide(vehicle2, List.of(client7, client8), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            ride7.setStatus(RideStatus.REQUESTED);
+            ride7.getPassengers().forEach(passenger -> {
+                passenger.setUserRidingStatus(UserRidingStatus.DENIED);
+                passengerRepository.save(passenger);
+            });
+            rideRepository.save(ride7);
+            addDestination(19.8327891, 45.2388761, "Narodnog Fronta 111", ride7);
+            addDestination(19.7938139, 45.2550643, "Bulevar Vojvode Stepe", ride7);
+
+            Ride ride8 = addRide(vehicle1, List.of(client7, client8), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            ride8.setStatus(RideStatus.REQUESTED);
+            rideRepository.save(ride8);
+            addDestination(19.8327891, 45.2388761, "Narodnog Fronta 111", ride8);
+            addDestination(19.7938139, 45.2550643, "Bulevar Vojvode Stepe", ride8);
+
+            vehicle1.setStatus(VehicleStatus.ACTIVE);
+            vehicleRepository.save(vehicle1);
+
+
 
             LogInfo logInfo1 = addLogInfo(driver1);
         };
     }
 
-    private  Role addRole(String name) {
+    private Role addRole(String name) {
         Role role = new Role();
         role.setRole(name);
         return roleRepository.save(role);
     }
 
-    private  LogInfo addLogInfo(User driver) {
+    private LogInfo addLogInfo(User driver) {
         LogInfo logInfo = new LogInfo();
         logInfo.setUserId(driver.getId());
         logInfo.setBegging(LocalDateTime.of(2023, 1, 28, 10, 0));
@@ -99,7 +143,7 @@ public class TestConfig {
         return logInfoRepository.save(logInfo);
     }
 
-    private  User addUser(Role role, String first_name, String last_name, String phoneNumber) {
+    private User addUser(Role role, String first_name, String last_name, String phoneNumber) {
         User user = new User();
         user.setFirstName(first_name);
         user.setLastName(last_name);
@@ -116,7 +160,7 @@ public class TestConfig {
         return userRepository.save(user);
     }
 
-    private  Destination addDestination(double latitude, double longitude, String address, Ride ride) {
+    private Destination addDestination(double latitude, double longitude, String address, Ride ride) {
         Destination destination = new Destination();
         destination.setLatitude(latitude);
         destination.setLongitude(longitude);
@@ -126,14 +170,14 @@ public class TestConfig {
     }
 
 
-    private  Passenger addPassenger(User user) {
+    private Passenger addPassenger(User user) {
         Passenger passenger = new Passenger();
         passenger.setUser(user);
         passenger.setUserRidingStatus(UserRidingStatus.ACCEPTED);
         return passengerRepository.save(passenger);
     }
 
-    private  Vehicle addVehicle(User driver) {
+    private Vehicle addVehicle(User driver) {
         Vehicle vehicle = new Vehicle();
 
         vehicle.setLatitude(45.248130);
@@ -148,7 +192,7 @@ public class TestConfig {
     }
 
 
-    private  Ride addRide(Vehicle vehicle, List<User> users, Double duration, double length, String startTime, String endTime, int price, String routeLocation) {
+    private Ride addRide(Vehicle vehicle, List<User> users, Double duration, double length, String startTime, String endTime, int price, String routeLocation) {
         Ride ride = new Ride();
 
         ride.setStatus(RideStatus.ENDED);
@@ -158,7 +202,10 @@ public class TestConfig {
         ride.setLength(length);
         ride.setVehicleTypeRequested(VehicleType.CARAVAN);
         ride.setStartTime(LocalDateTime.parse(startTime, formatter));
-        ride.setEndTime(LocalDateTime.parse(endTime, formatter));
+        if (endTime == null)
+            ride.setEndTime(null);
+        else
+            ride.setEndTime(LocalDateTime.parse(endTime, formatter));
         ride.setPrice(price);
         ride.setRouteLocation(routeLocation);
         ride.setSplitFare(false);

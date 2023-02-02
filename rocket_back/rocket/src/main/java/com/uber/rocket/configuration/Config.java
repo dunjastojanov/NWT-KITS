@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Configuration
+@Profile("runtime")
 public class Config {
 
     @Autowired
