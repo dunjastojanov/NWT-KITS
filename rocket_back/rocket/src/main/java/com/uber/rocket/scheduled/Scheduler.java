@@ -1,9 +1,11 @@
 package com.uber.rocket.scheduled;
 
+import com.uber.rocket.dto.RideDTO;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.ride.RideStatus;
 import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.entity.user.VehicleStatus;
+import com.uber.rocket.repository.RideCancellationRepository;
 import com.uber.rocket.service.LogInfoService;
 import com.uber.rocket.service.NotificationService;
 import com.uber.rocket.service.RideService;
@@ -36,6 +38,8 @@ public class Scheduler {
     private LogInfoService logInfoService;
 
     private final static int ONE_MINUTE = 1000 * 60;
+    @Autowired
+    private RideCancellationRepository rideCancellationRepository;
 
     @Scheduled(fixedDelay = ONE_MINUTE, initialDelay = ONE_MINUTE * 10)
     public void checkIfDriveExceededWorkingTime() {
@@ -46,7 +50,8 @@ public class Scheduler {
             }
             for (Vehicle vehicle : vehicles) {
                 boolean exceeded = logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId());
-                if (exceeded && vehicle.getStatus().equals(VehicleStatus.DRIVING)) {
+                RideDTO rideDTO=rideService.getUserCurrentRideByEmail(vehicle.getDriver().getEmail());
+                if (exceeded && rideDTO==null) {
                     vehicle.setStatus(VehicleStatus.INACTIVE);
                     vehicleService.save(vehicle);
                     logInfoService.endWorkingHourCount(vehicle.getDriver().getId());
