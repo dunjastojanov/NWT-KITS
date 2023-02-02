@@ -1,4 +1,4 @@
-package com.uber.rocket.ride_cancelation.unit;
+package com.uber.rocket.ride_execution;
 
 import com.uber.rocket.dto.NotificationDTO;
 import com.uber.rocket.entity.notification.Notification;

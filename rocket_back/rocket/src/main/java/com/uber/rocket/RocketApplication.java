@@ -19,20 +19,7 @@ import java.util.List;
 @EnableScheduling
 public class RocketApplication {
 
-    @Autowired
-    VehicleRepository vehicleRepository;
-
     public static void main(String[] args) {
         SpringApplication.run(RocketApplication.class, args);
     }
-
-	/*@PostConstruct
-	private void startScript() throws IOException {
-		List<Vehicle> vehicles = this.vehicleRepository.findAll();
-		String[] cmd = {
-				"python",
-				"D:\\siit\\4. god\\NWT\\NWT-KITS\\rocket_back\\rocket\\script.py -u " + vehicles.size() + " -r 1 --run-time 30m"
-		};
-		Runtime.getRuntime().exec(cmd);
-	}*/
 }

@@ -214,7 +214,7 @@ public class RideController {
 
     @PutMapping(path = "update-location/{id}", produces = "application/json")
     public void updateVehicleLocation(@PathVariable("id") Long id, @RequestBody LocationDTO locationDTO) {
-        LocationDTO location = this.rideService.updateVehicleLocation(id, locationDTO.getLongitude(), locationDTO.getLatitude());
+        this.rideService.updateVehicleLocation(id, locationDTO.getLongitude(), locationDTO.getLatitude());
     }
     @GetMapping(path = "/simulation-ride/{id}", produces = "application/json")
     public RideSimulationDTO getRideSimulation(@PathVariable Long id) {

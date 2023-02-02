@@ -1,7 +1,7 @@
 <div *ngIf="role === 'CLIENT'" class="absolute right-3 top-3 flex gap-3">
   <button-icon *ngIf="rideId !== -1 && rideId !== undefined && hasRole('CLIENT')" [fillButton]="isFavorite" icon="./assets/icons/favorite.png" (click)="markAsFavorite()"
                [text]="'Mark route as favorite'"></button-icon>
-  <button-icon *ngIf="driverId !== ''" icon="./assets/icons/exclamation-mark.png" text="Report driver"
+  <button-icon *ngIf="driverId !== '' && rideStatus !== 'CONFIRMED'" icon="./assets/icons/exclamation-mark.png" text="Report driver"
                (click)="toggleReportModal()"></button-icon>
   <button-icon *ngIf="hasRole('DRIVER')" (click)="toggleCancelModal()" icon="./assets/icons/cancel.png" text="Cancel ride"></button-icon>
 
