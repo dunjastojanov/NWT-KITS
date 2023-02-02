@@ -48,4 +48,18 @@ export class LineChartComponent implements OnInit, OnChanges {
     });
   }
 
+  getAverage():string {
+    if (this.unit === "KM") {
+      return (+this.average/1000).toFixed(1);
+    }
+    return this.average.toString();
+  }
+
+  getTotal():string {
+    if (this.unit === "KM") {
+      return (+this.total/1000).toFixed(1);
+    }
+    return this.total.toString();
+  }
+
 }

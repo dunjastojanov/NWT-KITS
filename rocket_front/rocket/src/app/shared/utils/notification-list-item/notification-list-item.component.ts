@@ -25,18 +25,6 @@ export class NotificationListItemComponent implements OnInit {
 
   toggleShowModal(): void {
     this.showModal = !this.showModal;
-
-    if (this.showModal) {
-      this.notificationService.setRead(this.notification.id).then((result) => {
-        //this.notification.read = true;
-        /*this.store.dispatch(
-          new NotificationsAction(
-            NotificationsActionType.SET_NOTIFICATION_TRUE,
-            this.notification
-          )
-        );*/
-      });
-    }
   }
 
   getDate(): string {

@@ -28,6 +28,7 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
   private mapShow: any;
   layerPolylines: L.LayerGroup | null = null;
   layerVehicle: L.LayerGroup | null = null;
+  counter = 1;
   constructor(private store: Store<StoreType>, private toastr: ToastrService) {}
 
   async ngAfterViewInit() {
@@ -37,8 +38,14 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
 
   async ngOnChanges() {
     if (this.layerPolylines || this.layerVehicle) {
-      this.clearMap();
-      await this.showOnMap();
+      this.layerVehicle?.clearLayers();
+      if (this.vehicle) {
+        console.log('SHOW ON MAP');
+        console.log(this.vehicle);
+        console.log('**************************************');
+        await this.drawVehicle();
+      }
+      // await this.showOnMap();
     }
   }
 
@@ -77,19 +84,12 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
   }
 
   private drawPolyline() {
-    //const routes = this.route!.split(' ').slice(0, -1);
-    // for (let i = 0; i < routes.length; i++) {
-    //   const coordinates = decode(routes[i]);
     const coordinates = decode(this.route!);
     const mainRoutePolyline = L.polyline(coordinates, {
       color: '#E1A901',
       weight: 4,
     });
-    // if (i === 0) this.bounds = mainRoutePolyline.getBounds();
-    // else this.bounds!.extend(mainRoutePolyline.getBounds());
-
     mainRoutePolyline.addTo(this.layerPolylines!);
-
     this.mapShow.fitBounds(mainRoutePolyline.getBounds());
   }
 
@@ -115,8 +115,11 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
         iconSize: [32, 32],
       }),
     }).addTo(this.layerVehicle!);
-
-    if (this.updateVehicleTime) await this.loadTimeToArrive();
+    if (this.updateVehicleTime && this.counter === 1) {
+      await this.loadTimeToArrive();
+    }
+    this.counter = this.counter + 1;
+    if (this.counter > 8) this.counter = 1;
     this.checkArrivedToDestinations();
   }
 
@@ -128,7 +131,7 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
       this.destinations[0].longitude!,
       6371 * 1000
     );
-    if (distanceStart < 25)
+    if (distanceStart < 20)
       this.toastr.success('Vehicle has arrived to first destination.');
     else {
       const distanceEnd = this.haversineDistance(
@@ -138,7 +141,7 @@ export class ShowOnMapComponent implements AfterViewInit, OnChanges {
         this.destinations[this.destinations.length - 1].longitude!,
         6371 * 1000
       );
-      if (distanceEnd < 25)
+      if (distanceEnd < 20)
         this.toastr.success('Vehicle has arrived to final destination.');
     }
   }

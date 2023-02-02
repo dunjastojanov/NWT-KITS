@@ -126,7 +126,6 @@ export class MapComponent implements AfterViewInit {
 
   private async drawVehicle(vehicle: ActiveVehicle) {
     const latLng = new L.LatLng(vehicle.latitude!, vehicle.longitude!);
-    console.log(vehicle);
     if (vehicle.free) {
       L.marker(latLng, {
         icon: L.icon({

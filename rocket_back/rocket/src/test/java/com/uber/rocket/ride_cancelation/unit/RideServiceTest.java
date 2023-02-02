@@ -13,7 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +32,8 @@ class RideServiceTest {
     RideCancellationRepository rideCancellationRepository;
     @Mock
     NotificationService notificationService;
+    @Mock
+    SimpMessagingTemplate messagingTemplate;
     Ride ride;
     AutoCloseable closeable;
 
@@ -46,6 +50,7 @@ class RideServiceTest {
         ride = new Ride();
         ride.setVehicle(vehicle);
         ride.setStatus(RideStatus.CONFIRMED);
+        ride.setPassengers(new ArrayList<>());
     }
 
     @Test

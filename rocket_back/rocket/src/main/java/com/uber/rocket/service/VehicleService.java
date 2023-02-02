@@ -137,29 +137,32 @@ public class VehicleService {
                     messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
                 }
                 logInfoService.startCountingHours(vehicle.getDriver().getId());
+                vehicle.setStatus(VehicleStatus.ACTIVE);
+                return vehicleRepository.save(vehicle).getStatus().name();
             }
             if (VehicleStatus.valueOf(status.toUpperCase()).equals(VehicleStatus.INACTIVE)) {
-                logInfoService.endWorkingHourCount(vehicle.getDriver().getId());
+                vehicle.setStatus(VehicleStatus.INACTIVE);
+                String result = vehicleRepository.save(vehicle).getStatus().name();
+                logInfoService.endWorkingHourCount(vehicle.getDriver().getId()); //TODO baca error query did not return a unique result
+                return result;
             }
-            vehicle.setStatus(VehicleStatus.valueOf(status.toUpperCase()));
-            return vehicleRepository.save(vehicle).getStatus().name();
+
 
         } catch (IllegalArgumentException exception) {
             throw new RuntimeException("Status name does not exist");
         }
+        return "";
     }
 
     public List<Vehicle> findAvailableDrivers(VehicleType type, boolean kidFriendly, boolean petFriendly) {
-        return this.getActiveVehicleByRequirements(type, kidFriendly, petFriendly);
-    }
-
-    public List<Vehicle> getActiveVehicleByRequirements(VehicleType type, boolean kidFriendly, boolean petFriendly) {
-        List<Vehicle> vehicles = this.vehicleRepository.findByStatusAndTypeAndKidAndPetFriendly(VehicleStatus.ACTIVE, type, kidFriendly, petFriendly);
-        return vehicles;
-    }
-
-    public List<Vehicle> getActiveVehicles() {
-        return this.vehicleRepository.findByActiveStatus();
+        if (kidFriendly && petFriendly) {
+            return this.vehicleRepository.findByStatusAndTypeAndKidAndPetFriendly(VehicleStatus.ACTIVE, type, kidFriendly, petFriendly);
+        } else if (kidFriendly) {
+            return this.vehicleRepository.findByStatusAndTypeAndKidFriendly(VehicleStatus.ACTIVE, type, kidFriendly);
+        } else if (petFriendly) {
+            return this.vehicleRepository.findByStatusAndTypeAndPetFriendly(VehicleStatus.ACTIVE, type, petFriendly);
+        }
+        return this.vehicleRepository.findByStatusAndType(VehicleStatus.ACTIVE, type);
     }
 
     public Object getVehicleByDriver(HttpServletRequest request) {

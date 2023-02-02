@@ -29,4 +29,9 @@ export class ForgotPasswordComponent implements OnInit {
   isInputValid() {
     return /^.+[@].+[.].+$/.test(this.email)
   }
+
+  onClose() {
+    this.closeFunc()
+    this.open = false;
+  }
 }

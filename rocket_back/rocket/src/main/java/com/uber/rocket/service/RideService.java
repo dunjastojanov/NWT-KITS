@@ -93,18 +93,20 @@ public class RideService {
             if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("CLIENT")) {
                 ride = setClientStatus(ride, changeStatusDTO);
             }
+            boolean noDriver = false;
             if (!driverAccepted && this.allAcceptedRide(ride)) {
                 boolean foundDriver = this.findAndNotifyDriver(ride);
                 if (!foundDriver) {
                     ride.setStatus(RideStatus.DENIED);
+                    noDriver = true;
                 }
             }
             ride = this.repository.save(ride);
-            if (driverAccepted)
-                notificationService.setNotificationAsRead(user, ride, NotificationType.DRIVER_RIDE_REQUEST);
-            else
-                notificationService.setNotificationAsRead(user, ride, NotificationType.PASSENGER_RIDE_REQUEST);
-            this.updateStatusOverSocket(ride);
+
+            this.updateStatusOverSocket(ride, ride.getId());
+            if (!noDriver)
+                this.updateStatusOverSocket(ride, ride.getId());
+            else this.updateStatusOverSocket(ride, (long) -1);
         } else {
             throw new RuntimeException("Ride not found");
         }
@@ -122,17 +124,16 @@ public class RideService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void updateStatusOverSocket(Ride ride) {
+    public void updateStatusOverSocket(Ride ride, Long rideId) {
         Vehicle vehicle = ride.getVehicle();
         try {
             if (vehicle != null) {
-                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/queue/rides", ride.getId());
+                messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/queue/rides", rideId);
             }
             for (Passenger passenger : ride.getPassengers()) {
-                messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/rides", ride.getId());
+                messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/rides", rideId);
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -221,17 +222,23 @@ public class RideService {
         return ride.getId();
     }
 
-    public void createPalsNotifsAndLookForDriver(Long id) {
+    public boolean createPalsNotifsAndLookForDriver(Long id) {
         Optional<Ride> rideOpt = this.repository.findById(id);
         if (rideOpt.isPresent()) {
             Ride ride = rideOpt.get();
+            if (this.allAcceptedRide(ride)) {
+                boolean foundDriver = this.findAndNotifyDriver(ride);
+                if (!foundDriver) {
+                    ride.setStatus(RideStatus.DENIED);
+                    this.repository.save(ride);
+                    return false;
+                }
+            }
             for (int i = 1; i < ride.getPassengers().size(); i++) {
                 this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
             }
-            if (this.allAcceptedRide(ride)) {
-                this.findAndNotifyDriver(ride);
-            }
         }
+        return true;
     }
 
     public UserDTO getRidingPal(String email) {
@@ -276,7 +283,7 @@ public class RideService {
                 }
             }
             ride = this.repository.save(ride);
-            updateStatusOverSocket(ride);
+            updateStatusOverSocket(ride, ride.getId());
         }
         return null;
     }
@@ -415,8 +422,9 @@ public class RideService {
         } else if (user.getRoles().stream().toList().get(0).getRole().equalsIgnoreCase("DRIVER")) {
             rides = repository.findByDriver(user);
         }
-        if (rides.size() > 0)
-            return this.rideMapper.mapToDto(rides.get(0));
+        Ride ride = getRide(rides);
+        if (ride != null)
+            return this.rideMapper.mapToDto(ride);
         return null;
     }
 
@@ -621,16 +629,13 @@ public class RideService {
             Vehicle vehicle = vehicleOpt.get();
             this.vehicleService.save(vehicle);
             List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
-            System.out.println(vehicleId);
-            System.out.println(rides);
-            Ride ride = null;
+            List<Ride> goodRides = new ArrayList<Ride>();
             for (Ride r : rides) {
                 if (Objects.equals(r.getVehicle().getId(), vehicle.getId())) {
-                    ride = r;
+                    goodRides.add(r);
                 }
             }
-            System.out.println("-----");
-            System.out.println(ride);
+            Ride ride = this.getRide(goodRides);
             RideSimulationDTO rsDTO = new RideSimulationDTO();
             rsDTO.setVehicleStatus(vehicle.getStatus());
             if (ride != null) {
@@ -657,23 +662,24 @@ public class RideService {
             vehicle.setLongitude(longitude);
             vehicle.setLatitude(latitude);
             this.vehicleService.save(vehicle);
-
             activeVehicleDTO.setId(vehicle.getId());
             activeVehicleDTO.setLatitude(latitude);
             activeVehicleDTO.setLongitude(longitude);
 
             List<Ride> rides = this.repository.findRideByVehicleAndStatus(vehicle);
-            Ride ride = null;
+            List<Ride> goodRides = new ArrayList<Ride>();
             for (Ride r : rides) {
                 if (Objects.equals(r.getVehicle().getId(), vehicle.getId())) {
-                    ride = r;
+                    goodRides.add(r);
                 }
             }
+            Ride ride = this.getRide(goodRides);
             LocationDTO locationDTO = new LocationDTO();
             locationDTO.setLatitude(vehicle.getLatitude());
             locationDTO.setLongitude(vehicle.getLongitude());
             if (ride != null) {
-                activeVehicleDTO.setFree(false);
+                if (ride.getStatus() == RideStatus.SCHEDULED) activeVehicleDTO.setFree(true);
+                else activeVehicleDTO.setFree(false);
                 this.updateLocationToPassengers(ride.getVehicle().getDriver(), ride.getPassengers().stream().toList(), locationDTO);
                 this.updateActiveVehicles(activeVehicleDTO);
             } else {
@@ -682,6 +688,33 @@ public class RideService {
             }
         }
         return null;
+    }
+
+    private Ride getRide(List<Ride> goodRides) {
+        if (goodRides.size() == 0) return null;
+        if (goodRides.size() == 1) return goodRides.get(0);
+        else {
+            for (Ride ride : goodRides) {
+                if (ride.getStatus() == RideStatus.STARTED || ride.getStatus() == RideStatus.CONFIRMED) {
+                    return ride;
+                }
+            }
+            for (Ride ride : goodRides) {
+                if (ride.getStatus() == RideStatus.SCHEDULED) {
+                    return ride;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void removeInactiveVehicle(Long vehicleId) {
+        Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(vehicleId);
+        if (vehicleOpt.isPresent()) {
+            ActiveVehicleDTO inactive = new ActiveVehicleDTO();
+            inactive.setId(vehicleOpt.get().getId());
+            this.updateActiveVehicles(inactive);
+        }
     }
 
     private void updateActiveVehicles(ActiveVehicleDTO activeVehicleDTO) {

@@ -84,6 +84,12 @@ export class DetailedRouteComponent implements OnInit {
 
   async book(id: string) {
     let rideId = await this.rideService.bookExisting(id);
+
+    if (rideId === null) {
+      this.toastr.error("You already booked a ride.");
+      return;
+    }
+
     let driverFound: boolean | null = false;
     if (rideId) {
       driverFound = await this.rideService.findDriver(rideId);
@@ -100,5 +106,10 @@ export class DetailedRouteComponent implements OnInit {
       }
     }
 
+  }
+
+  onClose() {
+    this.closeFunc()
+    this.open = false;
   }
 }

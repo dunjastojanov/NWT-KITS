@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RideService} from "../../services/ride/ride.service";
 import {ToastrService} from "ngx-toastr";
+import { NotificationService } from 'src/app/services/notification/notification.service';
 
 @Component({
   selector: 'review',
@@ -12,9 +13,10 @@ export class ReviewComponent implements OnInit {
   driverRating: number = 0;
   vehicleRating: number = 0;
   description: string = '';
+  @Input("notificationId") notificationId: string | undefined;
   private rideService: RideService;
 
-  constructor(rideService: RideService, private toastr: ToastrService) {
+  constructor(rideService: RideService, private toastr: ToastrService, private notificationService: NotificationService) {
     this.rideService = rideService;
   }
 
@@ -44,8 +46,16 @@ export class ReviewComponent implements OnInit {
     }
     this.rideService.addReview(dto).then(response => {
         this.toastr.success('Review added successfully');
-        window.location.reload();
+        if (this.notificationId) {
+          this.notificationService.setRead(this.notificationId);
+        }
+      window.location.reload();
       }
     )
+  }
+
+  onClose() {
+    this.closeFunc()
+    this.open = false;
   }
 }

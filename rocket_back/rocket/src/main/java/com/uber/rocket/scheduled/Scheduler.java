@@ -38,8 +38,6 @@ public class Scheduler {
     private LogInfoService logInfoService;
 
     private final static int ONE_MINUTE = 1000 * 60;
-    @Autowired
-    private RideCancellationRepository rideCancellationRepository;
 
     @Scheduled(fixedDelay = ONE_MINUTE, initialDelay = ONE_MINUTE * 10)
     public void checkIfDriveExceededWorkingTime() {

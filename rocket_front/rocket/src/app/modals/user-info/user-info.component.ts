@@ -55,4 +55,8 @@ export class UserInfoComponent implements OnInit {
 
   }
 
+  onClose() {
+    this.closeFunc()
+    this.open = false;
+  }
 }
