@@ -16,8 +16,8 @@
         <td class="data">{{item.start}}</td>
         <td class="data">{{item.end}}</td>
         <td class="data">{{item.driver}}</td>
-        <td class="data">{{item.duration}}</td>
-        <td class="data">{{item.price}}</td>
+        <td class="data">{{+item.duration/60}} min</td>
+        <td class="data">{{item.price}} din.</td>
         <td>
           <view-more-button [id]="item.id"></view-more-button>
         </td>

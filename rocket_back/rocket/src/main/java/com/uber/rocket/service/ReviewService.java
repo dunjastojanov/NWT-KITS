@@ -46,12 +46,7 @@ public class ReviewService {
         review.setRide(ride);
 
         review =  reviewRepository.save(review);
-        List<Notification> notifs = notificationService.getNotificationsForUserAndRide(user, ride);
-        for (Notification notification : notifs) {
-            if (notification.getType() == NotificationType.RIDE_REVIEW) {
-                notificationService.setNotificationAsRead(user, ride, notification.getType());
-            }
-        }
+
         return review;
     }
 }

@@ -53,6 +53,12 @@ export class FavouriteRoutesComponent implements OnInit {
 
   bookNow(id: string) {
     this.rideService.bookExisting(id).then(id => {
+      if (id === null) {
+        this.toastr.error("You already booked a ride.");
+        return;
+      }
+
+
       if (id) {
         this.rideService.getCurrentRide(id).then(currentRide =>{
           if (currentRide) {

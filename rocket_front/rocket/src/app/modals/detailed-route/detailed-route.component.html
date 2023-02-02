@@ -1,6 +1,6 @@
 <div *ngIf="open" class="modal !w-3/5">
   <div class="modal-container w-full">
-    <button type="button" (click)="closeFunc()" class="modal-close-button">
+    <button type="button" (click)="onClose()" class="modal-close-button">
       <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
            xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd"
@@ -21,7 +21,7 @@
           <app-info [title]="'Driver'" [info]="ride.driver"></app-info>
 
           <app-info class="ml-auto" [title]="'Price'" [info]="ride.price.toString() + ' din'"></app-info>
-          <app-info [title]="'Duration'" [info]="ride.duration.toString()  + ' min'"></app-info>
+          <app-info [title]="'Duration'" [info]="+ride.duration/60  + ' min'"></app-info>
           <icon-button-secondary *ngIf="hasRole('CLIENT')" class="mr-2" (click)="addFavorite(ride.id)"
                                  [path]="'assets/icons/favorite.png'"></icon-button-secondary>
           <icon-button-secondary *ngIf="hasRole('CLIENT')" class="mr-2"

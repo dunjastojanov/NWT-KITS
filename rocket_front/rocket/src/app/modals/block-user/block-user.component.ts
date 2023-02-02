@@ -33,4 +33,8 @@ export class BlockUserComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onClose() {
+    this.closeFunc()
+    this.open = false;
+  }
 }

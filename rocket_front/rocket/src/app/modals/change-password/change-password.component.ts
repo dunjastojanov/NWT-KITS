@@ -39,4 +39,8 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onClose() {
+    this.closeFunc()
+    this.open = false;
+  }
 }
