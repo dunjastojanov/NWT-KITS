@@ -16,16 +16,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/ride")
 public class RideController {
-    private final RideService rideService;
     @Autowired
-    public RideController(RideService rideService) {
-        this.rideService = rideService;
-
-    }
+    private RideService rideService;
 
     @PostMapping("currentRide")
     public ResponseEntity<?> createRide(@RequestBody @Valid RideDTO ride) {
-        try{
+        try {
             System.out.println(ride.getRoute());
             return ResponseEntity.ok(this.rideService.createRide(ride));
         } catch (Exception exception) {
@@ -37,8 +33,7 @@ public class RideController {
     public ResponseEntity<?> createRideFromExisting(@PathVariable long rideId, HttpServletRequest request) {
         try {
             return ResponseEntity.ok(this.rideService.createRideFromExisting(rideId, request));
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -47,8 +42,7 @@ public class RideController {
     public ResponseEntity<?> findDriver(@PathVariable long rideId) {
         try {
             return ResponseEntity.ok(this.rideService.findAndNotifyDriver(rideId));
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -63,8 +57,7 @@ public class RideController {
     public ResponseEntity<?> getMap(@PathVariable long rideId) {
         try {
             return ResponseEntity.ok(this.rideService.getMap(rideId));
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -97,10 +90,12 @@ public class RideController {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping(path = "/status/{rideId}")
     public void changeRidePalDriverStatus(@PathVariable("rideId") String rideId, @RequestBody ChangeStatusDTO changeStatusDTO) {
         rideService.changeRidePalDriverStatus(rideId, changeStatusDTO);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getRideDetails(@PathVariable Long id) {
         try {
@@ -109,6 +104,7 @@ public class RideController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
+
     @GetMapping("/favourite")
     public ResponseEntity<?> getFavouriteRoutesForUser(HttpServletRequest request) {
         try {
@@ -122,8 +118,7 @@ public class RideController {
     public ResponseEntity<?> addFavouriteRoute(HttpServletRequest request, @PathVariable Long rideId) {
         try {
             return ResponseEntity.ok(rideService.addFavouriteRoute(request, rideId));
-        }
-        catch (RuntimeException exception) {
+        } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
@@ -142,8 +137,7 @@ public class RideController {
         try {
             rideService.deleteFavouriteRoute(favouriteRouteId);
             return ResponseEntity.ok("Delete successful.");
-        }
-        catch (RuntimeException exception) {
+        } catch (RuntimeException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
@@ -216,6 +210,7 @@ public class RideController {
     public void updateVehicleLocation(@PathVariable("id") Long id, @RequestBody LocationDTO locationDTO) {
         LocationDTO location = this.rideService.updateVehicleLocation(id, locationDTO.getLongitude(), locationDTO.getLatitude());
     }
+
     @GetMapping(path = "/simulation-ride/{id}", produces = "application/json")
     public RideSimulationDTO getRideSimulation(@PathVariable Long id) {
         return this.rideService.getRideForSimulation(id);

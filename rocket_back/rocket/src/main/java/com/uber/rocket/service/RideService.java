@@ -3,7 +3,6 @@ package com.uber.rocket.service;
 import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.notification.NotificationType;
 import com.uber.rocket.entity.ride.*;
-import com.uber.rocket.entity.user.Role;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.mapper.FavouriteRouteMapper;
@@ -11,10 +10,6 @@ import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
 import com.uber.rocket.mapper.RideMapper;
 import com.uber.rocket.repository.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.type.LocalDateType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,14 +69,6 @@ public class RideService {
     @Autowired
     private DestinationRepository destinationRepository;
 
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private class VehicleLastDestination {
-        Destination endDestinationCurrentRide;
-        Vehicle vehicle;
-    }
 
     public MapDTO getMap(long rideId) {
         Ride ride = getRide(rideId);
@@ -293,6 +280,7 @@ public class RideService {
         }
         return null;
     }
+
     public boolean findAndNotifyDriver(long rideId) {
 
         try {
@@ -308,7 +296,7 @@ public class RideService {
     public boolean findAndNotifyDriver(Ride ride) {
         Vehicle vehicle = this.lookForDriver(ride);
         if (vehicle != null) {
-            try{
+            try {
                 User driver = vehicle.getDriver();
                 this.notificationService.addDriverRideRequestNotification(driver, ride);
                 List<NotificationDTO> notifications = this.notificationService.getNotificationsForUser(driver);
@@ -686,7 +674,7 @@ public class RideService {
             locationDTO.setLongitude(vehicle.getLongitude());
             if (ride != null) {
                 activeVehicleDTO.setFree(false);
-                this.updateLocationToPassengers(ride.getVehicle().getDriver(), ride.getPassengers().stream().toList(),locationDTO);
+                this.updateLocationToPassengers(ride.getVehicle().getDriver(), ride.getPassengers().stream().toList(), locationDTO);
                 this.updateActiveVehicles(activeVehicleDTO);
             } else {
                 activeVehicleDTO.setFree(true);
@@ -699,11 +687,12 @@ public class RideService {
     private void updateActiveVehicles(ActiveVehicleDTO activeVehicleDTO) {
         this.messagingTemplate.convertAndSend("/queue/active-vehicles", activeVehicleDTO);
     }
+
     private void updateLocationToPassengers(User driver, List<Passenger> passengers, LocationDTO locationDTO) {
         for (Passenger passenger : passengers) {
-            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(),"/queue/update-vehicle", locationDTO);
+            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/update-vehicle", locationDTO);
         }
-        messagingTemplate.convertAndSendToUser(driver.getEmail(),"/queue/update-vehicle", locationDTO);
+        messagingTemplate.convertAndSendToUser(driver.getEmail(), "/queue/update-vehicle", locationDTO);
     }
 
     public List<Ride> getRidesByRideStatus(RideStatus rideStatus) {

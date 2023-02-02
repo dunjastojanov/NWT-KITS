@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import javax.validation.constraints.Null;
 import java.util.ArrayList;
 
 import static com.uber.rocket.ride_booking.utils.destination.DestinationCreation.getDestinationList;

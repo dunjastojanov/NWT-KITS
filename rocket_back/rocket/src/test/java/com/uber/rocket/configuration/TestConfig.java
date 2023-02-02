@@ -3,41 +3,46 @@ package com.uber.rocket.configuration;
 import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.*;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Configuration
-public class Config {
-
+@TestConfiguration
+public class TestConfig {
     @Autowired
+    
     RoleRepository roleRepository;
     @Autowired
+    
     UserRepository userRepository;
     @Autowired
+    
     VehicleRepository vehicleRepository;
     @Autowired
+    
     RideRepository rideRepository;
     @Autowired
+    
     PassengerRepository passengerRepository;
     @Autowired
+    
     DestinationRepository destinationRepository;
 
     @Autowired
+    
     LogInfoRepository logInfoRepository;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Bean
-    CommandLineRunner configureTestData() {
+    public  CommandLineRunner configureTestData() {
         return args -> {
+            System.out.println("aaaaaaaaaaaaaaaaaaaa");
             Role clientRole = addRole("CLIENT");
             Role driverRole = addRole("DRIVER");
             Role adminRole = addRole("ADMINISTRATOR");
@@ -58,7 +63,7 @@ public class Config {
             User client6 = addUser(clientRole, "Jelena", "Stojanov", "0611111111");
 
             Ride ride1 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-25 14:15", "2023-01-25 17:15", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
-            addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride1);
+            addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad aloo breee", ride1);
             addDestination(45.2478236, 19.804034, "Futoski put 18 Novi Sad", ride1);
 
             Ride ride2 = addRide(vehicle2, List.of(client3, client4), 180.0, 1538.2, "2023-01-24 21:20", "2023-01-25 00:20", 520, "smdsGwz~wBxAEA{EoFHkAf@_Al@`@gO@iES}NYyCgA_F`BeAz@_AdB{Dj@eBxGjGfBgF");
@@ -67,7 +72,7 @@ public class Config {
 
 
             Ride ride3 = addRide(vehicle3, List.of(client5, client6), 360.0, 3039.4, "2023-01-25 20:03", "2023-01-25 21:03", 760, "kkcsGyubxBhAg@z\\jjB{OvFym@bA@zEmDHJ`P");
-            addDestination(45.2423455, 19.8437972, "Dr Ivana Ribara 13 Novi Sad sss", ride3);
+            addDestination(45.2423455, 19.8437972, "Dr Ivana Ribara 13 Novi Sad", ride3);
             addDestination(45.2482226, 19.8212104, "Rudjera Boskovica 22 Novi Sad", ride3);
 
             Ride ride4 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-29 13:56", "2023-01-29 14:50", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
@@ -80,13 +85,13 @@ public class Config {
         };
     }
 
-    private Role addRole(String name) {
+    private  Role addRole(String name) {
         Role role = new Role();
         role.setRole(name);
         return roleRepository.save(role);
     }
 
-    private LogInfo addLogInfo(User driver) {
+    private  LogInfo addLogInfo(User driver) {
         LogInfo logInfo = new LogInfo();
         logInfo.setUserId(driver.getId());
         logInfo.setBegging(LocalDateTime.of(2023, 1, 28, 10, 0));
@@ -94,7 +99,7 @@ public class Config {
         return logInfoRepository.save(logInfo);
     }
 
-    private User addUser(Role role, String first_name, String last_name, String phoneNumber) {
+    private  User addUser(Role role, String first_name, String last_name, String phoneNumber) {
         User user = new User();
         user.setFirstName(first_name);
         user.setLastName(last_name);
@@ -111,7 +116,7 @@ public class Config {
         return userRepository.save(user);
     }
 
-    private Destination addDestination(double latitude, double longitude, String address, Ride ride) {
+    private  Destination addDestination(double latitude, double longitude, String address, Ride ride) {
         Destination destination = new Destination();
         destination.setLatitude(latitude);
         destination.setLongitude(longitude);
@@ -121,14 +126,14 @@ public class Config {
     }
 
 
-    private Passenger addPassenger(User user) {
+    private  Passenger addPassenger(User user) {
         Passenger passenger = new Passenger();
         passenger.setUser(user);
         passenger.setUserRidingStatus(UserRidingStatus.ACCEPTED);
         return passengerRepository.save(passenger);
     }
 
-    private Vehicle addVehicle(User driver) {
+    private  Vehicle addVehicle(User driver) {
         Vehicle vehicle = new Vehicle();
 
         vehicle.setLatitude(45.248130);
@@ -143,7 +148,7 @@ public class Config {
     }
 
 
-    private Ride addRide(Vehicle vehicle, List<User> users, Double duration, double length, String startTime, String endTime, int price, String routeLocation) {
+    private  Ride addRide(Vehicle vehicle, List<User> users, Double duration, double length, String startTime, String endTime, int price, String routeLocation) {
         Ride ride = new Ride();
 
         ride.setStatus(RideStatus.ENDED);

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Component
+@Component("rideMapperImpl")
 @Transactional
 public class RideMapper implements Mapper<Ride, RideDTO> {
     @Autowired
@@ -200,4 +200,7 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
         }
         return dests;
     }
+
+
+
 }
