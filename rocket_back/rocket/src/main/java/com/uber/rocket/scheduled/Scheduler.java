@@ -46,7 +46,7 @@ public class Scheduler {
             }
             for (Vehicle vehicle : vehicles) {
                 boolean exceeded = logInfoService.hasDriverExceededWorkingHours(vehicle.getDriver().getId());
-                if (exceeded && vehicle.getStatus().equals(VehicleStatus.DRIVING)) {
+                if (exceeded) {  //TODO: Ne moze status driving
                     vehicle.setStatus(VehicleStatus.INACTIVE);
                     vehicleService.save(vehicle);
                     logInfoService.endWorkingHourCount(vehicle.getDriver().getId());

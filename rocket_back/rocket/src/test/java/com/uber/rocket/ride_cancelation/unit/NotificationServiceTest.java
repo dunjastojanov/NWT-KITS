@@ -141,16 +141,20 @@ class NotificationServiceTest {
 
     @Test
     public void getNotificationsForClient() {
-        when(notificationMapper.mapToDto(new Notification())).thenReturn(new NotificationDTO());
-        when(notificationRepository.findAllByUser(user1)).thenReturn(List.of(new Notification()));
+        Notification notification = new Notification();
+        notification.setRead(false);
+        when(notificationMapper.mapToDto(notification)).thenReturn(new NotificationDTO());
+        when(notificationRepository.findAllByUser(user1)).thenReturn(List.of(notification));
         List<NotificationDTO> notifications = notificationService.getNotificationsForUser(user1);
         assertEquals(1, notifications.size());
     }
 
     @Test
     public void getNotificationsForDriver() {
-        when(notificationMapper.mapToDto(new Notification())).thenReturn(new NotificationDTO());
-        when(notificationRepository.findAllByUser(user2)).thenReturn(List.of(new Notification()));
+        Notification notification = new Notification();
+        notification.setRead(false);
+        when(notificationMapper.mapToDto(notification)).thenReturn(new NotificationDTO());
+        when(notificationRepository.findAllByUser(user2)).thenReturn(List.of(notification));
         List<NotificationDTO> notifications = notificationService.getNotificationsForUser(user2);
         assertEquals(1, notifications.size());
     }

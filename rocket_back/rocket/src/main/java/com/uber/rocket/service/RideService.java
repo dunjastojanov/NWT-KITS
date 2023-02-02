@@ -116,7 +116,7 @@ public class RideService {
             }
             ride = this.repository.save(ride);
 
-            this.updateStatusOverSocket(ride);
+            this.updateStatusOverSocket(ride, ride.getId());
             if (!noDriver)
                 this.updateStatusOverSocket(ride, ride.getId());
             else this.updateStatusOverSocket(ride, (long)-1);

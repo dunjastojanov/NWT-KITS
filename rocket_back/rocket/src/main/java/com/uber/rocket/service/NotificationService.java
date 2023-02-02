@@ -235,7 +235,7 @@ public class NotificationService {
         String endAddress = this.destinationService.getEndAddressByRide(ride);
         variables.put("passengers", getPassengers(ride));
         variables.put("price", String.valueOf(ride.getPrice()));
-        variables.put("time", String.valueOf(ride.getPrice()));
+        variables.put("time", String.valueOf(ride.getDuration()/60) + " min.");
         variables.put("start", startAddress);
         variables.put("end", endAddress);
         return variables;
@@ -274,7 +274,7 @@ public class NotificationService {
         Map<String, String> variables = new HashMap<>();
         variables.put("passengers", getPassengers(ride));
         variables.put("price", String.valueOf(ride.getPrice()));
-        variables.put("time", String.valueOf(ride.getPrice()));
+        variables.put("time", String.valueOf(ride.getDuration()/60) + " min.");
         variables.put("start", startAddress);
         variables.put("end", endAddress);
 
