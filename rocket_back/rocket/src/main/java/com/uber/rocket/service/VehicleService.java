@@ -137,16 +137,21 @@ public class VehicleService {
                     messagingTemplate.convertAndSendToUser(vehicle.getDriver().getEmail(), "/user/queue/driver/status", vehicle.getStatus());
                 }
                 logInfoService.startCountingHours(vehicle.getDriver().getId());
+                vehicle.setStatus(VehicleStatus.ACTIVE);
+                return vehicleRepository.save(vehicle).getStatus().name();
             }
             if (VehicleStatus.valueOf(status.toUpperCase()).equals(VehicleStatus.INACTIVE)) {
-                logInfoService.endWorkingHourCount(vehicle.getDriver().getId());
+                vehicle.setStatus(VehicleStatus.INACTIVE);
+                String result = vehicleRepository.save(vehicle).getStatus().name();
+                logInfoService.endWorkingHourCount(vehicle.getDriver().getId()); //TODO baca error query did not return a unique result
+                return result;
             }
-            vehicle.setStatus(VehicleStatus.valueOf(status.toUpperCase()));
-            return vehicleRepository.save(vehicle).getStatus().name();
+
 
         } catch (IllegalArgumentException exception) {
             throw new RuntimeException("Status name does not exist");
         }
+        return "";
     }
 
     public List<Vehicle> findAvailableDrivers(VehicleType type, boolean kidFriendly, boolean petFriendly) {

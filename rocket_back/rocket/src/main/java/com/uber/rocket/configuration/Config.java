@@ -69,11 +69,11 @@ public class Config {
             addDestination(45.2423455, 19.8437972, "Dr Ivana Ribara 13 Novi Sad", ride3);
             addDestination(45.2482226, 19.8212104, "Rudjera Boskovica 22 Novi Sad", ride3);
 
-            /*Ride ride4 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-29 13:56", "2023-01-29 14:50", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
-            ride4.setStatus(RideStatus.SCHEDULED);
+            Ride ride4 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-29 13:56", "2023-01-29 14:50", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
+            ride4.setStatus(RideStatus.CONFIRMED);
             rideRepository.save(ride4);
             addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride4);
-            addDestination(45.2478236, 19.804034, "Futoski put 18 Novi Sad", ride4);*/
+            addDestination(45.2478236, 19.804034, "Futoski put 18 Novi Sad", ride4);
 
             LogInfo logInfo1 = addLogInfo(driver1);
         };
