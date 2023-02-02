@@ -1,11 +1,13 @@
 package com.uber.rocket.ride_booking.integration;
 
 import com.uber.rocket.configuration.TestConfig;
+import com.uber.rocket.dto.ChangeStatusDTO;
 import com.uber.rocket.dto.DestinationDTO;
 import com.uber.rocket.dto.RideDTO;
 import com.uber.rocket.dto.VehicleDTO;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.ride.RideStatus;
+import com.uber.rocket.entity.ride.UserRidingStatus;
 import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.entity.user.VehicleStatus;
 import com.uber.rocket.entity.user.VehicleType;
@@ -38,7 +40,8 @@ import java.util.Optional;
 
 import static com.uber.rocket.ride_booking.utils.destination.DestinationCreation.getDestinationDTO;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -386,7 +389,7 @@ class RideControllerTest {
     @Test
     @DisplayName("Passengers did accepted ride, but no driver")
     void createPalsNotifsAndLookForDriverTest2() throws Exception {
-        Optional<Vehicle> vehicle=vehicleRepository.findById(1L);
+        Optional<Vehicle> vehicle = vehicleRepository.findById(1L);
         vehicle.get().setStatus(VehicleStatus.INACTIVE);
         vehicleRepository.save(vehicle.get());
         MvcResult mvcResult = mockMvc.perform(get(URL_PREFIX + "/post-create-ride/6"))
@@ -411,7 +414,7 @@ class RideControllerTest {
 
     @Test
     void gettingPassengerPalWithWrongEmail() throws Exception {
-        MvcResult mvcResult =  mockMvc.perform(get(URL_PREFIX + "/pal/bre@gmail.com"))
+        MvcResult mvcResult = mockMvc.perform(get(URL_PREFIX + "/pal/bre@gmail.com"))
                 .andExpect(status().isNotFound()).andReturn();
         assertEquals("User not found", mvcResult.getResponse().getContentAsString());
     }
@@ -419,7 +422,7 @@ class RideControllerTest {
     @Test
     @DisplayName("User has current ride")
     void getRidingPalTest2() throws Exception {
-        MvcResult mvcResult =  mockMvc.perform(get(URL_PREFIX + "/pal/eleonora@gmail.com"))
+        MvcResult mvcResult = mockMvc.perform(get(URL_PREFIX + "/pal/marica@gmail.com"))
                 .andExpect(status().isForbidden()).andReturn();
         assertEquals("User already has scheduled ride.", mvcResult.getResponse().getContentAsString());
     }
@@ -427,7 +430,7 @@ class RideControllerTest {
     @Test
     @DisplayName("User doesn't have current ride")
     void getRidingPal() throws Exception {
-        MvcResult mvcResult =  mockMvc.perform(get(URL_PREFIX + "/pal/jovica@gmail.com"))
+        MvcResult mvcResult = mockMvc.perform(get(URL_PREFIX + "/pal/jovica@gmail.com"))
                 .andExpect(status().isOk()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("jovica@gmail.com"));
     }
