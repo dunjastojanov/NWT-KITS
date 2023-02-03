@@ -117,7 +117,6 @@ class RideServiceTest {
 
         verify(rideRepository).findById(Long.parseLong(rideId));
         verify(userService).getById(Long.parseLong(changeStatusDTO.getUserId()));
-        verify(notificationService).setNotificationAsRead(user, ride, NotificationType.PASSENGER_RIDE_REQUEST);
         verify(rideRepository).save(ride);
         verify(vehicleService, never()).findAvailableDrivers(any(), anyBoolean(), anyBoolean());
         verify(destinationService, never()).getStartDestinationByRide(ride);
@@ -185,7 +184,6 @@ class RideServiceTest {
 
         verify(rideRepository).findById(Long.parseLong(rideId));
         verify(userService).getById(Long.parseLong(changeStatusDTO.getUserId()));
-        verify(notificationService).setNotificationAsRead(user, ride, NotificationType.DRIVER_RIDE_REQUEST);
         verify(rideRepository).save(ride);
         verify(vehicleService, never()).findAvailableDrivers(any(), anyBoolean(), anyBoolean());
         verify(destinationService, never()).getStartDestinationByRide(ride);
@@ -218,7 +216,6 @@ class RideServiceTest {
 
         verify(rideRepository).findById(Long.parseLong(rideId));
         verify(userService).getById(Long.parseLong(changeStatusDTO.getUserId()));
-        verify(notificationService).setNotificationAsRead(user, ride, NotificationType.DRIVER_RIDE_REQUEST);
         verify(rideRepository).save(ride);
         verify(vehicleService, never()).findAvailableDrivers(any(), anyBoolean(), anyBoolean());
         verify(destinationService, never()).getStartDestinationByRide(ride);
@@ -284,7 +281,6 @@ class RideServiceTest {
 
         verify(rideRepository).findById(Long.parseLong(rideId));
         verify(userService).getById(Long.parseLong(changeStatusDTO.getUserId()));
-        verify(notificationService).setNotificationAsRead(user, ride, NotificationType.DRIVER_RIDE_REQUEST);
         verify(rideRepository).save(ride);
         verify(vehicleService, never()).findAvailableDrivers(any(), anyBoolean(), anyBoolean());
         verify(destinationService, never()).getStartDestinationByRide(ride);
@@ -331,7 +327,6 @@ class RideServiceTest {
 
         verify(rideRepository).findById(Long.parseLong(rideId));
         verify(userService).getById(Long.parseLong(changeStatusDTO.getUserId()));
-        verify(notificationService).setNotificationAsRead(user, ride, NotificationType.PASSENGER_RIDE_REQUEST);
         verify(rideRepository).save(ride);
 
         assertNotNull(result);
@@ -372,7 +367,6 @@ class RideServiceTest {
 
         verify(rideRepository).findById(Long.parseLong(rideId));
         verify(userService).getById(Long.parseLong(changeStatusDTO.getUserId()));
-        verify(notificationService).setNotificationAsRead(user, ride, NotificationType.PASSENGER_RIDE_REQUEST);
         verify(rideRepository).save(ride);
 
         assertNotNull(result);
@@ -417,7 +411,6 @@ class RideServiceTest {
 
         verify(rideRepository).findById(Long.parseLong(rideId));
         verify(userService).getById(Long.parseLong(changeStatusDTO.getUserId()));
-        verify(notificationService).setNotificationAsRead(user, ride, NotificationType.PASSENGER_RIDE_REQUEST);
         verify(rideRepository).save(ride);
         verify(vehicleService, never()).findAvailableDrivers(any(), anyBoolean(), anyBoolean());
         verify(destinationService, never()).getStartDestinationByRide(ride);

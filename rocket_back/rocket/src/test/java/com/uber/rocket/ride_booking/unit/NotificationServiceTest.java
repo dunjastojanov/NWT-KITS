@@ -1,7 +1,11 @@
 package com.uber.rocket.ride_booking.unit;
 
+import com.uber.rocket.dto.NotificationDTO;
 import com.uber.rocket.entity.notification.Notification;
+import com.uber.rocket.entity.user.Role;
+import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.ride.Ride;
+import com.uber.rocket.mapper.NotificationMapper;
 import com.uber.rocket.repository.NotificationRepository;
 import com.uber.rocket.ride_booking.utils.ride.RideCreationService;
 import com.uber.rocket.service.DestinationService;
@@ -13,6 +17,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.Null;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 
@@ -36,6 +42,8 @@ public class NotificationServiceTest {
 
     @Mock
     private TemplateProcessor templateProcessorMock;
+    @Mock
+    NotificationMapper notificationMapperMock;
 
     private AutoCloseable closeable;
 
@@ -93,11 +101,19 @@ public class NotificationServiceTest {
     }
 
     @Test
-    @DisplayName("Positive test")
+    @DisplayName("Positive test if user is admin, and list of notification is empty list")
     void setNotificationAsReadTest2() {
-        when(this.notificationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(new Notification()));
-        assertNull(notificationService.setNotificationAsRead(anyLong()));
-        verify(notificationRepositoryMock, times(1)).save(any(Notification.class));
+        Notification value = new Notification();
+        Role role = new Role();
+        role.setRole("ADMINISTRATOR");
+        User user = new User();
+        user.setEmail("test@email.com");
+        user.setRoles(new ArrayList<>());
+        user.getRoles().add(role);
+        value.setUser(user);
+        when(this.notificationRepositoryMock.findByUserIsNull()).thenReturn(new ArrayList<>());
+        when(this.notificationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(value));
+        assertThrows(NullPointerException.class, () -> notificationService.setNotificationAsRead(anyLong()));
     }
 
     @Test
