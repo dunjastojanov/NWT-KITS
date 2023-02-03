@@ -65,7 +65,7 @@ public class NotificationService {
         save(notification);
     }
 
-    private Notification save(Notification notification) {
+    public Notification save(Notification notification) {
         notification.setRead(false);
         notification.setSent(LocalDateTime.now());
         notification = notificationRepository.save(notification);
@@ -259,13 +259,14 @@ public class NotificationService {
         return variables;
     }
 
-    private Notification createRideRequestNotification(User user, Ride ride) {
+    public Notification createRideRequestNotification(User user, Ride ride) {
         String startAddress = this.destinationService.getStartAddressByRide(ride);
         String endAddress = this.destinationService.getEndAddressByRide(ride);
         Notification notification = new Notification();
         notification.setUser(user);
         notification.setTitle("Ride request");
-        notification.setTemplateVariables(templateProcessor.getVariableString(getRideVariables(ride, startAddress, endAddress)));
+        HashMap<String, String> variables = (HashMap<String, String>) getRideVariables(ride, startAddress, endAddress);
+        notification.setTemplateVariables(templateProcessor.getVariableString(variables));
         notification.setEntityId(ride.getId());
         notification.setSent(LocalDateTime.now());
         return notification;

@@ -33,7 +33,7 @@ const injectToken = (config: AxiosRequestConfig): AxiosRequestConfig => {
   }
 };
 
-class Http {
+export class Http {
   private instance: AxiosInstance | null = null;
 
   private get http(): AxiosInstance {

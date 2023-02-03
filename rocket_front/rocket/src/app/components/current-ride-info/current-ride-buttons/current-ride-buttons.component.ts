@@ -1,14 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {ToastrService} from "ngx-toastr";
-import {User} from "../../../interfaces/User";
-import {StoreType} from "../../../shared/store/types";
-import {Store} from "@ngrx/store";
+import { ToastrService } from 'ngx-toastr';
+import { User } from '../../../interfaces/User';
+import { StoreType } from '../../../shared/store/types';
+import { Store } from '@ngrx/store';
 import { RideStatus } from 'src/app/interfaces/Ride';
 import { RideService } from 'src/app/services/ride/ride.service';
-import {
-  CurrentRideAction,
-  CurrentRideActionType,
-} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
 
 @Component({
   selector: 'current-ride-buttons',
@@ -28,13 +24,17 @@ export class CurrentRideButtonsComponent implements OnInit {
 
   role: string = '';
 
-  user:User|null=null;
+  user: User | null = null;
 
-  constructor(private rideService: RideService, private toastr: ToastrService, private store: Store<StoreType>) {
+  constructor(
+    private rideService: RideService,
+    private toastr: ToastrService,
+    private store: Store<StoreType>
+  ) {
     this.isFavorite = false;
-    store.select("loggedUser").subscribe(result => {
+    store.select('loggedUser').subscribe((result) => {
       this.user = result.user;
-    })
+    });
     this.store.select('loggedUser').subscribe((res) => {
       this.role = res.user!.roles[0];
     });
@@ -64,15 +64,14 @@ export class CurrentRideButtonsComponent implements OnInit {
 
   markAsFavorite() {
     if (this.rideId !== undefined && this.rideId !== -1) {
-      this.rideService.addFavorite(this.rideId.toString()).then(
-        ()=> {
-          this.toastr.success("Added to favorites");
-        }
-      ).catch((err)=>{
+      this.rideService
+        .addFavorite(this.rideId.toString())
+        .then(() => {
+          this.toastr.success('Added to favorites');
+        })
+        .catch((err) => {
           this.toastr.error(err.message);
-      })
+        });
     }
-
-
   }
 }

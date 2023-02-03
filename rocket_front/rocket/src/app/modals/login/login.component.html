@@ -51,7 +51,6 @@
   </div>
 </div>
 <forgot-password [open]="openForgotPasswordModal" [closeFunc]="toggleForgotPasswordModal"></forgot-password>
-<choose-role [open]="openChooseRoleModal" [closeFunc]="toggleChooseRoleModal" [userRoleItems]="userRoleItems"
-             (onConfirmRole)="loginWithOneRole($event)"></choose-role>
+
 <div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
 

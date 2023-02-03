@@ -3,42 +3,49 @@ package com.uber.rocket.configuration;
 import com.uber.rocket.entity.ride.*;
 import com.uber.rocket.entity.user.*;
 import com.uber.rocket.repository.*;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Configuration
-@Profile(value ="!test")
-public class Config {
-
+@TestConfiguration
+@Profile("test")
+public class TestConfig {
     @Autowired
+
     RoleRepository roleRepository;
     @Autowired
+
     UserRepository userRepository;
     @Autowired
+
     VehicleRepository vehicleRepository;
     @Autowired
+
     RideRepository rideRepository;
     @Autowired
+
     PassengerRepository passengerRepository;
     @Autowired
+
     DestinationRepository destinationRepository;
 
     @Autowired
+
     LogInfoRepository logInfoRepository;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+
     @Bean
-    CommandLineRunner configureTestData() {
+    public CommandLineRunner configureTestData() {
         return args -> {
+            System.out.println("aaaaaaaaaaaaaaaaaaaa");
             Role clientRole = addRole("CLIENT");
             Role driverRole = addRole("DRIVER");
             Role adminRole = addRole("ADMINISTRATOR");
@@ -52,9 +59,7 @@ public class Config {
             Vehicle vehicle3 = addVehicle(driver3);
             User driver4 = addUser(driverRole, "Bogoljub", "Milicevic", "0611111111");
             Vehicle vehicle4 = addVehicle(driver4);
-            vehicle4.setStatus(VehicleStatus.ACTIVE);
-            vehicleRepository.save(vehicle4);
-            User driver5 = addUser(driverRole, "Borko", "Sokic", "0611111111");
+            User driver5 = addUser(driverRole, "Imre", "Sokic", "0611111111");
             Vehicle vehicle5 = addVehicle(driver5);
             User driver6 = addUser(driverRole, "Rasim", "Sabani", "0611111111");
             Vehicle vehicle6 = addVehicle(driver6);
@@ -72,7 +77,7 @@ public class Config {
             User client9 = addUser(clientRole, "Jovica", "Vujic", "0611111111");
             User client10 = addUser(clientRole, "Marica", "Jovetic", "0611111111");
             User client11 = addUser(clientRole, "Teodora", "Bogatic", "0611111111");
-            User client12 = addUser(clientRole, "Milivoje", "Mrsic", "0611111111");
+            User client12 = addUser(clientRole, "Ivan", "Mrsic", "0611111111");
             User client13 = addUser(clientRole, "Goran", "Dobrenovic", "0611111111");
             User client14 = addUser(clientRole, "Svetozar", "Matin", "0611111111");
 
@@ -120,6 +125,7 @@ public class Config {
             rideRepository.save(ride7);
             addDestination(19.8327891, 45.2388761, "Narodnog Fronta 111", ride7);
             addDestination(19.7938139, 45.2550643, "Bulevar Vojvode Stepe", ride7);
+
             Ride ride8 = addRide(vehicle1, List.of(client7, client8), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
             ride8.setStatus(RideStatus.REQUESTED);
             rideRepository.save(ride8);
@@ -135,6 +141,7 @@ public class Config {
 
             addDestination(45.2370758, 19.826718, "Ive Andrica 58 Novi Sad", ride9);
             addDestination(45.2518688, 19.801566, "Bulevar Jovana Ducica 11 Novi Sad", ride9);
+
 
             LogInfo logInfo1 = addLogInfo(driver1);
         };
@@ -165,7 +172,7 @@ public class Config {
         user.setBlocked(false);
         user.setCity("Novi Sad");
         user.setProfilePicture(null);
-        user.setTokens((double) 2000);
+        user.setTokens((double) 1000);
         user = userRepository.save(user);
         user.setProfilePicture("http://localhost:8443/images/" + user.getId() + "/" + user.getFirstName() + ".jpg");
         return userRepository.save(user);
@@ -212,18 +219,11 @@ public class Config {
         ride.setDuration(duration);
         ride.setLength(length);
         ride.setVehicleTypeRequested(VehicleType.CARAVAN);
-        if (startTime != null ) {
-            ride.setStartTime(LocalDateTime.parse(startTime, formatter));
-        }
-        else {
-            ride.setStartTime(null);
-        }
-        if (endTime != null ) {
-            ride.setEndTime(LocalDateTime.parse(endTime, formatter));
-        }
-        else {
+        ride.setStartTime(LocalDateTime.parse(startTime, formatter));
+        if (endTime == null)
             ride.setEndTime(null);
-        }
+        else
+            ride.setEndTime(LocalDateTime.parse(endTime, formatter));
         ride.setPrice(price);
         ride.setRouteLocation(routeLocation);
         ride.setSplitFare(false);

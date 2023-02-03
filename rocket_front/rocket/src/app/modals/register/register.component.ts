@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import {RegisterService} from './register.service';
 import {ToastrService} from "ngx-toastr";
 
@@ -25,11 +26,10 @@ export class RegisterComponent implements OnInit {
   openSuccessToast = false;
   errorMessage = '';
 
-  constructor(private service: RegisterService, private toastr: ToastrService) {
-  }
+  constructor(private authService: AuthService, private toastr: ToastrService) {}
 
-  ngOnInit(): void {
-  }
+
+  ngOnInit(): void {}
 
   nextPage = () => {
     this.currentPage++;
@@ -53,7 +53,7 @@ export class RegisterComponent implements OnInit {
         city: this.city,
         phoneNumber: this.phone,
       };
-      let success: boolean = await this.service.registerUser(data);
+      let success: boolean = await this.authService.registerUser(data);
       if (success) {
         this.toggleSuccessToast();
         this.toastr.success("Registration successful!")

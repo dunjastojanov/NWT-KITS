@@ -65,6 +65,7 @@ export class NavbarComponent implements OnInit {
   };
 
   logout = (): void => {
+    this.router.navigate(['/']);
     if (this.hasRole('DRIVER')) {
       this.vehicleService.changeStatus('INACTIVE').then((res) => {
       });
@@ -72,6 +73,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/']).then(() => {});
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGOUT));
     this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
+    window.location.reload();
   };
 
   toggleRegister = (): void => {

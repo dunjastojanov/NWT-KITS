@@ -17,17 +17,13 @@ import java.util.stream.IntStream;
 
 @Component
 public class RideDetailsMapper implements Mapper<Ride, RideDetails> {
-    private final ReviewMapper reviewMapper;
-    private final ReviewService reviewService;
-    private final DestinationService destinationService;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
     @Autowired
-    public RideDetailsMapper(ReviewMapper reviewMapper, ReviewService reviewService, DestinationService destinationService) {
-        this.reviewMapper = reviewMapper;
-        this.reviewService = reviewService;
-        this.destinationService = destinationService;
-    }
+    private ReviewMapper reviewMapper;
+    @Autowired
+    private ReviewService reviewService;
+    @Autowired
+    private DestinationService destinationService;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
     @Override
