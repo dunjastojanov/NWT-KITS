@@ -490,23 +490,42 @@ public class RideCreationService {
         return userDTO;
     }
     public static RideDTO createValidRideDto() {
+        UserDTO userDTO=new UserDTO();
+        userDTO.setEmail("goran@gmail.com");
+        userDTO.setFirstName("Goran");
+        userDTO.setLastName("Dobrenovic");
+        userDTO.setRole("CLIENT");
+        userDTO.setProfilePicture("http://localhost:8443/images/21/Goran.jpg");
+        DestinationDTO destinationDTO1=new DestinationDTO();
+        destinationDTO1.setIndex(0);
+        destinationDTO1.setAddress("Bulevar Evrope 27 Novi Sad");
+        destinationDTO1.setLatitude(45.2444731);
+        destinationDTO1.setLongitude(19.8188391);
+        DestinationDTO destinationDTO2=new DestinationDTO();
+        destinationDTO2.setIndex(1);
+        destinationDTO2.setAddress("Narodnog Fronta 111 Novi Sad");
+        destinationDTO2.setLatitude(45.2388761);
+        destinationDTO2.setLongitude(19.8327891);
+        ArrayList<DestinationDTO> destinationDTOS=new ArrayList<>();
+        destinationDTOS.add(destinationDTO1);
+        destinationDTOS.add(destinationDTO2);
         RideDTO rideDTO = new RideDTO();
-        rideDTO.setRoute("_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
-        rideDTO.setPrice(10);
-        rideDTO.setEstimatedTime((double) 10);
-        rideDTO.setEstimatedDistance((double) 10);
+        rideDTO.setClient(userDTO);
+        rideDTO.setDestinations(destinationDTOS);
+        rideDTO.setIsSplitFair(false);
+        rideDTO.setPrice(700);
+        rideDTO.setEstimatedDistance(2520.7);
+        rideDTO.setEstimatedTime(300.0);
+        rideDTO.setIsNow(true);
+        rideDTO.setFeatures(List.of("Kid friendly"));
+        rideDTO.setRideStatus(RideStatus.REQUESTED);
+        rideDTO.setRoute("eycsGm{}wB~@k@PII]AEESZSp@a@TMRMVOZSDC`BaA^UVQfC{AdBeAn@a@^UnCaBfAs@BABADAJCDCB@BBDBB?D@DADABA@ADEBEBG@I@G?I?IAGCGGYCWAG?WCg@CqAEs@Ea@K{@?ACQEWGc@CIAICSAGG[COGc@EQqAcIEUAGuAsHEYKq@aAwFAIAOIe@EYKu@G[q@uFe@gDSwA}@qGg@iDCQIm@XOBABAhBw@lAk@HETKHEHEJEJEJGjBy@VMBAHE@DFZ?@^vB|B~LF`@BNfBhJ");
+        rideDTO.setIsRouteFavorite(false);
+        VehicleDTO dto=new VehicleDTO();
+        dto.setType(VehicleType.CARAVAN);
+        rideDTO.setVehicle(dto);
+        rideDTO.setTime("2023-02-03T16:42:28+01:00");
         rideDTO.setRidingPals(new ArrayList<>());
-        rideDTO.setVehicle(getGoodVehicleDto());
-        rideDTO.setClient(getValidUserDTO());
-        rideDTO.setIsNow(true);
-        rideDTO.setTime("1256.1");
-        rideDTO.setFeatures(new ArrayList<>());
-        rideDTO.setIsNow(true);
-        rideDTO.setIsSplitFair(true);
-        rideDTO.setRideId(1L);
-        rideDTO.setDriver(getValidVehicle());
         return rideDTO;
     }
-
-
 }
