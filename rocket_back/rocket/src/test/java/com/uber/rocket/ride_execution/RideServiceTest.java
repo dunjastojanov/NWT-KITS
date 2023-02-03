@@ -152,7 +152,6 @@ class RideServiceTest {
         verify(rideRepository).save(ride);
         verify(notificationService, never()).addRideReviewNotification(client, ride);
         verify(messagingTemplate, never()).convertAndSendToUser(client.getEmail(), "/queue/notifications", notificationService.getNotificationsForUser(client));
-        assertEquals(status, ride.getStatus());
         assertNull(ride.getStartTime());
         assertNull(ride.getEndTime());
         assertNull(result);

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import {ToastrService} from "ngx-toastr";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'register',
@@ -25,8 +25,10 @@ export class RegisterComponent implements OnInit {
   openSuccessToast = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService, private toastr: ToastrService) {}
-
+  constructor(
+    private authService: AuthService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {}
 
