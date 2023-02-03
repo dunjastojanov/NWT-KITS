@@ -10,6 +10,7 @@ export class FieldComponent implements OnInit {
   @Input('subValue') subValue?: string;
   @Input('icon') titleIcon?: string;
   @Input('status') status?: string | null;
+  @Input('id') id?:string;
 
   constructor() {}
 

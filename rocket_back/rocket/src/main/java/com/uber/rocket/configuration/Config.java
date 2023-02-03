@@ -75,6 +75,18 @@ public class Config {
             User client12 = addUser(clientRole, "Milivoje", "Mrsic", "0611111111");
             User client13 = addUser(clientRole, "Goran", "Dobrenovic", "0611111111");
             User client14 = addUser(clientRole, "Svetozar", "Matin", "0611111111");
+            User client15 = addUser(clientRole, "Sveta", "Jovic", "0611111111");
+            User client16 = addUser(clientRole, "Mileta", "Okiljevic", "0611111111");
+            User client17 = addUser(clientRole, "Danica", "Samrdzic", "0611111111");
+            User client18 = addUser(clientRole, "Miljan", "Kocic", "0611111111");
+            client18.setTokens(0.0);
+            userRepository.save(client18);
+
+            User client19 = addUser(clientRole, "Dimitrije", "Ciric", "0611111111");
+            User client20 = addUser(clientRole, "Tijana", "Pecikoza", "0611111111");
+            User client21 = addUser(clientRole, "Tamara", "Apostolovic", "0611111111");
+            User client22 = addUser(clientRole, "Natalija", "Dimitrijevic", "0611111111");
+            User client23 = addUser(clientRole, "Petar", "Fustic", "0611111111");
 
             Ride ride1 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-25 14:15", "2023-01-25 17:15", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
             addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride1);
