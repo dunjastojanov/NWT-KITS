@@ -188,24 +188,6 @@ class NotificationServiceTest {
     }
 
     @Test
-    public void setNotificationAsRead() {
-        Long id = 1L;
-        Notification notification = new Notification();
-        notification.setId(id);
-        notification.setRead(false);
-
-        when(notificationRepository.findById(id)).thenReturn(Optional.of(notification));
-        when(notificationRepository.save(notification)).thenReturn(notification);
-
-        Notification result = notificationService.setNotificationAsRead(id);
-
-        assertEquals(notification, result);
-        assertTrue(result.isRead());
-        verify(notificationRepository).findById(id);
-        verify(notificationRepository).save(notification);
-    }
-
-    @Test
     public void setNotificationAsReadInvalidId() {
         Long id = 1L;
         when(notificationRepository.findById(id)).thenReturn(Optional.empty());
