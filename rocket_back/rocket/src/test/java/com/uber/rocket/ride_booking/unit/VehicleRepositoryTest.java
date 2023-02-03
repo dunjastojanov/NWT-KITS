@@ -1,4 +1,4 @@
-package com.uber.rocket.ride_execution;
+package com.uber.rocket.ride_booking.unit;
 
 import com.uber.rocket.configuration.TestConfig;
 import com.uber.rocket.entity.user.Vehicle;
@@ -30,4 +30,16 @@ public class VehicleRepositoryTest {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Test
+    public void shouldFindVehicleByDriverId() {
+        Vehicle vehicle = vehicleRepository.findFirstByDriverId(3L);
+        assertEquals(3L, vehicle.getDriver().getId());
+    }
+
+    @Test
+    public void shouldFindVehicleByDriverId_DriverDontExist() {
+        Vehicle vehicle = vehicleRepository.findFirstByDriverId(99L);
+        assertNull(vehicle);
+    }
 }
