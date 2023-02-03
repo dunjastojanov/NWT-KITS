@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import {RegisterService} from './register.service';
-import {ToastrService} from "ngx-toastr";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'register',
@@ -26,8 +25,10 @@ export class RegisterComponent implements OnInit {
   openSuccessToast = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService, private toastr: ToastrService) {}
-
+  constructor(
+    private authService: AuthService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -56,14 +57,14 @@ export class RegisterComponent implements OnInit {
       let success: boolean = await this.authService.registerUser(data);
       if (success) {
         this.toggleSuccessToast();
-        this.toastr.success("Registration successful!")
+        this.toastr.success('Registration successful!');
       } else {
         this.errorMessage = 'User with this email already registered.';
-        this.toastr.error(this.errorMessage)
+        this.toastr.error(this.errorMessage);
         this.toggleErrorToast();
       }
     } else {
-      this.toastr.error(this.errorMessage)
+      this.toastr.error(this.errorMessage);
       this.toggleErrorToast();
     }
   };
