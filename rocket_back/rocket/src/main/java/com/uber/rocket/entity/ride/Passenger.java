@@ -25,8 +25,10 @@ public class Passenger {
     @Enumerated(EnumType.STRING)
     UserRidingStatus userRidingStatus;
 
+    boolean booked;
     public Passenger(User user, UserRidingStatus userRidingStatus) {
         this.user = user;
         this.userRidingStatus = userRidingStatus;
+        this.booked = false;
     }
 }
