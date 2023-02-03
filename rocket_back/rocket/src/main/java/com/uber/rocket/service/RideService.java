@@ -112,7 +112,7 @@ public class RideService {
         }
     }
 
-    private boolean allAcceptedRide(Ride ride) {
+    public boolean allAcceptedRide(Ride ride) {
         if (ride.getStatus() == RideStatus.DENIED) return false;
         if (ride.getStatus() == RideStatus.REQUESTED) {
             for (Passenger passenger : ride.getPassengers()) {

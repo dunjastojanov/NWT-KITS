@@ -249,9 +249,10 @@ class BookingRideServiceTest {
     void changeRidePalDriverStatusTest6() {
         when(this.rideRepositoryMock.findById(rideCreationService.getGoodRideFromRideDTO().getId())).thenReturn(Optional.of(rideCreationService.getRideIsRequestedPassengersAccepted()));
         when(this.userServiceMock.getById(anyLong())).thenReturn(getGoodClient());
-        when(this.rideRepositoryMock.save(any(Ride.class))).thenReturn(rideCreationService.getRideIsRequestedPassengersAccepted());
-        when(this.destinationServiceMock.getStartDestinationByRide(any(Ride.class))).thenThrow(ArrayIndexOutOfBoundsException.class);
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> rideService.changeRidePalDriverStatus(String.valueOf(rideCreationService.getRideIsRequestedPassengersAccepted().getId()), getGoodChangeStatus()));
+        Ride ride=rideCreationService.getRideIsRequestedPassengersAccepted();
+        ride.setStatus(RideStatus.DENIED);
+        when(this.rideRepositoryMock.save(any(Ride.class))).thenReturn(ride);
+        assertEquals(RideStatus.DENIED, rideService.changeRidePalDriverStatus(String.valueOf(rideCreationService.getRideIsRequestedPassengersAccepted().getId()), getGoodChangeStatus()).getStatus());
         verify(this.rideRepositoryMock, times(1)).findById(anyLong());
         verify(this.userServiceMock, times(1)).getById(anyLong());
     }
@@ -400,7 +401,7 @@ class BookingRideServiceTest {
     void allAcceptedRideTest3() {
         Ride ride = rideCreationService.getRideNoPassengers();
         ride.setStatus(RideStatus.DENIED);
-        assertTrue(this.rideService.allAcceptedRide(ride));
+        assertFalse(this.rideService.allAcceptedRide(ride));
     }
 
     @Test

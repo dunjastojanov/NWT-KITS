@@ -1,5 +1,6 @@
 package com.uber.rocket.ride_booking.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uber.rocket.configuration.TestConfig;
 import com.uber.rocket.dto.ChangeStatusDTO;
 import com.uber.rocket.dto.DestinationDTO;
@@ -345,6 +346,7 @@ class RideControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    //TODO prepravi
     @Test
     @DisplayName("Positive test for creating ride")
     void createRideTest19() throws Exception {
@@ -353,7 +355,8 @@ class RideControllerTest {
         rideDTO.setDestinations(getValidDestinations());
         rideDTO.setIsRouteFavorite(false);
         rideDTO.setRideStatus(RideStatus.REQUESTED);
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String dto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").contentType(MediaType.APPLICATION_JSON).content(dto))
                 .andExpect(status().isOk());
     }
 
