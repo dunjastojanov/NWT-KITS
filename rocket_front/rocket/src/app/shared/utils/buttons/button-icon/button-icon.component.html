@@ -1,7 +1,7 @@
-<button id="button" [ngClass]="{'fill': fillButton, 'not-fill': !fillButton}" [class]="dimension"
+<button [id]="id ? id : 'icon'" [ngClass]="{'fill': fillButton, 'not-fill': !fillButton}" [class]="dimension"
         class=" float-left peer cursor-pointer group p-1 hover:w-fit rounded-full flex items-center gap-1">
   <div [classList]="[dimension, groupHoverDimension]">
-    <icon id="icon" [path]="icon" [bounce]="false" [class]="fillButton? 'fill-icon' : 'not-fill-icon'"></icon>
+    <icon  [path]="icon" [bounce]="false" [class]="fillButton? 'fill-icon' : 'not-fill-icon'"></icon>
   </div>
   <p *ngIf="hoverText" class="hidden group-hover:flex text-sm font-semibold cursor-pointer mr-2"
      [class]="fillButton? 'fill-text' : 'not-fill-text'">{{hoverText}}</p>

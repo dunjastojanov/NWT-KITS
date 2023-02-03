@@ -26,8 +26,8 @@ export class CancelRideComponent implements OnInit {
         .then((result) => {
           this.toastr.success(result);
         })
-        .catch((err) => {
-          this.toastr.error(err.message);
+        .catch(() => {
+          this.toastr.error("Must fill reason.");
         });
     }
   }

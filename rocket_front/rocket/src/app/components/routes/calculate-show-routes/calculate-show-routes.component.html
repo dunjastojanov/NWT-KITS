@@ -2,7 +2,7 @@
   <choose-route></choose-route>
   <route-info></route-info>
   <div class="flex justify-center mt-6">
-    <secondary-button text="Show" class="w-fit" (click)="onShow()"></secondary-button>
+    <secondary-button text="Show" id="show-button" class="w-fit" (click)="onShow()"></secondary-button>
   </div>
   <toast-error message="Please fill all inputs." [open]="openErrorToast" [closeFunc]="toggleErrorToast"></toast-error>
 </div>

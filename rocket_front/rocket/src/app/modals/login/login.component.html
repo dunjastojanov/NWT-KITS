@@ -13,10 +13,10 @@
       <h3 class="mb-4 text-xl font-medium text-gray-900 ">Log in to our platform</h3>
       <div class="space-y-3 flex flex-col items-center mt-10" action="#">
         <form class="flex flex-col items-center w-full">
-          <app-input class="w-96" text="Your email" name="email" [(prop)]="email"></app-input>
-          <app-input text="Your password" type="password" class="border-0 p-0 m-0 w-96" name="password"
+          <app-input [id]="'email-input'" class="w-96" text="Your email" name="email" [(prop)]="email"></app-input>
+          <app-input [id]="'password-input'" text="Your password" type="password" class="border-0 p-0 m-0 w-96" name="password"
                      [(prop)]="password"></app-input>
-          <primary-button text="Login to your account" (click)="onSubmit()"></primary-button>
+          <primary-button text="Login to your account" idParam="log-in" (click)="onSubmit()"></primary-button>
         </form>
         <a class="text-sm text-primary-light hover:underline cursor-pointer" (click)="toggleForgotPasswordModal()">
           Forgot your passoword?</a>
@@ -44,7 +44,7 @@
         </div>
         <div class="text-sm font-medium text-gray-500 self-start !mt-10">
           Not registered?
-          <button class="text-secondary-light hover:underline" (click)="openRegisterModal()">Create account</button>
+          <button class="text-secondary-light hover:underline" id="create-account" (click)="openRegisterModal()">Create account</button>
         </div>
       </div>
     </div>

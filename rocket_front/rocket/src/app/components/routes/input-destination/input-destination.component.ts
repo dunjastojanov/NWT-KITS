@@ -16,6 +16,7 @@ import {RouteService} from '../route.service';
 export class InputDestinationComponent extends InputComponent {
   @Input('index') index!: number;
   @Input('showBin') showBin!: boolean;
+  @Input('id') inputedId?: string;
   destination: string = '';
   lastDispatched: string = this.value;
 

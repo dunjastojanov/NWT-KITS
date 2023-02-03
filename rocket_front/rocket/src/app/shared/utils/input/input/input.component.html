@@ -1,5 +1,5 @@
 <div class="relative z-0 w-full group" [ngClass]="marginBottom">
-  <input [type]="type" [name]="name" (input)="onInputChange($event)"
+  <input [type]="type" [name]="name" (input)="onInputChange($event)" [id]="id ? id : 'input'"
          class="block w-full py-2.5 px-0 text-sm bg-transparent border-0 border-b-2 border-tertiary-medium appearance-none focus:outline-none focus:ring-0 focus:border-secondary-light peer"
          placeholder=" " required [value]="value"/>
   <label

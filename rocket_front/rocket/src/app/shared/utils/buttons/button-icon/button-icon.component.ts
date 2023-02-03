@@ -11,6 +11,7 @@ export class ButtonIconComponent implements OnInit {
   @Input('fillButton') fillButton: boolean;
   @Input('dimension') dimension: string;
   @Input('groupHoverDimension') groupHoverDimension: string;
+  @Input('id') id?: string;
 
   constructor() {
     this.fillButton = false;
