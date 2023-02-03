@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@TestConfiguration
 @Profile("test")
 public class TestConfig {
     @Autowired
