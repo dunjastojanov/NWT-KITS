@@ -114,7 +114,7 @@ public class Config {
             addDestination(45.2388761,19.8327891,  "Narodnog Fronta 111", ride5);
             addDestination(45.2550643,19.7938139,  "Bulevar Vojvode Stepe", ride5);
 
-            Ride ride6 = addRide(vehicle2, List.of(client4, client2), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            Ride ride6 = addRide(null, List.of(client4, client2), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
             ride6.setStatus(RideStatus.REQUESTED);
 
             rideRepository.save(ride6);
@@ -122,7 +122,7 @@ public class Config {
             addDestination(45.2550643,19.7938139,  "Bulevar Vojvode Stepe", ride6);
 
 
-            Ride ride7 = addRide(vehicle2, List.of(client7, client8), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            Ride ride7 = addRide(null, List.of(client7, client8), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
             ride7.setStatus(RideStatus.REQUESTED);
             ride7.getPassengers().forEach(passenger -> {
                 passenger.setUserRidingStatus(UserRidingStatus.DENIED);
@@ -132,14 +132,11 @@ public class Config {
             rideRepository.save(ride7);
             addDestination(19.8327891, 45.2388761, "Narodnog Fronta 111", ride7);
             addDestination(19.7938139, 45.2550643, "Bulevar Vojvode Stepe", ride7);
-            Ride ride8 = addRide(vehicle1, List.of(client7, client8), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
-            ride8.setStatus(RideStatus.REQUESTED);
+            Ride ride8 = addRide(null, List.of(client7, client8), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            ride8.setStatus(RideStatus.ENDED);
             rideRepository.save(ride8);
             addDestination(45.2388761,19.8327891,  "Narodnog Fronta 111", ride8);
             addDestination(45.2550643,19.7938139,  "Bulevar Vojvode Stepe", ride8);
-
-            vehicle1.setStatus(VehicleStatus.ACTIVE);
-            vehicleRepository.save(vehicle1);
 
             Ride ride9 = addRide(vehicle7, List.of(client12), 516.0, 4277.7, "2023-02-02 21:04", null, 916, "wjbsG_l_xBMHQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^_@?M?A?CACAKGMMQc@Ma@iBuHi@_CsAuFg@yBQs@AIACGWESK_@?CU{@{@uDU{@yCiMHGDCRM@H");
             ride9.setStatus(RideStatus.CONFIRMED);
