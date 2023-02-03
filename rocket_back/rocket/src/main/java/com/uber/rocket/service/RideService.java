@@ -272,10 +272,12 @@ public class RideService {
         Optional<Ride> rideOpt = this.repository.findById(id);
         if (rideOpt.isPresent()) {
             Ride ride = rideOpt.get();
-            ride.setStatus(status);
-            if (status == RideStatus.STARTED)
+            if (status == RideStatus.STARTED) {
                 ride.setStartTime(LocalDateTime.now().withSecond(0).withNano(0));
+                ride.setStatus(status);
+            }
             if (status == RideStatus.ENDED) {
+                ride.setStatus(status);
                 ride.setEndTime(LocalDateTime.now().withSecond(0).withNano(0));
                 for (User passenger : ride.getUsers()) {
                     this.notificationService.addRideReviewNotification(passenger, ride);

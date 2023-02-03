@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Configuration
-@Profile("runtime")
+@Profile(value ="!test")
 public class Config {
 
     @Autowired
@@ -68,7 +68,7 @@ public class Config {
 
 
             Ride ride3 = addRide(vehicle3, List.of(client5, client6), 360.0, 3039.4, "2023-01-25 20:03", "2023-01-25 21:03", 760, "kkcsGyubxBhAg@z\\jjB{OvFym@bA@zEmDHJ`P");
-            addDestination(45.2423455, 19.8437972, "Dr Ivana Ribara 13 Novi Sad sss", ride3);
+            addDestination(45.2423455, 19.8437972, "Dr Ivana Ribara 13 Novi Sad", ride3);
             addDestination(45.2482226, 19.8212104, "Rudjera Boskovica 22 Novi Sad", ride3);
 
             Ride ride4 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-29 13:56", "2023-01-29 14:50", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
