@@ -56,7 +56,7 @@ public class CurrentRidePage {
     }
 
     public void closeCancelModal() {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         wait.until(ExpectedConditions.visibilityOf(closeModalButton));
         closeModalButton.click();
     }

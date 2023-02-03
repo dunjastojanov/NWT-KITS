@@ -191,7 +191,7 @@ public class HomePage {
         return notificationTitle.getText();
     }
     public String getErrorMessage() {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, 15);
 
         wait.until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {

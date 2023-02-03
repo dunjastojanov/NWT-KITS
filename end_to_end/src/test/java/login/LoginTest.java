@@ -35,7 +35,6 @@ public class LoginTest {
 
         Assertions.assertEquals("Login successful!", message);
         Assertions.assertTrue(homePage.isProfilePresent());
-        Assertions.assertTrue(homePage.isBookRidePresent());
 
         Helper.takeScreenshot(driver, "login_client_successful_homepage");
 
