@@ -6,8 +6,8 @@
     </p>
     <div class="md:flex gap-7 items-center w-4/6 md:w-auto">
       <div class="flex gap-4 md:order-2 justify-end">
-        <primary-button *ngIf="!user" text="Login" (click)="toggleLogin()"></primary-button>
-        <primary-button *ngIf="user" text="Logout" (click)="logout()"></primary-button>
+        <primary-button *ngIf="!user" [idParam]="'login-button'" text="Login" (click)="toggleLogin()"></primary-button>
+        <primary-button *ngIf="user" [idParam]="'logout-button'" text="Logout" (click)="logout()"></primary-button>
         <button data-collapse-toggle="navbar-sticky" type="button"
                 class="ml-5 inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
                 aria-controls="navbar-sticky" aria-expanded="false">
@@ -26,22 +26,22 @@
             <status-toggle></status-toggle>
           </li>
           <li *ngIf="hasRole('CLIENT')  || hasRole('DRIVER')">
-            <p class="navbar-link" routerLink='profile'>Profile</p>
+            <p class="navbar-link" routerLink='profile/information' id="profile-link">Profile</p>
           </li>
           <li *ngIf="hasRole('ADMINISTRATOR')">
-            <p class="navbar-link" routerLink='admin'>Profile & Administrative Panel</p>
+            <p class="navbar-link" routerLink='admin/information' id="admin-link">Profile & Administrative Panel</p>
           </li>
           <li *ngIf="hasRole('ADMINISTRATOR')">
             <a class="navbar-link" href="http://localhost:4200/admin/chat">Chat</a>
           </li>
           <li *ngIf="hasRole('CLIENT')">
-            <p class="navbar-link"  routerLink='ride/book'>Book a ride</p>
+            <p class="navbar-link" id="book-ride-link" routerLink='ride/book'>Book a ride</p>
           </li>
           <li *ngIf="hasRole('CLIENT') || hasRole('DRIVER')">
-            <p class="navbar-link" routerLink='ride/current'>Current ride</p>
+            <p class="navbar-link" id="current-link" routerLink='ride/current'>Current ride</p>
           </li>
           <li>
-            <a class="navbar-link" href=''>Home</a>
+            <a class="navbar-link" id="home-link" href=''>Home</a>
           </li>
           <li *ngIf="hasRole('CLIENT')">
             <button (click)="togglePayPal()"><p class="navbar-link">PayPal</p></button>
@@ -53,13 +53,13 @@
             <a class="navbar-link" href='#about'>About</a>
           </li>
           <li *ngIf="user">
-            <p class="navbar-link" (click)="toggleNotifications()">Notifications</p>
+            <p class="navbar-link" id="notifications-link" (click)="toggleNotifications()">Notifications</p>
           </li>
 
           <div *ngIf="showNotifications" (mouseleave)="toggleNotifications()"
                class="absolute w-96 h-full top-16 right-44 bg-transparent z-50">
             <div *ngIf="notifications.length < 1" class="flex justify-between m-1 bg-white hover:bg-tertiary-light hover:cursor-pointer p-4 ">
-              <h5>No new notifications</h5>
+              <h5 id="no-notifications">No new notifications</h5>
             </div>
             <div *ngFor="let notification of notifications">
               <notification-list-item [notification]="notification"></notification-list-item>

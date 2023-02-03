@@ -42,7 +42,6 @@ export class NavbarComponent implements OnInit {
       this.user = resData.user;
     });
     this.store.select('notifications').subscribe((res) => {
-      console.log(res.notifications);
       this.notifications = res.notifications;
     });
   }
@@ -66,16 +65,13 @@ export class NavbarComponent implements OnInit {
   };
 
   logout = (): void => {
-    this.router.navigate(['/']).then(() => {
-      if (this.hasRole('DRIVER')) {
-        this.vehicleService.changeStatus('INACTIVE').then((res) => {
-          console.log(res);
-        });
-      }
-    });
+    window.location.href= "http://localhost:4200"
+    if (this.hasRole('DRIVER')) {
+      this.vehicleService.changeStatus('INACTIVE').then((res) => {
+      });
+    }
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGOUT));
     this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
-    window.location.reload();
   };
 
   toggleRegister = (): void => {

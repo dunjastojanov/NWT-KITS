@@ -50,6 +50,16 @@ public class Config {
             Vehicle vehicle2 = addVehicle(driver2);
             User driver3 = addUser(driverRole, "Milan", "Nikolic", "0611111111");
             Vehicle vehicle3 = addVehicle(driver3);
+            User driver4 = addUser(driverRole, "Bogoljub", "Milicevic", "0611111111");
+            Vehicle vehicle4 = addVehicle(driver4);
+            vehicle4.setStatus(VehicleStatus.ACTIVE);
+            vehicleRepository.save(vehicle4);
+            User driver5 = addUser(driverRole, "Borko", "Sokic", "0611111111");
+            Vehicle vehicle5 = addVehicle(driver5);
+            User driver6 = addUser(driverRole, "Rasim", "Sabani", "0611111111");
+            Vehicle vehicle6 = addVehicle(driver6);
+            User driver7 = addUser(driverRole, "Hristina", "Miletic", "0611111111");
+            Vehicle vehicle7 = addVehicle(driver7);
 
             User client1 = addUser(clientRole, "Slavica", "Slavic", "0611111111");
             User client2 = addUser(clientRole, "Bogdana", "Vujic", "0611111111");
@@ -57,6 +67,26 @@ public class Config {
             User client4 = addUser(clientRole, "Dalibor", "Dobrilovic", "0611111111");
             User client5 = addUser(clientRole, "Eleonora", "Desnica", "0611111111");
             User client6 = addUser(clientRole, "Jelena", "Stojanov", "0611111111");
+            User client7 = addUser(clientRole, "Marko", "Desnica", "0611111111");
+            User client8 = addUser(clientRole, "Helena", "Stojanov", "0611111111");
+            User client9 = addUser(clientRole, "Jovica", "Vujic", "0611111111");
+            User client10 = addUser(clientRole, "Marica", "Jovetic", "0611111111");
+            User client11 = addUser(clientRole, "Teodora", "Bogatic", "0611111111");
+            User client12 = addUser(clientRole, "Milivoje", "Mrsic", "0611111111");
+            User client13 = addUser(clientRole, "Goran", "Dobrenovic", "0611111111");
+            User client14 = addUser(clientRole, "Svetozar", "Matin", "0611111111");
+            User client15 = addUser(clientRole, "Sveta", "Jovic", "0611111111");
+            User client16 = addUser(clientRole, "Mileta", "Okiljevic", "0611111111");
+            User client17 = addUser(clientRole, "Danica", "Samrdzic", "0611111111");
+            User client18 = addUser(clientRole, "Miljan", "Kocic", "0611111111");
+            client18.setTokens(0.0);
+            userRepository.save(client18);
+
+            User client19 = addUser(clientRole, "Dimitrije", "Ciric", "0611111111");
+            User client20 = addUser(clientRole, "Tijana", "Pecikoza", "0611111111");
+            User client21 = addUser(clientRole, "Tamara", "Apostolovic", "0611111111");
+            User client22 = addUser(clientRole, "Natalija", "Dimitrijevic", "0611111111");
+            User client23 = addUser(clientRole, "Petar", "Fustic", "0611111111");
 
             Ride ride1 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-25 14:15", "2023-01-25 17:15", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
             addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride1);
@@ -66,16 +96,57 @@ public class Config {
             addDestination(45.2477844, 19.8241151, "Brace Krkljus 7 Novi Sad", ride2);
             addDestination(45.2462784, 19.8346671, "Gogoljeva 18 Novi Sad", ride2);
 
-
             Ride ride3 = addRide(vehicle3, List.of(client5, client6), 360.0, 3039.4, "2023-01-25 20:03", "2023-01-25 21:03", 760, "kkcsGyubxBhAg@z\\jjB{OvFym@bA@zEmDHJ`P");
             addDestination(45.2423455, 19.8437972, "Dr Ivana Ribara 13 Novi Sad", ride3);
             addDestination(45.2482226, 19.8212104, "Rudjera Boskovica 22 Novi Sad", ride3);
 
-            Ride ride4 = addRide(vehicle1, List.of(client1, client2), 276.0, 2252.9, "2023-01-29 13:56", "2023-01-29 14:50", 676, "_hfsGeg}wBxGtX|j@i]jBvMl@dMjBdm@uATLl@");
+            Ride ride4 = addRide(vehicle5, List.of(client10), 876.0, 7331.1, "2023-02-02 18:49", null, 1276, "imfsGiguwB`BnFL{@d@aCvB`AfLfEv@XbA\\HBLDzLrEb@wC^qCJy@b@iDHq@f@qD\\_C@K\\yB\\aCD[ZqBHm@F[@K`@gCLw@^cC@Gf@{CBKVeBHa@T}AXeBd@yDDa@d@mDBS@I@GH?HEFGBI@I@IAKCI?c@@MD_@VsBX}BLgABQHu@F{@@w@@a@Eg@GWGSCOIYkAiFI[_AiE_@{AAIACGYI]QJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}RWaAAEAEGWEQESAEw@}CqDgOkAyEk@_CKa@g@uBOm@WcAGUCMEQEQi@yBq@qCu@wCSy@]yAcB_Hq@uCmA_Fi@yBAKAM?W@Q?W@E?G?IAIAGCGCGCEEEAAQMMMEECGEIGSGOKc@u@yCg@oBAEAEGUGSAG{BmIACAEIUIQCESe@[q@q@wAkDiHqAkCiAcCCEACM[LQBCr@{@~@gA`AkATYDE@AV]@EAIAISc@ACSc@s@yAO]Ue@[u@Qg@ACAEEQESAEGUOiAIcAAiA?e@?[DcBHmD@g@?O?E@E@c@@W?G@a@LiFFkDDiC?sB?WEmAKyAOuBSeC?GACI}@Ge@Ss@GQWw@sAkEHGBCJEr@[lCmA`@Q~@c@Nx@`@Sh@nCFEzEyB");
             ride4.setStatus(RideStatus.CONFIRMED);
             rideRepository.save(ride4);
-            addDestination(45.2571209, 19.8157059, "Hadzi Ruvimova 12 Novi Sad", ride4);
-            addDestination(45.2478236, 19.804034, "Futoski put 18 Novi Sad", ride4);
+
+            addDestination(45.2579691,19.7747737,  "Avrama Miletica bb", ride4);
+            addDestination(45.2615881,19.2615881,  "Bulevar oslobodjenja 25", ride4);
+
+            Ride ride5 = addRide(vehicle6, List.of(client11), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            ride5.setStatus(RideStatus.STARTED);
+            rideRepository.save(ride5);
+
+            addDestination(45.2388761,19.8327891,  "Narodnog Fronta 111", ride5);
+            addDestination(45.2550643,19.7938139,  "Bulevar Vojvode Stepe", ride5);
+
+            Ride ride6 = addRide(vehicle2, List.of(client4, client2), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            ride6.setStatus(RideStatus.REQUESTED);
+
+            rideRepository.save(ride6);
+            addDestination(45.2388761, 19.8327891, "Narodnog Fronta 111", ride6);
+            addDestination(45.2550643,19.7938139,  "Bulevar Vojvode Stepe", ride6);
+
+
+            Ride ride7 = addRide(vehicle2, List.of(client7, client8), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            ride7.setStatus(RideStatus.REQUESTED);
+            ride7.getPassengers().forEach(passenger -> {
+                passenger.setUserRidingStatus(UserRidingStatus.DENIED);
+                passengerRepository.save(passenger);
+            });
+
+            rideRepository.save(ride7);
+            addDestination(19.8327891, 45.2388761, "Narodnog Fronta 111", ride7);
+            addDestination(19.7938139, 45.2550643, "Bulevar Vojvode Stepe", ride7);
+            Ride ride8 = addRide(vehicle1, List.of(client7, client8), 588.0, 4907.9, "2023-02-02 19:06", null, 988, "_vbsG}q`xB??@F@DNv@DT@F`@xBr@xDJj@@JfA`GHd@DRrAfHRbAPx@FTQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^e@VA?CBC@QHQJQJC@i@XoBdAsFxCeDfBIDWNuDpBs@`@EBOJEMAG[sAs@uC{E}R");
+            ride8.setStatus(RideStatus.REQUESTED);
+            rideRepository.save(ride8);
+            addDestination(45.2388761,19.8327891,  "Narodnog Fronta 111", ride8);
+            addDestination(45.2550643,19.7938139,  "Bulevar Vojvode Stepe", ride8);
+
+            vehicle1.setStatus(VehicleStatus.ACTIVE);
+            vehicleRepository.save(vehicle1);
+
+            Ride ride9 = addRide(vehicle7, List.of(client12), 516.0, 4277.7, "2023-02-02 21:04", null, 916, "wjbsG_l_xBMHQJUJkBp@kDnAC?C@C@MDGBGBKBIBEB_AZo@TG@EBWFQ@DXFZ@HPhADXL`BDj@Bh@?f@?d@AR?DABERGPCDCFAFAH?F@H@F@FBFBDB@AH?F?H?D?F?JCb@GjACh@?TDl@Bd@APOtCALELCJCHCNQpDCZg@rKCr@?DA@Cj@Cf@?FKpBQbEAZGhAe@jKCl@AL?HC^AVC`@?HM~Bk@jMMvCAHCh@Ch@?FAJKfCYrGC\\Cr@GfAInBCf@AHAR?NANC^?HOxC[zGI|AMnCAL?HAVEt@?HM|BKfCCd@Gh@Or@Qj@]p@c@`@a@^cClAcDbBEBYPQH]RE@iKrFYP]NmE~B}Ax@o@^_@?M?A?CACAKGMMQc@Ma@iBuHi@_CsAuFg@yBQs@AIACGWESK_@?CU{@{@uDU{@yCiMHGDCRM@H");
+            ride9.setStatus(RideStatus.CONFIRMED);
+            rideRepository.save(ride9);
+
+            addDestination(45.2370758, 19.826718, "Ive Andrica 58 Novi Sad", ride9);
+            addDestination(45.2518688, 19.801566, "Bulevar Jovana Ducica 11 Novi Sad", ride9);
 
             LogInfo logInfo1 = addLogInfo(driver1);
         };
@@ -106,7 +177,7 @@ public class Config {
         user.setBlocked(false);
         user.setCity("Novi Sad");
         user.setProfilePicture(null);
-        user.setTokens((double) 1000);
+        user.setTokens((double) 2000);
         user = userRepository.save(user);
         user.setProfilePicture("http://localhost:8443/images/" + user.getId() + "/" + user.getFirstName() + ".jpg");
         return userRepository.save(user);
@@ -153,8 +224,18 @@ public class Config {
         ride.setDuration(duration);
         ride.setLength(length);
         ride.setVehicleTypeRequested(VehicleType.CARAVAN);
-        ride.setStartTime(LocalDateTime.parse(startTime, formatter));
-        ride.setEndTime(LocalDateTime.parse(endTime, formatter));
+        if (startTime != null ) {
+            ride.setStartTime(LocalDateTime.parse(startTime, formatter));
+        }
+        else {
+            ride.setStartTime(null);
+        }
+        if (endTime != null ) {
+            ride.setEndTime(LocalDateTime.parse(endTime, formatter));
+        }
+        else {
+            ride.setEndTime(null);
+        }
         ride.setPrice(price);
         ride.setRouteLocation(routeLocation);
         ride.setSplitFare(false);

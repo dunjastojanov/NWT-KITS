@@ -158,6 +158,7 @@ public class RideMapper implements Mapper<Ride, RideDTO> {
         User user = this.userService.getUserByEmail(rideDTO.getClient().getEmail());
         Passenger passenger = new Passenger();
         passenger.setUser(user);
+        passenger.setBooked(true);
         passenger.setUserRidingStatus(UserRidingStatus.ACCEPTED);
         passengers.add(passenger);
         for (StatusUserDTO statusUserDTO : rideDTO.getRidingPals()) {

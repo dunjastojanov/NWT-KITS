@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'register',
@@ -24,7 +25,10 @@ export class RegisterComponent implements OnInit {
   openSuccessToast = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -53,12 +57,14 @@ export class RegisterComponent implements OnInit {
       let success: boolean = await this.authService.registerUser(data);
       if (success) {
         this.toggleSuccessToast();
+        this.toastr.success("Registration successful!")
       } else {
         this.errorMessage = 'User with this email already registered.';
+        this.toastr.error(this.errorMessage)
         this.toggleErrorToast();
       }
     } else {
-      console.log(this.errorMessage);
+      this.toastr.error(this.errorMessage)
       this.toggleErrorToast();
     }
   };
@@ -72,12 +78,12 @@ export class RegisterComponent implements OnInit {
       !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,20}$/.test(this.password)
     ) {
       this.errorMessage =
-        'Inavlid format of password. Password must be at least 8 characters long and contain at least one capital letter and one number.';
+        'Invalid format of password. Password must be at least 8 characters long and contain at least one capital letter and one number.';
       return false;
     }
     if (this.password !== this.confirmPassword) {
       this.errorMessage =
-        'The password and confirmation password you have entered do not match. Please double-check your password and try again';
+        'The password and confirmation password you have entered do not match. Please double-check your password and try again.';
       return false;
     }
     if (!/^[A-Za-z\s]+$/.test(this.firstName)) {

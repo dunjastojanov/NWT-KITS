@@ -11,7 +11,7 @@ export class InputComponent implements OnInit {
   @Input('name') name!: string;
   @Input('value') value: string;
   @Input('marginBottom') marginBottom: string;
-
+  @Input("id") id?: string;
   @Input() prop!: string;
   @Output() propChange = new EventEmitter<string>();
 

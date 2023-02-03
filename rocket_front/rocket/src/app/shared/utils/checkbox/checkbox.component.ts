@@ -9,6 +9,7 @@ export class CheckboxComponent implements OnInit {
   @Input('text') text!: string;
   @Input('checked') checked: boolean;
   @Input('disabled') disabled: boolean;
+  @Input('id') id?: string;
   @Output() checkedEmitter = new EventEmitter<boolean>();
   constructor() {
     this.checked = false;

@@ -10,6 +10,7 @@ export class LabelComponent implements OnInit {
   @Input('icon') icon?: string;
   @Input('gap') gap: string;
   @Input('dimension') dimension: string;
+  @Input('id') id?:string;
 
   constructor() {
     this.gap = "gap-5";

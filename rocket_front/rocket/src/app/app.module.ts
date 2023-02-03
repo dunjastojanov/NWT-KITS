@@ -225,7 +225,7 @@ import { DateInputComponent } from './shared/utils/input/date-input/date-input.c
     NgxStarsModule,
     ToastrModule.forRoot({
       timeOut: 3000,
-      positionClass: 'toast-center-center',
+      positionClass: 'toast-top-left',
       preventDuplicates: true,
     }),
     SocialLoginModule,
