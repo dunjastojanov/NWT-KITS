@@ -5,6 +5,7 @@ import com.uber.rocket.entity.ride.Destination;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.service.DestinationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
@@ -18,6 +19,7 @@ public class RideHistoryMapper implements Mapper<Ride, RideHistory> {
     @Autowired
     DestinationService destinationService;
     @Autowired
+    @Qualifier("rideMapperImpl")
     RideMapper rideMapper;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
