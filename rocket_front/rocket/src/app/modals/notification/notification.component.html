@@ -11,17 +11,17 @@
     </button>
 
     <div class="py-6 px-6 lg:px-8 w-full">
-      <h3 class="mb-4 text-xl font-medium text-gray-900 text-center w-full">{{notification.title}}</h3>
+      <h3 id="notification_title" class="mb-4 text-xl font-medium text-gray-900 text-center w-full">{{notification.title}}</h3>
 
       <div *ngIf="isBasic(notification.type)" class="flex items-center justify-center mt-2 gap-2">
-        <secondary-button (click)="onOkay()" text="OKAY"></secondary-button>
+        <secondary-button id="ok-button" (click)="onOkay()" text="OKAY"></secondary-button>
       </div>
 
       <embedded-html [html]="notification.html"></embedded-html>
 
       <div *ngIf="!isBasic(notification.type)" class="flex items-center justify-center mt-2 gap-2">
-        <secondary-button (click)="onDeny()" [text]="notification.type === 'RIDE_REVIEW' ? 'CANCEL' : 'DENY'"></secondary-button>
-        <primary-button (click)="onAccept()" [text]="notification.type === 'RIDE_REVIEW' ? 'LEAVE A REVIEW' : 'ACCEPT'"></primary-button>
+        <secondary-button id="deny-button" (click)="onDeny()" [text]="notification.type === 'RIDE_REVIEW' ? 'CANCEL' : 'DENY'"></secondary-button>
+        <primary-button idParam="accept-button" (click)="onAccept()" [text]="notification.type === 'RIDE_REVIEW' ? 'LEAVE A REVIEW' : 'ACCEPT'"></primary-button>
       </div>
 
     </div>

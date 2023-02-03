@@ -1,0 +1,10 @@
+email,password,confirm_password,first_name,last_name,city,phone,error
+anastasijagmail.com,Anastasija123,Anastasija123,Anastasija,Savic,Novi Sad,0697894125,Invalid format of email. Please enter email in format: username@domain.com.
+anastasija@gmail.com,Ana,Anastasija123,Anastasija,Savic,Novi Sad,0697894125,Invalid format of password. Password must be at least 8 characters long and contain at least one capital letter and one number.
+anastasija@gmail.com,Anastasija123,Anastasija456,Anastasija,Savic,Novi Sad,0697894125,The password and confirmation password you have entered do not match. Please double-check your password and try again.
+anastasija@gmail.com,Anastasija123,Anastasija123,Anastasija55,Savic,Novi Sad,0697894125,First name must contain all letters.
+anastasija@gmail.com,Anastasija123,Anastasija123,Anastasija,Savic44,Novi Sad,0697894125,Last name must contain all letters.
+anastasija@gmail.com,Anastasija123,Anastasija123,Anastasija,Savic,Novi Sad77,0697894125,City must contain all letters.
+anastasija@gmail.com,Anastasija123,Anastasija123,Anastasija,Savic,Novi Sad,asd0697894125,Phone number must contain only numbers and must start with '06'.
+anastasija@gmail.com,Anastasija123,Anastasija123,Anastasija,Savic,Novi Sad,8697894125,Phone number must contain only numbers and must start with '06'.
+dragan@gmail.com,Anastasija123,Anastasija123,Anastasija,Savic,Novi Sad,0697894125,User with this email already registered.

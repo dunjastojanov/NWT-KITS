@@ -7,8 +7,10 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class PrimaryButtonComponent implements OnInit {
   @Input('text') text!: String;
+  @Input('idParam') id?: String;
 
   constructor() {
+    console.log(this.id)
   }
 
   ngOnInit(): void {

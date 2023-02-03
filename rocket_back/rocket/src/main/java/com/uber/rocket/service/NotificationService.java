@@ -152,6 +152,7 @@ public class NotificationService {
             notification.setType(NotificationType.RIDE_CANCELED);
             notification.setTitle("Ride has been canceled");
             notification.setSent(LocalDateTime.now());
+            notification.setEntityId(rideCancellation.getRide().getId());
             notification.setTemplateVariables(templateProcessor.getVariableString(getRideCancellationVariables(rideCancellation)));
             notifications.add(notification);
             save(notification);

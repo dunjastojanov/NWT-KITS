@@ -1,6 +1,6 @@
 <div *ngIf="open" class="modal !w-2/5">
   <div class="modal-container w-full">
-    <button type="button" (click)="closeModal()" class="modal-close-button">
+    <button type="button" id="close-cancel-ride-modal" (click)="closeModal()" class="modal-close-button">
       <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
            xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd"
@@ -15,11 +15,11 @@
 
       <h3 class="mb-4 text-xl font-medium text-gray-900 text-center w-full">Cancel ride</h3>
 
-      <app-input [(prop)]="message" [value]="message" class="w-96" text="Reason for canceling the ride"></app-input>
+      <app-input [id]="'message-input'" [(prop)]="message" [value]="message" class="w-96" text="Reason for canceling the ride"></app-input>
 
 
       <div class="mt-3 flex justify-center">
-        <primary-button (click)="onCancel()" [text]="'CANCEL RIDE'"></primary-button>
+        <primary-button idParam="cancel-ride-button" (click)="onCancel()"  [text]="'CANCEL RIDE'"></primary-button>
       </div>
 
     </div>

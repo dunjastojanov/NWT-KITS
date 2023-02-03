@@ -8,6 +8,7 @@ import {Component, Input, OnInit} from '@angular/core';
 export class SecondaryComponent implements OnInit {
   @Input('text') text!: String;
   @Input('disabled') disabled: boolean;
+  @Input('id') id?: string;
 
   constructor() {
     this.disabled = false;
