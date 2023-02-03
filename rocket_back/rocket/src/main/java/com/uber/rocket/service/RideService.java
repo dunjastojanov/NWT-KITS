@@ -234,8 +234,10 @@ public class RideService {
                     return false;
                 }
             }
-            for (int i = 1; i < ride.getPassengers().size(); i++) {
-                this.notificationService.addPassengerRequestNotification(ride.getPassengers().stream().toList().get(i).getUser(), ride);
+            for (Passenger passenger: ride.getPassengers()) {
+                if (!passenger.isBooked()) {
+                    this.notificationService.addPassengerRequestNotification(passenger.getUser(), ride);
+                }
             }
         }
         return true;

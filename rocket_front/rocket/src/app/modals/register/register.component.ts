@@ -57,14 +57,14 @@ export class RegisterComponent implements OnInit {
       let success: boolean = await this.authService.registerUser(data);
       if (success) {
         this.toggleSuccessToast();
-        this.toastr.success('Registration successful!');
+        this.toastr.success("Registration successful!")
       } else {
         this.errorMessage = 'User with this email already registered.';
-        this.toastr.error(this.errorMessage);
+        this.toastr.error(this.errorMessage)
         this.toggleErrorToast();
       }
     } else {
-      this.toastr.error(this.errorMessage);
+      this.toastr.error(this.errorMessage)
       this.toggleErrorToast();
     }
   };
