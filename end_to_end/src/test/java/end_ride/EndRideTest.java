@@ -93,8 +93,6 @@ public class EndRideTest {
         currentRidePage.clickCancel();
         Helper.takeScreenshot(driver, "cancel_ride_confirmed_ride_successful_cancel_modal");
 
-        currentRidePage.closeCancelModal();
-
         homePage.clickLogout();
 
         homePage.login("milivoje@gmail.com", "Milivoje123");
