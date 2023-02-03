@@ -69,14 +69,13 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/']).then(() => {
       if (this.hasRole('DRIVER')) {
         this.vehicleService.changeStatus('INACTIVE').then((res) => {
-
-          alert(res);
-
+          console.log(res);
         });
       }
     });
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGOUT));
     this.store.dispatch(new CurrentRideAction(CurrentRideActionType.REMOVE));
+    window.location.reload();
   };
 
   toggleRegister = (): void => {

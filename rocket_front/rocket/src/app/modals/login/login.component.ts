@@ -1,17 +1,15 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FacebookLoginProvider, SocialAuthService, SocialUser,} from '@abacritt/angularx-social-login';
-import {Store} from '@ngrx/store';
-import {StoreType} from 'src/app/shared/store/types';
-import {LoggedUserAction, LoggedUserActionType,} from 'src/app/shared/store/logged-user-slice/logged-user.actions';
-import {User} from 'src/app/interfaces/User';
-import {UserService} from '../../services/user/user.service';
-import {NotificationService} from '../../services/notification/notification.service';
-import {multiSelectProp} from 'src/app/shared/utils/input/multi-select-with-icons/multi-select-with-icons.component';
-import {CurrentRideAction, CurrentRideActionType,} from 'src/app/shared/store/current-ride-slice/current-ride.actions';
-import {ToastrService} from 'ngx-toastr';
-import {SocketService} from 'src/app/services/sockets/sockets.service';
-import {VehicleService} from 'src/app/services/vehicle/vehicle.service';
-import {ChatService} from '../../services/chat/chat.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { Store } from '@ngrx/store';
+import { StoreType } from 'src/app/shared/store/types';
+import {
+  LoggedUserAction,
+  LoggedUserActionType,
+} from 'src/app/shared/store/logged-user-slice/logged-user.actions';
+import { User } from 'src/app/interfaces/User';
+import { ToastrService } from 'ngx-toastr';
+import { SocketService } from 'src/app/services/sockets/sockets.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'login',
@@ -24,8 +22,6 @@ export class LoginComponent implements OnInit {
   @Input('openRegisterModal') openRegisterModal!: () => void;
 
   openForgotPasswordModal = false;
-  openChooseRoleModal = false;
-  userRoleItems: multiSelectProp[] = [];
 
   user: User | null = null;
 
@@ -33,15 +29,11 @@ export class LoginComponent implements OnInit {
   password: string;
 
   constructor(
-    private service: UserService,
     private socialAuthService: SocialAuthService,
     private store: Store<StoreType>,
-    private notificationService: NotificationService,
     private toastr: ToastrService,
-    private vehicleService: VehicleService,
-    private userService: UserService,
-    private chatService: ChatService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private authService: AuthService
   ) {
     this.email = '';
     this.password = '';
@@ -66,10 +58,10 @@ export class LoginComponent implements OnInit {
           roles: ['CLIENT'],
           profilePicture: socialUser.photoUrl,
         };
-        await this.userService.loginGoogleUser(user).then(async (token) => {
-          this.userService.setToken(token);
-          let user: User | null = await this.service.getUser();
-          if(user) {
+        await this.authService.loginGoogleUser(user).then(async (token) => {
+          this.authService.setToken(token);
+          let user: User | null = await this.authService.getUser();
+          if (user) {
             await this.login(user);
           }
         });
@@ -85,64 +77,38 @@ export class LoginComponent implements OnInit {
     this.openForgotPasswordModal = !this.openForgotPasswordModal;
   };
 
-  toggleChooseRoleModal = () => {
-    this.openChooseRoleModal = !this.openChooseRoleModal;
-  };
-
-  signInWithFB(): void {
-    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
-  }
-
   async login(user: User) {
     this.toastr.success('Login successful!');
     this.store.dispatch(new LoggedUserAction(LoggedUserActionType.LOGIN, user));
-    await this.chatService.loadMessages();
-    await this.notificationService.loadNotifications();
-    const currentRide = await this.service.getCurrentRide(user.email);
-    if (currentRide) {
-      this.store.dispatch(
-        new CurrentRideAction(CurrentRideActionType.SET, currentRide)
-      );
-    }
+    await this.authService.loadResources(user.email);
     this.closeFunc();
-  }
-
-  async loginWithOneRole(role: string) {
-    this.user!.roles = [role];
-    await this.login(this.user!);
-    this.toggleChooseRoleModal();
   }
 
   async onSubmit() {
     if (this.valid()) {
-      let success: boolean = await this.service.loginUser(
+      let success: boolean = await this.authService.loginUser(
         this.getEncodedData()
       );
+
       if (success) {
-        this.user = await this.service.getUser();
+        this.user = await this.authService.getUser();
 
         if (this.hasRole(this.user, 'DRIVER')) {
-          await this.vehicleService.changeStatus('ACTIVE').then(status => {
+          await this.authService.changeStatus('ACTIVE').then((status) => {
             if (status === 'ACTIVE' && this.user) {
               this.user.status = 'ACTIVE';
             }
           });
         }
-        if (this.user && this.user.roles.length === 1) {
+
+        if (this.user) {
           await this.login(this.user);
-        } else if (this.user && this.user.roles.length > 1) {
-          this.chooseRoleForLogin();
-        } else {
-          this.toastr.error('Invalid email or password.');
-          //token nije upisan
         }
       } else {
-        this.toastr.error('Invalid email or password.');
-        //ne postoji user sa unetim kredencijalima
+        this.toastr.error('Invalid email or password.'); //ne postoji user sa unetim kredencijalima
       }
     } else {
-      this.toastr.error('Invalid email or password.');
-      //email ili sifra nisu u dobrom formatu upisani
+      this.toastr.error('Invalid email or password.'); //email ili sifra nisu u dobrom formatu upisani
     }
   }
 
@@ -151,17 +117,6 @@ export class LoginComponent implements OnInit {
     encodedData.append('username', this.email);
     encodedData.append('password', this.password);
     return encodedData;
-  }
-
-  chooseRoleForLogin() {
-    this.userRoleItems = [];
-    for (let role of this.user!.roles) {
-      this.userRoleItems.push({
-        path: './assets/icons/user-role.png',
-        title: role.charAt(0).toUpperCase() + role.slice(1).toLowerCase(),
-      });
-    }
-    this.toggleChooseRoleModal();
   }
 
   valid(): boolean {

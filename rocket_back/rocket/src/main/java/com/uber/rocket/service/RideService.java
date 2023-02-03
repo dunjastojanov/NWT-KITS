@@ -79,7 +79,7 @@ public class RideService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void changeRidePalDriverStatus(String rideId, ChangeStatusDTO changeStatusDTO) {
+    public Ride changeRidePalDriverStatus(String rideId, ChangeStatusDTO changeStatusDTO) {
         Optional<Ride> rideOpt = this.repository.findById(Long.parseLong(rideId));
         User user = this.userService.getById(Long.parseLong(changeStatusDTO.getUserId()));
         boolean driverAccepted = false;
@@ -101,16 +101,19 @@ public class RideService {
                 }
             }
             ride = this.repository.save(ride);
+
             this.updateStatusOverSocket(ride, ride.getId());
             if (!noDriver)
                 this.updateStatusOverSocket(ride, ride.getId());
-            else this.updateStatusOverSocket(ride, (long) -1);
+            else this.updateStatusOverSocket(ride, (long)-1);
+            return ride;
         } else {
             throw new RuntimeException("Ride not found");
         }
     }
 
-    public boolean allAcceptedRide(Ride ride) {
+    private boolean allAcceptedRide(Ride ride) {
+        if (ride.getStatus() == RideStatus.DENIED) return false;
         if (ride.getStatus() == RideStatus.REQUESTED) {
             for (Passenger passenger : ride.getPassengers()) {
                 if (passenger.getUserRidingStatus() != UserRidingStatus.ACCEPTED) {
@@ -131,9 +134,7 @@ public class RideService {
             for (Passenger passenger : ride.getPassengers()) {
                 messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/rides", rideId);
             }
-        } catch (Exception e) {
-
-        }
+        } catch (Exception e) {}
     }
 
     public Ride setClientStatus(Ride ride, ChangeStatusDTO changeStatusDTO) {
@@ -653,7 +654,7 @@ public class RideService {
         return null;
     }
 
-    public LocationDTO updateVehicleLocation(Long id, Double longitude, Double latitude) {
+    public ActiveVehicleDTO updateVehicleLocation(Long id, Double longitude, Double latitude) {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(id);
         if (vehicleOpt.isPresent()) {
             ActiveVehicleDTO activeVehicleDTO = new ActiveVehicleDTO();
@@ -685,13 +686,18 @@ public class RideService {
                 activeVehicleDTO.setFree(true);
                 this.updateActiveVehicles(activeVehicleDTO);
             }
+            return activeVehicleDTO;
         }
         return null;
     }
 
-    private Ride getRide(List<Ride> goodRides) {
+    public Ride getRide(List<Ride> goodRides) {
         if (goodRides.size() == 0) return null;
-        if (goodRides.size() == 1) return goodRides.get(0);
+        if (goodRides.size() == 1) {
+            if (goodRides.get(0).getStatus() != RideStatus.DENIED && goodRides.get(0).getStatus() != RideStatus.ENDED)
+                return goodRides.get(0);
+            return null;
+        }
         else {
             for (Ride ride : goodRides) {
                 if (ride.getStatus() == RideStatus.STARTED || ride.getStatus() == RideStatus.CONFIRMED) {
@@ -719,12 +725,11 @@ public class RideService {
     private void updateActiveVehicles(ActiveVehicleDTO activeVehicleDTO) {
         this.messagingTemplate.convertAndSend("/queue/active-vehicles", activeVehicleDTO);
     }
-
-    private void updateLocationToPassengers(User driver, List<Passenger> passengers, LocationDTO locationDTO) {
+    public void updateLocationToPassengers(User driver, List<Passenger> passengers, LocationDTO locationDTO) {
         for (Passenger passenger : passengers) {
-            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(), "/queue/update-vehicle", locationDTO);
+            messagingTemplate.convertAndSendToUser(passenger.getUser().getEmail(),"/queue/update-vehicle", locationDTO);
         }
-        messagingTemplate.convertAndSendToUser(driver.getEmail(), "/queue/update-vehicle", locationDTO);
+        messagingTemplate.convertAndSendToUser(driver.getEmail(),"/queue/update-vehicle", locationDTO);
     }
 
     public List<Ride> getRidesByRideStatus(RideStatus rideStatus) {
