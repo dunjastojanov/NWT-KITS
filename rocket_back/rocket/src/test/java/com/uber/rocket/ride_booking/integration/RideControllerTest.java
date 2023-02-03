@@ -2,17 +2,16 @@ package com.uber.rocket.ride_booking.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uber.rocket.configuration.TestConfig;
-import com.uber.rocket.dto.ChangeStatusDTO;
-import com.uber.rocket.dto.DestinationDTO;
-import com.uber.rocket.dto.RideDTO;
-import com.uber.rocket.dto.VehicleDTO;
+import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.ride.Ride;
 import com.uber.rocket.entity.ride.RideStatus;
 import com.uber.rocket.entity.ride.UserRidingStatus;
 import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.entity.user.VehicleStatus;
 import com.uber.rocket.entity.user.VehicleType;
+import com.uber.rocket.repository.RideCancellationRepository;
 import com.uber.rocket.repository.RideRepository;
+import com.uber.rocket.repository.RoleRepository;
 import com.uber.rocket.repository.VehicleRepository;
 import com.uber.rocket.ride_booking.utils.ride.RideCreationService;
 import com.uber.rocket.service.NotificationService;
@@ -69,6 +68,20 @@ class RideControllerTest {
     private RideRepository rideRepository;
     @Autowired
     private VehicleRepository vehicleRepository;
+    @Autowired
+    private RideCancellationRepository rideCancellationRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Test
+    @DisplayName("Creating ride where userDTO is invalid because of id")
+    void createRideTest2() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        RideDTO rideDTO = RideCreationService.createRideDTOWithInvalidUserDTOId();
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 
     @BeforeEach
     public void setup() {
@@ -80,16 +93,8 @@ class RideControllerTest {
     void createRideTest1() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithNegativeId();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("Creating ride where userDTO is invalid because of id")
-    void createRideTest2() throws Exception {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        RideDTO rideDTO = RideCreationService.createRideDTOWithInvalidUserDTOId();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -98,7 +103,8 @@ class RideControllerTest {
     void createRideTest3() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithInvalidUserDTOFirstName();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -107,7 +113,8 @@ class RideControllerTest {
     void createRideTest4() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithInvalidUserDTOLastName();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -116,7 +123,8 @@ class RideControllerTest {
     void createRideTest5() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithInvalidUserDTOBlankEmail();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -125,7 +133,8 @@ class RideControllerTest {
     void createRideTest6() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithInvalidUserDTOEmailFormat();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -134,7 +143,8 @@ class RideControllerTest {
     void createRideTest7() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithInvalidUserDTORole();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -143,7 +153,8 @@ class RideControllerTest {
     void createRideTest8() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithInvalidStatusUserDto();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -152,7 +163,8 @@ class RideControllerTest {
     void createRideTest9() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithNegativeEstimatedDistance();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -161,7 +173,8 @@ class RideControllerTest {
     void createRideTest10() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithNegativeEstimatedTime();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -170,7 +183,8 @@ class RideControllerTest {
     void createRideTest11() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithNegativePrice();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -179,7 +193,8 @@ class RideControllerTest {
     void createRideTest12() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWitBlankRoute();
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -191,7 +206,8 @@ class RideControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createRideDTOWithValidRoute();
         rideDTO.setDestinations(destinations);
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -275,7 +291,8 @@ class RideControllerTest {
         RideDTO rideDTO = RideCreationService.createRideDTOWithValidRoute();
         rideDTO.setDestinations(getValidDestinations());
         rideDTO.setVehicle(vehicleDTO);
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -296,7 +313,8 @@ class RideControllerTest {
         RideDTO rideDTO = RideCreationService.createRideDTOWithValidRoute();
         rideDTO.setDestinations(getValidDestinations());
         rideDTO.setVehicle(getGoodVehicleDTO());
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -308,7 +326,8 @@ class RideControllerTest {
         rideDTO.setDestinations(getValidDestinations());
         rideDTO.setVehicle(getGoodVehicleDTO());
         rideDTO.setIsNow(false);
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -321,7 +340,8 @@ class RideControllerTest {
         rideDTO.setVehicle(getGoodVehicleDTO());
         rideDTO.setIsNow(false);
         rideDTO.setTime("1256.1");
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -342,21 +362,18 @@ class RideControllerTest {
         rideDTO.setFeatures(new ArrayList<>());
         rideDTO.setRideStatus(rideStatus);
         rideDTO.setIsNow(true);
-        mockMvc.perform(post(URL_PREFIX + "/currentRide", rideDTO))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
-    //TODO prepravi
     @Test
     @DisplayName("Positive test for creating ride")
     void createRideTest19() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         RideDTO rideDTO = RideCreationService.createValidRideDto();
-        rideDTO.setDestinations(getValidDestinations());
-        rideDTO.setIsRouteFavorite(false);
-        rideDTO.setRideStatus(RideStatus.REQUESTED);
-        String dto = new ObjectMapper().writeValueAsString(rideDTO);
-        mockMvc.perform(post(URL_PREFIX + "/currentRide").contentType(MediaType.APPLICATION_JSON).content(dto))
+        String nesto = new ObjectMapper().writeValueAsString(rideDTO);
+        mockMvc.perform(post(URL_PREFIX + "/currentRide").content(nesto).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
