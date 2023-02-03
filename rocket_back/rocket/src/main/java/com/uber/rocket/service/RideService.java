@@ -3,7 +3,6 @@ package com.uber.rocket.service;
 import com.uber.rocket.dto.*;
 import com.uber.rocket.entity.notification.NotificationType;
 import com.uber.rocket.entity.ride.*;
-import com.uber.rocket.entity.user.Role;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
 import com.uber.rocket.mapper.FavouriteRouteMapper;
@@ -11,10 +10,6 @@ import com.uber.rocket.mapper.RideDetailsMapper;
 import com.uber.rocket.mapper.RideHistoryMapper;
 import com.uber.rocket.mapper.RideMapper;
 import com.uber.rocket.repository.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.type.LocalDateType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -69,19 +64,10 @@ public class RideService {
     private RideMapper rideMapper;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    @Autowired
-    private NotificationRepository notificationRepository;
+
     @Autowired
     private DestinationRepository destinationRepository;
 
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private class VehicleLastDestination {
-        Destination endDestinationCurrentRide;
-        Vehicle vehicle;
-    }
 
     public MapDTO getMap(long rideId) {
         Ride ride = getRide(rideId);
@@ -126,7 +112,7 @@ public class RideService {
         }
     }
 
-    private boolean allAcceptedRide(Ride ride) {
+    public boolean allAcceptedRide(Ride ride) {
         if (ride.getStatus() == RideStatus.DENIED) return false;
         if (ride.getStatus() == RideStatus.REQUESTED) {
             for (Passenger passenger : ride.getPassengers()) {
@@ -151,7 +137,7 @@ public class RideService {
         } catch (Exception e) {}
     }
 
-    private Ride setClientStatus(Ride ride, ChangeStatusDTO changeStatusDTO) {
+    public Ride setClientStatus(Ride ride, ChangeStatusDTO changeStatusDTO) {
         for (Passenger passenger : ride.getPassengers()) {
             if (Objects.equals(passenger.getUser().getId(), Long.parseLong(changeStatusDTO.getUserId()))) {
                 if (changeStatusDTO.getRidingStatus() == UserRidingStatus.DENIED) {
@@ -166,7 +152,7 @@ public class RideService {
         return ride;
     }
 
-    private Ride setDriverStatus(Ride ride, ChangeStatusDTO changeStatusDTO, User driver) {
+    public Ride setDriverStatus(Ride ride, ChangeStatusDTO changeStatusDTO, User driver) {
         if (changeStatusDTO.getRidingStatus() == UserRidingStatus.DENIED) {
             ride.setStatus(RideStatus.DENIED);
         } else if (changeStatusDTO.getRidingStatus() == UserRidingStatus.ACCEPTED) {
@@ -266,7 +252,7 @@ public class RideService {
         return this.createRidingPal(user);
     }
 
-    private UserDTO createRidingPal(User user) {
+    public UserDTO createRidingPal(User user) {
         return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getProfilePicture(), user.getRoles().iterator().next().getRole());
     }
 
@@ -301,6 +287,7 @@ public class RideService {
         }
         return null;
     }
+
     public boolean findAndNotifyDriver(long rideId) {
 
         try {
@@ -316,7 +303,7 @@ public class RideService {
     public boolean findAndNotifyDriver(Ride ride) {
         Vehicle vehicle = this.lookForDriver(ride);
         if (vehicle != null) {
-            try{
+            try {
                 User driver = vehicle.getDriver();
                 this.notificationService.addDriverRideRequestNotification(driver, ride);
                 List<NotificationDTO> notifications = this.notificationService.getNotificationsForUser(driver);
@@ -693,7 +680,7 @@ public class RideService {
             if (ride != null) {
                 if (ride.getStatus() == RideStatus.SCHEDULED) activeVehicleDTO.setFree(true);
                 else activeVehicleDTO.setFree(false);
-                this.updateLocationToPassengers(ride.getVehicle().getDriver(), ride.getPassengers().stream().toList(),locationDTO);
+                this.updateLocationToPassengers(ride.getVehicle().getDriver(), ride.getPassengers().stream().toList(), locationDTO);
                 this.updateActiveVehicles(activeVehicleDTO);
             } else {
                 activeVehicleDTO.setFree(true);
@@ -725,6 +712,7 @@ public class RideService {
         }
         return null;
     }
+
     public void removeInactiveVehicle(Long vehicleId) {
         Optional<Vehicle> vehicleOpt = this.vehicleService.getVehicleById(vehicleId);
         if (vehicleOpt.isPresent()) {
@@ -733,6 +721,7 @@ public class RideService {
             this.updateActiveVehicles(inactive);
         }
     }
+
     private void updateActiveVehicles(ActiveVehicleDTO activeVehicleDTO) {
         this.messagingTemplate.convertAndSend("/queue/active-vehicles", activeVehicleDTO);
     }

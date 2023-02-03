@@ -19,6 +19,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
+@EqualsAndHashCode
 public class Ride {
     @Id
     @SequenceGenerator(name = "ride_sequence", sequenceName = "ride_sequence", allocationSize = 1)
