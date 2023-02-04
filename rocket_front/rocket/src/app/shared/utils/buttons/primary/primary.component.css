@@ -1,0 +1,6 @@
+@tailwind base;
+
+
+.primary-button {
+  @apply text-white bg-primary-light hover:bg-primary-medium focus:ring-4 focus:outline-none focus:ring-primary-dark rounded-full text-center font-medium px-7 py-2.5
+}

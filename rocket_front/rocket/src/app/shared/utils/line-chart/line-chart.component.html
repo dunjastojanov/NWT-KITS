@@ -1,0 +1,22 @@
+<div class="chart-container w-2/4 absolute translate-x-1/4 translate-y-12">
+  <canvas id="stats">{{ chart }}</canvas>
+
+  <div class="flex justify-center mt-5">
+
+    <div class="flex flex-col items-center justify-center w-1/4">
+      <div class="bg-secondary-medium rounded-full w-32 h-32 flex items-center justify-center">
+        <h1 class="text-xl text-white font-bold mt-1">{{getAverage()}} {{this.unit}}</h1>
+      </div>
+      <p>Average {{this.type}}</p>
+    </div>
+
+    <div class="flex flex-col items-center justify-center w-1/4">
+      <div class="bg-secondary-medium rounded-full w-32 h-32 flex items-center justify-center">
+        <h1 class="text-xl text-white font-bold mt-1">{{getTotal()}} {{this.unit}}</h1>
+      </div>
+      <p>Total {{this.type}}</p>
+    </div>
+
+  </div>
+
+</div>

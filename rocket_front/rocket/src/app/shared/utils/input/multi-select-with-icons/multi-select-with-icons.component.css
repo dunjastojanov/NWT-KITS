@@ -1,0 +1,9 @@
+@tailwind base;
+
+.multiselect-card {
+  @apply flex-col flex items-center justify-center w-36 h-44 m-2 p-5 bg-white drop-shadow-2xl rounded-lg border shadow-md hover:scale-105 transition ease-in-out
+}
+
+.selected {
+  @apply border-4 border-secondary-light
+}

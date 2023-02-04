@@ -1,0 +1,27 @@
+<div class="mx-10 pt-5">
+
+  <app-medium-title [text]="'Clients'"></app-medium-title>
+
+  <div class="flex justify-start items-center">
+    <div class="w-full mt-5">
+      <app-input [text]="'Search'" [(prop)]="filter" [value]="filter"></app-input>
+    </div>
+
+    <secondary-button (click)="fetch()" class="text-xs mx-2" [text]="'Search'"></secondary-button>
+
+  </div>
+
+  <div class="flex flex-row pt-3">
+    <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1">
+      <user-card *ngFor="let client of clients" [user]="client"></user-card>
+    </div>
+
+  </div>
+
+
+  <div class="w-full mt-7 flex justify-center">
+    <pagination [(currentPage)]="currentPage" [(numberOfPages)]="numberOfPages"></pagination>
+  </div>
+
+</div>
+

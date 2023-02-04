@@ -1,6 +1,7 @@
 package com.uber.rocket.entity.user;
 
 
+import com.uber.rocket.dto.UserRegistrationDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,14 +17,11 @@ public class User {
     @Id
     @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_sequence")
-    @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-    @OneToOne
-    private PayInfo payInfo;
 
     @Column(unique = true)
     private String email;
@@ -35,4 +33,19 @@ public class User {
     private String city;
     private boolean blocked;
 
+    private Double tokens = (double) 0;
+
+    public User(UserRegistrationDTO userRegistrationDTO) {
+        this.setEmail(userRegistrationDTO.getEmail());
+        this.setPassword(userRegistrationDTO.getPassword());
+        this.setFirstName(userRegistrationDTO.getFirstName());
+        this.setLastName(userRegistrationDTO.getLastName());
+        this.setCity(userRegistrationDTO.getCity());
+        this.setPhoneNumber(userRegistrationDTO.getPhoneNumber());
+        this.setBlocked(true);
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

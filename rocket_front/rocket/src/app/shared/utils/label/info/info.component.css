@@ -1,0 +1,9 @@
+@tailwind base;
+
+.large {
+  @apply text-xl
+}
+
+.small {
+  @apply text-sm
+}

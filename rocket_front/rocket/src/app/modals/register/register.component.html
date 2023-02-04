@@ -1,0 +1,48 @@
+<div *ngIf="open" class="modal">
+  <div class="modal-container ">
+    <button type="button" (click)="closeModal()" class="modal-close-button">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+           xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"></path>
+      </svg>
+    </button>
+    <div class="py-6 px-6 lg:px-8">
+      <h3 class="mb-4 text-xl font-medium text-gray-900 ">Sign up to our platform</h3>
+      <form class="space-y-3 flex flex-col items-center mt-10" action="#">
+        <div class="flex flex-col items-center w-full h-[300px] gap-5" *ngIf="currentPage === 1">
+          <app-input id="email-input" class="w-96" text="Your email" name="email" [(prop)]="email" [value]="email"></app-input>
+          <app-input id="password-input" text="Your password" type="password" name="password" [(prop)]="password" [value]="password"
+                     class="border-0 p-0 m-0 w-96"></app-input>
+          <app-input id="confirm-password-input" text="Confirm password" type="password" name="confirmPassword" [(prop)]="confirmPassword"
+                     [value]="confirmPassword" class="border-0 p-0 m-0 w-96"></app-input>
+          <primary-button idParam="continue-button" text="Continue" (click)="nextPage()"></primary-button>
+        </div>
+        <div class="flex flex-col items-center w-full h-[300px]" *ngIf="currentPage === 2">
+          <app-input id="first-name-input" class="w-96" text="Your first name" name="firstName" [(prop)]="firstName"
+                     [value]="firstName"></app-input>
+          <app-input id="last-name-input" class="w-96" text="Your last name" name="lastName" [(prop)]="lastName"
+                     [value]="lastName"></app-input>
+          <app-input id="city-input" class="w-96" text="Your city" name="city" [(prop)]="city" [value]="city"></app-input>
+          <app-input id="phone-input" class="w-96" text="Your phone" name="phone" [(prop)]="phone" [value]="phone"></app-input>
+          <div class="flex justify-evenly w-full">
+            <secondary-button text="Back" (click)="previousPage()"></secondary-button>
+            <primary-button idParam="sing-up-button"  text="Sign up" (click)="onSignUp()"></primary-button>
+          </div>
+        </div>
+        <div class="flex gap-5 justify-center !mt-8">
+          <span class="dot" [ngClass]="currentPage === 2 ? 'bg-gray-300' : 'bg-gray-500'"></span>
+          <span class="dot" [ngClass]="currentPage === 1 ? 'bg-gray-300' : 'bg-gray-500'"></span>
+        </div>
+        <div class="text-sm font-medium text-gray-500 self-start !mt-10">
+          Registered?
+          <button class="text-secondary-light hover:underline" (click)="openLoginModal()">Log in</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+

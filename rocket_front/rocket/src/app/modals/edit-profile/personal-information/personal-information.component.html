@@ -1,0 +1,72 @@
+<change-password [open]="showChangePassword" [closeFunc]="toggleChangePassword"></change-password>
+<div>
+  <div class="flex flex-col m-2 items-center justify-center">
+    <secondary-button (click)="toggleChangePassword()" text="CHANGE PASSWORD"></secondary-button>
+  </div>
+  <div *ngIf="!isDriver()" class="flex m-4 items-center justify-center">
+    <div class="flex flex-col m-2 items-center justify-center">
+      <div class="w-64 m-2">
+        <app-input text="First name" [value]="data.firstName" [(prop)]="data.firstName">
+        </app-input>
+      </div>
+      <div class="w-64 m-2">
+        <app-input text="City" [value]="data.city" [(prop)]="data.city">
+        </app-input>
+      </div>
+    </div>
+    <div class="flex flex-col m-2 items-center justify-center">
+      <div class="w-64 m-2">
+        <app-input text="Last name" [value]="data.lastName" [(prop)]="data.lastName">
+        </app-input>
+      </div>
+
+      <div class="w-64 m-2">
+        <app-input text="Phone number" [value]="data.phoneNumber" [(prop)]="data.phoneNumber">
+        </app-input>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div *ngIf="isDriver()" class="flex m-4 items-center justify-center">
+    <div class="flex flex-col m-2 items-center justify-center">
+      <div class="w-64 m-2">
+        <app-input text="First name" [value]="data.firstName" [(prop)]="data.firstName">
+        </app-input>
+      </div>
+      <div class="w-64 m-2">
+        <app-input text="Last name" [value]="data.lastName" [(prop)]="data.lastName">
+        </app-input>
+      </div>
+      <div class="w-64 m-2">
+        <app-input text="Phone number" [value]="data.phoneNumber" [(prop)]="data.phoneNumber">
+        </app-input>
+      </div>
+      <div class="w-64 m-2">
+        <app-input text="City" [value]="data.city" [(prop)]="data.city">
+        </app-input>
+      </div>
+
+
+    </div>
+    <div class="flex flex-col m-2 items-center justify-center">
+      <div class="w-64 m-2">
+        <multi-select
+          [itemProps]="[{path:'./assets/icons/kids.png', title:'Kid friendly', selected: vehicle.kidFriendly},{path:'./assets/icons/pets.png', title:'Pet friendly', selected: vehicle.petFriendly}]"
+          (selectedItems)="setSelectedItems($event)"
+          [selected]="selectedItems"
+        ></multi-select>
+      </div>
+      <div class="w-64 m-2">
+        <app-select [(prop)]="vehicle.type" [value]="vehicle.type" text="Type"
+                    placeholder="Choose a type of vehicle" [items]="types" class="w-96"></app-select>
+      </div>
+
+    </div>
+  </div>
+  <div class="flex items-center justify-center mt-2">
+    <secondary-button class="mr-2" text="CANCEL"></secondary-button>
+    <primary-button text="SAVE" (click)="onSave()"></primary-button>
+  </div>
+</div>

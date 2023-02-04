@@ -1,0 +1,58 @@
+<div class="py-6 pt-10 w-full h-[75vh] flex gap-x-10 justify-center text-xl">
+    <div class=" shadow-2xl drop-shadow-2xl h-full p-9 flex gap-x-10 w-1/4">
+        <div class="flex flex-col items-center h-full w-full">
+            <p class="self-start font-semibold h-fit">Select time:</p>
+            <div class="mt-6 items-center w-full flex flex-col h-3/4 justify-between">
+                <checkbox id="current-time-check" (checkedEmitter)="setCurrentTime($event)" [checked]="this.ride.isNow" text="Book ride for now"></checkbox>
+                <div class="flex gap-3 items-center w-full">
+                    <div class="w-2/5 pt-5/12"><hr class= "min-w-full"></div>
+                    <p class="flex justify-center w-1/12 text-tertiary-light-light font-light" >or</p>
+                    <div class="w-5/12 pt-1"><hr class= "w-full"></div>
+                </div>
+                <p class="font-semibold ">Choose time: </p>
+                <input (input)="setTime($event)" [value]="showTime()" id="time-input" type="time" class="w-full block text-sm bg-transparent border-0 border-b-2 border-tertiary-medium appearance-none focus:outline-none focus:ring-0 focus:border-secondary-light peer" />
+            </div>
+        </div>
+    </div>
+    <div class=" shadow-2xl drop-shadow-2xl h-full p-9 flex gap-x-10 w-1/4">
+        <div class="flex flex-col items-center w-full">
+            <p class="font-semibold self-start">Invite a friend: </p>
+            <div class="mt-9 w-full flex flex-col justify-center gap-4">
+                <div class="flex gap-3 items-center w-full">
+                    <app-input id="pal-input" (propChange)="setFriend($event)" class="w-4/5" text="Enter email"></app-input>
+                    <button-icon id="pal-button" (click)="addFriend()" class="w-1/5 flex justify-center" [fillButton]="true" icon="assets/icons/plus.png" dimension="!w-6 !h-6" groupHoverDimension="!w-4 !h-4"></button-icon>
+                </div>
+                <hr class= "w-full">
+                <div class="flex flex-col gap-3 max-h-64 overflow-auto">
+                    <div *ngFor="let friend of this.ride.friends" class="flex items-center justify-center w-full gap-5">
+                        <div class="flex gap-2 items-center mt-4">
+                            <img alt="driver-image" class="profile-image !w-10 !h-10 !m-0" [src]="friend.profilePicture ? friend.profilePicture : 'assets/profile-placeholder.png'"/>
+                            <field class="!text-xl" [title]="friend.email!" [value]="friend.firstName + ' ' + friend.lastName"></field>
+                        </div>
+                        <button-icon (click)="removeFriend(friend)" icon="./assets/icons/cancel.png" dimension="!w-7 !h-7" groupHoverDimension="!w-5 !h-5" class="mt-5"></button-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=" shadow-2xl drop-shadow-2xl h-full p-9 flex gap-x-10 w-1/4">
+        <div class="flex flex-col items-center w-full">
+            <p class="font-semibold self-start">Payment and vehicle info: </p>
+            <div class="mt-7 w-full flex flex-col justify-center gap-6">
+                <checkbox id="split-fair-check" (checkedEmitter)="setSplitFair($event)" [checked]="this.ride.split" text="Split fair payment"></checkbox>
+                <multi-select (selectedItems)="setFeatures($event)" [itemProps]="[{path:'./assets/icons/kids.png', title:'Kid friendly', selected: featureIsSelected('Kid friendly')},{path:'./assets/icons/pets.png', title:'Pet friendly', selected: featureIsSelected('Pet friendly')}]"></multi-select>
+                <select id="vehicle-select" [value]="this.ride.vehicle ? this.ride.vehicle : ''" #types (change)="setVehicleType(types.value)" class="w-full block text-sm bg-transparent border-0 border-b-2 border-tertiary-medium appearance-none focus:outline-none focus:ring-0 focus:border-secondary-light peer" >
+                    <option value="" disabled selected>Vehicle type</option>
+                    <option id="LIMOUSINE" value="LIMOUSINE">Limousine</option>
+                    <option id="HATCHBACK"  value="HATCHBACK">Hatchback</option>
+                    <option id="CARAVAN"  value="CARAVAN">Caravan</option>
+                    <option id="COUPE"  value="COUPE">Coupe</option>
+                    <option id="CONVERTIBLE"  value="CONVERTIBLE">Convertible</option>
+                    <option id="MINIVAN"  value="MINIVAN">Minivan</option>
+                    <option id="SUV"  value="SUV">Suv</option>
+                    <option id="PICKUP"  value="PICKUP">Pickup</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>

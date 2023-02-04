@@ -1,0 +1,33 @@
+<div class="mt-5 h-screen">
+  <app-medium-title [text]="'Statistics'"></app-medium-title>
+  <div class="flex justify-center w-full align-middle">
+    <div class="input-box">
+      <app-date-input text="Start date" [(prop)]="startDate" [value]="startDate"></app-date-input>
+    </div>
+
+    <div class="input-box">
+      <app-date-input text="End date" [value]="endDate" [(prop)]="endDate"></app-date-input>
+    </div>
+
+    <div class="input-box">
+      <app-select text="Type" [placeholder]="'Choose a type of report'" [items]="items" [value]="type"
+                  [(prop)]="type" (change)="onChange()"></app-select>
+    </div>
+
+
+  </div>
+  <div class="mt-5 flex justify-center w-full align-middle">
+    <secondary-button text="Show" (click)="onShow()"></secondary-button>
+
+  </div>
+  <div>
+    <line-chart [data]="reportData.data" [total]="+reportData.total" [average]="reportData.average" [type]="type"
+                [unit]="type === 'kilometers' ? 'KM': type === 'money' ? 'din': ''"></line-chart>
+  </div>
+
+  <div class="translate-y-24 absolute">
+
+  </div>
+
+
+</div>

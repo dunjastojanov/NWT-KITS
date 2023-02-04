@@ -1,0 +1,8 @@
+
+<div (click)="toggleShowModal()" [id]="'ride_notification_' + notification.entityId" class="notification flex justify-between m-1 bg-white hover:bg-tertiary-light hover:cursor-pointer p-4 ">
+  <h5>{{notification.title}}</h5>
+
+  <p class="text-tertiary-medium m-l-auto">{{getDate()}}</p>
+</div>
+
+<notification [notification]="notification" [open]="showModal" [closeFunc]="toggleShowModal"></notification>

@@ -1,0 +1,15 @@
+<div class="pt-5 flex flex-col items-center">
+  <app-medium-title [text]="'History'"></app-medium-title>
+  <div class="flex justify-start items-center w-full px-6">
+    <div class="w-full">
+      <app-input [text]="'Email'" [(prop)]="email" [value]="email"></app-input>
+    </div>
+
+    <secondary-button (click)="fetch()" class="text-xs mx-2" [text]="'Search'"></secondary-button>
+
+  </div>
+  <div class="m-2 mt-8">
+    <history-table [(numberOfPages)]="numberOfPages" [(page)]="currentPage" [rideHistory]="rideHistory"></history-table>
+  </div>
+
+</div>

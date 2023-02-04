@@ -1,15 +1,16 @@
 package com.uber.rocket.entity.ride;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Entity
 @Table
+@Setter
+@Getter
+@ToString
 public class Destination {
     @Id
     @SequenceGenerator(name = "destination_sequence", sequenceName = "destination_sequence", allocationSize = 1)
@@ -17,6 +18,11 @@ public class Destination {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @NotNull
-    private String city;
+    @ManyToOne()
+    private Ride ride;
+
+    private String address;
+    private double longitude;
+    private double latitude;
+
 }

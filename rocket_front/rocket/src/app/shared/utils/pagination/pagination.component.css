@@ -1,0 +1,21 @@
+@tailwind base;
+
+.pagination-link {
+  @apply py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700
+}
+
+.pagination-link-arrows {
+  @apply block ml-0
+}
+
+.pagination-link-arrows-left {
+  @apply rounded-l-lg
+}
+
+.pagination-link-arrows-right {
+  @apply rounded-r-lg
+}
+
+.arrow {
+  @apply w-5 h-5
+}

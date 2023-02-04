@@ -31,4 +31,11 @@ public class Review {
     @NotNull
     private String description;
 
+    @ManyToOne
+    private Ride ride;
+
+    public double getRating() {
+        return ((double)(vehicleRating + driverRating))/2;
+    }
+
 }

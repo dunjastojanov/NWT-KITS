@@ -1,0 +1,11 @@
+<div class="p-5">
+
+  <div *ngFor="let i of information">
+    <app-info [title]="i.title" [info]="i.info"></app-info>
+  </div>
+  <div class="flex mt-5">
+    <secondary-button class="mr-3" [text]="'EDIT ACCOUNT'" (click)="toggleEditProfile()"></secondary-button>
+  </div>
+
+  <app-edit-profile class="w-3/4" [open]="openEditProfile" [closeFunc]="toggleEditProfile"></app-edit-profile>
+</div>

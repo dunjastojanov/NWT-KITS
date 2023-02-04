@@ -1,0 +1,35 @@
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<div *ngIf="open" class="modal">
+  <div class="modal-container">
+    <button type="button" (click)="onClose()" class="modal-close-button">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+           xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"></path>
+      </svg>
+    </button>
+    <div class="py-6 px-6 lg:px-8">
+      <h3 class="mb-4 text-xl font-medium text-gray-900 ">Add review</h3>
+      <div class="space-y-3 flex flex-col items-center mt-10" action="#">
+        <div class="flex gap-6">
+          <div class="flex flex-col items-center justify-center">
+            <ngx-stars [size]="2" [readonly]="false" color="#E1A901" [maxStars]="5"
+                       (ratingOutput)="onRatingSet($event, 'driver')"></ngx-stars>
+            <span>Driver rating: {{ driverRating }}</span>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <ngx-stars [size]="2" [readonly]="false" color="#E1A901" [maxStars]="5"
+                       (ratingOutput)="onRatingSet($event, 'vehicle')"></ngx-stars>
+            <span>Vehicle rating: {{ vehicleRating }}</span>
+          </div>
+        </div>
+
+        <app-input text="Message" class="border-0 p-0 m-0 w-96" name="description" [(prop)]="description"></app-input>
+        <secondary-button text="Add" (click)="addReview()"></secondary-button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="open" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+

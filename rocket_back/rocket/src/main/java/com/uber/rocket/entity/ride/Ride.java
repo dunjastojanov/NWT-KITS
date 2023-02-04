@@ -1,47 +1,55 @@
 package com.uber.rocket.entity.ride;
 
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 import com.uber.rocket.entity.user.User;
 import com.uber.rocket.entity.user.Vehicle;
+import com.uber.rocket.entity.user.VehicleType;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Entity
 @Table
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
 public class Ride {
     @Id
     @SequenceGenerator(name = "ride_sequence", sequenceName = "ride_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "ride_sequence")
-    @Setter(AccessLevel.NONE)
     private Long id;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @NotNull
-    private Collection<User> passengers;
-
+    @JoinColumn(name = "ride_id")
+    private Collection<Passenger> passengers;
     @OneToOne
-    @NotNull
+    @Nullable
     private Vehicle vehicle;
 
-    @OneToOne
-    @NotNull
-    private Route route;
+    @Enumerated(EnumType.STRING)
+    private VehicleType vehicleTypeRequested;
 
-    @OneToMany
-    @NotNull
-    private Collection<Destination> destination;
+    private boolean petFriendly;
 
-    @OneToMany
+    private boolean kidFriendly;
+
     @NotNull
-    private Collection<Review> reviews;
+    @Column(length = 1024)
+    private String routeLocation;
+
+    private boolean now;
 
     private LocalDateTime startTime;
+
+    @Nullable
     private LocalDateTime endTime;
 
     @NotNull
@@ -53,5 +61,20 @@ public class Ride {
 
     @NotNull
     private int price;
+
+    //menjano
+    @NotNull
+    private Double duration;
+
+    @NotNull
+    private double length;
+
+    public User getDriver() {
+        return vehicle.getDriver();
+    }
+
+    public List<User> getUsers() {
+        return passengers.stream().map(Passenger::getUser).toList();
+    }
 
 }

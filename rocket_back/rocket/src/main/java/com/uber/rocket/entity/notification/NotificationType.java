@@ -1,0 +1,14 @@
+package com.uber.rocket.entity.notification;
+
+public enum NotificationType {
+    DRIVER_RIDE_REQUEST,
+    PASSENGER_RIDE_REQUEST,
+    RIDE_SCHEDULED,
+    RIDE_CONFIRMED,
+    DRIVER_ARRIVED,
+    RIDE_REVIEW,
+    UPDATE_DRIVER_PICTURE_REQUEST,
+    UPDATE_DRIVER_DATA_REQUEST,
+    RIDE_CANCELED,
+    USER_BLOCKED
+}
